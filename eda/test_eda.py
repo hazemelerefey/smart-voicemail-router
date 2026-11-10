@@ -50,3 +50,16 @@ def test_review_consistency():
     s = load_summary()["transcripts"]
     assert s["needs_review_without_reason"] == 0
     assert s["review_reason_without_flag"] == 0
+
+
+# --- Task 3: duplicates, near-duplicates, labels gap ---
+
+def test_duplicate_groups():
+    s = load_summary()["duplicates"]
+    assert s["largest_text_norm_group"] >= 9  # "اشتركوا في القناة" group
+
+
+def test_labels_empty():
+    s = load_summary()["labels"]
+    assert s["category_non_empty"] == 0
+    assert s["sentiment_non_empty"] == 0
