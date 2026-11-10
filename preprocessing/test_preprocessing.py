@@ -137,3 +137,143 @@ def test_manifest_reconciles():
     assert counts.sum() == 6522
     assert (counts.get("excluded", 0)) == 498
     assert counts.get("train_ready", 0) + counts.get("quarantine", 0) == 6024
+
+
+# ---------------- Task 2: audio standardization + dedup ----------------
+
+def test_all_train_ready_sources_exist():
+    # Regression: 3 files ("Café Suprême" *) are NFC in the CSVs but NFD
+    # on disk (unrar output); source_path must resolve them.
+    import sys
+
+    sys.path.insert(0, str(REPO / "preprocessing"))
+    from standardize_audio import source_path
+
+    manifest = read_manifest()
+    files = manifest[manifest["prep_status"] == "train_ready"]["file"].tolist()
+    missing = [f for f in files if not source_path(f).exists()]
+    assert missing == []
+
+
+def wav_source_file(wav_path):
+    """WAV name is '<basename>.wav'; map back to the dataset file path."""
+    basename = wav_path.name[: -len(".wav")]
+    return "الكل ان شاء الله\\" + basename
+
+
+def wav_pcm_sha256(wav_path):
+    import hashlib
+    import wave
+
+    with wave.open(str(wav_path), "rb") as w:
+        return hashlib.sha256(w.readframes(w.getnframes())).hexdigest()
+
+
+def test_standardized_count_matches_train_ready():
+    manifest = read_manifest()
+    wavs = list(AUDIO_16K.glob("*.wav"))
+    assert len(wavs) == (manifest["prep_status"] == "train_ready").sum()
+
+
+def test_all_wavs_16k_mono():
+    import wave
+
+    wavs = list(AUDIO_16K.glob("*.wav"))
+    assert len(wavs) > 0  # guard against a vacuous pass on an empty dir
+    bad = []
+    for w in wavs:
+        with wave.open(str(w), "rb") as f:
+            if f.getframerate() != 16000 or f.getnchannels() != 1:
+                bad.append(w.name)
+    assert bad == []
+
+
+def test_wav_matches_decoded_audio():
+    # Duration is verified against the DECODED PCM, not the inventory
+    # duration_s: ffprobe's estimate is unreliable for raw ADTS .aac
+    # (0185.aac: ffprobe 7.681 s vs decoded 8.149 s). Every WAV's PCM
+    # hash and frame count must match the decode record exactly.
+    import wave
+
+    wavs = list(AUDIO_16K.glob("*.wav"))
+    assert len(wavs) > 0  # guard against a vacuous pass on an empty dir
+    record = json.loads((PREP_DIR / "audio_decode.json").read_text())["files"]
+    assert len(record) == len(wavs)
+    bad = []
+    for w in wavs:
+        src = wav_source_file(w)
+        rec = record[src]
+        with wave.open(str(w), "rb") as f:
+            frames = f.getnframes()
+            pcm = f.readframes(frames)
+        import hashlib
+
+        if frames != rec["samples"] or hashlib.sha256(pcm).hexdigest() != rec["pcm_sha256"]:
+            bad.append(w.name)
+    assert bad == []
+
+
+def test_inventory_drift_is_recorded():
+    # The inventory-vs-decoded drift is measured and reported, not gated:
+    # a drifted file is good audio with a wrong inventory estimate.
+    rec = json.loads((PREP_DIR / "audio_decode.json").read_text())
+    assert "drift_vs_inventory" in rec
+    assert "gt_0.1s" in rec["drift_vs_inventory"]
+    assert "by_format" in rec["drift_vs_inventory"]
+
+
+def test_no_duplicate_audio_content():
+    wavs = list(AUDIO_16K.glob("*.wav"))
+    assert len(wavs) > 0  # guard against a vacuous pass on an empty dir
+    hashes = [wav_pcm_sha256(w) for w in wavs]
+    assert len(hashes) == len(set(hashes))
+
+
+# ---------------- Task 3: split + exclusions ----------------
+
+def load_splits():
+    out = {}
+    for name in ("train", "dev", "test"):
+        out[name] = json.loads((PREP_DIR / f"split_{name}.json").read_text())
+    return out
+
+
+def train_ready_count():
+    manifest = read_manifest()
+    return int((manifest["prep_status"] == "train_ready").sum())
+
+
+def leaked_text_norm_groups():
+    splits = load_splits()
+    df = read_clean_csv()
+    norm_by_file = dict(zip(df["file"], df["text_norm"]))
+    group_side = {}
+    leaked = 0
+    for side, files in splits.items():
+        for f in files:
+            g = norm_by_file[f]
+            if g in group_side and group_side[g] != side:
+                leaked += 1
+            group_side[g] = side
+    return leaked
+
+
+def test_split_reconciles_with_train_ready():
+    s = load_splits()
+    assert len(s["train"]) + len(s["dev"]) + len(s["test"]) == train_ready_count()
+
+
+def test_split_no_leaked_groups():
+    assert leaked_text_norm_groups() == 0
+
+
+def test_split_ratios():
+    s = load_splits()
+    total = sum(len(v) for v in s.values())
+    assert abs(len(s["train"]) / total - 0.80) < 0.02
+
+
+def test_excluded_reconciles():
+    ex = json.loads((PREP_DIR / "excluded_disposition.json").read_text())
+    assert sum(ex["reasons"].values()) == 498
+    assert ex["total"] == 498
