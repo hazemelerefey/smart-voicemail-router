@@ -168,11 +168,11 @@ Data boundary: raw recordings stay local. A transcript approval does not authori
 
 ## 8. Split
 
-Proposed 80/10/10 split over the 6,024 transcribed rows: train 4,820, dev 602, test 602. Method: whole `text_norm` groups were kept on one side (greedy assignment ordered by duration-quartile and format stratum, each group going to the split with the largest relative shortfall). Duration quartiles of the transcribed rows (probed durations): Q1 5.12 s, Q2 6.223 s, Q3 7.874 s.
+Proposed 70/20/10 split over the 6,024 transcribed rows: train 4,217, val 1,205, test 602. This replaces the 80/10/10 proposal; the user standard is 70/20/10. Method: whole `text_norm` groups were kept on one side (greedy assignment ordered by duration-quartile and format stratum, each group going to the split with the largest relative shortfall). Duration quartiles of the transcribed rows (probed durations): Q1 5.12 s, Q2 6.223 s, Q3 7.874 s.
 
 - Duplicate groups leaking across sides: **0**
-- Per-split flagged rows: train 109, dev 10, test 14
-- Per-split mean duration: train 7.003 s, dev 6.900 s, test 6.917 s
+- Per-split flagged rows: train 92, val 25, test 16
+- Per-split mean duration: train 6.984 s, val 7.028 s, test 6.897 s
 - Per-split formats stay close to the overall mix in each split
 
 The per-file assignment is saved outside the repo at `~/workspace/ai-customer-support/dataset/split_assignment.json` for Phase 2 reuse. Limitation: there are no speaker IDs in the data, so this split is text-group-aware and duration/format-stratified, but **not** speaker-aware. If speaker identity can be established later, the split must be re-checked for same-speaker leakage before it is frozen.

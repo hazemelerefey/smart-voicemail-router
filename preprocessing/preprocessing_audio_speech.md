@@ -45,8 +45,8 @@ Canonical file hashes (recorded before the run in
   derived file, documented.
 - The 498 excluded files stay excluded. Recoverable ones are counted,
   none re-included.
-- Split recomputed on the train-ready set (seed 42, 80/10/10, whole
-  `text_norm` groups on one side, 0 leaks). The EDA split (4820/602/602
+- Split recomputed on the train-ready set (seed 42, 70/20/10, whole
+  `text_norm` groups on one side, 0 leaks). The EDA split (4217/1205/602
   on all 6,024 rows) is superseded for the training pool.
 
 ## 3. Disposition
@@ -112,12 +112,12 @@ duration quartile + format, whole `text_norm` groups on one side:
 
 | split | files | share |
 |---|---|---|
-| train | 4,704 | 80.0% |
-| dev | 589 | 10.0% |
+| train | 4,117 | 70.0% |
+| val | 1,176 | 20.0% |
 | test | 588 | 10.0% |
 
 Leaked `text_norm` groups: 0. Files:
-`dataset/preprocessed/split_train.json`, `split_dev.json`,
+`dataset/preprocessed/split_train.json`, `split_val.json`,
 `split_test.json` (outside the repo). The EDA split is superseded for
 the training pool; the EDA assignment file is kept for reference only.
 
@@ -170,7 +170,7 @@ Derived data lives outside the repo at
 `~/workspace/ai-customer-support/dataset/preprocessed/` and is never
 committed: `transcripts_clean.csv`, `disposition_manifest.csv`,
 `audio_16k/*.wav`, `audio_decode.json`, `split_train.json`,
-`split_dev.json`, `split_test.json`, `excluded_disposition.json`,
+`split_val.json`, `split_test.json`, `excluded_disposition.json`,
 `run_log_hashes.txt`. Repo holds scripts, tests, summary, and this note.
 
 Commands (run from the repo root, branch `team/audio-speech`):

@@ -40,11 +40,11 @@
   "total": 6522
  },
  "split": {
-  "dev": 589,
   "leaked_groups": 0,
   "seed": 42,
   "test": 588,
-  "train": 4704
+  "train": 4117,
+  "val": 1176
  },
  "transcripts": {
   "dup_fixed_rows": 3,

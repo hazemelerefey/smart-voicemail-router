@@ -106,4 +106,4 @@ def test_privacy_counts_only():
 def test_split_no_leak():
     s = load_summary()["split"]
     assert s["leaked_duplicate_groups"] == 0
-    assert s["train"] + s["dev"] + s["test"] == 6024
+    assert s["train"] + s["val"] + s["test"] == 6024

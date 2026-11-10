@@ -231,7 +231,7 @@ def test_no_duplicate_audio_content():
 
 def load_splits():
     out = {}
-    for name in ("train", "dev", "test"):
+    for name in ("train", "val", "test"):
         out[name] = json.loads((PREP_DIR / f"split_{name}.json").read_text())
     return out
 
@@ -258,7 +258,7 @@ def leaked_text_norm_groups():
 
 def test_split_reconciles_with_train_ready():
     s = load_splits()
-    assert len(s["train"]) + len(s["dev"]) + len(s["test"]) == train_ready_count()
+    assert len(s["train"]) + len(s["val"]) + len(s["test"]) == train_ready_count()
     # Set identity, not just counts: a split that swapped a quarantined
     # file in for a train-ready file at the same count must fail.
     manifest = read_manifest()
@@ -287,7 +287,7 @@ def test_split_no_leaked_groups():
 def test_split_ratios():
     s = load_splits()
     total = sum(len(v) for v in s.values())
-    assert abs(len(s["train"]) / total - 0.80) < 0.02
+    assert abs(len(s["train"]) / total - 0.70) < 0.02
 
 
 def test_excluded_reconciles():
@@ -349,7 +349,7 @@ def test_summary_schema_invariants():
     assert s["files"]["excluded"] == 498
     assert s["audio"]["standardized_files"] == s["transcripts"]["train_ready"]
     assert (
-        s["split"]["train"] + s["split"]["dev"] + s["split"]["test"]
+        s["split"]["train"] + s["split"]["val"] + s["split"]["test"]
         == s["transcripts"]["train_ready"]
     )
     assert s["split"]["leaked_groups"] == 0

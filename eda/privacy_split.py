@@ -6,7 +6,7 @@ digit runs). Counts are integers only; no matched strings, no examples, no
 raw text is stored anywhere. Name-like detection is not reliable from
 transcripts alone and is recorded as such, not attempted.
 
-Split: 80/10/10 train/dev/test over the 6,024 transcribed rows. Whole
+Split: 70/20/10 train/val/test over the 6,024 transcribed rows. Whole
 text_norm groups stay on one side (no duplicate leakage), assignment is
 greedy within duration-quartile x format strata, deterministic. The
 per-file assignment table is written OUTSIDE the repo for Phase 2 reuse.
@@ -45,7 +45,7 @@ INTL_PHONE_RE = re.compile(r"(?:\+20|0020)\s?1[0-9]{9}")
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 LONG_DIGITS_RE = re.compile(r"\d{10,}")
 
-TARGET_SHARES = {"train": 0.8, "dev": 0.1, "test": 0.1}
+TARGET_SHARES = {"train": 0.7, "val": 0.2, "test": 0.1}
 
 
 def read_csv(path: Path) -> list:
@@ -89,7 +89,7 @@ def privacy_scan(rows: list) -> dict:
 
 
 def build_split(rows: list, durations: dict) -> tuple:
-    """Greedy group-aware 80/10/10 split. Returns (summary, assignment)."""
+    """Greedy group-aware 70/20/10 split. Returns (summary, assignment)."""
     groups = defaultdict(list)
     for r in rows:
         groups[r["text_norm"]].append(r)
@@ -144,7 +144,7 @@ def build_split(rows: list, durations: dict) -> tuple:
     leaked = sum(1 for sides in group_sides.values() if len(sides) > 1)
 
     per_split = {}
-    for split in ("train", "dev", "test"):
+    for split in ("train", "val", "test"):
         members = [r for r in rows if assignment[r["file"]] == split]
         durs = [durations[norm(r["file"])] for r in members if norm(r["file"]) in durations]
         per_split[split] = {
@@ -156,13 +156,13 @@ def build_split(rows: list, durations: dict) -> tuple:
         }
 
     summary = {
-        "method": "group-aware greedy 80/10/10: whole text_norm groups kept on one side, "
+        "method": "group-aware greedy 70/20/10: whole text_norm groups kept on one side, "
                   "ordered by (duration quartile, format) stratum, assigned to the split "
                   "with the largest relative shortfall",
         "target_shares": TARGET_SHARES,
         "target_rows": targets,
         "train": counts["train"],
-        "dev": counts["dev"],
+        "val": counts["val"],
         "test": counts["test"],
         "total_rows": total,
         "leaked_duplicate_groups": leaked,
@@ -253,7 +253,7 @@ def main() -> int:
 
     made = make_figures(summary, rows)
     print(f"phone_like={privacy['phone_like_rows']} email_like={privacy['email_like_rows']} "
-          f"split train/dev/test={split_summary['train']}/{split_summary['dev']}/{split_summary['test']} "
+          f"split train/val/test={split_summary['train']}/{split_summary['val']}/{split_summary['test']} "
           f"leaked={split_summary['leaked_duplicate_groups']} "
           f"figures={len(made)}", flush=True)
     return 0

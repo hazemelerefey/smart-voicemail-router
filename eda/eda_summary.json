@@ -395,19 +395,19 @@
     "name_like_note": "Person names cannot be detected reliably from transcripts alone (no name list, dialect spellings vary); not attempted."
   },
   "split": {
-    "method": "group-aware greedy 80/10/10: whole text_norm groups kept on one side, ordered by (duration quartile, format) stratum, assigned to the split with the largest relative shortfall",
+    "method": "group-aware greedy 70/20/10: whole text_norm groups kept on one side, ordered by (duration quartile, format) stratum, assigned to the split with the largest relative shortfall",
     "target_shares": {
-      "train": 0.8,
-      "dev": 0.1,
+      "train": 0.7,
+      "val": 0.2,
       "test": 0.1
     },
     "target_rows": {
-      "train": 4820,
-      "dev": 602,
+      "train": 4217,
+      "val": 1205,
       "test": 602
     },
-    "train": 4820,
-    "dev": 602,
+    "train": 4217,
+    "val": 1205,
     "test": 602,
     "total_rows": 6024,
     "leaked_duplicate_groups": 0,
@@ -418,52 +418,52 @@
     },
     "per_split": {
       "train": {
-        "rows": 4820,
-        "needs_review": 109,
-        "duration_mean_s": 7.003,
+        "rows": 4217,
+        "needs_review": 92,
+        "duration_mean_s": 6.984,
         "duration_median_s": 6.226,
         "formats": {
-          ".aac": 439,
-          ".m4a": 1490,
-          ".mp3": 327,
-          ".mp4": 1202,
-          ".mpeg": 546,
-          ".ogg": 783,
-          ".ogx": 2,
-          ".opus": 12,
-          ".wav": 19
+          ".aac": 387,
+          ".m4a": 1307,
+          ".mp3": 284,
+          ".mp4": 1052,
+          ".mpeg": 479,
+          ".ogg": 682,
+          ".ogx": 3,
+          ".opus": 8,
+          ".wav": 15
         }
       },
-      "dev": {
-        "rows": 602,
-        "needs_review": 10,
-        "duration_mean_s": 6.9,
-        "duration_median_s": 6.202,
+      "val": {
+        "rows": 1205,
+        "needs_review": 25,
+        "duration_mean_s": 7.028,
+        "duration_median_s": 6.223,
         "formats": {
-          ".aac": 51,
-          ".m4a": 189,
-          ".mp3": 39,
-          ".mp4": 153,
-          ".mpeg": 70,
-          ".ogg": 96,
-          ".ogx": 1,
-          ".opus": 1,
-          ".wav": 2
+          ".aac": 107,
+          ".m4a": 373,
+          ".mp3": 82,
+          ".mp4": 301,
+          ".mpeg": 135,
+          ".ogg": 197,
+          ".opus": 4,
+          ".wav": 6
         }
       },
       "test": {
         "rows": 602,
-        "needs_review": 14,
-        "duration_mean_s": 6.917,
-        "duration_median_s": 6.251,
+        "needs_review": 16,
+        "duration_mean_s": 6.897,
+        "duration_median_s": 6.208,
         "formats": {
-          ".aac": 56,
-          ".m4a": 189,
+          ".aac": 52,
+          ".m4a": 188,
           ".mp3": 39,
-          ".mp4": 150,
-          ".mpeg": 67,
+          ".mp4": 152,
+          ".mpeg": 69,
           ".ogg": 97,
           ".ogx": 2,
+          ".opus": 1,
           ".wav": 2
         }
       }

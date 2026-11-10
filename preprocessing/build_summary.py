@@ -47,7 +47,7 @@ def main():
     manifest = pd.read_csv(MANIFEST_CSV, dtype=str, encoding="utf-8")
     splits = {
         s: json.loads((PREP_DIR / f"split_{s}.json").read_text())
-        for s in ("train", "dev", "test")
+        for s in ("train", "val", "test")
     }
     excluded = json.loads((PREP_DIR / "excluded_disposition.json").read_text())
     decode = json.loads((PREP_DIR / "audio_decode.json").read_text())
@@ -94,7 +94,7 @@ def main():
         },
         "split": {
             "train": len(splits["train"]),
-            "dev": len(splits["dev"]),
+            "val": len(splits["val"]),
             "test": len(splits["test"]),
             "leaked_groups": leaked_groups(clean_df, splits),
             "seed": 42,

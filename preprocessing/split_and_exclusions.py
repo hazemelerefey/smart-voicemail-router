@@ -3,7 +3,7 @@
 Split: the train-ready set only (the EDA split covered all 6,024 rows;
 quarantine removals change the pool, so the EDA split is superseded for
 the training pool). Whole text_norm groups stay on one side (0 leaks),
-stratified by duration quartile + format, target 80/10/10, seed 42.
+stratified by duration quartile + format, target 70/20/10, seed 42.
 Deterministic: groups sorted, shuffled with random.Random(42) per
 stratum, greedy assignment to the side furthest below its target share.
 
@@ -15,7 +15,7 @@ duplicate (content already in the pool via the kept copy) and too_short
 (no content to recover). Re-include NONE without a team decision.
 
 Outputs (outside the repo):
-  - dataset/preprocessed/split_train.json, split_dev.json, split_test.json
+  - dataset/preprocessed/split_train.json, split_val.json, split_test.json
   - dataset/preprocessed/excluded_disposition.json
 
 Run: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python preprocessing/split_and_exclusions.py
@@ -35,7 +35,7 @@ MANIFEST_CSV = PREP_DIR / "disposition_manifest.csv"
 INVENTORY_CSV = Path("/home/hatch/workspace/user/files/inventory_clean_13_825a.csv")
 
 SEED = 42
-TARGETS = {"train": 0.80, "dev": 0.10, "test": 0.10}
+TARGETS = {"train": 0.70, "val": 0.20, "test": 0.10}
 
 # Reasons a defined operation could rescue (denoise / declip-tolerate /
 # chunk / trim-silence). Duplicates add no new content; too_short has
