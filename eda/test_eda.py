@@ -65,6 +65,17 @@ def test_labels_empty():
     assert s["sentiment_non_empty"] == 0
 
 
+# --- Task 5 prep: audio quality (clipping/noise) from inventory_clean ---
+
+def test_audio_quality_stats():
+    s = load_summary()["audio_quality"]
+    assert s["rows"] == 6522
+    assert s["clip_pct_gt0"] == 338
+    assert s["silence_pct_gt50"] == 18
+    assert s["snr_db_lt10"] == 22
+    assert abs(s["duration_total_h"] - 12.63) < 0.01
+
+
 # --- Task 4: privacy scan, split proposal, figures ---
 
 def test_privacy_counts_only():

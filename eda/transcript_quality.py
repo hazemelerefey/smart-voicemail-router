@@ -140,6 +140,31 @@ def main() -> int:
         "whisper-large-v3-turbo": dist([r["whisper-large-v3-turbo__sec"] for r in eval_rows]),
     }
 
+    # Audio quality aggregates from inventory_clean.csv per-file measures
+    # (rms/peak/clip/silence/snr were measured when the inventory was built;
+    # this recomputes the aggregates from those per-file values).
+    def fvals(rows, col):
+        return [float(r[col]) for r in rows if (r.get(col) or "") != ""]
+
+    kept_rows = [r for r in inv_rows if not (r["exclude_reason"] or "").strip()]
+    audio_quality = {
+        "source_file": INVENTORY_CSV.name,
+        "rows": len(inv_rows),
+        "kept_rows": len(kept_rows),
+        "rms_db": dist(fvals(inv_rows, "rms_db")),
+        "peak": dist(fvals(inv_rows, "peak")),
+        "clip_pct": dist(fvals(inv_rows, "clip_pct")),
+        "clip_pct_gt0": sum(1 for v in fvals(inv_rows, "clip_pct") if v > 0),
+        "clip_pct_gt0_kept": sum(1 for v in fvals(kept_rows, "clip_pct") if v > 0),
+        "silence_pct": dist(fvals(inv_rows, "silence_pct")),
+        "silence_pct_gt50": sum(1 for v in fvals(inv_rows, "silence_pct") if v > 50),
+        "snr_db": dist(fvals(inv_rows, "snr_db")),
+        "snr_db_lt10": sum(1 for v in fvals(inv_rows, "snr_db") if v < 10),
+        "duration_total_h": round(sum(fvals(inv_rows, "duration_s")) / 3600, 3),
+        "duration_kept_h": round(sum(fvals(kept_rows, "duration_s")) / 3600, 3),
+    }
+    merge_summary("audio_quality", audio_quality)
+
     section = {
         "source_file": TRANSCRIPTS_CSV.name,
         "rows": len(rows),
