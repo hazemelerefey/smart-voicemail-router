@@ -46,6 +46,7 @@ Scope: Full expert dataset preparation for model training. One notebook `prepara
   CHECK: sha256sum -c /home/hatch/workspace/ai-customer-support/dataset/prepared/run_log_hashes.txt
   EXPECT: OK
   EVIDENCE: automatic-evidence=v1; definition-sha256=a9ab57e253bcc62c04083ce91032d1935aa66b5e236b45618d151fa4180737a9; exit=0; EXPECT=matched; output-sha256=ecda3ec92fb208a783144b03b4b99bd1c1e90310b7c4df8c99ed2a930de09ee5; output-bytes=251; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
-- [ ] D12: Working tree clean (except gate evidence refresh)
+- [x] D12: Working tree clean (except gate evidence refresh)
   CHECK: test $(git status --porcelain | wc -l) -eq 0 && echo TREE_CLEAN
   EXPECT: TREE_CLEAN
+  EVIDENCE: automatic-evidence=v1; definition-sha256=1308d9fdb20dad22a4ea6fad49cab7bcb390041ba2ed381e9409b18e880110ce; exit=0; EXPECT=matched; output-sha256=aae759e7feba7044a7768be621e4903bc475dc06185d754ee91c532cd54ad749; output-bytes=11; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
