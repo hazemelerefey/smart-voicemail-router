@@ -1,5 +1,7 @@
 # EDA: Audio and Speech Evidence, Hazem & Ebtihal pair (Phase 1)
 
+Executed notebook: `eda/eda_audio_speech.ipynb`.
+
 **Project:** Smart Voicemail Router
 **Pair:** Hazem & Ebtihal, audio and speech evidence
 **Branch:** `team/audio-speech`

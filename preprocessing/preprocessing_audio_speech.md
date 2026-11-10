@@ -1,5 +1,7 @@
 # Preprocessing: Audio and Speech Evidence, Hazem & Ebtihal pair (Phase 2)
 
+Executed notebook: `preprocessing/preprocessing_audio_speech.ipynb`.
+
 Training-ready set built from the EDA-verified dataset snapshot. Every
 disposition is recorded; nothing was silently altered; the canonical
 files are byte-identical before and after.
