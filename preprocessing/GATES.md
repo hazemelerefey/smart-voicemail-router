@@ -7,7 +7,7 @@ Scope: Deterministic, local-only preprocessing of the EDA-verified dataset into 
 - [x] P1: Branch is team/audio-speech tracking origin/team/audio-speech
   CHECK: git rev-parse --abbrev-ref HEAD && git status --porcelain --branch | head -1
   EXPECT: team/audio-speech
-  EVIDENCE: automatic-evidence=v1; definition-sha256=78d77f280a87698f088c4b79d5d6e0f758e7701aec4888dc4c91d8e19d8cb8dc; exit=0; EXPECT=matched; output-sha256=61684d7d1771b66bc15f4970043217f34cf1a618718fe1d9eef2e0dca1f49445; output-bytes=76; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=78d77f280a87698f088c4b79d5d6e0f758e7701aec4888dc4c91d8e19d8cb8dc; exit=0; EXPECT=matched; output-sha256=7ca74ae49d41da31727a0a1402e0447f9e3b9f5b6ed9546bb2416b5b39ba3727; output-bytes=77; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
 - [x] P2: Dataset snapshot verified (RAR SHA256 matches, 6,522 extracted files)
   CHECK: find /home/hatch/workspace/ai-customer-support/dataset/extracted -type f | wc -l && sha256sum /home/hatch/workspace/ai-customer-support/dataset/dataset.rar | grep -c 3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63
@@ -17,7 +17,7 @@ Scope: Deterministic, local-only preprocessing of the EDA-verified dataset into 
 - [x] P3: Full preprocessing pytest suite passes
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -m pytest preprocessing/test_preprocessing.py -q && echo PREP_TESTS_OK
   EXPECT: PREP_TESTS_OK
-  EVIDENCE: automatic-evidence=v1; definition-sha256=513be85b09bd39faf4b285b28c1254aa69709a21efc8cc948dd5878c81cf1b24; exit=0; EXPECT=matched; output-sha256=18f7652541efdf5f5e5701bb0c0a34a4535eb9392f3a4f0bb3d91930b1d63fac; output-bytes=124; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=513be85b09bd39faf4b285b28c1254aa69709a21efc8cc948dd5878c81cf1b24; exit=0; EXPECT=matched; output-sha256=231eb73c53c8b80f2d16cbb08a032aecbcd6333675fc5940ac743ba692c2c6e4; output-bytes=124; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
 - [x] P4: Dispositions reconcile (train_ready + quarantine = 6024 transcripts; exclusions = 498; dup_text_size recomputed in derived file)
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -c "import json; s=json.load(open('preprocessing/preprocessing_summary.json')); print(s['transcripts']['train_ready'] + s['transcripts']['quarantine'], s['files']['excluded'], s['transcripts']['dup_fixed_rows'])"
