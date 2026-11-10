@@ -6,7 +6,7 @@
 
 **Architecture:** One deterministic preprocessing pipeline reads the extracted audio + the canonical transcript/inventory CSVs + the EDA summary/split, writes derived artifacts OUTSIDE the repo under `~/workspace/ai-customer-support/dataset/preprocessed/`, and writes scripts, tests, an aggregate summary JSON, and a markdown note into `preprocessing/` on branch `team/audio-speech`. Derived data is never committed.
 
-**Tech Stack:** Python 3.12 (reuse the EDA venv at `~/workspace/ai-customer-support/.venv-eda/` — pandas 2.1.4, pytest 9.2.0), ffmpeg/ffprobe 8.1.2 for resampling and verification, hashlib for content-hash dedup.
+**Tech Stack:** Python 3.12 (reuse the EDA venv at `~/workspace/ai-customer-support/.venv-eda/`, pandas 2.1.4, pytest 9.2.0), ffmpeg/ffprobe 8.1.2 for resampling and verification, hashlib for content-hash dedup.
 
 **Spec:** EDA note `eda/eda_audio_speech.md` §10 (recommended next decisions), `docs/project/team-allocation.md` §5 (Phase 2 = shared data/interface freeze; a blocked data/privacy gate does not permit model work on unapproved material), locked STT output format v1 (10 columns).
 

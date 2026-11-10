@@ -139,7 +139,7 @@ def main():
         ax.text(v + 60, i, str(v), va="center")
     ax.set_xlim(0, max(values) * 1.12)
     ax.set_xlabel("files")
-    ax.set_title("Phase 2 disposition — 6,522 files")
+    ax.set_title("Phase 2 disposition, 6,522 files")
     fig.tight_layout()
     fig.savefig(FIGURE, dpi=120)
     print(f"wrote {FIGURE}")

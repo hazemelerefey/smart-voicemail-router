@@ -1,7 +1,7 @@
-# EDA: Audio and Speech Evidence — Hazem & Ebtihal pair (Phase 1)
+# EDA: Audio and Speech Evidence, Hazem & Ebtihal pair (Phase 1)
 
 **Project:** Smart Voicemail Router
-**Pair:** Hazem & Ebtihal — audio and speech evidence
+**Pair:** Hazem & Ebtihal, audio and speech evidence
 **Branch:** `team/audio-speech`
 **Date:** 2026-11-10
 **Status:** Phase 1 pair EDA note, for the weekly team comparison. No labels are finalized here; no model was trained.
@@ -25,10 +25,10 @@ The snapshot was provided by the project owner. What is **not** settled: dataset
 
 Analysis inputs (read-only, never copied into the repo):
 
-- `transcripts_flagged_14_4zfb.csv` — 6,024 rows, STT output for the kept files
-- `inventory_clean_13_825a.csv` — 6,522 rows, per-file inventory and acoustic measures
-- `stt_results_12_d6z5.csv` — 20-row model evaluation
-- `sample_11_laqj.csv` — 20-row reference sample
+- `transcripts_flagged_14_4zfb.csv`, 6,024 rows, STT output for the kept files
+- `inventory_clean_13_825a.csv`, 6,522 rows, per-file inventory and acoustic measures
+- `stt_results_12_d6z5.csv`, 20-row model evaluation
+- `sample_11_laqj.csv`, 20-row reference sample
 
 ---
 
@@ -51,7 +51,7 @@ Formats (by container extension): m4a 2,012; mp4 1,656; ogg 1,039; mpeg 723; aac
 
 ![Audio files by container format](figures/format_bar.png)
 
-Duration histogram (files per bin): 0–2 s: 4; 2–4 s: 415; 4–6 s: 2,532; 6–8 s: 2,028; 8–10 s: 752; 10–15 s: 633; 15–30 s: 157; 30–60 s: 0; 60 s+: 1. The single file over 60 seconds (125.922 s) is the one the inventory excludes as too long.
+Duration histogram (files per bin): 0-2 s: 4; 2-4 s: 415; 4-6 s: 2,532; 6-8 s: 2,028; 8-10 s: 752; 10-15 s: 633; 15-30 s: 157; 30-60 s: 0; 60 s+: 1. The single file over 60 seconds (125.922 s) is the one the inventory excludes as too long.
 
 Clipping and noise (aggregates recomputed from the per-file measures in `inventory_clean_13_825a.csv`; these measures were taken as given, not re-measured by ffprobe):
 
@@ -66,7 +66,7 @@ Clipping and noise (aggregates recomputed from the per-file measures in `invento
 | SNR mean / median / min | 35.53 dB / 34.3 dB / 7.3 dB |
 | Files with SNR under 10 dB | 22 |
 
-Kept files (6,024) total 11.685 hours. The inventory exclusion breakdown reconciles exactly with the transcript set: duplicate 470, low SNR 18, clipped 6, too short 2, too long 1, mostly silence 1 — 498 excluded in total, and the file-id overlap between the inventory and the transcripts is exactly 6,024, with 0 transcript-only files.
+Kept files (6,024) total 11.685 hours. The inventory exclusion breakdown reconciles exactly with the transcript set: duplicate 470, low SNR 18, clipped 6, too short 2, too long 1, mostly silence 1, 498 excluded in total, and the file-id overlap between the inventory and the transcripts is exactly 6,024, with 0 transcript-only files.
 
 ---
 

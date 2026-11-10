@@ -1,4 +1,4 @@
-# Preprocessing: Audio and Speech Evidence — Hazem & Ebtihal pair (Phase 2)
+# Preprocessing: Audio and Speech Evidence, Hazem & Ebtihal pair (Phase 2)
 
 Training-ready set built from the EDA-verified dataset snapshot. Every
 disposition is recorded; nothing was silently altered; the canonical
@@ -20,7 +20,7 @@ files are byte-identical before and after.
   and is NOT the canonical STT output.
 
 Canonical file hashes (recorded before the run in
-`dataset/preprocessed/run_log_hashes.txt`, re-verified after — unchanged):
+`dataset/preprocessed/run_log_hashes.txt`, re-verified after, unchanged):
 
 | file | SHA256 |
 |---|---|
@@ -123,7 +123,7 @@ the training pool; the EDA assignment file is kept for reference only.
 
 498 files, reasons from the inventory. Recoverable in principle = 26
 (readable audio + a reason a defined operation could rescue):
-low_snr 18 (denoise), clipped 6 (declip/tolerate — clip_pct 0.53–1.21%
+low_snr 18 (denoise), clipped 6 (declip/tolerate, clip_pct 0.53-1.21%
 vs kept max 0.497%), too_long 1 (125.92 s, chunkable),
 mostly_silence 1 (64.6% silence of 13.29 s, trimmable). Permanently
 unusable = 472: duplicate 470 (content already in the pool via the

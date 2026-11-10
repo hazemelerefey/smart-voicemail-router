@@ -1,7 +1,7 @@
 """Task 2: audio standardization + content-hash dedup.
 
 For each train-ready file: decode with ffmpeg to 16 kHz mono s16le PCM,
-SHA256 the decoded PCM (content hash — catches cross-format duplicates),
+SHA256 the decoded PCM (content hash, catches cross-format duplicates),
 keep the first occurrence, quarantine later copies with reason
 duplicate_audio. Kept files are written as 16 kHz mono WAVs via the
 wave module from exactly the hashed PCM bytes.
@@ -14,7 +14,7 @@ Outputs (outside the repo):
 Dedup decisions are made in manifest order after parallel hash
 computation, so results are deterministic regardless of worker timing.
 Loudness is NOT changed. A file that fails to decode stops the run
-(fail loudly) — EDA found 0 unreadable files.
+(fail loudly), EDA found 0 unreadable files.
 
 Verification of each WAV: re-read with the wave module (sample rate,
 channels, frame count == decoded PCM samples) and check file size ==

@@ -66,7 +66,7 @@ Expected: commit succeeds; `git status` clean afterwards.
 
 **Files:**
 - Create: `eda/audio_inventory.py`
-- Create: `eda/audio_inventory.csv` (aggregate table only, no per-file PII; per-file rows are technical metadata, allowed locally but NOT committed — write it outside the repo)
+- Create: `eda/audio_inventory.csv` (aggregate table only, no per-file PII; per-file rows are technical metadata, allowed locally but NOT committed, write it outside the repo)
 - Test: `eda/test_eda.py::test_audio_counts`
 
 **Interfaces:**
@@ -202,7 +202,7 @@ Expected: commit succeeds.
 
 **Interfaces:**
 - Consumes: summary so far, transcripts CSV (pattern counts only)
-- Produces: PII-pattern counts (phone-like, email-like, name-like is NOT detectable reliably — say so), split proposal (stratified by duration quartile + format, 80/10/10, duplicate groups kept intact on one side), figure PNGs
+- Produces: PII-pattern counts (phone-like, email-like, name-like is NOT detectable reliably, say so), split proposal (stratified by duration quartile + format, 80/10/10, duplicate groups kept intact on one side), figure PNGs
 
 - [ ] **Step 1: Write the failing tests**
 

@@ -1,4 +1,4 @@
-"""Task 1: transcript cleaning — DERIVED file only.
+"""Task 1: transcript cleaning, DERIVED file only.
 
 Reads the canonical transcripts + inventory CSVs (never writes to them),
 recomputes dup_text_size from text_norm group sizes, normalizes empty
