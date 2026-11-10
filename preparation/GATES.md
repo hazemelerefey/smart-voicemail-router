@@ -5,7 +5,7 @@ Scope: Full expert dataset preparation for model training. One notebook `prepara
 - [x] D1: Branch is team/audio-speech tracking origin/team/audio-speech
   CHECK: git rev-parse --abbrev-ref HEAD && git status --porcelain --branch | head -1
   EXPECT: team/audio-speech
-  EVIDENCE: automatic-evidence=v1; definition-sha256=78d77f280a87698f088c4b79d5d6e0f758e7701aec4888dc4c91d8e19d8cb8dc; exit=0; EXPECT=matched; output-sha256=df4c3c5a164f901c258fe9805fcdb55700d2b4a32681b9f69b684513fec3905d; output-bytes=76; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=78d77f280a87698f088c4b79d5d6e0f758e7701aec4888dc4c91d8e19d8cb8dc; exit=0; EXPECT=matched; output-sha256=9924cdad6c9b020991192ee14147bd407af3c9345a0e3902b2f005a892656de2; output-bytes=76; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 - [x] D2: Dataset snapshot verified (RAR SHA256 matches, 6,522 extracted files)
   CHECK: echo "$(find /home/hatch/workspace/ai-customer-support/dataset/extracted -type f | wc -l) and $(sha256sum /home/hatch/workspace/ai-customer-support/dataset/dataset.rar | grep -c 3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63)"
   EXPECT: 6522 and 1
@@ -41,7 +41,7 @@ Scope: Full expert dataset preparation for model training. One notebook `prepara
 - [x] D10: Full preparation pytest suite passes
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -m pytest preparation/test_preparation.py -q && echo PREP_TESTS_OK
   EXPECT: PREP_TESTS_OK
-  EVIDENCE: automatic-evidence=v1; definition-sha256=ab3db0fd0ac07c0fdbcd9457f61c2bde196d385d61fc3afaee5dd55fe87096bb; exit=0; EXPECT=matched; output-sha256=542fca3971b90a934fd4978334ff648964158f7d93d85c3014f3fecaf7d6d233; output-bytes=113; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=ab3db0fd0ac07c0fdbcd9457f61c2bde196d385d61fc3afaee5dd55fe87096bb; exit=0; EXPECT=matched; output-sha256=bd253e4dc2450b9d8845eefc80379399510343ab352d9c679a5d52666fa15d54; output-bytes=113; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 - [x] D11: Canonical files unchanged (hashes match the recorded run log)
   CHECK: sha256sum -c /home/hatch/workspace/ai-customer-support/dataset/prepared/run_log_hashes.txt
   EXPECT: OK
