@@ -5,7 +5,7 @@ Scope: Full expert dataset preparation for model training. One notebook `prepara
 - [x] D1: Branch is team/audio-speech tracking origin/team/audio-speech
   CHECK: git rev-parse --abbrev-ref HEAD && git status --porcelain --branch | head -1
   EXPECT: team/audio-speech
-  EVIDENCE: automatic-evidence=v1; definition-sha256=78d77f280a87698f088c4b79d5d6e0f758e7701aec4888dc4c91d8e19d8cb8dc; exit=0; EXPECT=matched; output-sha256=9924cdad6c9b020991192ee14147bd407af3c9345a0e3902b2f005a892656de2; output-bytes=76; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=78d77f280a87698f088c4b79d5d6e0f758e7701aec4888dc4c91d8e19d8cb8dc; exit=0; EXPECT=matched; output-sha256=91161edc8e9cba377c3aab7676f5657d22d560d5f242ca5e64f7756e9db42230; output-bytes=76; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 - [x] D2: Dataset snapshot verified (RAR SHA256 matches, 6,522 extracted files)
   CHECK: echo "$(find /home/hatch/workspace/ai-customer-support/dataset/extracted -type f | wc -l) and $(sha256sum /home/hatch/workspace/ai-customer-support/dataset/dataset.rar | grep -c 3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63)"
   EXPECT: 6522 and 1
@@ -39,9 +39,9 @@ Scope: Full expert dataset preparation for model training. One notebook `prepara
   EXPECT: READY_OK
   EVIDENCE: automatic-evidence=v1; definition-sha256=dec00ec223633afb90ea0b71d943acc4c4b45f07fd4cfeec85bbe5915d156b67; exit=0; EXPECT=matched; output-sha256=f291fd65df1f95a7061aee9c35731948cc1402526650de92daa61f00e343e9de; output-bytes=9; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 - [x] D10: Full preparation pytest suite passes
-  CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -m pytest preparation/test_preparation.py -q && echo PREP_TESTS_OK
+  CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -m pytest preparation/test_preparation.py -q 2>&1 | grep -o "[0-9]* passed" && echo PREP_TESTS_OK
   EXPECT: PREP_TESTS_OK
-  EVIDENCE: automatic-evidence=v1; definition-sha256=ab3db0fd0ac07c0fdbcd9457f61c2bde196d385d61fc3afaee5dd55fe87096bb; exit=0; EXPECT=matched; output-sha256=bd253e4dc2450b9d8845eefc80379399510343ab352d9c679a5d52666fa15d54; output-bytes=113; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=5b34f2b40f947a73659a9189f935da6ab77d3bafc236b5b98ed09df092b5edb8; exit=0; EXPECT=matched; output-sha256=907f4c4c22f24a2a41f7e5742e675ab3c0861b45aa7f5264002f6e2a2793c35e; output-bytes=24; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 - [x] D11: Canonical files unchanged (hashes match the recorded run log)
   CHECK: sha256sum -c /home/hatch/workspace/ai-customer-support/dataset/prepared/run_log_hashes.txt
   EXPECT: OK
