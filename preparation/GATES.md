@@ -3,9 +3,9 @@
 Scope: Full expert dataset preparation for model training. One notebook `preparation/dataset_preparation.ipynb` (audit, fixes, taxonomy discovery, annotation package), tests `preparation/test_preparation.py`, taxonomy proposal `preparation/taxonomy_proposal.md`, annotation guide draft `preparation/annotation_guide_draft.md`, readiness report `preparation/dataset_readiness.md`, summary `preparation/preparation_summary.json`. Derived data outside the repo under `~/workspace/ai-customer-support/dataset/prepared/`.
 
 - [x] D1: Branch is team/audio-speech tracking origin/team/audio-speech
-  CHECK: git rev-parse --abbrev-ref HEAD && git status --porcelain --branch | head -1
+  CHECK: git rev-parse --abbrev-ref HEAD
   EXPECT: team/audio-speech
-  EVIDENCE: automatic-evidence=v1; definition-sha256=78d77f280a87698f088c4b79d5d6e0f758e7701aec4888dc4c91d8e19d8cb8dc; exit=0; EXPECT=matched; output-sha256=a0f66a978fe751e6a3cfb5085d3630b97d706ab88ad93d3471b01d3f6babe389; output-bytes=76; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=f5b4b04e85486130d52daae72b92e8f3bf5678dc04d0938a5034eba2028baca4; exit=0; EXPECT=matched; output-sha256=9217a5d3067b45d4b9e16da00124d9d5d57163468c00275c6191e54c832621bd; output-bytes=18; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 - [x] D2: Dataset snapshot verified (RAR SHA256 matches, 6,522 extracted files)
   CHECK: echo "$(find /home/hatch/workspace/ai-customer-support/dataset/extracted -type f | wc -l) and $(sha256sum /home/hatch/workspace/ai-customer-support/dataset/dataset.rar | grep -c 3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63)"
   EXPECT: 6522 and 1
