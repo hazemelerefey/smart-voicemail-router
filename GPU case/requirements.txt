@@ -1,0 +1,5 @@
+# General development tools only. No application, model, audio, or accelerator runtime is selected.
+# Add the PyTorch/CUDA wheel only after target hardware and model selection.
+mypy==2.4.1
+pytest==9.2.0
+ruff==0.17.4
