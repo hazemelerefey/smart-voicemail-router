@@ -14,8 +14,10 @@ files are byte-identical before and after.
 - Canonical inventory: `inventory_clean_13_825a.csv` (6,522 rows).
 - EDA summary + split assignment (Phase 1), used as reference only.
 - Locked STT output format v1 (10 columns). The derived cleaned file
-  adds exactly two preprocessing-only columns, `prep_status` and
-  `prep_reason`, and is NOT the canonical STT output.
+  carries all 11 columns of the canonical file (the 10 locked v1
+  columns + `prompt`, which the canonical CSV retains) plus exactly
+  two preprocessing-only columns, `prep_status` and `prep_reason`,
+  and is NOT the canonical STT output.
 
 Canonical file hashes (recorded before the run in
 `dataset/preprocessed/run_log_hashes.txt`, re-verified after — unchanged):
@@ -72,8 +74,8 @@ quarantine: every SNR < 10 dB file is already among the 498 excluded.
   format v1. The canonical file is untouched.
 - Prompt normalized: 581 empty prompts → `none`; all 6,024 rows now
   read `none`.
-- Derived file: `dataset/preprocessed/transcripts_clean.csv` (10 locked
-  columns + `prep_status` + `prep_reason`), outside the repo.
+- Derived file: `dataset/preprocessed/transcripts_clean.csv` (11
+  canonical columns + `prep_status` + `prep_reason`), outside the repo.
 - Per-file disposition manifest (file IDs + status + reason codes, no
   transcript text): `dataset/preprocessed/disposition_manifest.csv`,
   6,522 rows, outside the repo.
@@ -183,6 +185,7 @@ node ~/workspace/custom-skills/local-unlazy/scripts/gate-check.mjs --status prep
 ```
 
 Deterministic: re-running the pipeline on the same snapshot produces
-byte-identical derived CSVs and identical manifest hashes. Verification:
-23/23 pytest tests pass; all 10 unlazy gates met (see
+byte-identical derived CSVs and identical manifest hashes (verified by
+re-running the transcript and split steps and comparing SHA256).
+Verification: 25/25 pytest tests pass; all 10 unlazy gates met (see
 `preprocessing/GATES.md`).

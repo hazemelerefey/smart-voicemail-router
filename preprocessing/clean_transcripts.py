@@ -26,12 +26,6 @@ INVENTORY_CSV = Path("/home/hatch/workspace/user/files/inventory_clean_13_825a.c
 CLEAN_CSV = PREP_DIR / "transcripts_clean.csv"
 MANIFEST_CSV = PREP_DIR / "disposition_manifest.csv"
 
-LOCKED_COLUMNS = [
-    "file", "text", "model", "max_no_speech_prob", "min_avg_logprob",
-    "prompt", "error", "text_norm", "review_reasons", "needs_review",
-    "dup_text_size",
-]
-
 # Fixed order for prep_reason flags (deterministic output).
 REASON_ORDER = ["needs_review", "silence_gt_50pct", "snr_lt_10db", "clipping"]
 
@@ -90,7 +84,11 @@ def clean(transcripts, inventory):
     df["prep_reason"] = df.apply(reasons, axis=1)
     df = df.drop(columns=["_needs_review", "_silence", "_low_snr", "_clipping",
                           "silence_pct", "snr_db", "clip_pct"])
-    return df[LOCKED_COLUMNS + ["prep_status", "prep_reason"]]
+    # Output columns derive from the canonical file at runtime (all 11
+    # canonical columns: the 10 locked v1 columns + prompt, which the
+    # canonical CSV retains) + the two preprocessing-only columns, so
+    # the script cannot silently drift from the canonical schema.
+    return df[list(transcripts.columns) + ["prep_status", "prep_reason"]]
 
 
 def build_manifest(clean_df, inventory):

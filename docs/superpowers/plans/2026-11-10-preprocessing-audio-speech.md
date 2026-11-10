@@ -90,7 +90,7 @@ Expected: commit succeeds; `git status` clean afterwards.
 
 **Interfaces:**
 - Consumes: canonical transcripts CSV, inventory CSV, EDA summary (acoustic measures taken as given, per EDA note §10)
-- Produces: derived cleaned CSV (10 locked columns + `prep_status` + `prep_reason`), per-file disposition manifest (file IDs + status + reason codes, no transcript text)
+- Produces: derived cleaned CSV (11 canonical columns + `prep_status` + `prep_reason`), per-file disposition manifest (file IDs + status + reason codes, no transcript text)
 
 - [ ] **Step 1: Write the failing tests**
 

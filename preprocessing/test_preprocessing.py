@@ -30,13 +30,6 @@ DUP_DEFECT_FILES = [
     "الكل ان شاء الله\\AUDIO-2025-11-27-17-01-39.m4a",
 ]
 
-LOCKED_COLUMNS = [
-    "file", "text", "model", "max_no_speech_prob", "min_avg_logprob",
-    "prompt", "error", "text_norm", "review_reasons", "needs_review",
-    "dup_text_size",
-]
-
-
 def read_clean_csv():
     df = pd.read_csv(CLEAN_CSV, dtype=str, encoding="utf-8")
     df["dup_text_size"] = df["dup_text_size"].astype(int)
@@ -62,8 +55,13 @@ def test_clean_row_count():
 
 
 def test_clean_columns_locked_plus_prep():
+    # Anchored to the canonical file's columns, not a hand-maintained
+    # list: the derived file must carry all 11 canonical columns (the
+    # 10 locked v1 columns + prompt, which the canonical CSV retains)
+    # plus exactly the two preprocessing-only columns.
+    canon = pd.read_csv(CANONICAL_CSV, dtype=str, encoding="utf-8-sig", nrows=0)
     df = pd.read_csv(CLEAN_CSV, dtype=str, encoding="utf-8", nrows=0)
-    assert list(df.columns) == LOCKED_COLUMNS + ["prep_status", "prep_reason"]
+    assert list(df.columns) == list(canon.columns) + ["prep_status", "prep_reason"]
 
 
 def test_dup_recomputed():
@@ -261,6 +259,25 @@ def leaked_text_norm_groups():
 def test_split_reconciles_with_train_ready():
     s = load_splits()
     assert len(s["train"]) + len(s["dev"]) + len(s["test"]) == train_ready_count()
+    # Set identity, not just counts: a split that swapped a quarantined
+    # file in for a train-ready file at the same count must fail.
+    manifest = read_manifest()
+    train_ready = set(manifest[manifest["prep_status"] == "train_ready"]["file"])
+    sides = [set(v) for v in s.values()]
+    assert sides[0] | sides[1] | sides[2] == train_ready
+    assert not (sides[0] & sides[1])
+    assert not (sides[0] & sides[2])
+    assert not (sides[1] & sides[2])
+
+
+def test_manifest_agrees_with_clean_csv():
+    manifest = read_manifest()
+    df = read_clean_csv()
+    merged = manifest.merge(
+        df[["file", "prep_status"]], on="file", suffixes=("_man", "_csv")
+    )
+    assert len(merged) == 6024
+    assert (merged["prep_status_man"] == merged["prep_status_csv"]).all()
 
 
 def test_split_no_leaked_groups():
@@ -302,6 +319,24 @@ def test_canonical_unchanged():
     before = load_recorded_hashes()
     after = hash_canonical_files()
     assert before == after
+
+
+def test_decoded_total_duration_anchored_to_eda():
+    # Independent anchor for WAV duration: the decoded train-ready total
+    # plus the quarantined files' inventory durations must match EDA's
+    # kept total (11.685 h) within ±60 s. The 60 s tolerance covers the
+    # known ffprobe estimation error on .aac (measured gap 19.5 s) while
+    # still catching any systematic decode failure; single-file errors
+    # are caught by the per-file PCM hash + frame checks.
+    eda = json.loads((REPO / "eda/eda_summary.json").read_text())
+    eda_kept_s = eda["audio_quality"]["duration_kept_h"] * 3600
+    decode = json.loads((PREP_DIR / "audio_decode.json").read_text())
+    decoded_total = sum(v["duration_s"] for v in decode["files"].values())
+    clean_df = read_clean_csv()
+    inv = pd.read_csv(INVENTORY_CSV, dtype=str, encoding="utf-8-sig")
+    q_files = set(clean_df[clean_df["prep_status"] == "quarantine"]["file"])
+    q_inv = inv[inv["file"].isin(q_files)]["duration_s"].astype(float).sum()
+    assert abs(decoded_total + q_inv - eda_kept_s) <= 60
 
 
 def test_summary_schema_invariants():
