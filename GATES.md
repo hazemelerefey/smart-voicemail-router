@@ -7,7 +7,7 @@ Scope: Reproducible pair EDA note for the Smart Voicemail Router dataset snapsho
 - [x] G1: Branch is team/audio-speech tracking origin/team/audio-speech
   CHECK: git rev-parse --abbrev-ref HEAD && git status --porcelain --branch | head -1
   EXPECT: team/audio-speech
-  EVIDENCE: automatic-evidence=v1; definition-sha256=78d77f280a87698f088c4b79d5d6e0f758e7701aec4888dc4c91d8e19d8cb8dc; exit=0; EXPECT=matched; output-sha256=a0f66a978fe751e6a3cfb5085d3630b97d706ab88ad93d3471b01d3f6babe389; output-bytes=76; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=78d77f280a87698f088c4b79d5d6e0f758e7701aec4888dc4c91d8e19d8cb8dc; exit=0; EXPECT=matched; output-sha256=61684d7d1771b66bc15f4970043217f34cf1a618718fe1d9eef2e0dca1f49445; output-bytes=76; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
 - [x] G2: Dataset extracted outside the repo, 6,522 audio files, RAR SHA256 matches the plan value
   CHECK: find /home/hatch/workspace/ai-customer-support/dataset/extracted -type f | wc -l && sha256sum /home/hatch/workspace/ai-customer-support/dataset/dataset.rar | grep -c 3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63
@@ -17,7 +17,7 @@ Scope: Reproducible pair EDA note for the Smart Voicemail Router dataset snapsho
 - [x] G3: Full EDA pytest suite passes
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -m pytest eda/test_eda.py -q && echo EDA_TESTS_OK
   EXPECT: EDA_TESTS_OK
-  EVIDENCE: automatic-evidence=v1; definition-sha256=3dea4dcd167f6014f56cbe894032bb8698ef4115a0f9fc6f7ad397afc5b38d23; exit=0; EXPECT=matched; output-sha256=60f1ac65d5cbd38ecae93db89e9df5d4602b35fa3706011a430b05353d481e40; output-bytes=112; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=3dea4dcd167f6014f56cbe894032bb8698ef4115a0f9fc6f7ad397afc5b38d23; exit=0; EXPECT=matched; output-sha256=e216e81cb6b091923c888ca9659cf553ea81fc513c84e7e40c0ae95bcb934f80; output-bytes=112; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
 - [x] G4: Summary counts reproduce the anchors from source (6522 total, 6024 transcripts, 133 needs_review, 3 dup_text_size mismatches)
   CHECK: python3 -c "import json; s=json.load(open('eda/eda_summary.json')); print(s['audio']['total_files'], s['transcripts']['rows'], s['transcripts']['needs_review'], s['transcripts']['dup_text_size_wrong_rows'])"
