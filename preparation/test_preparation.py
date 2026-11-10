@@ -128,7 +128,7 @@ def test_clusters_cover_train_ready():
 def test_taxonomy_has_evidence():
     t = load_taxonomy()
     c = load_clusters()
-    assert "proposed" in t.lower()
+    assert "approved" in t.lower()
     for cand in c["candidates"]:
         assert cand["cluster_id"] in c["clusters"]
         assert len(cand["top_terms"]) >= 5
@@ -140,9 +140,10 @@ def test_taxonomy_has_evidence():
 
 def test_annotation_package():
     g = (REPO / "preparation/annotation_guide_draft.md").read_text()
-    for field in ["complaint_category", "complaint_urgency", "customer_state_text"]:
+    for field in ["complaint_category", "complaint_urgency", "customer_state"]:
         assert field in g
-    assert "DRAFT" in g and "proposed" in g.lower()
+    assert "APPROVED" in g
+    assert "Hazem and Ebtihal" in g
     cal = load_calibration_batch()
     assert len(cal) == 100
 
