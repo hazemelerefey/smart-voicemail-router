@@ -31,3 +31,22 @@ def test_audio_counts():
     inv = load_inventory()
     assert inv["total_files"] == 6522
     assert inv["unreadable"] == []
+
+
+# --- Task 2: transcript and STT quality ---
+
+def test_transcript_counts():
+    s = load_summary()["transcripts"]
+    assert s["rows"] == 6024
+    assert s["needs_review"] == 133
+
+
+def test_dup_defect():
+    s = load_summary()["transcripts"]
+    assert s["dup_text_size_wrong_rows"] == 3
+
+
+def test_review_consistency():
+    s = load_summary()["transcripts"]
+    assert s["needs_review_without_reason"] == 0
+    assert s["review_reason_without_flag"] == 0
