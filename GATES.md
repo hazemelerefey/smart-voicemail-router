@@ -14,10 +14,10 @@ Scope: Reproducible pair EDA note for the Smart Voicemail Router dataset snapsho
   EXPECT: 6522
   EVIDENCE: automatic-evidence=v1; definition-sha256=134d8fc941fa004871ee56fe0260e268ba40beee79e88e0da3f79499c11a269f; exit=0; EXPECT=matched; output-sha256=35514693661808da14bf1c451d0f5b03671da413c94de373d88d67f7ee2742a0; output-bytes=7; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
-- [ ] G3: Full EDA pytest suite passes
+- [x] G3: Full EDA pytest suite passes
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -m pytest eda/test_eda.py -q && echo EDA_TESTS_OK
   EXPECT: EDA_TESTS_OK
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=3dea4dcd167f6014f56cbe894032bb8698ef4115a0f9fc6f7ad397afc5b38d23; exit=0; EXPECT=matched; output-sha256=60f1ac65d5cbd38ecae93db89e9df5d4602b35fa3706011a430b05353d481e40; output-bytes=112; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
 - [x] G4: Summary counts reproduce the anchors from source (6522 total, 6024 transcripts, 133 needs_review, 3 dup_text_size mismatches)
   CHECK: python3 -c "import json; s=json.load(open('eda/eda_summary.json')); print(s['audio']['total_files'], s['transcripts']['rows'], s['transcripts']['needs_review'], s['transcripts']['dup_text_size_wrong_rows'])"
