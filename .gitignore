@@ -97,6 +97,7 @@ __pycache__/
 .cache/
 .tox/
 .conda/
+.unlazy/
 
 # Experiment and tool caches
 mlruns/
