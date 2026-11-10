@@ -14,25 +14,25 @@ Scope: Deterministic, local-only preprocessing of the EDA-verified dataset into 
   EXPECT: 6522
   EVIDENCE: automatic-evidence=v1; definition-sha256=134d8fc941fa004871ee56fe0260e268ba40beee79e88e0da3f79499c11a269f; exit=0; EXPECT=matched; output-sha256=35514693661808da14bf1c451d0f5b03671da413c94de373d88d67f7ee2742a0; output-bytes=7; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router/preprocessing; path=47e26463d816/21 entries
 
-- [ ] P3: Full preprocessing pytest suite passes
+- [x] P3: Full preprocessing pytest suite passes
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -m pytest preprocessing/test_preprocessing.py -q && echo PREP_TESTS_OK
   EXPECT: PREP_TESTS_OK
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=513be85b09bd39faf4b285b28c1254aa69709a21efc8cc948dd5878c81cf1b24; exit=0; EXPECT=matched; output-sha256=1dc018338d68e6c33b2975a002acfebb470acd85647e964bb1ef8fc154eb3704; output-bytes=114; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
-- [ ] P4: Dispositions reconcile (train_ready + quarantine = 6024 transcripts; exclusions = 498; dup_text_size recomputed in derived file)
+- [x] P4: Dispositions reconcile (train_ready + quarantine = 6024 transcripts; exclusions = 498; dup_text_size recomputed in derived file)
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -c "import json; s=json.load(open('preprocessing/preprocessing_summary.json')); print(s['transcripts']['train_ready'] + s['transcripts']['quarantine'], s['files']['excluded'], s['transcripts']['dup_fixed_rows'])"
   EXPECT: 6024 498 3
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=59bdff0a954a4dac77c3cd3d91dd8f0bbc5a61e22198189870f686dfa585768f; exit=0; EXPECT=matched; output-sha256=ee9c990cd380f6a3d1263d8ceae693db1e7d8332f5e0cbbc35d5565591ba8c5a; output-bytes=11; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
-- [ ] P5: Standardized audio matches the train-ready set, all 16 kHz mono, no duplicate audio content
+- [x] P5: Standardized audio matches the train-ready set, all 16 kHz mono, no duplicate audio content
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -c "import json; s=json.load(open('preprocessing/preprocessing_summary.json')); print('AUDIO_OK' if s['audio']['standardized_files'] == s['transcripts']['train_ready'] else 'AUDIO_MISMATCH')"
   EXPECT: AUDIO_OK
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=ecb0138dfd53a17bba6a807389a2ad8bdfd5ca0458d78d08f270871263ec0a62; exit=0; EXPECT=matched; output-sha256=07b16c53b2adaba5393724202fda63a1ac0dfbfc5d8da2bb59360b4dc73c34ee; output-bytes=9; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
-- [ ] P6: Split reconciles with the train-ready set, 0 leaked text_norm groups
+- [x] P6: Split reconciles with the train-ready set, 0 leaked text_norm groups
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -c "import json; s=json.load(open('preprocessing/preprocessing_summary.json')); print('SPLIT_OK' if s['split']['train'] + s['split']['dev'] + s['split']['test'] == s['transcripts']['train_ready'] and s['split']['leaked_groups'] == 0 else 'SPLIT_BAD')"
   EXPECT: SPLIT_OK
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=7a8fbe213b3aa2a4102980eceb9db58eba7fb3aca9c7d005e99c27a12fdebf28; exit=0; EXPECT=matched; output-sha256=eff048e768fd38f21a8223cd59a997f34dba8341c091defbf702306d307f3c1e; output-bytes=9; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
 - [x] P7: Canonical files byte-identical before and after
   CHECK: sha256sum -c /home/hatch/workspace/ai-customer-support/dataset/preprocessed/run_log_hashes.txt && echo CANONICAL_UNCHANGED
@@ -44,12 +44,12 @@ Scope: Deterministic, local-only preprocessing of the EDA-verified dataset into 
   EXPECT: NO_DATA_TRACKED
   EVIDENCE: automatic-evidence=v1; definition-sha256=c9eabb9d0f3f3455a897726afa84008180ce1400be8ebab9d7c2afe3af8c6f23; exit=0; EXPECT=matched; output-sha256=aff021e6084aee36d69e6a841988d7debca80563c8b80935431092ebc14676d2; output-bytes=16; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router/preprocessing; path=47e26463d816/21 entries
 
-- [ ] P9: Preprocessing note exists and covers scope, dispositions, and open team items
+- [x] P9: Preprocessing note exists and covers scope, dispositions, and open team items
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -c "n=open('preprocessing/preprocessing_audio_speech.md').read().lower(); print('PREP_NOTE_OK' if all(w in n for w in ['disposition','dedup','split','quarantine','ebtihal','rights','reproducibility']) else 'PREP_NOTE_MISSING')"
   EXPECT: PREP_NOTE_OK
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=27528cace1638475afb8478b74851a31a8b65f3fc9204bd9896789927ec1bddf; exit=0; EXPECT=matched; output-sha256=4fbe1b9bb913e78aeaa1337ace53d5feb803dd6c907d54a8c67eb87be34f51f2; output-bytes=13; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
-- [ ] P10: Working tree clean after the preprocessing commit, nothing pushed yet
+- [x] P10: Working tree clean after the preprocessing commit, nothing pushed yet
   CHECK: test $(git status --porcelain | wc -l) -eq 0 && echo TREE_CLEAN
   EXPECT: TREE_CLEAN
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=1308d9fdb20dad22a4ea6fad49cab7bcb390041ba2ed381e9409b18e880110ce; exit=0; EXPECT=matched; output-sha256=aae759e7feba7044a7768be621e4903bc475dc06185d754ee91c532cd54ad749; output-bytes=11; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
