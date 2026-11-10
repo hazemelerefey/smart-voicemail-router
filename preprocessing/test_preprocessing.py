@@ -277,3 +277,59 @@ def test_excluded_reconciles():
     ex = json.loads((PREP_DIR / "excluded_disposition.json").read_text())
     assert sum(ex["reasons"].values()) == 498
     assert ex["total"] == 498
+
+
+# ---------------- Task 4: summary, note, final verification ----------------
+
+def load_recorded_hashes():
+    hashes = {}
+    for line in HASH_LOG.read_text().splitlines():
+        h, path = line.split(None, 1)
+        hashes[path.strip()] = h
+    return hashes
+
+
+def hash_canonical_files():
+    import hashlib
+
+    out = {}
+    for path in load_recorded_hashes():
+        out[path] = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    return out
+
+
+def test_canonical_unchanged():
+    before = load_recorded_hashes()
+    after = hash_canonical_files()
+    assert before == after
+
+
+def test_summary_schema_invariants():
+    s = json.loads(SUMMARY_JSON.read_text())
+    assert s["transcripts"]["train_ready"] + s["transcripts"]["quarantine"] == 6024
+    assert s["transcripts"]["total"] == 6024
+    assert s["transcripts"]["dup_fixed_rows"] == 3
+    assert s["transcripts"]["prompt_normalized_rows"] == 581
+    assert s["files"]["total"] == 6522
+    assert s["files"]["excluded"] == 498
+    assert s["audio"]["standardized_files"] == s["transcripts"]["train_ready"]
+    assert (
+        s["split"]["train"] + s["split"]["dev"] + s["split"]["test"]
+        == s["transcripts"]["train_ready"]
+    )
+    assert s["split"]["leaked_groups"] == 0
+    assert s["split"]["seed"] == 42
+
+
+def test_note_covers_scope():
+    note = NOTE.read_text()
+    for item in [
+        "disposition", "dedup", "split", "quarantine",
+        "ebtihal", "rights", "reproducibility",
+    ]:
+        assert item in note.lower()
+
+
+def test_no_data_tracked():
+    out = subprocess.check_output(["git", "ls-files"], text=True)
+    assert not re.search(r"\.(csv|m4a|mp3|ogg|mp4|wav|aac|opus|mpeg|rar|parquet)$", out, re.M)
