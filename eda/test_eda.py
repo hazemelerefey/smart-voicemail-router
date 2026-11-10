@@ -63,3 +63,17 @@ def test_labels_empty():
     s = load_summary()["labels"]
     assert s["category_non_empty"] == 0
     assert s["sentiment_non_empty"] == 0
+
+
+# --- Task 4: privacy scan, split proposal, figures ---
+
+def test_privacy_counts_only():
+    s = load_summary()["privacy"]
+    assert isinstance(s["phone_like_rows"], int)
+    assert "examples" not in s
+
+
+def test_split_no_leak():
+    s = load_summary()["split"]
+    assert s["leaked_duplicate_groups"] == 0
+    assert s["train"] + s["dev"] + s["test"] == 6024
