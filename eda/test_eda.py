@@ -76,6 +76,25 @@ def test_audio_quality_stats():
     assert abs(s["duration_total_h"] - 12.63) < 0.01
 
 
+# --- Task 5: EDA note ---
+
+def test_note_covers_checklist():
+    note = (REPO / "eda" / "eda_audio_speech.md").read_text(encoding="utf-8")
+    for item in ["origin", "inventory", "language", "duplicates", "labels", "privacy", "split", "reproducibility"]:
+        assert item in note.lower()
+
+
+def test_note_has_no_pii():
+    note = (REPO / "eda" / "eda_audio_speech.md").read_text(encoding="utf-8")
+    assert not re.search(r"01[0-9]{9}", note)
+    assert "@" not in note or "hazemelerefy@gmail.com" in note  # only the contact line allowed, no customer emails
+
+
+def test_no_data_tracked():
+    out = subprocess.check_output(["git", "ls-files"], text=True, cwd=REPO)
+    assert not re.search(r"\.(csv|m4a|mp3|ogg|mp4|wav|rar|parquet)$", out, re.M)
+
+
 # --- Task 4: privacy scan, split proposal, figures ---
 
 def test_privacy_counts_only():

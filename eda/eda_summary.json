@@ -1,0 +1,529 @@
+{
+  "audio": {
+    "total_files": 6522,
+    "formats": {
+      ".aac": 579,
+      ".m4a": 2012,
+      ".mp3": 472,
+      ".mp4": 1656,
+      ".mpeg": 723,
+      ".ogg": 1039,
+      ".ogx": 5,
+      ".opus": 13,
+      ".wav": 23
+    },
+    "total_duration_s": 45468.333,
+    "total_duration_h": 12.63,
+    "duration_stats": {
+      "min_s": 0.41,
+      "max_s": 125.922,
+      "mean_s": 6.972,
+      "median_s": 6.208,
+      "p10_s": 4.304,
+      "p90_s": 10.611
+    },
+    "sample_rates": {
+      "44100": 1052,
+      "48000": 5470
+    },
+    "channels": {
+      "1": 3709,
+      "2": 2813
+    },
+    "codecs": {
+      "aac": 4165,
+      "mp3": 1177,
+      "opus": 1157,
+      "pcm_s24le": 23
+    },
+    "unreadable": [],
+    "unreadable_count": 0,
+    "duration_histogram": {
+      "0-2s": 4,
+      "2-4s": 415,
+      "4-6s": 2532,
+      "6-8s": 2028,
+      "8-10s": 752,
+      "10-15s": 633,
+      "15-30s": 157,
+      "30-60s": 0,
+      "60s+": 1
+    }
+  },
+  "transcripts": {
+    "source_file": "transcripts_flagged_14_4zfb.csv",
+    "rows": 6024,
+    "columns_present": [
+      "file",
+      "model",
+      "text",
+      "text_norm",
+      "min_avg_logprob",
+      "max_no_speech_prob",
+      "needs_review",
+      "review_reasons",
+      "dup_text_size",
+      "error"
+    ],
+    "columns_present_ok": true,
+    "extra_columns": [
+      "prompt"
+    ],
+    "models": {
+      "whisper-large-v3": 6024
+    },
+    "needs_review": 133,
+    "clean": 5891,
+    "needs_review_without_reason": 0,
+    "review_reason_without_flag": 0,
+    "review_reasons_combination": {
+      "hallucination_suspect": 7,
+      "hallucination_suspect,low_confidence": 5,
+      "hallucination_suspect,too_short": 1,
+      "hallucination_suspect,too_short,low_confidence": 2,
+      "low_confidence": 106,
+      "prompt_leak": 1,
+      "prompt_leak,low_confidence": 2,
+      "repetition": 1,
+      "repetition,low_confidence": 1,
+      "too_short": 2,
+      "too_short,low_confidence": 5
+    },
+    "review_reasons_token": {
+      "hallucination_suspect": 15,
+      "low_confidence": 121,
+      "prompt_leak": 3,
+      "repetition": 2,
+      "too_short": 10
+    },
+    "error_non_empty": 0,
+    "empty_text": 0,
+    "empty_text_norm": 0,
+    "prompt_values": {
+      "": 581,
+      "none": 5443
+    },
+    "min_avg_logprob": {
+      "all": {
+        "count": 6024,
+        "mean": -0.2019,
+        "median": -0.1788,
+        "min": -1.4183,
+        "max": -0.0139,
+        "p10": -0.3278,
+        "p90": -0.0961
+      },
+      "flagged": {
+        "count": 133,
+        "mean": -0.628,
+        "median": -0.5876,
+        "min": -1.4183,
+        "max": -0.1489,
+        "p10": -0.8058,
+        "p90": -0.5026
+      },
+      "clean": {
+        "count": 5891,
+        "mean": -0.1922,
+        "median": -0.1764,
+        "min": -0.4994,
+        "max": -0.0139,
+        "p10": -0.312,
+        "p90": -0.0955
+      }
+    },
+    "max_no_speech_prob": {
+      "all": {
+        "count": 6024,
+        "mean": 0.007,
+        "median": 0.0029,
+        "min": 0.0,
+        "max": 0.2478,
+        "p10": 0.0003,
+        "p90": 0.0166
+      },
+      "flagged": {
+        "count": 133,
+        "mean": 0.0157,
+        "median": 0.0053,
+        "min": 0.0,
+        "max": 0.1663,
+        "p10": 0.0004,
+        "p90": 0.0423
+      },
+      "clean": {
+        "count": 5891,
+        "mean": 0.0068,
+        "median": 0.0029,
+        "min": 0.0,
+        "max": 0.2478,
+        "p10": 0.0003,
+        "p90": 0.0163
+      }
+    },
+    "text_length": {
+      "words": {
+        "count": 6024,
+        "mean": 15.8167,
+        "median": 14.0,
+        "min": 2.0,
+        "max": 72.0,
+        "p10": 10.0,
+        "p90": 24.0
+      },
+      "chars": {
+        "count": 6024,
+        "mean": 81.2273,
+        "median": 73.0,
+        "min": 8.0,
+        "max": 358.0,
+        "p10": 54.0,
+        "p90": 123.0
+      }
+    },
+    "text_norm_length": {
+      "words": {
+        "count": 6024,
+        "mean": 15.8174,
+        "median": 14.0,
+        "min": 2.0,
+        "max": 72.0,
+        "p10": 10.0,
+        "p90": 24.0
+      },
+      "chars": {
+        "count": 6024,
+        "mean": 80.6376,
+        "median": 73.0,
+        "min": 7.0,
+        "max": 348.0,
+        "p10": 53.0,
+        "p90": 122.0
+      }
+    },
+    "dup_text_size_distribution": {
+      "1": 5764,
+      "2": 79,
+      "3": 20,
+      "4": 7,
+      "5": 1,
+      "9": 1
+    },
+    "dup_text_size_wrong_rows": 3,
+    "dup_mismatches": [
+      {
+        "file": "الكل ان شاء الله\\1015.m4a",
+        "stored_dup_text_size": 1,
+        "actual_dup_text_size": 3
+      },
+      {
+        "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 11.54.59 PM (1).mp4",
+        "stored_dup_text_size": 1,
+        "actual_dup_text_size": 3
+      },
+      {
+        "file": "الكل ان شاء الله\\AUDIO-2025-11-27-17-01-39.m4a",
+        "stored_dup_text_size": 1,
+        "actual_dup_text_size": 3
+      }
+    ],
+    "dup_groups": 5872,
+    "largest_dup_group": 9,
+    "language_mix": {
+      "rows_with_latin_tokens": 41,
+      "rows_pure_arabic": 5983,
+      "top_latin_tokens": {
+        "otp": 6,
+        "g": 5,
+        "call": 4,
+        "me": 4,
+        "back": 4,
+        "application": 3,
+        "vpn": 3,
+        "control": 2,
+        "flex": 2,
+        "online": 2,
+        "logout": 2,
+        "only": 2,
+        "clm": 1,
+        "puk": 1,
+        "volt": 1
+      }
+    },
+    "wer_eval_rows": 20,
+    "wer_mean": {
+      "whisper-large-v3": 0.291,
+      "whisper-large-v3-turbo": 0.3495
+    },
+    "wer_eval": {
+      "whisper-large-v3": {
+        "count": 20,
+        "mean": 0.291,
+        "median": 0.2697,
+        "min": 0.0,
+        "max": 0.6333,
+        "p10": 0.0083,
+        "p90": 0.5604
+      },
+      "whisper-large-v3-turbo": {
+        "count": 20,
+        "mean": 0.3495,
+        "median": 0.2792,
+        "min": 0.1538,
+        "max": 0.75,
+        "p10": 0.1561,
+        "p90": 0.5643
+      }
+    },
+    "eval_seconds": {
+      "whisper-large-v3": {
+        "count": 20,
+        "mean": 2.251,
+        "median": 2.11,
+        "min": 1.23,
+        "max": 4.09,
+        "p10": 1.43,
+        "p90": 3.943
+      },
+      "whisper-large-v3-turbo": {
+        "count": 20,
+        "mean": 2.479,
+        "median": 2.075,
+        "min": 1.41,
+        "max": 5.14,
+        "p10": 1.549,
+        "p90": 4.377
+      }
+    },
+    "inventory_cross_check": {
+      "inventory_rows": 6522,
+      "overlap_file_ids": 6024,
+      "transcripts_only": 0,
+      "inventory_only": 498,
+      "excluded": 498,
+      "exclude_reasons": {
+        "(kept)": 6024,
+        "clipped": 6,
+        "duplicate": 470,
+        "low_snr": 18,
+        "mostly_silence": 1,
+        "too_long": 1,
+        "too_short": 2
+      },
+      "is_duplicate_true": 470
+    },
+    "sample_rows": 20
+  },
+  "duplicates": {
+    "total_text_norm_groups": 5872,
+    "groups_size_gt1": 108,
+    "rows_in_duplicate_groups": 260,
+    "largest_text_norm_group": 9,
+    "largest_group_sizes": [
+      9,
+      5,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      3
+    ],
+    "group_size_distribution": {
+      "1": 5764,
+      "2": 79,
+      "3": 20,
+      "4": 7,
+      "5": 1,
+      "9": 1
+    },
+    "duplicate_groups_spanning_multiple_formats": 84,
+    "audio_size_duration_collisions": {
+      "collision_groups": 418,
+      "files_in_collisions": 953,
+      "method": "(file size bytes, probed duration rounded to 3 decimals)"
+    },
+    "inventory_is_duplicate_flag_true": 470
+  },
+  "labels": {
+    "columns_checked": {
+      "transcripts_flagged_14_4zfb.csv": {
+        "label_columns_present": [],
+        "non_empty": {}
+      },
+      "inventory_clean_13_825a.csv": {
+        "label_columns_present": [],
+        "non_empty": {}
+      },
+      "stt_results_12_d6z5.csv": {
+        "label_columns_present": [
+          "category_label",
+          "sentiment_label"
+        ],
+        "non_empty": {
+          "category_label": 0,
+          "sentiment_label": 0
+        }
+      },
+      "sample_11_laqj.csv": {
+        "label_columns_present": [
+          "category_label",
+          "sentiment_label"
+        ],
+        "non_empty": {
+          "category_label": 0,
+          "sentiment_label": 0
+        }
+      }
+    },
+    "category_non_empty": 0,
+    "sentiment_non_empty": 0
+  },
+  "privacy": {
+    "rows_scanned": 6024,
+    "fields_scanned": [
+      "text",
+      "text_norm"
+    ],
+    "phone_like_rows": 0,
+    "intl_phone_like_rows": 0,
+    "email_like_rows": 0,
+    "long_digit_run_rows": 0,
+    "name_like_detectable": false,
+    "name_like_note": "Person names cannot be detected reliably from transcripts alone (no name list, dialect spellings vary); not attempted."
+  },
+  "split": {
+    "method": "group-aware greedy 80/10/10: whole text_norm groups kept on one side, ordered by (duration quartile, format) stratum, assigned to the split with the largest relative shortfall",
+    "target_shares": {
+      "train": 0.8,
+      "dev": 0.1,
+      "test": 0.1
+    },
+    "target_rows": {
+      "train": 4820,
+      "dev": 602,
+      "test": 602
+    },
+    "train": 4820,
+    "dev": 602,
+    "test": 602,
+    "total_rows": 6024,
+    "leaked_duplicate_groups": 0,
+    "duration_quartiles_s": {
+      "q1": 5.12,
+      "q2": 6.223,
+      "q3": 7.874
+    },
+    "per_split": {
+      "train": {
+        "rows": 4820,
+        "needs_review": 109,
+        "duration_mean_s": 7.003,
+        "duration_median_s": 6.226,
+        "formats": {
+          ".aac": 439,
+          ".m4a": 1490,
+          ".mp3": 327,
+          ".mp4": 1202,
+          ".mpeg": 546,
+          ".ogg": 783,
+          ".ogx": 2,
+          ".opus": 12,
+          ".wav": 19
+        }
+      },
+      "dev": {
+        "rows": 602,
+        "needs_review": 10,
+        "duration_mean_s": 6.9,
+        "duration_median_s": 6.202,
+        "formats": {
+          ".aac": 51,
+          ".m4a": 189,
+          ".mp3": 39,
+          ".mp4": 153,
+          ".mpeg": 70,
+          ".ogg": 96,
+          ".ogx": 1,
+          ".opus": 1,
+          ".wav": 2
+        }
+      },
+      "test": {
+        "rows": 602,
+        "needs_review": 14,
+        "duration_mean_s": 6.917,
+        "duration_median_s": 6.251,
+        "formats": {
+          ".aac": 56,
+          ".m4a": 189,
+          ".mp3": 39,
+          ".mp4": 150,
+          ".mpeg": 67,
+          ".ogg": 97,
+          ".ogx": 2,
+          ".wav": 2
+        }
+      }
+    },
+    "assignment_file_outside_repo": "/home/hatch/workspace/ai-customer-support/dataset/split_assignment.json"
+  },
+  "audio_quality": {
+    "source_file": "inventory_clean_13_825a.csv",
+    "rows": 6522,
+    "kept_rows": 6024,
+    "rms_db": {
+      "count": 6522,
+      "mean": -22.6699,
+      "median": -22.3,
+      "min": -50.5,
+      "max": -10.1,
+      "p10": -29.2,
+      "p90": -16.6
+    },
+    "peak": {
+      "count": 6522,
+      "mean": 0.5914,
+      "median": 0.577,
+      "min": 0.014,
+      "max": 1.0,
+      "p10": 0.25,
+      "p90": 0.939
+    },
+    "clip_pct": {
+      "count": 6522,
+      "mean": 0.0023,
+      "median": 0.0,
+      "min": 0.0,
+      "max": 1.208,
+      "p10": 0.0,
+      "p90": 0.0
+    },
+    "clip_pct_gt0": 338,
+    "clip_pct_gt0_kept": 320,
+    "silence_pct": {
+      "count": 6522,
+      "mean": 16.4879,
+      "median": 15.9,
+      "min": 0.0,
+      "max": 64.6,
+      "p10": 2.0,
+      "p90": 32.4
+    },
+    "silence_pct_gt50": 18,
+    "snr_db": {
+      "count": 6522,
+      "mean": 35.5305,
+      "median": 34.3,
+      "min": 7.3,
+      "max": 156.6,
+      "p10": 21.7,
+      "p90": 49.87
+    },
+    "snr_db_lt10": 22,
+    "duration_total_h": 12.63,
+    "duration_kept_h": 11.685
+  }
+}
