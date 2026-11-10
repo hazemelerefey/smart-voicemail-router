@@ -17,7 +17,7 @@ Scope: Deterministic, local-only preprocessing of the EDA-verified dataset into 
 - [x] P3: Full preprocessing pytest suite passes
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -m pytest preprocessing/test_preprocessing.py -q && echo PREP_TESTS_OK
   EXPECT: PREP_TESTS_OK
-  EVIDENCE: automatic-evidence=v1; definition-sha256=513be85b09bd39faf4b285b28c1254aa69709a21efc8cc948dd5878c81cf1b24; exit=0; EXPECT=matched; output-sha256=b7313dec7ca62395f22710a290d81fa588d68fd821f7c6768096ccdb7b816d30; output-bytes=124; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
+  EVIDENCE: automatic-evidence=v1; definition-sha256=513be85b09bd39faf4b285b28c1254aa69709a21efc8cc948dd5878c81cf1b24; exit=0; EXPECT=matched; output-sha256=7c154bd54f970867d8e1c77a1bce5df561ae76d580b25841e771974972b3b26a; output-bytes=124; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
 - [x] P4: Dispositions reconcile (train_ready + quarantine = 6024 transcripts; exclusions = 498; dup_text_size recomputed in derived file)
   CHECK: /home/hatch/workspace/ai-customer-support/.venv-eda/bin/python -c "import json; s=json.load(open('preprocessing/preprocessing_summary.json')); print(s['transcripts']['train_ready'] + s['transcripts']['quarantine'], s['files']['excluded'], s['transcripts']['dup_fixed_rows'])"
@@ -49,7 +49,7 @@ Scope: Deterministic, local-only preprocessing of the EDA-verified dataset into 
   EXPECT: PREP_NOTE_OK
   EVIDENCE: automatic-evidence=v1; definition-sha256=27528cace1638475afb8478b74851a31a8b65f3fc9204bd9896789927ec1bddf; exit=0; EXPECT=matched; output-sha256=4fbe1b9bb913e78aeaa1337ace53d5feb803dd6c907d54a8c67eb87be34f51f2; output-bytes=13; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
 
-- [ ] P10: Working tree clean after the preprocessing commit, nothing pushed yet
+- [x] P10: Working tree clean after the preprocessing commit, nothing pushed yet
   CHECK: test $(git status --porcelain | wc -l) -eq 0 && echo TREE_CLEAN
   EXPECT: TREE_CLEAN
-  EVIDENCE: pending
+  EVIDENCE: automatic-evidence=v1; definition-sha256=1308d9fdb20dad22a4ea6fad49cab7bcb390041ba2ed381e9409b18e880110ce; exit=0; EXPECT=matched; output-sha256=aae759e7feba7044a7768be621e4903bc475dc06185d754ee91c532cd54ad749; output-bytes=11; shell=/bin/sh; cwd=/home/hatch/workspace/ai-customer-support/smart-voicemail-router; path=47e26463d816/21 entries
