@@ -1,0 +1,84 @@
+{
+ "dataset": {
+  "files_total": 6522,
+  "transcripts": 6024,
+  "train_ready": 5881,
+  "quarantine": 143,
+  "excluded": 498
+ },
+ "split": {
+  "train": 4117,
+  "val": 1176,
+  "test": 588,
+  "ratio": "70/20/10"
+ },
+ "issues_fixed": [
+  "duration_drift",
+  "recoverable_files",
+  "low_snr",
+  "long_file"
+ ],
+ "issues_open": [
+  "labels",
+  "quarantine_review",
+  "clipping_treatment",
+  "speaker_awareness",
+  "glossary",
+  "normalization"
+ ],
+ "issues_proposed": [
+  "dup_confirmation",
+  "taxonomy"
+ ],
+ "issues_blocked": [
+  "transcript_quality",
+  "rights"
+ ],
+ "tracks": {
+  "asr": {
+   "status": "blocked",
+   "blockers": [
+    "transcript quality unverified beyond 20 reference rows (WER directional only)",
+    "rights, consent, retention and processing locations unconfirmed",
+    "dup_text_size fix still proposed, not confirmed by the reviewer",
+    "clipping treatment undecided (recommendation: tolerate)"
+   ],
+   "owner": "Hazem (reviewer) and Ebtihal",
+   "unblock": "confirm rights; human-check a transcript verification sample; confirm dup fix; decide clipping treatment"
+  },
+  "router": {
+   "status": "blocked",
+   "blockers": [
+    "no labels: category, urgency, customer state and churn are empty everywhere",
+    "taxonomy is a candidate proposal, not approved",
+    "annotation guide is a draft, calibration not run",
+    "no annotators or adjudicator named"
+   ],
+   "owner": "Hazem (reviewer) and Ebtihal",
+   "unblock": "approve taxonomy; approve guide; name annotators; run 100-row calibration to kappa 0.7 per field"
+  }
+ },
+ "decisions_needed_from_user": [
+  "confirm the recomputed dup_text_size values as canonical",
+  "freeze the 70/20/10 split",
+  "confirm rights, consent, retention and processing locations",
+  "approve or revise the taxonomy candidates",
+  "approve the annotation guide draft and name annotators and adjudicator",
+  "decide the clipping treatment (recommendation: tolerate)",
+  "approve transcription of the 26 recovered files"
+ ],
+ "artifacts": {
+  "notebook": "preparation/dataset_preparation.ipynb",
+  "audit": "dataset/prepared/audit_summary.json",
+  "corrected_inventory": "dataset/prepared/inventory_corrected.csv",
+  "recovery_manifest": "dataset/prepared/recovery_manifest.json",
+  "chunk_map": "dataset/prepared/long_file_chunks.json",
+  "clusters": "dataset/prepared/cluster_results.json",
+  "calibration_batch": "dataset/prepared/calibration_batch.json",
+  "review_queue": "dataset/prepared/review_queue.json"
+ },
+ "versions": {
+  "sklearn": "1.9.1",
+  "pandas": "2.1.4"
+ }
+}
