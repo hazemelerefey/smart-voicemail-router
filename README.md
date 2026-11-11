@@ -4,7 +4,7 @@ Smart Voicemail Router turns Egyptian Arabic customer voicemails into explainabl
 
 ## The dataset
 
-The raw set is 6,522 voicemails, 12.6 hours of audio, received in 9 formats and standardized to 16 kHz mono WAV. Speech to text produced 6,024 transcripts. Whisper large-v3 was used for transcription; on a 20 row eval it scored WER 0.29 against 0.35 for turbo.
+The dataset is the SVR Voicemail Corpus: 6,522 Egyptian Arabic customer voicemails, 12.6 hours of audio, received in 9 formats and standardized to 16 kHz mono WAV. Speech to text produced 6,024 transcripts. Whisper large-v3 was used for transcription; on a 20 row eval it scored WER 0.29 against 0.35 for turbo.
 
 From the 6,522 files, 498 were excluded and 5,881 rows were labeled as train ready. The clean training set is 5,751 rows: 5,662 train ready rows, 62 quarantined rows that were labeled and joined, and 27 recovered rows. 219 garbled rows were excluded from training after a re-transcription check showed re-transcription does not fix garbled audio.
 
