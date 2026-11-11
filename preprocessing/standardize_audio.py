@@ -55,7 +55,7 @@ SAMPLE_RATE = 16000
 
 
 def source_path(dataset_file):
-    """Dataset file values use backslashes: 'الكل ان شاء الله\\0001.m4a'.
+    """Dataset file values use backslashes: 'svr-voicemail-corpus\\0001.m4a'.
 
     Normalize to NFD: unrar extracted accented Latin names decomposed
     (e + combining acute, e.g. 'Café Suprême' files), while the CSVs

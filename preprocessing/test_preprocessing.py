@@ -25,9 +25,9 @@ NOTE = REPO / "preprocessing/preprocessing_audio_speech.md"
 # The 3 files whose canonical dup_text_size is wrong (stored 1, actual 3).
 # File IDs only; no transcript text.
 DUP_DEFECT_FILES = [
-    "الكل ان شاء الله\\1015.m4a",
-    "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 11.54.59 PM (1).mp4",
-    "الكل ان شاء الله\\AUDIO-2025-11-27-17-01-39.m4a",
+    "svr-voicemail-corpus\\1015.m4a",
+    "svr-voicemail-corpus\\WhatsApp Audio 2025-11-30 at 11.54.59 PM (1).mp4",
+    "svr-voicemail-corpus\\AUDIO-2025-11-27-17-01-39.m4a",
 ]
 
 def read_clean_csv():
@@ -156,7 +156,7 @@ def test_all_train_ready_sources_exist():
 def wav_source_file(wav_path):
     """WAV name is '<basename>.wav'; map back to the dataset file path."""
     basename = wav_path.name[: -len(".wav")]
-    return "الكل ان شاء الله\\" + basename
+    return "svr-voicemail-corpus\\" + basename
 
 
 def wav_pcm_sha256(wav_path):

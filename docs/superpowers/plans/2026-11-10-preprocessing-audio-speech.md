@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Dataset snapshot is the Drive RAR `الكل ان شاء الله.rar`, SHA256 `3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63`, extracted at `~/workspace/ai-customer-support/dataset/extracted/` (6,522 files). Verify before starting.
+- Dataset snapshot is the Drive RAR `svr-voicemail-corpus.rar`, SHA256 `3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63`, extracted at `~/workspace/ai-customer-support/dataset/extracted/` (6,522 files). Verify before starting.
 - **Canonical files are read-only.** The transcripts CSV (`~/workspace/user/files/transcripts_flagged_14_4zfb.csv`) and inventory CSV must be byte-identical before and after (record SHA256 in the summary). All fixes go into the DERIVED cleaned file only.
 - **The 3 wrong `dup_text_size` values are fixed in the derived file by recomputation, marked as proposed pending Ebtihal's confirmation.** Do not present the derived file as the canonical STT output. Do not edit the canonical file.
 - **Local only.** No audio, transcripts, or derived data leaves this machine. No external provider, no upload, no Colab.

@@ -8,7 +8,7 @@ files are byte-identical before and after.
 
 ## 1. Inputs
 
-- Dataset snapshot: Drive RAR `الكل ان شاء الله.rar`, 735,052,270 bytes,
+- Dataset snapshot: Drive RAR `svr-voicemail-corpus.rar`, 735,052,270 bytes,
   SHA256 `3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63`,
   extracted at `~/workspace/ai-customer-support/dataset/extracted/`
   (6,522 files, verified before starting).

@@ -14,7 +14,7 @@
 
 ## Global Constraints
 
-- Dataset snapshot is the Drive RAR `الكل ان شاء الله.rar`, SHA256 `3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63`, extracted at `~/workspace/ai-customer-support/dataset/extracted/` (6,522 files). Verify before starting.
+- Dataset snapshot is the Drive RAR `svr-voicemail-corpus.rar`, SHA256 `3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63`, extracted at `~/workspace/ai-customer-support/dataset/extracted/` (6,522 files). Verify before starting.
 - **Canonical files are read-only.** The transcripts CSV, inventory CSV, eval/sample CSVs must be byte-identical before and after (record SHA256 in the run log). All fixes go into DERIVED files only.
 - **Local only.** No audio, transcripts, or derived data leaves this machine. No external provider, no upload, no Colab.
 - **No finalized labels.** Do not assign category, urgency, customer state, or churn values to any row. The taxonomy proposal is a CANDIDATE for the user/team to approve, grounded in clustering evidence. The annotation guide is a DRAFT. The calibration batch is a sample for agreement measurement, not labeled data.

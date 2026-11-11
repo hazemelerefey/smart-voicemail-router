@@ -15,7 +15,7 @@ All numbers below were recomputed by the scripts in `eda/` from the dataset snap
 
 ## 1. Origin
 
-The dataset snapshot is the Drive folder "AI Voicemail", file `الكل ان شاء الله.rar`:
+The dataset snapshot is the Drive folder "AI Voicemail", file `svr-voicemail-corpus.rar`:
 
 - Archive size: 735,052,270 bytes
 - SHA256: `3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63`
@@ -111,7 +111,7 @@ Confidence separates clean from flagged rows clearly. `min_avg_logprob` (closer 
 
 Model comparison on the 20-row evaluation file: whisper-large-v3 mean WER 0.291, whisper-large-v3-turbo mean WER 0.3495; mean runtime per clip 2.251 s (large-v3) vs 2.479 s (turbo). Large-v3 wins on both accuracy and speed on this sample, but the sample is only 20 rows and the WER is dialect-inflated (see §3), so this is a directional result, not a selection proof.
 
-**Known defect, verified (not silently fixed):** `dup_text_size` is wrong on exactly 3 rows. In each case the stored value is 1 while an independent recount grouped by `text_norm` gives 3. The three files are `الكل ان شاء الله\1015.m4a`, `الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 11.54.59 PM (1).mp4`, and `الكل ان شاء الله\AUDIO-2025-11-27-17-01-39.m4a`. All three share one repeated hallucinated phrase. The format stays locked; the fix belongs in the pipeline (recompute `dup_text_size` from `text_norm` at write time), and Ebtihal co-owns the format, so the correction needs her confirmation before the value is treated as fixed.
+**Known defect, verified (not silently fixed):** `dup_text_size` is wrong on exactly 3 rows. In each case the stored value is 1 while an independent recount grouped by `text_norm` gives 3. The three files are `svr-voicemail-corpus\1015.m4a`, `svr-voicemail-corpus\WhatsApp Audio 2025-11-30 at 11.54.59 PM (1).mp4`, and `svr-voicemail-corpus\AUDIO-2025-11-27-17-01-39.m4a`. All three share one repeated hallucinated phrase. The format stays locked; the fix belongs in the pipeline (recompute `dup_text_size` from `text_norm` at write time), and Ebtihal co-owns the format, so the correction needs her confirmation before the value is treated as fixed.
 
 ---
 

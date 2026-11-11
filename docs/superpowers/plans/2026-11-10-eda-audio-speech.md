@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Dataset snapshot is the Drive RAR `الكل ان شاء الله.rar`, 735,052,270 bytes, SHA256 `3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63`, local copy `~/workspace/ai-customer-support/dataset/dataset.rar`. Extract only to `~/workspace/ai-customer-support/dataset/extracted/` (outside the repo).
+- Dataset snapshot is the Drive RAR `svr-voicemail-corpus.rar`, 735,052,270 bytes, SHA256 `3518fdd5edad615bf81fc25657f84c0ae476e41f9b31e09c8ea31995f9284e63`, local copy `~/workspace/ai-customer-support/dataset/dataset.rar`. Extract only to `~/workspace/ai-customer-support/dataset/extracted/` (outside the repo).
 - Never commit audio, CSVs, transcripts, or the RAR. Copy `.gitignore` from `origin/master` into this branch first; verify with `git status` before every commit.
 - EDA note is aggregate statistics only. No raw transcript lines, no phone numbers, no names, no audio. PII checks are counts of patterns, never examples.
 - Do not finalize labels. Category/sentiment are empty everywhere; propose an annotation protocol, do not invent classes.
