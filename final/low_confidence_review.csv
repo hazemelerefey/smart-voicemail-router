@@ -1,0 +1,460 @@
+﻿file,complaint_category,complaint_urgency,customer_state,churn_risk,confidence,note,in_clean_training
+الكل ان شاء الله\0028.m4a,branch_and_staff,medium,frustrated,not_at_risk,low,complaint about customer service getting worse; transcript garbled,True
+الكل ان شاء الله\0036.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; repeated internet cuts with the same improvement promise,True
+الكل ان شاء الله\0041.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,same issue repeats every two weeks with no follow-up; transcript garbled,True
+الكل ان شاء الله\0096.mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,repeated line faults; transcript garbled,True
+الكل ان شاء الله\0115.mp4,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled; code request in the app says service unavailable,True
+الكل ان شاء الله\0142.ogg,balance_and_data,medium,frustrated,not_at_risk,low,automatic switching between packages does not work; transcript garbled,True
+الكل ان شاء الله\0162.mp3,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled; app keeps logging out on Wi-Fi,True
+الكل ان شاء الله\0171.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; network does not work on the top floor,True
+الكل ان شاء الله\0178.mp3,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled; app behaves oddly after the update,True
+الكل ان شاء الله\0183.m4a,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled; app does not show the package or the balance,True
+الكل ان شاء الله\0194.mp4,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; support helped cancel the daily drama service,True
+الكل ان شاء الله\0230.mpeg,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; support came on time,True
+الكل ان شاء الله\0266.mp4,app_and_account,high,frustrated,not_at_risk,low,transcript garbled; app will not open and the code request says service unavailable,True
+الكل ان شاء الله\0269.mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; cannot make calls at night,True
+الكل ان شاء الله\0312.aac,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; technical problems are annoying and unhandled,True
+الكل ان شاء الله\0315.aac,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; line disconnects around Maghreb time,True
+الكل ان شاء الله\0339.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; network good in the street but not at home,True
+الكل ان شاء الله\0343.m4a,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled; app does not save the data correctly,True
+الكل ان شاء الله\0373.mpeg,branch_and_staff,medium,frustrated,not_at_risk,low,repeated cold replies from staff with no interest; transcript garbled,True
+الكل ان شاء الله\0386.mpeg,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled; app does not show remaining data,True
+الكل ان شاء الله\0395.mp3,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled; automatic services charged without request,True
+الكل ان شاء الله\0448.aac,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled; requested service in the app is often unavailable,True
+الكل ان شاء الله\0466.mpeg,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled; logging in with a new number wipes the app data,True
+الكل ان شاء الله\0473.mpeg,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled; service cancelled then the same amount deducted again,True
+الكل ان شاء الله\0480.mpeg,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled; card refused in the app though it works elsewhere,True
+الكل ان شاء الله\0485.mpeg,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; line keeps cutting while abroad,True
+الكل ان شاء الله\0521.aac,branch_and_staff,medium,mad,not_at_risk,low,transcript garbled; support hung up on the customer,True
+الكل ان شاء الله\0527.aac,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript too short to tell what service is unavailable,True
+الكل ان شاء الله\0610.aac,billing_and_charges,medium,calm,not_at_risk,low,"transcript garbled, bill amount unclear",True
+الكل ان شاء الله\0635.mpeg,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled but intent is thanks for fast service,True
+الكل ان شاء الله\0761.mpeg,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled but intent is thanks for service,True
+الكل ان شاء الله\1012.m4a,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled but intent is thanks for app update,True
+الكل ان شاء الله\1222.m4a,network_and_connectivity,medium,calm,not_at_risk,low,transcript short but network weakening on second floor is clear,True
+الكل ان شاء الله\13.m4a,balance_and_data,medium,calm,not_at_risk,low,transcript garbled but balance deducted after using package code,True
+الكل ان شاء الله\1320.m4a,balance_and_data,medium,calm,not_at_risk,low,transcript garbled but missing balance is clear,True
+الكل ان شاء الله\1394.m4a,branch_and_staff,medium,frustrated,not_at_risk,low,transcript garbled but complaint about branch staff ignoring customer,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 4.41.51 PM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; no network when calling,True
+الكل ان شاء الله\AUDIO-2025-11-25-01-39-30.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled but OTP/message delay is clear,True
+الكل ان شاء الله\3f.mp3,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,transcript garbled; appears to be customer service closing after a long wait,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 1.52.00 AM.ogg,balance_and_data,medium,frustrated,not_at_risk,low,transcript truncated,True
+الكل ان شاء الله\Standard recording 23.mp3,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,transcript garbled; customer service call drops after a long wait,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.25.18 AM.aac,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; employee was polite and helped,True
+الكل ان شاء الله\AUDIO-2025-11-19-19-26-08.m4a,billing_and_charges,medium,calm,not_at_risk,low,transcript garbled; question about paying package fees every time,True
+الكل ان شاء الله\AUDIO-2025-11-27-16-53-24.m4a,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled; package activation message sent but package does not work,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 12.48.49 AM.aac,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled; balance being deducted,True
+الكل ان شاء الله\Dir Al Naheyah Street 12A 4.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; technician has not come to install the router,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.34 PM (1).mp4,cancellation_request,medium,frustrated,not_at_risk,low,transcript garbled; temporary line suspension request not executed,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.44 PM (1).ogg,balance_and_data,medium,frustrated,not_at_risk,low,mixed with advice text about video quality,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 5.29.50 PM (2).ogg,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; line disconnects and says invalid,True
+الكل ان شاء الله\2297.ogg,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled; sudden change in balance consumption,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.59 AM (3).ogg,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; network problem at home,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.44 PM.ogg,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled; balance deducted though not subscribed to a package,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.24.59 AM.mp4,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled; night package worked only one hour,True
+الكل ان شاء الله\2460.mp4,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled; package is 50 vs 100 megabytes,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.32.21 PM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\Recording (9).m4a,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; network fast at the club,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.42 PM (5).mpeg,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled; add-on auto-activated with no clear way to stop it,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.48 PM.ogg,billing_and_charges,high,frustrated,not_at_risk,low,"double charge when changing package, mixed with advice text",True
+الكل ان شاء الله\2198.ogg,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled; services activated without request and balance deducted,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.27 PM.mp4,network_and_connectivity,high,frustrated,not_at_risk,low,transcript garbled; line disconnected suddenly and will not restart,True
+الكل ان شاء الله\AUDIO-2025-11-29-09-40-53.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; line not receiving calls,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.47 PM (2).ogg,network_and_connectivity,low,calm,not_at_risk,low,"question about speed difference morning vs night, mixed with advice text",True
+الكل ان شاء الله\New Recording 60.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,"transcript garbled; waited an hour on the line, problem unresolved",True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.04 PM (4).mp4,cancellation_request,medium,calm,not_at_risk,low,transcript garbled; wants all auto-activated add-ons cancelled,True
+الكل ان شاء الله\1907.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,transcript garbled; complaint registered then told to call again,True
+الكل ان شاء الله\AUDIO-2025-11-29-00-30-06.m4a,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.56.22 PM (1).mpeg,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,transcript ambiguous or too garbled to label confidently,True
+الكل ان شاء الله\AUDIO-2025-11-27-17-06-25.m4a,thanks_or_praise,low,satisfied,not_at_risk,low,transcript ambiguous or too garbled to label confidently,True
+الكل ان شاء الله\2381.ogg,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 4.41.43 PM.mp4,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.08 PM (2).mp4,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\تسجيل جديد ١٢.m4a,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; appears to praise support,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.40 PM.ogg,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.34.58 AM (1).ogg,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.51 PM (2).ogg,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\2308.mp4,branch_and_staff,medium,calm,not_at_risk,low,transcript garbled; staff promise not kept,True
+الكل ان شاء الله\1972.mp4,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 4.41.54 PM (2).mp4,network_and_connectivity,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1731.aac,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\x98.mp3,app_and_account,low,calm,not_at_risk,low,transcript ambiguous or too garbled to label confidently,True
+الكل ان شاء الله\2175.ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,transcript vague about what the problem is,True
+الكل ان شاء الله\n41.m4a,balance_and_data,low,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\تسجيل جديد ٩.m4a,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\2190.m4a,cancellation_request,medium,calm,not_at_risk,low,transcript ambiguous or too garbled to label confidently,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 11.55.07 PM (2).mp4,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1826.mp3,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.06 AM.mp4,network_and_connectivity,medium,calm,not_at_risk,low,transcript garbled; codes not responding,True
+الكل ان شاء الله\Makkvah Street 2.m4a,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\AUDIO-2025-12-02-02-23-15.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript too vague to tell,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.55 PM (1).mp4,branch_and_staff,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 5.29.45 PM (3).ogg,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.05 AM (1).ogg,balance_and_data,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.55.30 PM.mpeg,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.54 PM (1).mp4,network_and_connectivity,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.18.49 AM (1).mp4,network_and_connectivity,high,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.07 PM.aac,network_and_connectivity,high,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.07.32 AM.mp4,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.52.49 PM.mp4,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 11.05.30 PM.ogg,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1642.ogg,branch_and_staff,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.10 PM.ogg,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\AUDIO-2025-11-29-00-45-2977.m4a,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\2.m4a,app_and_account,high,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.42 PM.mp4,branch_and_staff,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.09 PM (2).ogg,billing_and_charges,medium,frustrated,not_at_risk,low,"transcript starts mid-sentence, garbled",True
+الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.05 PM (6).mp4,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.41.58 PM (4).mp4,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.58 PM (2).mp4,no_reply_or_long_wait,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.19.07 AM.mp4,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.56.16 PM (1).mpeg,app_and_account,medium,frustrated,not_at_risk,low,transcript vague about what changed in the app,True
+الكل ان شاء الله\M6.m4a,no_reply_or_long_wait,high,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\39.m4a,balance_and_data,medium,mad,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\n73.m4a,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\2462.mpeg,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.08 PM (2).ogg,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.30.09 PM (2).aac,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.33 PM.mpeg,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1704.m4a,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.00.04 AM.mp4,network_and_connectivity,high,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.12 AM.ogg,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\New Recording 45.m4a,branch_and_staff,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.30 PM.aac,app_and_account,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.33.09 PM (2).mp4,balance_and_data,low,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\2063.mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1770.mp3,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\AUDIO-2025-11-27-16-06-40.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\AUDIO-2025-12-02-01-05-52.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\2486.mp4,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.29.54 (4).mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\New Recording 53.m4a,branch_and_staff,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\AUD-20251123-WA0059.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1753.m4a,app_and_account,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1983.mp4,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\AUDIO-2025-11-21-01-32-37 2.m4a,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\مكالمهs 1.mp3,app_and_account,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.46 PM.ogg,branch_and_staff,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.45 PM (2).mp4,branch_and_staff,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 2.07.40 AM.mp4,network_and_connectivity,high,mad,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\New recorioding 13.m4a,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1979.mpeg,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\Recording (4).m4a,branch_and_staff,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\ملف تسجيل جديد 4.m4a.mp3,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\3d.m4a,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 6.30.10 AM.ogg,network_and_connectivity,high,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\New Recording 43.m4a,branch_and_staff,medium,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.10 PM (2).ogg,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1918.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.37.19 PM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\2430.ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\2292.ogg,balance_and_data,low,calm,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1926.aac,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-19 at 2.34.41 PM.mp4,branch_and_staff,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\AUD-20251124-WA0067.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1900.aac,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\1733.m4a,billing_and_charges,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.51.47 (2).mp4,app_and_account,medium,frustrated,not_at_risk,low,transcript garbled,True
+الكل ان شاء الله\2253.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,garbled wording but complaint is about internet service,True
+الكل ان شاء الله\AUD-20251124-WA0094.mp3,branch_and_staff,medium,frustrated,not_at_risk,low,garbled wording about staff repeating same words with no solution,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.56.26 PM (4).ogg,network_and_connectivity,high,frustrated,not_at_risk,low,garbled wording about SIM suddenly not sending or receiving,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 9.18.09 PM.mpeg,balance_and_data,medium,frustrated,not_at_risk,low,garbled wording about daily package working intermittently,True
+الكل ان شاء الله\Concordia Compound 4.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,garbled wording about landline internet being slow,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.58 PM (1).ogg,balance_and_data,medium,frustrated,not_at_risk,low,garbled wording about balance running out,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.39 AM (3).mp4,network_and_connectivity,high,frustrated,not_at_risk,low,garbled wording about nothing opening for two days,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.58.56 PM.mpeg,billing_and_charges,medium,frustrated,not_at_risk,low,garbled wording about unauthorized services and balance deductions,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.38.55 PM.mp4,billing_and_charges,medium,frustrated,not_at_risk,low,garbled wording about automatic service activation and balance,True
+الكل ان شاء الله\AUDIO-2025-11-29-00-33-4011.m4a,thanks_or_praise,low,satisfied,not_at_risk,low,garbled wording but praise for improvement is clear,True
+الكل ان شاء الله\2244.m4a,billing_and_charges,medium,frustrated,not_at_risk,low,garbled wording about a service subscribed without permission,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.54.21 PM (1).mp4,app_and_account,medium,frustrated,not_at_risk,low,garbled wording about number not appearing in app,True
+الكل ان شاء الله\2147.m4a,billing_and_charges,medium,mad,not_at_risk,low,garbled wording about discount messages,True
+الكل ان شاء الله\تسجيل (6).m4a,balance_and_data,medium,frustrated,not_at_risk,low,garbled wording about balance deducted after recharge,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.08.57 PM (1).ogg,branch_and_staff,low,frustrated,not_at_risk,low,transcript garbled; branch employee rude,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.57 PM (3).mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript partly garbled,True
+الكل ان شاء الله\AUDIO-2025-11-29-00-45-296.m4a,balance_and_data,low,frustrated,not_at_risk,low,transcript partly garbled; balance consumption complaint,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 12.49.18 AM.aac,cancellation_request,low,frustrated,not_at_risk,low,transcript garbled; trying to stop a service that stays active,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.02.57 (4).mp4,balance_and_data,medium,frustrated,not_at_risk,low,transcript partly garbled,True
+الكل ان شاء الله\2288.ogg,branch_and_staff,low,frustrated,not_at_risk,low,transcript garbled; support response unclear,True
+الكل ان شاء الله\Makvkah Street 10.m4a,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; thanks for fast response,True
+الكل ان شاء الله\New Recofrding 21.m4a,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled; bundle ends in the first week despite little use,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.40 AM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; line blocked after a complaint,True
+الكل ان شاء الله\AUD-20251124-WA0024.m4a,branch_and_staff,medium,frustrated,not_at_risk,low,transcript garbled; technician came but seemed uninterested,True
+الكل ان شاء الله\2258.ogg,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; weak network during calls,True
+الكل ان شاء الله\تسجيل (17).m4a,branch_and_staff,medium,frustrated,not_at_risk,low,"transcript garbled; SIM swap in branch, number now under a different name",True
+الكل ان شاء الله\1822.mpeg,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; problem resolved and thanks given,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.18.38 AM.mp4,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; thanks support team,True
+الكل ان شاء الله\New Recording 38.m4a,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; thanks given,True
+الكل ان شاء الله\n90.ogg,branch_and_staff,medium,frustrated,not_at_risk,low,transcript garbled; staff could not explain internet usage,True
+الكل ان شاء الله\AUDIO-2025-11-27-17-05-27 3.m4a,thanks_or_praise,low,satisfied,not_at_risk,low,transcript garbled; praises parental-control feature saving money,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.49 PM (1).mp4,app_and_account,medium,calm,not_at_risk,low,transcript garbled; booked code disappeared from account,True
+الكل ان شاء الله\1743.mp3,balance_and_data,medium,frustrated,not_at_risk,low,transcript garbled; upset about recharge and data running out,True
+الكل ان شاء الله\2001.m4a,app_and_account,low,calm,not_at_risk,low,transcript garbled; wallet only opens on mobile data,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 2.07.39 AM (2).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,transcript garbled; repeated calls with no resolution,True
+الكل ان شاء الله\1631.m4a,billing_and_charges,low,calm,not_at_risk,low,transcript garbled; no notification before renewal charge,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.40 PM (2).ogg,billing_and_charges,low,calm,not_at_risk,low,transcript garbled; request for manual activation or balance refund,True
+الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.51 PM (1).ogg,app_and_account,low,calm,not_at_risk,low,transcript garbled; could not find social package in app,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.23 PM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; line blocked after complaint,True
+الكل ان شاء الله\AUD-20251123-WA0186.mp3,billing_and_charges,medium,calm,not_at_risk,low,transcript garbled; unexplained deductions from balance,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-19 at 2.34.41 PM (3).mp4,billing_and_charges,low,calm,not_at_risk,low,transcript garbled; message about a debt after paying landline,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.47 AM.mpeg,network_and_connectivity,medium,frustrated,not_at_risk,low,transcript garbled; internet drops at night and returns only after restarting router,True
+الكل ان شاء الله\0060.m4a,branch_and_staff,medium,frustrated,not_at_risk,low,support agent replies without listening; garbled tail,True
+الكل ان شاء الله\0084.m4a,network_and_connectivity,medium,frustrated,not_at_risk,low,calls keep cutting since network changed in area,True
+الكل ان شاء الله\0102.m4a,billing_and_charges,medium,frustrated,not_at_risk,low,unwanted deduction for a service never needed,True
+الكل ان شاء الله\0112.m4a,offers_and_packages,low,calm,not_at_risk,low,asks about new mobile offer with internet bundle,True
+الكل ان شاء الله\0157.m4a,offers_and_packages,low,calm,not_at_risk,low,asks why bundle does not change,True
+الكل ان شاء الله\0265.mp4,app_and_account,medium,calm,not_at_risk,low,website says number is unregistered when entering it,True
+الكل ان شاء الله\0305.aac,app_and_account,medium,frustrated,not_at_risk,low,app code always says error,True
+الكل ان شاء الله\0336.m4a,balance_and_data,medium,frustrated,not_at_risk,low,unwanted deduction from balance,True
+الكل ان شاء الله\0375.mpeg,branch_and_staff,medium,frustrated,not_at_risk,low,"staff promised 48 hours, 4 days passed",True
+الكل ان شاء الله\0442.aac,network_and_connectivity,high,frustrated,not_at_risk,low,internet works minutes then down for hours,True
+الكل ان شاء الله\0555.aac,sim_services,high,frustrated,not_at_risk,low,"wallet data lost after SIM change, no way to recover it",True
+الكل ان شاء الله\0696.mpeg,other,low,calm,not_at_risk,low,asks how to stop unwanted messages,True
+الكل ان شاء الله\0705.aac,balance_and_data,medium,calm,not_at_risk,low,top-up code rejected as wrong,True
+الكل ان شاء الله\0979.mpeg,thanks_or_praise,low,satisfied,not_at_risk,low,thanks for network improvement,True
+الكل ان شاء الله\0982.mpeg,network_and_connectivity,medium,frustrated,not_at_risk,low,no signal improvement after new network and SIM,True
+الكل ان شاء الله\1003.wav,network_and_connectivity,medium,frustrated,not_at_risk,low,bad network for a long time; garbled tail,True
+الكل ان شاء الله\1024.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,website inquiry unanswered after a week,True
+الكل ان شاء الله\1083.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,"technical support very late, asks them to hurry",True
+الكل ان شاء الله\8oz Cafe and Restaurant.m4a,billing_and_charges,high,frustrated,not_at_risk,low,refund not received 5 days after failed transaction,True
+الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.42.02 PM.mpeg,network_and_connectivity,high,calm,not_at_risk,low,"router lights on but no internet, restart did not help",True
+الكل ان شاء الله\h59.m4a,other,low,calm,not_at_risk,low,asks for a call me back,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 11.05.30 PM (1).ogg,balance_and_data,medium,frustrated,not_at_risk,low,contradictory messages: bundle renewed then finished,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.42 PM (8).mpeg,offers_and_packages,low,calm,not_at_risk,low,can bundle renew after expiry or wait to month start,True
+الكل ان شاء الله\1807.mp4,network_and_connectivity,high,frustrated,at_risk,low,"speed below advertised, affects work, may change provider",True
+الكل ان شاء الله\AUD-20251117-WA0051.m4a,branch_and_staff,medium,frustrated,not_at_risk,low,technical support spoke oddly and caused a work problem,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.45 PM (2).aac,billing_and_charges,high,frustrated,not_at_risk,low,payment not received after 72 hours,True
+الكل ان شاء الله\1760.mp3,branch_and_staff,medium,frustrated,not_at_risk,low,"staff price vs website price mismatch, called misleading",True
+الكل ان شاء الله\2363.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,"emailed Tuesday, still waiting for a reply",True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.49 PM (3).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,"line installation requested months ago, nobody came",True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.06 PM (3).aac,offers_and_packages,low,calm,not_at_risk,low,can bundle be activated after expiry or must wait,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.41 PM (1).ogg,network_and_connectivity,low,calm,not_at_risk,low,question about 4G only or 3G only network mode,True
+الكل ان شاء الله\New recoprding 9.m4a,offers_and_packages,low,calm,not_at_risk,low,asks about internet offers for travel,True
+الكل ان شاء الله\AUDIO-2025-11-21-01-32-32 2.m4a,balance_and_data,medium,frustrated,not_at_risk,low,Salafny says not eligible though always tops up,True
+الكل ان شاء الله\AUD-20251104-WA0043.m4a,balance_and_data,medium,frustrated,not_at_risk,low,bundle drains fast without use,True
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.49 PM (4).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,technician not arrived after a week,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.43 AM (2).mp4,app_and_account,medium,frustrated,not_at_risk,low,settings update requested weekly and breaks settings,True
+الكل ان شاء الله\1616.mp3,balance_and_data,medium,calm,not_at_risk,low,balance deducted for a games service; transcript garbled,True
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 2.07.14 PM (5).mp4,balance_and_data,medium,unclear,not_at_risk,low,transcript heavily garbled; package seems to drain early though WhatsApp is unused,True
+الكل ان شاء الله\h50.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,low,"promised a callback within 24 hours after a complaint, nobody called back; transcript garbled",True
+الكل ان شاء الله\n38.m4a,balance_and_data,medium,frustrated,not_at_risk,low,consumption rose strangely after new service installed; transcript garbled,True
+الكل ان شاء الله\1757.mp4,thanks_or_praise,low,satisfied,not_at_risk,low,"chunk 0 of long call, thanks and praise for staff and fast support; transcript garbled",True
+الكل ان شاء الله\1757.mp4,thanks_or_praise,low,satisfied,not_at_risk,low,"chunk 1 of long call, thanks and praise for staff and fast support; repeated text",True
+الكل ان شاء الله\0004.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell what the issue is,False
+الكل ان شاء الله\0019.mp3,other,low,unclear,not_at_risk,low,money transfer notification not received by the other person,False
+الكل ان شاء الله\0024.mp3,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0027 (2).m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0113.m4a,app_and_account,low,unclear,not_at_risk,low,transcript garbled; no way to check something in the app,False
+الكل ان شاء الله\0121.ogg,network_and_connectivity,high,unclear,not_at_risk,low,transcript garbled; no network all day,False
+الكل ان شاء الله\0132.aac,other,low,frustrated,not_at_risk,low,transcript garbled; complaint about promotional offers,False
+الكل ان شاء الله\0137.mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0220.aac,network_and_connectivity,low,unclear,not_at_risk,low,"vague technical problems, unclear whether a real fault",False
+الكل ان شاء الله\0233.mpeg,app_and_account,medium,unclear,not_at_risk,low,transcript garbled; something deducted in the app then disappeared from the account,False
+الكل ان شاء الله\0246.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0255.mp4,other,low,unclear,not_at_risk,low,transcript too garbled or too vague to tell,False
+الكل ان شاء الله\0308.aac,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0342.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0344.m4a,app_and_account,low,unclear,not_at_risk,low,transcript garbled; number shows in the app,False
+الكل ان شاء الله\0348.m4a,balance_and_data,low,unclear,not_at_risk,low,balance withdrawn after recharge; transcript garbled,False
+الكل ان شاء الله\0419.aac,other,low,unclear,at_risk,low,asks about porting the number to another company,False
+الكل ان شاء الله\0422.aac,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0493.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0511.aac,app_and_account,medium,unclear,not_at_risk,low,transcript garbled; something booked in the app then disappeared,False
+الكل ان شاء الله\0516.aac,app_and_account,low,unclear,not_at_risk,low,apps only work on certain phones; transcript garbled,False
+الكل ان شاء الله\0520.aac,app_and_account,low,unclear,not_at_risk,low,vague report of app problems for review,False
+الكل ان شاء الله\0655.mpeg,balance_and_data,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0656.mpeg,balance_and_data,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0704.aac,other,low,unclear,not_at_risk,low,transcript too short and garbled to tell,False
+الكل ان شاء الله\0754.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0760.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0762.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0763.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0783.mpeg,billing_and_charges,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0850.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0856.mpeg,other,low,unclear,not_at_risk,low,transcript too short and garbled to tell,False
+الكل ان شاء الله\0857.mpeg,other,low,unclear,not_at_risk,low,transcript too short and garbled to tell,False
+الكل ان شاء الله\0878.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0911.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0918.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0926.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0927.mpeg,balance_and_data,low,unclear,not_at_risk,low,transcript garbled; appears to be balance deducted without use,False
+الكل ان شاء الله\0928.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0931.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\0943.mpeg,other,low,calm,not_at_risk,low,transcript garbled; asks procedures to move a line from another provider,False
+الكل ان شاء الله\1014.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1075.aac,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1078.mp3,billing_and_charges,medium,unclear,not_at_risk,low,transcript garbled but a 200-pound internet charge is mentioned,False
+الكل ان شاء الله\10k.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1102.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1103.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1116.m4a,other,low,unclear,not_at_risk,low,transcript too short and garbled to tell,False
+الكل ان شاء الله\1117.m4a,app_and_account,medium,unclear,not_at_risk,low,transcript garbled but the problem is with the app,False
+الكل ان شاء الله\1125.m4a,network_and_connectivity,medium,unclear,not_at_risk,low,transcript garbled but call cutting out is clear,False
+الكل ان شاء الله\1126.m4a,network_and_connectivity,medium,unclear,not_at_risk,low,transcript too short and garbled,False
+الكل ان شاء الله\1144.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1166.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1188.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\11i.m4a,other,low,unclear,not_at_risk,low,transcript garbled; appears to ask about new customer offers,False
+الكل ان شاء الله\1209.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1329.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.40 AM (2).mp4,network_and_connectivity,low,unclear,not_at_risk,low,transcript garbled; line appears cut off suddenly,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.41 PM (4).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell what the complaint is,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.06 AM.ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\6 e.m4a,other,low,unclear,not_at_risk,low,transcript garbled; appears to be about internet speed changing,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.42 PM (1).ogg,balance_and_data,low,unclear,not_at_risk,low,transcript garbled; appears to be about data usage per app,False
+الكل ان شاء الله\n78.m4a,other,low,unclear,not_at_risk,low,transcript garbled and ambiguous,False
+الكل ان شاء الله\2098.m4a,other,low,unclear,not_at_risk,low,transcript garbled and ambiguous,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.54 PM (2).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\AUDIO-2025-12-01-17-59-28 copy 2 (1).m4a,other,low,unclear,not_at_risk,low,transcript garbled and ambiguous,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.39.26 PM.mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1661.ogg,other,low,unclear,not_at_risk,low,transcript garbled and ambiguous,False
+الكل ان شاء الله\AUDIO-2025-11-29-09-33-55.m4a,other,low,unclear,not_at_risk,low,transcript garbled and ambiguous,False
+الكل ان شاء الله\5r.m4a,other,low,unclear,not_at_risk,low,transcript garbled; appears to be about a recharge error,False
+الكل ان شاء الله\AUDIO-2025-11-27-16-19-41.m4a,other,low,unclear,not_at_risk,low,transcript garbled; question about a signal booster,False
+الكل ان شاء الله\n23.m4a,app_and_account,low,unclear,not_at_risk,low,transcript ambiguous; reporting app problems for review,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.40 AM (1).mp4,other,low,unclear,not_at_risk,low,transcript garbled and ambiguous,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.37.04 PM.ogg,other,low,unclear,not_at_risk,low,transcript truncated and garbled,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 5.29.50 PM (1).ogg,network_and_connectivity,low,unclear,not_at_risk,low,transcript garbled; no network all day,False
+الكل ان شاء الله\2330.mp4,other,low,unclear,not_at_risk,low,transcript ambiguous; complaint about promotional offers,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.34.57 AM.ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\h76.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.39 AM (2).mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.54.27 PM (4).mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\AUD-20251124-WA0047.m4a,other,low,frustrated,not_at_risk,low,transcript garbled; offer ended without a notification message,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.40 AM (3).mp4,other,low,frustrated,not_at_risk,low,transcript garbled; no message clarifying the company account,False
+الكل ان شاء الله\1736.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\M7.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.57 PM.mp4,other,low,unclear,not_at_risk,low,no specific complaint theme stated,False
+الكل ان شاء الله\Standard recording 26.mp3,other,low,unclear,not_at_risk,low,customer unsure whether it is a problem,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.58 AM (1).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\h77.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.16 PM (6).mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.55.36 PM (2).mpeg,other,low,unclear,not_at_risk,low,"vague technical problem, no specific theme",False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.24 PM (5).mp4,other,low,frustrated,not_at_risk,low,"transcript garbled; service only opens on mobile network, not Wi-Fi",False
+الكل ان شاء الله\2151.ogg,other,low,unclear,not_at_risk,low,"reads like agent notes, not a customer complaint",False
+الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.47 PM (1).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\2293.m4a,other,low,unclear,not_at_risk,low,ambiguous: unclear which service the complaint is about,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.59 PM (2).ogg,other,low,frustrated,not_at_risk,low,general comment that inquiries are annoying and need short ready answers,False
+الكل ان شاء الله\AUDIO-2025-12-02-02-13-38.m4a,other,medium,frustrated,not_at_risk,low,"general complaint that the service got worse, no specific theme",False
+الكل ان شاء الله\AUDIO-2025-11-29-00-33-402.m4a,other,low,frustrated,not_at_risk,low,"general comment about inquiries, no specific complaint",False
+الكل ان شاء الله\٢٣-١١-٢٠٢٥ ٣.١٠.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\2349.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.11 PM.ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\AUDIO-2025-11-27-17-00-26.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.09 PM.aac,other,low,unclear,not_at_risk,low,unsure whether extra services issue is a problem or normal,False
+الكل ان شاء الله\AUDIO-2025-12-02-02-23-16.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.53 PM.ogg,other,low,unclear,not_at_risk,low,transcript garbled; unclear issue with unknown numbers,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 2.07.40 AM (3).mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-20 at 7.34.47 PM.ogg,other,low,calm,not_at_risk,low,asks about procedures to port number to another company,False
+الكل ان شاء الله\2144.ogg,other,low,unclear,not_at_risk,low,transcript garbled; appears unrelated to telecom service,False
+الكل ان شاء الله\AUDIO-2025-12-01-12-45-51 6.mp3,other,low,unclear,not_at_risk,low,transcript garbled; appears to be about new SIM activation delay,False
+الكل ان شاء الله\2260.m4a,other,low,unclear,not_at_risk,low,transcript garbled; unclear what changed about internet,False
+الكل ان شاء الله\AUDIO-2025-11-29-00-33-401.m4a,other,low,unclear,not_at_risk,low,transcript garbled; unclear what changed,False
+الكل ان شاء الله\AUDIO-2025-11-24-22-58-03(7).m4a,other,low,unclear,not_at_risk,low,transcript garbled; unclear question about company number procedures,False
+الكل ان شاء الله\h75.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.53.00 PM (4).ogg,other,low,calm,not_at_risk,low,suggests how to stop promo messages and block spam numbers,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.59 AM.ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\AUDIO-2025-11-29-08-41-37.m4a,other,medium,mad,not_at_risk,low,transcript garbled; general angry complaint about service,False
+الكل ان شاء الله\Concordia Compound 8.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.59 PM (1).ogg,no_reply_or_long_wait,medium,unclear,not_at_risk,low,"transcript reads like an internal suggestion, intent unclear",False
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.55 PM (2).aac,app_and_account,low,unclear,not_at_risk,low,transcript too vague to tell whether it is an app problem,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.32.56 PM.ogg,other,low,calm,not_at_risk,low,asks about family calling plans; transcript garbled,False
+الكل ان شاء الله\AUDIO-2025-11-19-17-24-22 7.m4a,other,medium,frustrated,not_at_risk,low,"games service closed by itself, staff blamed the customer; transcript garbled",False
+الكل ان شاء الله\1949.mpeg,other,low,calm,not_at_risk,low,asks how to get detailed call records; transcript garbled,False
+الكل ان شاء الله\Ibn Sender Street 17.m4a,other,low,calm,not_at_risk,low,asks the difference between the 100 EGP bundle and the higher bundle; transcript garbled,False
+الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.42.00 PM (2).mp4,other,low,calm,not_at_risk,low,asks about fast internet bundles; transcript garbled,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.08 PM (2).mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.58 PM (4).ogg,balance_and_data,low,unclear,not_at_risk,low,transcript garbled,False
+الكل ان شاء الله\2154.ogg,balance_and_data,low,unclear,not_at_risk,low,transcript garbled,False
+الكل ان شاء الله\2374.ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell what the complaint is,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.16 PM (7).mpeg,other,low,unclear,not_at_risk,low,"service unavailable, unclear which service",False
+الكل ان شاء الله\2029.ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell what the complaint is,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.55 PM.ogg,other,low,unclear,not_at_risk,low,"garbled message about changing system, unclear who is speaking",False
+الكل ان شاء الله\2160.ogg,other,low,frustrated,not_at_risk,low,garbled complaint about router instructions,False
+الكل ان شاء الله\AUDIO-2025-11-29-11-35-46.m4a,other,low,unclear,not_at_risk,low,unclear request about international service activation,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.33.00 PM (5).aac,other,low,unclear,not_at_risk,low,vague technical problem with no specifics given,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.41 AM (2).mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell what the complaint is,False
+الكل ان شاء الله\Street 306 10.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell what the complaint is,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.22 PM (6).mp4,other,medium,frustrated,not_at_risk,low,garbled transcript about network problems affecting study,False
+الكل ان شاء الله\New Recording 65.m4a,other,low,unclear,not_at_risk,low,"vague complaint about company page, no specific issue stated",False
+الكل ان شاء الله\New recorpding 12.m4a,other,low,unclear,not_at_risk,low,garbled question about porting number from another network,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.12 PM (7).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.52 PM (3).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\New Recorwding 23.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.38.57 PM.mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 4.41.43 PM (1).mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.00 PM (3).mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.42 PM.ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\9.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.30.01 AM (4).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 11.05.50 PM (1).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.56 PM (2).mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\n47.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\n40.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1896.mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\AUDIO-2025-12-02-03-32-42.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\2028.m4a,other,low,unclear,not_at_risk,low,transcript too vague and garbled to tell,False
+الكل ان شاء الله\1702.m4a,cancellation_request,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\New Recovrding 34.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\h87.m4a,balance_and_data,low,unclear,not_at_risk,low,transcript garbled; unclear whether data auto-renews,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.41 PM (3).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 12.49.20 AM.aac,app_and_account,low,unclear,not_at_risk,low,transcript garbled; app login issue,False
+الكل ان شاء الله\M8.m4a,billing_and_charges,low,unclear,not_at_risk,low,transcript too short and garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 4.41.55 PM (1).mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\Makvkah Street 5.m4a,balance_and_data,low,unclear,not_at_risk,low,transcript garbled; missing bonus after recharge,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.35 PM (1).mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.54.20 PM.mp4,balance_and_data,low,unclear,not_at_risk,low,transcript garbled; bundle renewal deduction,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.54 PM (3).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.18.09 PM (3).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\New recoording 10.m4a,network_and_connectivity,low,unclear,not_at_risk,low,transcript garbled; line keeps failing,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.46 PM (2).mp4,network_and_connectivity,low,unclear,not_at_risk,low,transcript garbled; no signal all day,False
+الكل ان شاء الله\AUDIO-2025-12-01-12-44-24 6.m4a,app_and_account,low,unclear,not_at_risk,low,transcript garbled; app feature unavailable,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.15 PM (2).mpeg,no_reply_or_long_wait,low,unclear,not_at_risk,low,transcript garbled; complained twice with no follow-up,False
+الكل ان شاء الله\AUDIO-2025-11-29-00-33-40.m4a,other,low,unclear,not_at_risk,low,transcript too vague and garbled to tell,False
+الكل ان شاء الله\2143.m4a,network_and_connectivity,low,unclear,not_at_risk,low,transcript garbled; sudden internet disconnection,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 11.55.07 PM.mp4,network_and_connectivity,low,unclear,not_at_risk,low,transcript garbled; calls cut off,False
+الكل ان شاء الله\AUDIO-2025-12-01-12-45-51 8.mp3,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1781.mp3,app_and_account,low,unclear,not_at_risk,low,transcript garbled; app does not work in airplane mode,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.13 AM (1).ogg,network_and_connectivity,low,unclear,not_at_risk,low,transcript garbled; slow Wi-Fi,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.43 PM.mpeg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 1.49.36 PM.aac,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 12.58.25 AM (2).mp4,network_and_connectivity,low,unclear,not_at_risk,low,transcript garbled; line disconnects,False
+الكل ان شاء الله\AUD-20251031-WA0054.aac,balance_and_data,low,unclear,not_at_risk,low,transcript garbled; usage report number differs,False
+الكل ان شاء الله\x5.mp3,app_and_account,low,unclear,not_at_risk,low,transcript garbled; number shown wrong in the app,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.31.56 PM (1).aac,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.42 PM (4).ogg,balance_and_data,low,unclear,not_at_risk,low,transcript garbled; balance consumption complaint,False
+الكل ان شاء الله\New Recording 2121.m4a,other,low,unclear,not_at_risk,low,transcript garbled; line blocked after a complaint,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 5.29.43 PM (2).ogg,other,low,unclear,not_at_risk,low,transcript garbled; question about transferring the line to his wife's name,False
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.45 PM (1).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.53.27 PM (4).aac,other,low,unclear,not_at_risk,low,unclear what changed in promotional offers; transcript vague,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 20.34.54 (2).ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\Makvkah Street.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.53.25 PM (1).mp4,other,low,unclear,not_at_risk,low,unclear whether the promotional offers issue is a problem; transcript vague,False
+الكل ان شاء الله\Standard recording 25.mp3,other,low,unclear,not_at_risk,low,transcript too vague to tell what the issue is,False
+الكل ان شاء الله\1951.mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\32.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\h73.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\AUDIO-2025-11-27-17-06-40.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1963.mp4,other,low,frustrated,not_at_risk,low,says the number was blocked after a report; transcript garbled,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.07 AM (4).aac,other,low,unclear,not_at_risk,low,transcript too short to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 3.28.51 PM.ogg,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.06.57 PM.mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.54 PM (4).ogg,other,low,unclear,not_at_risk,low,transcript unclear who is speaking; new router order arrived used,False
+الكل ان شاء الله\h52.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.32.56 PM (3).ogg,other,low,unclear,not_at_risk,low,unclear whether a sudden change in promotional offers is permanent or temporary,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.41 PM (2).ogg,network_and_connectivity,medium,unclear,not_at_risk,low,transcript garbled; mentions network settings and line maintenance,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 12.48.39 AM.aac,other,low,unclear,not_at_risk,low,transcript too short to tell,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.25 PM (2).mp4,other,low,calm,not_at_risk,low,transcript garbled; question about changing plan,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.44 PM.mp4,other,low,unclear,not_at_risk,low,transcript garbled; unclear what is not changing,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.37.05 PM.ogg,other,low,unclear,not_at_risk,low,"unrelated personal request about recording setup, not a telecom complaint",False
+الكل ان شاء الله\n43.m4a,other,low,unclear,not_at_risk,low,transcript garbled; unclear request to stop a service,False
+الكل ان شاء الله\AUDIO-2025-11-27-16-59-29.m4a,other,low,frustrated,not_at_risk,low,transcript garbled; unclear restriction after talking a lot,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.04.29 PM.mp4,other,low,unclear,not_at_risk,low,transcript too vague to tell if it is a complaint,False
+الكل ان شاء الله\n60.m4a,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\5r.mp3,other,low,unclear,not_at_risk,low,transcript garbled; unclear caller-ID service complaint,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.33.16 PM (1).mp4,other,low,unclear,not_at_risk,low,transcript garbled; unclear package renewal issue,False
+الكل ان شاء الله\2488.mp4,other,low,unclear,not_at_risk,low,transcript too garbled to tell,False
+الكل ان شاء الله\1653.ogg,other,low,unclear,not_at_risk,low,transcript garbled; unclear question about special-needs offers,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.56.37 PM (1).mpeg,other,low,unclear,not_at_risk,low,transcript garbled; vague observation about app problems,False
+الكل ان شاء الله\2188.ogg,other,low,unclear,not_at_risk,low,transcript garbled; unclear change in offers,False
+الكل ان شاء الله\Nasir Saber Street 6.m4a,other,medium,frustrated,not_at_risk,low,transcript garbled; general enquiries described as annoying,False
+الكل ان شاء الله\9k.m4a,other,low,unclear,not_at_risk,low,transcript garbled; unclear question about coverage in an area,False

@@ -1,0 +1,6 @@
+﻿file,audit_n,audio,text,min_avg_logprob,prep_status,quarantine_decision,reason,in_clean_training
+الكل ان شاء الله\0435.aac,95,095.mp3,سفر بصيد,-1.095,quarantine,pending_retranscription,Pending re-transcription: 2-word fragment at very low confidence (logprob -1.10); audio may contain a real message.,False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.45 PM (1).mp4,97,097.mp3,كلمة أغرب ميزة جديدة في الطبيب لإحلص مستحانة,-0.806,quarantine,pending_retranscription,Pending re-transcription: word salad at logprob -0.81; audio may yield a usable transcript.,False
+الكل ان شاء الله\0892.mpeg,98,098.mp3,شكرا لإستقبالك,-0.435,quarantine,exclude,"Exclude: confident 2-word thanks, no routable content; nothing to recover.",False
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.14 PM (2).mpeg,99,099.mp3,نشترك في صفحات المخيش أيضاً,-0.697,quarantine,pending_retranscription,"Pending re-transcription: subscribe-like fragment, unintelligible at logprob -0.70; audio may yield a usable transcript.",False
+الكل ان شاء الله\1460.m4a,100,100.mp3,شكرا لكم.,-0.703,quarantine,pending_retranscription,Pending re-transcription: 2-word fragment at very low confidence (logprob -0.70); audio may contain a real message.,False

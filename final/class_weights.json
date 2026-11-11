@@ -1,0 +1,38 @@
+{
+  "rows": 5751,
+  "method": "sklearn compute_class_weight, balanced, on the clean training set",
+  "weights": {
+    "complaint_category": {
+      "app_and_account": 0.726,
+      "balance_and_data": 0.674,
+      "billing_and_charges": 0.669,
+      "branch_and_staff": 1.154,
+      "cancellation_request": 2.455,
+      "network_and_connectivity": 0.532,
+      "no_reply_or_long_wait": 1.103,
+      "offers_and_packages": 2.409,
+      "other": 1.464,
+      "sim_services": 7.921,
+      "thanks_or_praise": 0.735
+    },
+    "complaint_urgency": {
+      "high": 3.448,
+      "low": 1.087,
+      "medium": 0.559
+    },
+    "customer_state": {
+      "calm": 0.488,
+      "frustrated": 0.457,
+      "mad": 7.234,
+      "satisfied": 1.609,
+      "unclear": 1150.2
+    },
+    "churn_risk": {
+      "at_risk": 89.859,
+      "not_at_risk": 0.503
+    }
+  },
+  "notes": {
+    "customer_state unclear": "1 row only. Weight 1150.2 is not usable. Review the row before training the state head."
+  }
+}
