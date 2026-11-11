@@ -1,0 +1,174 @@
+{
+  "dataset_totals": {
+    "total_files": 6522,
+    "train_ready": 5881,
+    "quarantine": 143,
+    "excluded": 498,
+    "transcripts": 6024
+  },
+  "quarantine_decisions": {
+    "include": 62,
+    "exclude": 18,
+    "pending_retranscription": 63,
+    "total": 143
+  },
+  "duplicates": {
+    "excluded_duplicate_n": 470,
+    "confirmed_true_duplicates_md5_twin": 470,
+    "unclear_duplicates_no_md5_twin": 0,
+    "with_train_ready_md5_twin": 449,
+    "with_quarantine_md5_twin": 17,
+    "with_only_excluded_md5_twins": 4,
+    "duplicates_stay_excluded": true,
+    "method": "source-file md5 in inventory_corrected.csv; every excluded duplicate shares its md5 with at least one other file (kept copy or another excluded copy)"
+  },
+  "duplicate_overlap_with_train_ready": {
+    "excluded_files_also_in_train_ready_by_filename": 0,
+    "train_ready_internal_md5_duplicates": 0,
+    "train_ready_pcm_sha256_unique": 5881,
+    "train_ready_pcm_sha256_total": 5881,
+    "train_ready_pcm_duplicates": 0,
+    "quarantine_md5_overlap_with_train_ready": 0,
+    "train_ready_text_norm_rows_in_duplicate_text_groups": 242,
+    "train_ready_text_norm_unique": 5743,
+    "note": "Excluded duplicates have no transcript rows, so a text_norm overlap check against them is not applicable; the audio-level check is md5. The 449 md5 twins in train-ready are the kept copies the duplicates were excluded against, not a leak."
+  },
+  "recovery_coverage": {
+    "recovered_n": 26,
+    "recovered_unique_n": 26,
+    "recovered_by_exclude_reason": {
+      "low_snr": 18,
+      "too_long": 1,
+      "clipped": 6,
+      "mostly_silence": 1
+    },
+    "recovered_by_op": {
+      "afftdn denoise": 18,
+      "chunk into 60 s max segments (see long_file_chunks.json)": 1,
+      "adeclip, tolerate if no reduction": 6,
+      "silenceremove trim": 1
+    },
+    "recovered_all_verified_true": true,
+    "recovered_all_in_excluded_set": true,
+    "reason_mismatches_vs_disposition": [],
+    "non_duplicate_excluded_total": 28,
+    "non_duplicate_excluded_recovered": 26,
+    "non_duplicate_excluded_not_recovered": [
+      "الكل ان شاء الله\\0797.mpeg",
+      "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 2.07.06 PM (1).aac"
+    ],
+    "any_non_duplicate_excluded_still_recoverable_beyond_26": false,
+    "recovered_files_have_transcripts_yet": false,
+    "recovered_files_with_transcript_rows": 0,
+    "recovered_audio_files_on_disk": 26,
+    "note": "The 26 recovered files are NOT train-ready yet: they have no transcripts and await transcription (incl. 3 chunks for the 125.9s too_long file). Recovery is audio repair only."
+  },
+  "too_short_excluded": {
+    "rows": [
+      {
+        "file": "الكل ان شاء الله\\0797.mpeg",
+        "duration_s": 0.432,
+        "duration_decoded_s": 0.432,
+        "snr_db": 133.2,
+        "silence_pct": 33.3,
+        "clip_pct": 0.0
+      },
+      {
+        "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 2.07.06 PM (1).aac",
+        "duration_s": 0.725313,
+        "duration_decoded_s": 0.725313,
+        "snr_db": 146.8,
+        "silence_pct": 13.9,
+        "clip_pct": 0.0
+      }
+    ],
+    "recoverable": false,
+    "shortest_train_ready_duration_s": 1.9135,
+    "note": "Both are under 1s (0.432s, 0.725s); the shortest train-ready file is 1.914s. Too short to carry a routable utterance; no recovery op applies."
+  },
+  "clipping": {
+    "train_ready_clipped_n": 312,
+    "train_ready_clean_n": 5569,
+    "quarantine_clipped_n": 8,
+    "total_clipped_in_transcribed_pool_n": 320,
+    "clip_pct_train_ready_clipped_mean": 0.0298,
+    "clip_pct_train_ready_clipped_max": 0.473,
+    "clip_pct_train_ready_clipped_min": 0.001,
+    "clip_pct_all_320_mean": 0.0312,
+    "clip_pct_all_320_max": 0.497,
+    "clip_pct_all_320_share_over_1pct": 0.0,
+    "clip_pct_clean_mean": 0.0,
+    "clip_pct_clean_max": 0.0,
+    "mean_min_avg_logprob_clipped": -0.1933,
+    "mean_min_avg_logprob_clean": -0.1922,
+    "mean_logprob_difference_clipped_minus_clean": -0.0011,
+    "median_min_avg_logprob_clipped": -0.1794,
+    "median_min_avg_logprob_clean": -0.1764,
+    "share_logprob_below_minus0_5_clipped": 0.0,
+    "share_logprob_below_minus0_5_clean": 0.0,
+    "count_logprob_below_minus0_5_clipped": 0,
+    "count_logprob_below_minus0_5_clean": 0,
+    "share_logprob_below_minus0_4_clipped": 0.0224,
+    "share_logprob_below_minus0_4_clean": 0.0302,
+    "needs_review_share_clipped": 0.0,
+    "needs_review_share_clean": 0.0,
+    "mean_max_no_speech_prob_clipped": 0.00592,
+    "mean_max_no_speech_prob_clean": 0.00685,
+    "mean_words_clipped": 19.49,
+    "mean_words_clean": 15.73,
+    "welch_t_statistic_logprob": -0.2439,
+    "welch_p_value_logprob": 0.8075,
+    "tolerate_decision_safe": true
+  },
+  "duration_drift": {
+    "checked_train_ready_files": 5881,
+    "mismatches_corrected_vs_decoded": 0,
+    "mismatch_files": [],
+    "max_abs_diff_corrected_vs_decoded_s": 0.0,
+    "tolerance_s": 1e-09,
+    "original_inventory_vs_decoded_gt_0_1s": 82,
+    "original_inventory_vs_decoded_max_abs_s": 0.4865,
+    "original_inventory_vs_decoded_mean_abs_s": 0.0136,
+    "original_drift_gt_0_1s_by_format": {
+      ".aac": 79,
+      ".m4a": 3
+    },
+    "audio_decode_json_drift_block": {
+      "by_format": {
+        ".aac": 79,
+        ".m4a": 3
+      },
+      "gt_0.1s": 82,
+      "max_drift_s": 0.487
+    },
+    "corrected_inventory_matches_audio_decode": true
+  },
+  "excluded_disposition_json": {
+    "permanently_unusable": 472,
+    "reasons": {
+      "clipped": 6,
+      "duplicate": 470,
+      "low_snr": 18,
+      "mostly_silence": 1,
+      "too_long": 1,
+      "too_short": 2
+    },
+    "recoverable": 26,
+    "recoverable_reasons": [
+      "clipped",
+      "low_snr",
+      "mostly_silence",
+      "too_long"
+    ],
+    "total": 498
+  },
+  "sources": {
+    "transcripts": "dataset/preprocessed/transcripts_clean.csv",
+    "disposition": "dataset/preprocessed/disposition_manifest.csv",
+    "excluded_disposition": "dataset/preprocessed/excluded_disposition.json",
+    "recovery_manifest": "dataset/prepared/recovery_manifest.json",
+    "inventory_corrected": "dataset/prepared/inventory_corrected.csv",
+    "audio_decode": "dataset/preprocessed/audio_decode.json",
+    "audit_summary": "dataset/prepared/audit_summary.json"
+  }
+}

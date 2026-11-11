@@ -1,0 +1,3380 @@
+{
+  "total_rows": 5881,
+  "scope": "train-ready only (prep_status == train_ready). Quarantined (143) and excluded (498) rows are NOT labeled and NOT in this file.",
+  "source": "transcripts_clean.csv (train-ready rows), labeled from text and text_norm",
+  "complaint_category": {
+    "network_and_connectivity": 978,
+    "other": 796,
+    "billing_and_charges": 774,
+    "balance_and_data": 772,
+    "app_and_account": 730,
+    "thanks_or_praise": 705,
+    "no_reply_or_long_wait": 468,
+    "branch_and_staff": 446,
+    "cancellation_request": 212
+  },
+  "complaint_urgency": {
+    "medium": 3396,
+    "low": 1943,
+    "high": 542
+  },
+  "customer_state": {
+    "frustrated": 2480,
+    "calm": 2335,
+    "satisfied": 709,
+    "unclear": 197,
+    "mad": 160
+  },
+  "churn_risk": {
+    "not_at_risk": 5849,
+    "at_risk": 32
+  },
+  "confidence": {
+    "high": 5464,
+    "low": 417
+  },
+  "low_confidence_rows": 417,
+  "other_rows": 796,
+  "hazem_4_rows_match_exactly": true,
+  "calibration_rows_in_train_ready": 90,
+  "calibration_rows_labeled": 90,
+  "rows_not_labeled_confidently": 219,
+  "low_confidence_list": [
+    {
+      "file": "الكل ان شاء الله\\0004.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell what the issue is"
+    },
+    {
+      "file": "الكل ان شاء الله\\0019.mp3",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "money transfer notification not received by the other person"
+    },
+    {
+      "file": "الكل ان شاء الله\\0024.mp3",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0027 (2).m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0028.m4a",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "complaint about customer service getting worse; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\0036.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; repeated internet cuts with the same improvement promise"
+    },
+    {
+      "file": "الكل ان شاء الله\\0041.m4a",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "same issue repeats every two weeks with no follow-up; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\0096.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "repeated line faults; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\0113.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; no way to check something in the app"
+    },
+    {
+      "file": "الكل ان شاء الله\\0115.mp4",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; code request in the app says service unavailable"
+    },
+    {
+      "file": "الكل ان شاء الله\\0121.ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "high",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; no network all day"
+    },
+    {
+      "file": "الكل ان شاء الله\\0132.aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; complaint about promotional offers"
+    },
+    {
+      "file": "الكل ان شاء الله\\0137.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0142.ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "automatic switching between packages does not work; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\0162.mp3",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; app keeps logging out on Wi-Fi"
+    },
+    {
+      "file": "الكل ان شاء الله\\0171.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; network does not work on the top floor"
+    },
+    {
+      "file": "الكل ان شاء الله\\0178.mp3",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; app behaves oddly after the update"
+    },
+    {
+      "file": "الكل ان شاء الله\\0183.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; app does not show the package or the balance"
+    },
+    {
+      "file": "الكل ان شاء الله\\0194.mp4",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; support helped cancel the daily drama service"
+    },
+    {
+      "file": "الكل ان شاء الله\\0220.aac",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "vague technical problems, unclear whether a real fault"
+    },
+    {
+      "file": "الكل ان شاء الله\\0230.mpeg",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; support came on time"
+    },
+    {
+      "file": "الكل ان شاء الله\\0233.mpeg",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; something deducted in the app then disappeared from the account"
+    },
+    {
+      "file": "الكل ان شاء الله\\0246.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0255.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled or too vague to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0266.mp4",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; app will not open and the code request says service unavailable"
+    },
+    {
+      "file": "الكل ان شاء الله\\0269.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; cannot make calls at night"
+    },
+    {
+      "file": "الكل ان شاء الله\\0308.aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0312.aac",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; technical problems are annoying and unhandled"
+    },
+    {
+      "file": "الكل ان شاء الله\\0315.aac",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line disconnects around Maghreb time"
+    },
+    {
+      "file": "الكل ان شاء الله\\0339.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; network good in the street but not at home"
+    },
+    {
+      "file": "الكل ان شاء الله\\0342.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0343.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; app does not save the data correctly"
+    },
+    {
+      "file": "الكل ان شاء الله\\0344.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; number shows in the app"
+    },
+    {
+      "file": "الكل ان شاء الله\\0348.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "balance withdrawn after recharge; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\0373.mpeg",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "repeated cold replies from staff with no interest; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\0386.mpeg",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; app does not show remaining data"
+    },
+    {
+      "file": "الكل ان شاء الله\\0395.mp3",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; automatic services charged without request"
+    },
+    {
+      "file": "الكل ان شاء الله\\0419.aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "at_risk",
+      "note": "asks about porting the number to another company"
+    },
+    {
+      "file": "الكل ان شاء الله\\0422.aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0448.aac",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; requested service in the app is often unavailable"
+    },
+    {
+      "file": "الكل ان شاء الله\\0466.mpeg",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; logging in with a new number wipes the app data"
+    },
+    {
+      "file": "الكل ان شاء الله\\0473.mpeg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; service cancelled then the same amount deducted again"
+    },
+    {
+      "file": "الكل ان شاء الله\\0480.mpeg",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; card refused in the app though it works elsewhere"
+    },
+    {
+      "file": "الكل ان شاء الله\\0485.mpeg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line keeps cutting while abroad"
+    },
+    {
+      "file": "الكل ان شاء الله\\0493.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0511.aac",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; something booked in the app then disappeared"
+    },
+    {
+      "file": "الكل ان شاء الله\\0516.aac",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "apps only work on certain phones; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\0520.aac",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "vague report of app problems for review"
+    },
+    {
+      "file": "الكل ان شاء الله\\0521.aac",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "mad",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; support hung up on the customer"
+    },
+    {
+      "file": "الكل ان شاء الله\\0527.aac",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too short to tell what service is unavailable"
+    },
+    {
+      "file": "الكل ان شاء الله\\0610.aac",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled, bill amount unclear"
+    },
+    {
+      "file": "الكل ان شاء الله\\0635.mpeg",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but intent is thanks for fast service"
+    },
+    {
+      "file": "الكل ان شاء الله\\0655.mpeg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0656.mpeg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0704.aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too short and garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0754.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0760.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0761.mpeg",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but intent is thanks for service"
+    },
+    {
+      "file": "الكل ان شاء الله\\0762.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0763.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0783.mpeg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0850.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0856.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too short and garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0857.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too short and garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0878.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0911.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0918.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0926.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0927.mpeg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; appears to be balance deducted without use"
+    },
+    {
+      "file": "الكل ان شاء الله\\0928.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0931.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\0943.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; asks procedures to move a line from another provider"
+    },
+    {
+      "file": "الكل ان شاء الله\\1012.m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but intent is thanks for app update"
+    },
+    {
+      "file": "الكل ان شاء الله\\1014.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1075.aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1078.mp3",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but a 200-pound internet charge is mentioned"
+    },
+    {
+      "file": "الكل ان شاء الله\\10k.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1102.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1103.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1116.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too short and garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1117.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but the problem is with the app"
+    },
+    {
+      "file": "الكل ان شاء الله\\1125.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but call cutting out is clear"
+    },
+    {
+      "file": "الكل ان شاء الله\\1126.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too short and garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1144.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1166.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1188.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\11i.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; appears to ask about new customer offers"
+    },
+    {
+      "file": "الكل ان شاء الله\\1209.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1222.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript short but network weakening on second floor is clear"
+    },
+    {
+      "file": "الكل ان شاء الله\\13.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but balance deducted after using package code"
+    },
+    {
+      "file": "الكل ان شاء الله\\1320.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but missing balance is clear"
+    },
+    {
+      "file": "الكل ان شاء الله\\1329.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1394.m4a",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but complaint about branch staff ignoring customer"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 11.11.40 AM (2).mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line appears cut off suddenly"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.41 PM (4).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell what the complaint is"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 5.35.06 AM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\6 e.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; appears to be about internet speed changing"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.42 PM (1).ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; appears to be about data usage per app"
+    },
+    {
+      "file": "الكل ان شاء الله\\n78.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled and ambiguous"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 4.41.51 PM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; no network when calling"
+    },
+    {
+      "file": "الكل ان شاء الله\\2098.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled and ambiguous"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.54 PM (2).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-12-01-17-59-28 copy 2 (1).m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled and ambiguous"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 11.39.26 PM.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1661.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled and ambiguous"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-09-33-55.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled and ambiguous"
+    },
+    {
+      "file": "الكل ان شاء الله\\5r.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; appears to be about a recharge error"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-27-16-19-41.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; question about a signal booster"
+    },
+    {
+      "file": "الكل ان شاء الله\\n23.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript ambiguous; reporting app problems for review"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 11.11.40 AM (1).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled and ambiguous"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 10.37.04 PM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript truncated and garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 5.29.50 PM (1).ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; no network all day"
+    },
+    {
+      "file": "الكل ان شاء الله\\2330.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript ambiguous; complaint about promotional offers"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 5.34.57 AM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\h76.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-25-01-39-30.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled but OTP/message delay is clear"
+    },
+    {
+      "file": "الكل ان شاء الله\\3f.mp3",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; appears to be customer service closing after a long wait"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 11.11.39 AM (2).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-28 at 1.52.00 AM.ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript truncated"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 6.54.27 PM (4).mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\Standard recording 23.mp3",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; customer service call drops after a long wait"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 1.25.18 AM.aac",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; employee was polite and helped"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-19-19-26-08.m4a",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; question about paying package fees every time"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-27-16-53-24.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; package activation message sent but package does not work"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUD-20251124-WA0047.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; offer ended without a notification message"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 11.11.40 AM (3).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; no message clarifying the company account"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-28 at 12.48.49 AM.aac",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; balance being deducted"
+    },
+    {
+      "file": "الكل ان شاء الله\\Dir Al Naheyah Street 12A 4.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; technician has not come to install the router"
+    },
+    {
+      "file": "الكل ان شاء الله\\1736.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\M7.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 7.28.57 PM.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "no specific complaint theme stated"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 5.05.34 PM (1).mp4",
+      "complaint_category": "cancellation_request",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; temporary line suspension request not executed"
+    },
+    {
+      "file": "الكل ان شاء الله\\Standard recording 26.mp3",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "customer unsure whether it is a problem"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.44 PM (1).ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "mixed with advice text about video quality"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 5.29.50 PM (2).ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line disconnects and says invalid"
+    },
+    {
+      "file": "الكل ان شاء الله\\2297.ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; sudden change in balance consumption"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 1.29.59 AM (3).ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; network problem at home"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 1.29.58 AM (1).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\h77.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 1.53.44 PM.ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; balance deducted though not subscribed to a package"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 1.24.59 AM.mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; night package worked only one hour"
+    },
+    {
+      "file": "الكل ان شاء الله\\2460.mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; package is 50 vs 100 megabytes"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 11.32.21 PM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 8.23.16 PM (6).mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\Recording (9).m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; network fast at the club"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 12.59.42 PM (5).mpeg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; add-on auto-activated with no clear way to stop it"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 3.55.36 PM (2).mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "vague technical problem, no specific theme"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.48 PM.ogg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "double charge when changing package, mixed with advice text"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 5.05.24 PM (5).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; service only opens on mobile network, not Wi-Fi"
+    },
+    {
+      "file": "الكل ان شاء الله\\2151.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "reads like agent notes, not a customer complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Ptt 2025-11-30 at 9.31.47 PM (1).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\2198.ogg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; services activated without request and balance deducted"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-25 at 11.25.27 PM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line disconnected suddenly and will not restart"
+    },
+    {
+      "file": "الكل ان شاء الله\\2293.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "ambiguous: unclear which service the complaint is about"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.59 PM (2).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "general comment that inquiries are annoying and need short ready answers"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-09-40-53.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line not receiving calls"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-12-02-02-13-38.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "general complaint that the service got worse, no specific theme"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.47 PM (2).ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "question about speed difference morning vs night, mixed with advice text"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recording 60.m4a",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; waited an hour on the line, problem unresolved"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 12.59.04 PM (4).mp4",
+      "complaint_category": "cancellation_request",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; wants all auto-activated add-ons cancelled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1907.m4a",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; complaint registered then told to call again"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-00-33-402.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "general comment about inquiries, no specific complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-00-30-06.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 3.56.22 PM (1).mpeg",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript ambiguous or too garbled to label confidently"
+    },
+    {
+      "file": "الكل ان شاء الله\\٢٣-١١-٢٠٢٥ ٣.١٠.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\2349.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-27-17-06-25.m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript ambiguous or too garbled to label confidently"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 12.25.11 PM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-27-17-00-26.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\2381.ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 2.07.09 PM.aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "unsure whether extra services issue is a problem or normal"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 4.41.43 PM.mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-21 at 9.56.08 PM (2).mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\تسجيل جديد ١٢.m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; appears to praise support"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-12-02-02-23-16.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.40 PM.ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 5.34.58 AM (1).ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Ptt 2025-11-30 at 9.31.53 PM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear issue with unknown numbers"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 2.07.40 AM (3).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-20 at 7.34.47 PM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "asks about procedures to port number to another company"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.51 PM (2).ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2308.mp4",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; staff promise not kept"
+    },
+    {
+      "file": "الكل ان شاء الله\\2144.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; appears unrelated to telecom service"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-12-01-12-45-51 6.mp3",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; appears to be about new SIM activation delay"
+    },
+    {
+      "file": "الكل ان شاء الله\\1972.mp4",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 4.41.54 PM (2).mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2260.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear what changed about internet"
+    },
+    {
+      "file": "الكل ان شاء الله\\1731.aac",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\x98.mp3",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript ambiguous or too garbled to label confidently"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-00-33-401.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear what changed"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-24-22-58-03(7).m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear question about company number procedures"
+    },
+    {
+      "file": "الكل ان شاء الله\\2175.ogg",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript vague about what the problem is"
+    },
+    {
+      "file": "الكل ان شاء الله\\n41.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\h75.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\تسجيل جديد ٩.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2190.m4a",
+      "complaint_category": "cancellation_request",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript ambiguous or too garbled to label confidently"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 11.55.07 PM (2).mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1826.mp3",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.53.00 PM (4).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "suggests how to stop promo messages and block spam numbers"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 1.23.06 AM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; codes not responding"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 1.29.59 AM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\Makkvah Street 2.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-08-41-37.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "medium",
+      "customer_state": "mad",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; general angry complaint about service"
+    },
+    {
+      "file": "الكل ان شاء الله\\Concordia Compound 8.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-12-02-02-23-15.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too vague to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.59 PM (1).ogg",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript reads like an internal suggestion, intent unclear"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 7.32.55 PM (1).mp4",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 5.29.45 PM (3).ogg",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 5.35.05 AM (1).ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 3.55.30 PM.mpeg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 7.54.54 PM (1).mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-01 at 6.18.49 AM (1).mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 2.07.07 PM.aac",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 1.07.32 AM.mp4",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 11.52.49 PM.mp4",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 11.05.30 PM.ogg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1642.ogg",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 7.28.55 PM (2).aac",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too vague to tell whether it is an app problem"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 12.25.10 PM.ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-00-45-2977.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 7.32.42 PM.mp4",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 12.25.09 PM (2).ogg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript starts mid-sentence, garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-21 at 9.56.05 PM (6).mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2026-03-28 at 5.41.58 PM (4).mp4",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 7.54.58 PM (2).mp4",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-01 at 6.19.07 AM.mp4",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 3.56.16 PM (1).mpeg",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript vague about what changed in the app"
+    },
+    {
+      "file": "الكل ان شاء الله\\M6.m4a",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\39.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "mad",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\n73.m4a",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2462.mpeg",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 6.28.08 PM (2).ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 1.30.09 PM (2).aac",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 5.05.33 PM.mpeg",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 8.32.56 PM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "asks about family calling plans; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1704.m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 1.00.04 AM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 5.35.12 AM.ogg",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recording 45.m4a",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-25 at 11.25.30 PM.aac",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-19-17-24-22 7.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "games service closed by itself, staff blamed the customer; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 11.33.09 PM (2).mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2063.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1770.mp3",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-27-16-06-40.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1949.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "asks how to get detailed call records; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-12-02-01-05-52.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2486.mp4",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-25 at 17.29.54 (4).mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recording 53.m4a",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUD-20251123-WA0059.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1753.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1983.mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\Ibn Sender Street 17.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "asks the difference between the 100 EGP bundle and the higher bundle; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2026-03-28 at 5.42.00 PM (2).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "asks about fast internet bundles; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-21-01-32-37 2.m4a",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\مكالمهs 1.mp3",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 1.53.46 PM.ogg",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 7.32.45 PM (2).mp4",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 2.07.40 AM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "high",
+      "customer_state": "mad",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\New recorioding 13.m4a",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1979.mpeg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\Recording (4).m4a",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\ملف تسجيل جديد 4.m4a.mp3",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\3d.m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-25 at 6.30.10 AM.ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recording 43.m4a",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 12.25.10 PM (2).ogg",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 8.23.08 PM (2).mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1918.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 11.37.19 PM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2430.ogg",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2292.ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.58 PM (4).ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1926.aac",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-19 at 2.34.41 PM.mp4",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUD-20251124-WA0067.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1900.aac",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\1733.m4a",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2154.ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-25 at 17.51.47 (2).mp4",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2253.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording but complaint is about internet service"
+    },
+    {
+      "file": "الكل ان شاء الله\\2374.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell what the complaint is"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 8.23.16 PM (7).mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "service unavailable, unclear which service"
+    },
+    {
+      "file": "الكل ان شاء الله\\2029.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell what the complaint is"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUD-20251124-WA0094.mp3",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about staff repeating same words with no solution"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.55 PM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "garbled message about changing system, unclear who is speaking"
+    },
+    {
+      "file": "الكل ان شاء الله\\2160.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled complaint about router instructions"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-11-35-46.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "unclear request about international service activation"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 8.33.00 PM (5).aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "vague technical problem with no specifics given"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 9.56.26 PM (4).ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about SIM suddenly not sending or receiving"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 11.11.41 AM (2).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell what the complaint is"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 9.18.09 PM.mpeg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about daily package working intermittently"
+    },
+    {
+      "file": "الكل ان شاء الله\\Concordia Compound 4.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about landline internet being slow"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.58 PM (1).ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about balance running out"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 11.11.39 AM (3).mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "high",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about nothing opening for two days"
+    },
+    {
+      "file": "الكل ان شاء الله\\Street 306 10.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell what the complaint is"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 11.58.56 PM.mpeg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about unauthorized services and balance deductions"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 5.05.22 PM (6).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled transcript about network problems affecting study"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recording 65.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "vague complaint about company page, no specific issue stated"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 11.38.55 PM.mp4",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about automatic service activation and balance"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-00-33-4011.m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording but praise for improvement is clear"
+    },
+    {
+      "file": "الكل ان شاء الله\\2244.m4a",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about a service subscribed without permission"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 6.54.21 PM (1).mp4",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about number not appearing in app"
+    },
+    {
+      "file": "الكل ان شاء الله\\2147.m4a",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "mad",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about discount messages"
+    },
+    {
+      "file": "الكل ان شاء الله\\New recorpding 12.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "garbled question about porting number from another network"
+    },
+    {
+      "file": "الكل ان شاء الله\\تسجيل (6).m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "garbled wording about balance deducted after recharge"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 12.25.12 PM (7).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Ptt 2025-11-30 at 9.31.52 PM (3).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recorwding 23.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 11.38.57 PM.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 4.41.43 PM (1).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-21 at 9.56.00 PM (3).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.42 PM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\9.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 1.30.01 AM (4).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 11.05.50 PM (1).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 7.28.56 PM (2).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\n47.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\n40.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1896.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-12-02-03-32-42.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\2028.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too vague and garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1702.m4a",
+      "complaint_category": "cancellation_request",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recovrding 34.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\h87.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear whether data auto-renews"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.41 PM (3).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-28 at 12.49.20 AM.aac",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; app login issue"
+    },
+    {
+      "file": "الكل ان شاء الله\\M8.m4a",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too short and garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-23 at 8.08.57 PM (1).ogg",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; branch employee rude"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 7.32.57 PM (3).mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript partly garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 4.41.55 PM (1).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\Makvkah Street 5.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; missing bonus after recharge"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 7.32.35 PM (1).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 6.54.20 PM.mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; bundle renewal deduction"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.54 PM (3).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 9.18.09 PM (3).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-00-45-296.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript partly garbled; balance consumption complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\New recoording 10.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line keeps failing"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 8.23.46 PM (2).mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; no signal all day"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-12-01-12-44-24 6.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; app feature unavailable"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 8.23.15 PM (2).mpeg",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; complained twice with no follow-up"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-28 at 12.49.18 AM.aac",
+      "complaint_category": "cancellation_request",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; trying to stop a service that stays active"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-29-00-33-40.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too vague and garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-25 at 17.02.57 (4).mp4",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript partly garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\2143.m4a",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; sudden internet disconnection"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 11.55.07 PM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; calls cut off"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-12-01-12-45-51 8.mp3",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1781.mp3",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; app does not work in airplane mode"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 5.35.13 AM (1).ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; slow Wi-Fi"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 5.05.43 PM.mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\2288.ogg",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; support response unclear"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-21 at 1.49.36 PM.aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 12.58.25 AM (2).mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line disconnects"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUD-20251031-WA0054.aac",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; usage report number differs"
+    },
+    {
+      "file": "الكل ان شاء الله\\x5.mp3",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; number shown wrong in the app"
+    },
+    {
+      "file": "الكل ان شاء الله\\Makvkah Street 10.m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; thanks for fast response"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 8.31.56 PM (1).aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.42 PM (4).ogg",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; balance consumption complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recording 2121.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line blocked after a complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-30 at 5.29.43 PM (2).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; question about transferring the line to his wife's name"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 1.53.45 PM (1).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recofrding 21.m4a",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; bundle ends in the first week despite little use"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-28 at 10.53.27 PM (4).aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "unclear what changed in promotional offers; transcript vague"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-25 at 20.34.54 (2).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\Makvkah Street.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-28 at 10.53.25 PM (1).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "unclear whether the promotional offers issue is a problem; transcript vague"
+    },
+    {
+      "file": "الكل ان شاء الله\\Standard recording 25.mp3",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too vague to tell what the issue is"
+    },
+    {
+      "file": "الكل ان شاء الله\\1951.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 11.11.40 AM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line blocked after a complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\32.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\h73.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-27-17-06-40.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\1963.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "says the number was blocked after a report; transcript garbled"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 1.23.07 AM (4).aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too short to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-21 at 3.28.51 PM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 2.06.57 PM.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUD-20251124-WA0024.m4a",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; technician came but seemed uninterested"
+    },
+    {
+      "file": "الكل ان شاء الله\\2258.ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; weak network during calls"
+    },
+    {
+      "file": "الكل ان شاء الله\\تسجيل (17).m4a",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; SIM swap in branch, number now under a different name"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.54 PM (4).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript unclear who is speaking; new router order arrived used"
+    },
+    {
+      "file": "الكل ان شاء الله\\1822.mpeg",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; problem resolved and thanks given"
+    },
+    {
+      "file": "الكل ان شاء الله\\h52.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-02 at 12.18.38 AM.mp4",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; thanks support team"
+    },
+    {
+      "file": "الكل ان شاء الله\\New Recording 38.m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; thanks given"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 8.32.56 PM (3).ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "unclear whether a sudden change in promotional offers is permanent or temporary"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.41 PM (2).ogg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; mentions network settings and line maintenance"
+    },
+    {
+      "file": "الكل ان شاء الله\\n90.ogg",
+      "complaint_category": "branch_and_staff",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; staff could not explain internet usage"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-27-17-05-27 3.m4a",
+      "complaint_category": "thanks_or_praise",
+      "complaint_urgency": "low",
+      "customer_state": "satisfied",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; praises parental-control feature saving money"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 7.28.49 PM (1).mp4",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; booked code disappeared from account"
+    },
+    {
+      "file": "الكل ان شاء الله\\1743.mp3",
+      "complaint_category": "balance_and_data",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; upset about recharge and data running out"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-28 at 12.48.39 AM.aac",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too short to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\2001.m4a",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; wallet only opens on mobile data"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 5.05.25 PM (2).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; question about changing plan"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 12.59.44 PM.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear what is not changing"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 2.07.39 AM (2).mp4",
+      "complaint_category": "no_reply_or_long_wait",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; repeated calls with no resolution"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 10.37.05 PM.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "unrelated personal request about recording setup, not a telecom complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\1631.m4a",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; no notification before renewal charge"
+    },
+    {
+      "file": "الكل ان شاء الله\\n43.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear request to stop a service"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUDIO-2025-11-27-16-59-29.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear restriction after talking a lot"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 5.04.29 PM.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too vague to tell if it is a complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-26 at 1.52.40 PM (2).ogg",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; request for manual activation or balance refund"
+    },
+    {
+      "file": "الكل ان شاء الله\\n60.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\5r.mp3",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear caller-ID service complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-29 at 11.33.16 PM (1).mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear package renewal issue"
+    },
+    {
+      "file": "الكل ان شاء الله\\2488.mp4",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript too garbled to tell"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Ptt 2025-11-30 at 9.31.51 PM (1).ogg",
+      "complaint_category": "app_and_account",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; could not find social package in app"
+    },
+    {
+      "file": "الكل ان شاء الله\\1653.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear question about special-needs offers"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-27 at 5.05.23 PM.mp4",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; line blocked after complaint"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-22 at 3.56.37 PM (1).mpeg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; vague observation about app problems"
+    },
+    {
+      "file": "الكل ان شاء الله\\2188.ogg",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear change in offers"
+    },
+    {
+      "file": "الكل ان شاء الله\\Nasir Saber Street 6.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; general enquiries described as annoying"
+    },
+    {
+      "file": "الكل ان شاء الله\\AUD-20251123-WA0186.mp3",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "medium",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unexplained deductions from balance"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-11-19 at 2.34.41 PM (3).mp4",
+      "complaint_category": "billing_and_charges",
+      "complaint_urgency": "low",
+      "customer_state": "calm",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; message about a debt after paying landline"
+    },
+    {
+      "file": "الكل ان شاء الله\\9k.m4a",
+      "complaint_category": "other",
+      "complaint_urgency": "low",
+      "customer_state": "unclear",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; unclear question about coverage in an area"
+    },
+    {
+      "file": "الكل ان شاء الله\\WhatsApp Audio 2025-12-01 at 1.29.47 AM.mpeg",
+      "complaint_category": "network_and_connectivity",
+      "complaint_urgency": "medium",
+      "customer_state": "frustrated",
+      "churn_risk": "not_at_risk",
+      "note": "transcript garbled; internet drops at night and returns only after restarting router"
+    }
+  ]
+}

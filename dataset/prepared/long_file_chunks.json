@@ -1,0 +1,27 @@
+{
+ "file": "الكل ان شاء الله\\1757.mp4",
+ "total_duration_s": 125.922,
+ "max_segment_s": 60.0,
+ "overlap_s": 0.0,
+ "segments": [
+  {
+   "index": 0,
+   "start_s": 0.0,
+   "end_s": 60.0,
+   "duration_s": 60.0
+  },
+  {
+   "index": 1,
+   "start_s": 60.0,
+   "end_s": 120.0,
+   "duration_s": 60.0
+  },
+  {
+   "index": 2,
+   "start_s": 120.0,
+   "end_s": 125.922,
+   "duration_s": 5.922
+  }
+ ],
+ "note": "segments need transcription before any use; map is the deliverable"
+}

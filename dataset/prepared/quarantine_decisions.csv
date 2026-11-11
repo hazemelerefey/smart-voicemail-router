@@ -1,0 +1,144 @@
+file,review_reasons,decision,reason
+الكل ان شاء الله\0017.mp3,low_confidence,include,Include: SMS not reaching company line despite working network is explicit.
+الكل ان شاء الله\0021.mp3,prompt_leak,pending_retranscription,"Pending re-transcription: transcript is leaked prompt text ('اتصالات بالعامية المصرية'), not customer speech; audio may yield a real transcript."
+الكل ان شاء الله\0030.m4a,low_confidence,pending_retranscription,"Pending re-transcription: fragment, unclear what the code is for at logprob -0.59; audio may yield a usable transcript."
+الكل ان شاء الله\0035.m4a,low_confidence,exclude,Exclude: speaker says they forgot what to say; no routable content even if the transcript is perfect.
+الكل ان شاء الله\0060.m4a,low_confidence,include,Include: support agent replies without listening is identifiable despite garbled tail.
+الكل ان شاء الله\0084.m4a,low_confidence,include,Include: calls keep cutting since area change is explicit.
+الكل ان شاء الله\0102.m4a,low_confidence,include,Include: unwanted deduction for an unneeded service is explicit.
+الكل ان شاء الله\0104.m4a,low_confidence,include,Include: unwanted deduction messages never subscribed to are explicit.
+الكل ان شاء الله\0112.m4a,low_confidence,include,Include: question about new mobile offer with internet bundle is identifiable.
+الكل ان شاء الله\0117.mp4,low_confidence,include,Include: can I make a different line from the old number is a clear question.
+الكل ان شاء الله\0157.m4a,low_confidence,include,Include: bundle-change question is identifiable despite confused wording.
+الكل ان شاء الله\0195.m4a,low_confidence,pending_retranscription,Pending re-transcription: word salad at logprob -0.71; audio may yield a usable transcript.
+الكل ان شاء الله\0203.aac,,include,Include: coherent complete complaint/question despite >50% silence; distinct recording (unique md5) though wording matches a train-ready row.
+الكل ان شاء الله\0207.aac,"prompt_leak,low_confidence",pending_retranscription,"Pending re-transcription: transcript is leaked prompt text ('اتصالات بالعامية المصرية'), not customer speech; audio may yield a real transcript."
+الكل ان شاء الله\0232.mpeg,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no clear topic at logprob -0.58; audio may yield a usable transcript."
+الكل ان شاء الله\0248.mp4,,include,Include: coherent complete complaint/question despite >50% silence in audio; transcript usable.
+الكل ان شاء الله\0253.mp4,low_confidence,include,Include: calls ring with no sound then line cuts is explicit.
+الكل ان شاء الله\0263.mp4,low_confidence,include,Include: refund not received 5 days after failed transaction is explicit.
+الكل ان شاء الله\0265.mp4,low_confidence,include,Include: website says number unregistered is a clear question.
+الكل ان شاء الله\0272.mp4,hallucination_suspect,exclude,"Exclude: hallucinated video outro 'شكرا لكم على المشاهدة.' (identical text in 2 files), not customer speech."
+الكل ان شاء الله\0293.mp4,"prompt_leak,low_confidence",pending_retranscription,"Pending re-transcription: transcript is leaked prompt text ('اتصالات بالعامية المصرية'), not customer speech; audio may yield a real transcript."
+الكل ان شاء الله\0305.aac,low_confidence,include,Include: app code always says error is explicit.
+الكل ان شاء الله\0328.mpeg,,include,Include: coherent complete complaint/question despite >50% silence in audio; transcript usable.
+الكل ان شاء الله\0335.m4a,low_confidence,pending_retranscription,Pending re-transcription: support/branch wording too garbled to route confidently at logprob -0.77; audio may yield a usable transcript.
+الكل ان شاء الله\0336.m4a,low_confidence,include,Include: unwanted balance deduction is explicit despite two garbled words.
+الكل ان شاء الله\0375.mpeg,low_confidence,include,Include: 48-hour promise broken after 4 days is explicit.
+الكل ان شاء الله\0379.mpeg,"hallucination_suspect,low_confidence",exclude,"Exclude: hallucinated video outro 'اشتركوا في القناة' (identical text in 9 files), not customer speech."
+الكل ان شاء الله\0405.aac,low_confidence,include,Include: told problem solved while still unsolved is explicit.
+الكل ان شاء الله\0435.aac,"too_short,low_confidence",pending_retranscription,Pending re-transcription: 2-word fragment at very low confidence (logprob -1.10); audio may contain a real message.
+الكل ان شاء الله\0442.aac,low_confidence,include,Include: internet works 5 minutes then down for hours is explicit.
+الكل ان شاء الله\0458.mpeg,,include,Include: coherent complete complaint/question despite >50% silence; distinct recording (unique md5) though wording matches a train-ready row.
+الكل ان شاء الله\0477.mpeg,"too_short,low_confidence",pending_retranscription,Pending re-transcription: 2-word fragment at very low confidence (logprob -1.01); audio may contain a real message.
+الكل ان شاء الله\0510.aac,"repetition,low_confidence",pending_retranscription,Pending re-transcription: model loop repeats 'not available' 3x at the tail; audio may yield a clean transcript.
+الكل ان شاء الله\0549.aac,low_confidence,include,Include: half-hour wait for customer service is clear.
+الكل ان شاء الله\0555.aac,low_confidence,include,Include: wallet data lost after SIM change with no way back is explicit.
+الكل ان شاء الله\0566.mpeg,hallucination_suspect,exclude,"Exclude: hallucinated video outro 'اشتركوا في القناة' (identical text in 9 files), not customer speech."
+الكل ان شاء الله\0598.mpeg,low_confidence,pending_retranscription,"Pending re-transcription: 4-word fragment, unintelligible at the lowest confidence in the set at logprob -1.42; audio may yield a usable transcript."
+الكل ان شاء الله\0657.mpeg,low_confidence,pending_retranscription,"Pending re-transcription: unclear referents, billing question unresolvable at logprob -0.50; audio may yield a usable transcript."
+الكل ان شاء الله\0696.mpeg,low_confidence,include,Include: how to stop unwanted messages is a clear request.
+الكل ان شاء الله\0698.mpeg,low_confidence,pending_retranscription,Pending re-transcription: 3-word nonsense fragment with high no-speech probability at logprob -1.03; audio may yield a usable transcript.
+الكل ان شاء الله\0699.mpeg,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no intelligible clause at logprob -0.71; audio may yield a usable transcript."
+الكل ان شاء الله\0705.aac,low_confidence,include,Include: top-up code rejected as wrong is clear.
+الكل ان شاء الله\0858.mpeg,low_confidence,pending_retranscription,Pending re-transcription: word salad at logprob -0.78; audio may yield a usable transcript.
+الكل ان شاء الله\0882.mpeg,"hallucination_suspect,low_confidence",exclude,"Exclude: hallucinated video outro 'شكرا لكم على المشاهدة' (identical text in 2 files), not customer speech."
+الكل ان شاء الله\0892.mpeg,too_short,exclude,"Exclude: confident 2-word thanks, no routable content; nothing to recover."
+الكل ان شاء الله\0954.mpeg,low_confidence,pending_retranscription,"Pending re-transcription: garbled, high no-speech probability at logprob -0.76; audio may yield a usable transcript."
+الكل ان شاء الله\0979.mpeg,low_confidence,include,Include: thanks for network improvement is clear positive feedback.
+الكل ان شاء الله\0981.mpeg,low_confidence,pending_retranscription,Pending re-transcription: monthly deduction hinted but rest is garbled at logprob -0.61; audio may yield a usable transcript.
+الكل ان شاء الله\0982.mpeg,low_confidence,include,Include: no signal improvement after new network/SIM is identifiable.
+الكل ان شاء الله\1003.wav,low_confidence,include,Include: bad-network complaint is clear despite garbled tail.
+الكل ان شاء الله\1010.m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no intelligible clause at logprob -0.75; audio may yield a usable transcript."
+الكل ان شاء الله\1015.m4a,"hallucination_suspect,too_short",exclude,"Exclude: hallucinated video outro 'شكرا للمشاهدة' (identical text in 3 files), not customer speech."
+الكل ان شاء الله\1024.m4a,low_confidence,include,Include: website inquiry unanswered after a week is identifiable despite muddled wording.
+الكل ان شاء الله\1030.m4a,"hallucination_suspect,low_confidence",exclude,"Exclude: hallucinated video outro 'شكرا لكم على المشاهدة وكل تفاصيل البوكات لكم في لقاء جديد' (identical text in 1 files), not customer speech."
+الكل ان شاء الله\1032.m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no intelligible clause at logprob -0.64; audio may yield a usable transcript."
+الكل ان شاء الله\1053.m4a,low_confidence,pending_retranscription,"Pending re-transcription: sentence incoherent, complaint target unclear at logprob -0.71; audio may yield a usable transcript."
+الكل ان شاء الله\1056.m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no intelligible clause at logprob -0.59; audio may yield a usable transcript."
+الكل ان شاء الله\1062.m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no intelligible clause at logprob -0.63; audio may yield a usable transcript."
+الكل ان شاء الله\1083.m4a,low_confidence,include,"Include: technical support very late, please hurry, is clear."
+الكل ان شاء الله\1187.m4a,low_confidence,pending_retranscription,Pending re-transcription: 5G/coverage hinted but sentence incoherent at logprob -0.51; audio may yield a usable transcript.
+الكل ان شاء الله\1230.m4a,low_confidence,pending_retranscription,"Pending re-transcription: contains a 'watching' video pattern, unintelligible at logprob -0.55; audio may yield a usable transcript."
+الكل ان شاء الله\1244.m4a,hallucination_suspect,exclude,"Exclude: hallucinated video outro 'اشتركوا في القناة' (identical text in 9 files), not customer speech."
+الكل ان شاء الله\1355.m4a,low_confidence,pending_retranscription,"Pending re-transcription: repeats itself, unintelligible at logprob -0.50; audio may yield a usable transcript."
+الكل ان شاء الله\1373.m4a,low_confidence,include,Include: refund not received 5 days after failed transaction is explicit.
+الكل ان شاء الله\1379.m4a,low_confidence,pending_retranscription,"Pending re-transcription: opens with 'subscribe', unintelligible at logprob -0.51; audio may yield a usable transcript."
+الكل ان شاء الله\1415.mp3,low_confidence,pending_retranscription,"Pending re-transcription: incoherent, no clear topic at logprob -0.75; audio may yield a usable transcript."
+الكل ان شاء الله\1460.m4a,"too_short,low_confidence",pending_retranscription,Pending re-transcription: 2-word fragment at very low confidence (logprob -0.70); audio may contain a real message.
+الكل ان شاء الله\1504.mp3,,include,Include: coherent complete complaint/question despite >50% silence; distinct recording (unique md5) though wording matches a train-ready row.
+الكل ان شاء الله\2058.m4a,low_confidence,pending_retranscription,"Pending re-transcription: video-greeting-like fragment, unintelligible at logprob -0.56; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.32.32 PM.mp4,"hallucination_suspect,low_confidence",exclude,"Exclude: hallucinated video outro 'اشتركوا في القناة' (identical text in 9 files), not customer speech."
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 10.15.12 PM (1).mpeg,low_confidence,include,Include: should not have to wait for bundle to end to change it is clear.
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.09 PM (3).mpeg,low_confidence,pending_retranscription,Pending re-transcription: word salad at logprob -0.73; audio may yield a usable transcript.
+الكل ان شاء الله\AUDIO-2025-11-29-00-30-021.m4a,low_confidence,pending_retranscription,"Pending re-transcription: key object of the complaint is missing, too vague to route at logprob -0.55; audio may yield a usable transcript."
+الكل ان شاء الله\تسجيل (13).m4a,low_confidence,pending_retranscription,"Pending re-transcription: repeated nonsense tokens, garbled at logprob -0.99; audio may yield a usable transcript."
+الكل ان شاء الله\8oz Cafe and Restaurant.m4a,low_confidence,include,Include: refund not received 5 days after failed transaction is explicit.
+الكل ان شاء الله\2464.mp3,low_confidence,pending_retranscription,"Pending re-transcription: single garbled question, no clear topic at logprob -0.64; audio may yield a usable transcript."
+الكل ان شاء الله\1701.m4a,low_confidence,pending_retranscription,"Pending re-transcription: incoherent, no clear topic at logprob -0.60; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.04.23 (4).aac,"too_short,low_confidence",pending_retranscription,Pending re-transcription: 2-word fragment at very low confidence (logprob -0.91); audio may contain a real message.
+الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.42.02 PM.mpeg,low_confidence,include,"Include: router lights on but no internet, restart did not help, is explicit."
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.37.01 PM (1).ogg,low_confidence,pending_retranscription,Pending re-transcription: same nonsense token repeated 3 times at logprob -0.67; audio may yield a usable transcript.
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.05 AM (2).mp4,low_confidence,pending_retranscription,"Pending re-transcription: garbled tail, topic unrecoverable at logprob -0.60; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 8.36.51 PM.ogg,repetition,include,Include: 72-word bill-increase complaint is coherent at high confidence; repetition is natural customer rambling.
+الكل ان شاء الله\h59.m4a,,include,Include: call-me-back request is clear despite truncated final word; audio silence does not corrupt the transcript.
+الكل ان شاء الله\AUD-20251123-WA0180.mp3,low_confidence,pending_retranscription,"Pending re-transcription: mostly word salad, only a deduction hint survives at logprob -0.60; audio may yield a usable transcript."
+الكل ان شاء الله\1823.mp4,low_confidence,include,"Include: speed below advertised, no improvement after calls, affects work is explicit."
+الكل ان شاء الله\x23.mp3,low_confidence,include,"Include: incoming calls not shown, harmed by it, is explicit."
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 11.05.30 PM (1).ogg,low_confidence,include,"Include: contradictory messages, bundle renewed then finished, is explicit."
+الكل ان شاء الله\h78.m4a,hallucination_suspect,exclude,"Exclude: hallucinated video outro 'اشتركوا في القناة' (identical text in 9 files), not customer speech."
+الكل ان شاء الله\2019.m4a,low_confidence,pending_retranscription,Pending re-transcription: short fragment with no clear topic at logprob -0.54; audio may yield a usable transcript.
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.42 PM (8).mpeg,low_confidence,include,Include: can bundle renew after expiry or wait to month start is a clear question.
+الكل ان شاء الله\تسجيل (7).m4a,low_confidence,include,Include: Rosette service deducting without use is explicit.
+الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.02 PM (4).mp4,,include,Include: coherent complete complaint/question despite >50% silence in audio; transcript usable.
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.15 PM (4).mp4,,include,Include: coherent complete complaint/question despite >50% silence in audio; transcript usable.
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.14 AM.ogg,low_confidence,pending_retranscription,"Pending re-transcription: coherent grammar but nonsense place name, topic unclear at logprob -1.23; audio may yield a usable transcript."
+الكل ان شاء الله\AUDIO-2025-12-02-03-08-59.m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no intelligible clause at logprob -0.63; audio may yield a usable transcript."
+الكل ان شاء الله\2479.mp3,low_confidence,pending_retranscription,Pending re-transcription: word salad at logprob -0.68; audio may yield a usable transcript.
+الكل ان شاء الله\1807.mp4,low_confidence,include,Include: speed below advertised affecting work is explicit.
+الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 11.54.59 PM (1).mp4,"hallucination_suspect,too_short,low_confidence",exclude,"Exclude: hallucinated video outro 'شكرا للمشاهدة' (identical text in 3 files), not customer speech."
+الكل ان شاء الله\AUD-20251117-WA0051.m4a,low_confidence,include,Include: support spoke oddly and caused a work problem is identifiable.
+الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.55 AM (1).mpeg,low_confidence,include,Include: internet stops every night at 10pm is explicit.
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.04 PM (3).mp4,low_confidence,pending_retranscription,"Pending re-transcription: key verbs misrecognized, app complaint unresolvable at logprob -0.52; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-11-19 at 2.34.41 PM (6).mp4,low_confidence,pending_retranscription,"Pending re-transcription: mostly garbled, no clear complaint at logprob -0.75; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.25.36 AM.mp4,hallucination_suspect,exclude,"Exclude: hallucinated video outro 'اشتركوا في القناة' (identical text in 9 files), not customer speech."
+الكل ان شاء الله\2097.mp4,,include,Include: short but complete question ('why no renewal') with high confidence despite >50% silence.
+الكل ان شاء الله\8oz Cafe and Restaurant 2.m4a,"hallucination_suspect,low_confidence",exclude,"Exclude: hallucinated video outro 'اشتركوا في القناة' (identical text in 9 files), not customer speech."
+الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.08.58 PM (1).ogg,,include,Include: coherent complete complaint/question despite >50% silence in audio; transcript usable.
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.45 PM (2).aac,low_confidence,include,Include: payment not received after 72 hours is clear despite garbled words.
+الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.19.07 AM (2).mp4,"too_short,low_confidence",pending_retranscription,Pending re-transcription: 2-word fragment at very low confidence (logprob -0.68); audio may contain a real message.
+الكل ان شاء الله\M9.m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no intelligible clause at logprob -0.66; audio may yield a usable transcript."
+الكل ان شاء الله\1760.mp3,low_confidence,include,Include: staff price vs website price mismatch called misleading is explicit.
+الكل ان شاء الله\2363.m4a,low_confidence,include,Include: emailed and still waiting for a reply is identifiable.
+الكل ان شاء الله\AUDIO-2025-11-27-17-01-39.m4a,"hallucination_suspect,too_short,low_confidence",exclude,"Exclude: hallucinated video outro 'شكرا للمشاهدة' (identical text in 3 files), not customer speech."
+الكل ان شاء الله\2we.m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no intelligible clause at logprob -0.76; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.49 PM (3).mp4,low_confidence,include,"Include: line installation requested months ago, nobody came, is explicit."
+الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.01 PM.mp4,low_confidence,include,Include: bundle renewed an hour early and a day deducted is explicit.
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.15 PM (3).mp4,low_confidence,include,"Include: who notifies of bundle expiry, sudden no internet, is explicit."
+الكل ان شاء الله\٢٣-١١-٢٠٢٥ ٣.٠٨(٢).m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled throughout, no intelligible clause at logprob -0.67; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.09 PM (4).mpeg,low_confidence,pending_retranscription,"Pending re-transcription: 5-word fragment, unintelligible at logprob -0.58; audio may yield a usable transcript."
+الكل ان شاء الله\٢٣-١١-٢٠٢٥ ٣.١٣.m4a,low_confidence,pending_retranscription,"Pending re-transcription: long garbled passage, only 'no reply from support' survives at logprob -0.52; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.44 PM.mp4,low_confidence,pending_retranscription,"Pending re-transcription: grammatical but vague, no routable topic at logprob -1.10; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.06 PM (3).aac,low_confidence,include,Include: can I activate after expiry question is identifiable.
+الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.41 PM (1).ogg,low_confidence,include,Include: 4G-only/3G-only network-mode question is identifiable.
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.33.18 PM.mp4,low_confidence,pending_retranscription,"Pending re-transcription: incoherent, YouTube mention, no clear topic at logprob -0.91; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.19.02 AM (1).mp4,low_confidence,pending_retranscription,"Pending re-transcription: subject word misrecognized, slowness complaint unclear at logprob -0.61; audio may yield a usable transcript."
+الكل ان شاء الله\New recoprding 9.m4a,low_confidence,include,Include: question about internet offers for travel is clear.
+الكل ان شاء الله\1811.mpeg,hallucination_suspect,exclude,"Exclude: hallucinated video outro 'اشتركوا في القناة' (identical text in 9 files), not customer speech."
+الكل ان شاء الله\تسجيل (14).m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled, no intelligible clause at logprob -0.56; audio may yield a usable transcript."
+الكل ان شاء الله\M4.m4a,low_confidence,pending_retranscription,Pending re-transcription: word salad at logprob -0.70; audio may yield a usable transcript.
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.12 PM (1).mpeg,low_confidence,pending_retranscription,"Pending re-transcription: coherent but content-free ('cannot do anything'), no topic at logprob -0.52; audio may yield a usable transcript."
+الكل ان شاء الله\M5.m4a,low_confidence,pending_retranscription,"Pending re-transcription: video-intro-like fragment, unintelligible at logprob -0.91; audio may yield a usable transcript."
+الكل ان شاء الله\20d.mp3,low_confidence,pending_retranscription,"Pending re-transcription: fragment, unclear whether complaint or question at logprob -0.60; audio may yield a usable transcript."
+الكل ان شاء الله\2419.ogg,low_confidence,pending_retranscription,"Pending re-transcription: incoherent, YouTube-like token at the end at logprob -0.81; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.45 PM (1).mp4,low_confidence,pending_retranscription,Pending re-transcription: word salad at logprob -0.81; audio may yield a usable transcript.
+الكل ان شاء الله\n66.m4a,low_confidence,pending_retranscription,Pending re-transcription: grammatical but semantically incoherent at logprob -1.05; audio may yield a usable transcript.
+الكل ان شاء الله\AUDIO-2025-11-21-01-32-32 2.m4a,low_confidence,include,Include: Salafny 'not eligible' complaint is explicit despite garbled opening.
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.14 PM (2).mpeg,low_confidence,pending_retranscription,"Pending re-transcription: subscribe-like fragment, unintelligible at logprob -0.70; audio may yield a usable transcript."
+الكل ان شاء الله\AUD-20251104-WA0043.m4a,low_confidence,include,Include: bundle drains fast without use is identifiable (bundle misrecognized as power).
+الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.33.09 PM (1).mp4,low_confidence,include,"Include: router disconnects 2 hours after restart, no support answer, is explicit."
+الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.02.57 (3).mp4,too_short,exclude,"Exclude: confident 2-word video-caption fragment, not customer speech."
+الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.49 PM (4).mp4,low_confidence,include,Include: technician not arrived after a week is explicit.
+الكل ان شاء الله\AUDIO-2025-11-24-22-58-03.m4a,low_confidence,pending_retranscription,"Pending re-transcription: garbled fragment, billing hint too broken to route at logprob -0.73; audio may yield a usable transcript."
+الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.43 AM (2).mp4,low_confidence,include,Include: weekly settings update that breaks settings is identifiable.
+الكل ان شاء الله\1841.mp4,hallucination_suspect,exclude,"Exclude: hallucinated video outro 'اشتركوا في القناة' (identical text in 9 files), not customer speech."
