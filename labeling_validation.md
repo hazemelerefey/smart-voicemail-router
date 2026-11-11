@@ -39,6 +39,10 @@ The rename mapping agrees with the labels: per split the mapping has the same ro
 
 Pass.
 
+## d2. Two views of the split
+
+The training tables in `final/` use the corrected split, stratified by complaint category: train 4,031, val 1,136, test 584. The audio folders keep the original split above. The rows and labels are the same in both views; only the split assignment changed, for 2,604 of the 5,751 rows. The corrected split and the reason for it are in `notebooks/data-preprocessing/data_preprocessing.ipynb`, section 8.
+
 ## e. Hazem's 4 hand labeled rows
 
 Each row was found in the final `labels.csv` by its original file name and cross checked through `rename_mapping.csv`. The mapping agrees on all 4.
@@ -50,7 +54,7 @@ Each row was found in the final `labels.csv` by its original file name and cross
 | 3 | AUDIO-2025-11-27-17-03-55.m4a | calm_0770.wav | train | other, low, calm, not_at_risk | offers_and_packages, low, calm, not_at_risk | Category changed, explained below |
 | 4 | 0296.mp4 | frustrated_0013.wav | test | billing_and_charges, medium, frustrated, at_risk | billing_and_charges, medium, frustrated, at_risk | Pass, exact match |
 
-Row 3 differs on category only. Urgency, state and churn still match. The reason is the approved other bucket relabel: the row was moved from other to the new offers_and_packages category, using Hazem's own note as the evidence ("He is inquiring about subscribing to an internet package for children that includes a content filter, and is asking if this is available?"). When Hazem labeled it, offers_and_packages did not exist yet, so other was the right label then. Under the current taxonomy the row belongs in offers_and_packages. The old claim that all 4 rows match exactly was true against the pre-relabel file `labeled_full_v1.csv` and is no longer true against the final `labels.csv`. That is a taxonomy change, not a labeling error.
+Row 3 differs on category only. Urgency, state and churn still match. The reason is the approved other bucket relabel: the row was moved from other to the new offers_and_packages category, using Hazem's own note as the evidence ("He is inquiring about subscribing to an internet package for children that includes a content filter, and is asking if this is available?"). When Hazem labeled it, offers_and_packages did not exist yet, so other was the right label then. Under the current taxonomy the row belongs in offers_and_packages. The old claim that all 4 rows match exactly was true against the pre-relabel file `labeled_full.csv` and is no longer true against the final `labels.csv`. That is a taxonomy change, not a labeling error.
 
 ## f. Verdict
 
