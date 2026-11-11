@@ -19,7 +19,7 @@ Each row carries four labels:
 
 Category counts in the clean set: network_and_connectivity 983, billing_and_charges 781, balance_and_data 776, app_and_account 720, thanks_or_praise 711, no_reply_or_long_wait 474, branch_and_staff 453, other 357, offers_and_packages 217, cancellation_request 213, sim_services 66. Urgency: medium 3,431, low 1,764, high 556. State: frustrated 2,517, calm 2,359, satisfied 715, mad 159, unclear 1. Churn: at_risk 32, not_at_risk 5,719. Confidence: high 5,511, low 240. `greeting_only` is an approved value with 0 rows.
 
-The split is 70/20/10. Two views of it exist in this repo, and they agree on rows and labels but differ in split assignment. The training tables in `final/` use the corrected split, stratified by complaint category: train 4,031, val 1,136, test 584. The audio folders in `dataset/` keep the original split: train 4,023, val 1,158, test 570. The rename from intermediate audio names to clean names is recorded in `rename_mapping.csv`, which carries the split, the old name, and the new name for all 5,751 rows.
+The split is 70/20/10. The training tables in `final/` and the audio folders in `dataset/` hold the same corrected split, stratified by complaint category: train 4,031, val 1,136, test 584, and the file set in each folder is identical to the matching training table. Before 2026-11-11 the folders kept the original split (train 4,023, val 1,158, test 570); the original assignment is kept in `rename_mapping.csv` as `old_split` and `old_clean_name`. The rename from intermediate audio names to clean names is recorded in `rename_mapping.csv`, which carries the original file, the old split and old clean name, the intermediate old name, and the new split and new clean name for all 5,751 rows.
 
 ## The pipeline
 
@@ -28,7 +28,7 @@ The split is 70/20/10. Two views of it exist in this repo, and they agree on row
 3. **Labeling.** `notebooks/data-labeling/data_labeling.ipynb` labels the 5,881 train ready rows with a TF-IDF vector space model built in the notebook. Labels come from the model throughout; the model is a baseline, and the audit page is what settles the labels. The model agrees with the labeled set at category 0.404, urgency 0.632, state 0.537, churn 0.995. On Hazem's 4 hand labeled rows it matches 10 of 16 fields.
 4. **Class weights and the corrected split.** The same preprocessing notebook computes balanced class weights with sklearn `compute_class_weight` and rebuilds the split stratified by complaint category, keeping whole duplicate text groups together with seed 42 and 0 leaked groups. The original split was not stratified by class: category shares moved up to 2.2 points in test. The corrected split holds category within 0.8 points in test and under 0.2 points in train and validation. Churn is not controlled by this split: the corrected test set holds 1 at risk row, so churn must be reported on validation and test pooled (8 at risk rows) or with cross validation, always with the count behind the rate.
 
-Validation of the labels is in `labeling_validation.md`: 24 checks passed, 0 failed. One explained difference is recorded there, a category change on a Hazem hand labeled row caused by the approved `other` bucket relabel, not a labeling error.
+Validation of the labels is in `labeling_validation.md`: 113 checks passed, 0 failed. One explained difference is recorded there, a category change on a Hazem hand labeled row caused by the approved `other` bucket relabel, not a labeling error.
 
 ## Project structure
 
@@ -52,8 +52,8 @@ notebooks/
   data-analysis/                EDA notebook and figures
   data-preprocessing/           Preprocessing notebook and figures
   data-labeling/                Labeling notebook and figures
-labeling_validation.md          Label validation, 24 checks
-rename_mapping.csv              Old audio name to clean name, per split
+labeling_validation.md          Label validation, 113 checks
+rename_mapping.csv              Original file, old split and clean name, intermediate name, new split and clean name, per row
 README.md                       This file
 ```
 

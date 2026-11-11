@@ -1,571 +1,585 @@
-file,original_file,complaint_category,complaint_urgency,customer_state,churn_risk,note,confidence
-calm_0001.wav,الكل ان شاء الله\0011.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0001.wav,الكل ان شاء الله\0014.mp3,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0002.wav,الكل ان شاء الله\0061.wav,other,low,calm,not_at_risk,question about how to benefit from monthly grouped minutes,high
-frustrated_0003.wav,الكل ان شاء الله\0065.mp4,balance_and_data,medium,frustrated,not_at_risk,,high
-satisfied_0001.wav,الكل ان شاء الله\0068.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0004.wav,الكل ان شاء الله\0075.mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
-frustrated_0005.wav,الكل ان شاء الله\0089.ogg,other,low,frustrated,not_at_risk,general complaint about the company with no specific issue stated,high
+﻿file,original_file,complaint_category,complaint_urgency,customer_state,churn_risk,note,confidence
+satisfied_0001.wav,الكل ان شاء الله\0010.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0001.wav,الكل ان شاء الله\0039.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+calm_0001.wav,الكل ان شاء الله\0058.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0002.wav,الكل ان شاء الله\0062.ogg,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0003.wav,الكل ان شاء الله\0075.mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0004.wav,الكل ان شاء الله\0080.mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
 calm_0003.wav,الكل ان شاء الله\0092.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
 calm_0004.wav,الكل ان شاء الله\0097.aac,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0006.wav,الكل ان شاء الله\0118.mpeg,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0007.wav,الكل ان شاء الله\0122.aac,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0008.wav,الكل ان شاء الله\0149.mp4,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0007.wav,الكل ان شاء الله\0184.m4a,offers_and_packages,low,calm,not_at_risk,question about the difference between the home and mobile packages,high
-frustrated_0009.wav,الكل ان شاء الله\0196.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0008.wav,الكل ان شاء الله\0250.mp4,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0009.wav,الكل ان شاء الله\0254.mp4,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0010.wav,الكل ان شاء الله\0256.mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0011.wav,الكل ان شاء الله\0282.mp4,app_and_account,low,frustrated,not_at_risk,,high
-satisfied_0002.wav,الكل ان شاء الله\0289.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0012.wav,الكل ان شاء الله\0290.mp4,app_and_account,low,frustrated,not_at_risk,,high
-frustrated_0013.wav,الكل ان شاء الله\0296.mp4,billing_and_charges,medium,frustrated,at_risk,,high
-frustrated_0014.wav,الكل ان شاء الله\0302.aac,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0010.wav,الكل ان شاء الله\0331.m4a,sim_services,low,calm,not_at_risk,question about getting a second line with the same old number,high
-frustrated_0015.wav,الكل ان شاء الله\0365.mpeg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0016.wav,الكل ان شاء الله\0368.mpeg,branch_and_staff,medium,frustrated,not_at_risk,,high
-frustrated_0017.wav,الكل ان شاء الله\0374.mpeg,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0011.wav,الكل ان شاء الله\0390.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0019.wav,الكل ان شاء الله\0412.aac,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0020.wav,الكل ان شاء الله\0437.aac,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0012.wav,الكل ان شاء الله\0446.aac,other,low,calm,not_at_risk,question about activating international services,high
-calm_0014.wav,الكل ان شاء الله\0460.mpeg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0015.wav,الكل ان شاء الله\0463.mpeg,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0022.wav,الكل ان شاء الله\0485.mpeg,network_and_connectivity,medium,frustrated,not_at_risk,transcript garbled; line keeps cutting while abroad,low
-frustrated_0023.wav,الكل ان شاء الله\0506.aac,offers_and_packages,low,frustrated,not_at_risk,question about offers in ads not being on the app or in the branch,high
-frustrated_0024.wav,الكل ان شاء الله\0523.aac,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0025.wav,الكل ان شاء الله\0527.aac,network_and_connectivity,medium,frustrated,not_at_risk,transcript too short to tell what service is unavailable,low
-satisfied_0003.wav,الكل ان شاء الله\0534.aac,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0016.wav,الكل ان شاء الله\0535.aac,sim_services,low,calm,not_at_risk,question about getting a second line with the same old number,high
-calm_0017.wav,الكل ان شاء الله\0547.aac,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0018.wav,الكل ان شاء الله\0552.aac,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0026.wav,الكل ان شاء الله\0553.aac,branch_and_staff,medium,frustrated,not_at_risk,,high
-satisfied_0004.wav,الكل ان شاء الله\0557.aac,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0027.wav,الكل ان شاء الله\0559.aac,network_and_connectivity,high,frustrated,not_at_risk,,high
-mad_0001.wav,الكل ان شاء الله\0567.mpeg,app_and_account,medium,mad,not_at_risk,,high
-calm_0019.wav,الكل ان شاء الله\0614.aac,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0020.wav,الكل ان شاء الله\0625.aac,other,low,calm,not_at_risk,"asks about name transfer on line to husband, name still shows old name",high
-satisfied_0005.wav,الكل ان شاء الله\0635.mpeg,thanks_or_praise,low,satisfied,not_at_risk,transcript garbled but intent is thanks for fast service,low
-calm_0021.wav,الكل ان شاء الله\0654.mpeg,app_and_account,medium,calm,not_at_risk,,high
-calm_0022.wav,الكل ان شاء الله\0671.mpeg,offers_and_packages,low,calm,not_at_risk,asks about discount for people with disabilities or elderly,high
-calm_0023.wav,الكل ان شاء الله\0702.aac,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0024.wav,الكل ان شاء الله\0706.aac,offers_and_packages,low,calm,not_at_risk,asks whether the package renews automatically or needs manual renewal,high
-calm_0025.wav,الكل ان شاء الله\0738.aac,other,low,calm,not_at_risk,asks where the loyalty points service went,high
-satisfied_0006.wav,الكل ان شاء الله\0739.aac,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0028.wav,الكل ان شاء الله\0752.mpeg,app_and_account,high,frustrated,not_at_risk,,high
-calm_0026.wav,الكل ان شاء الله\0753.mpeg,billing_and_charges,high,calm,not_at_risk,,high
-frustrated_0029.wav,الكل ان شاء الله\0755.mpeg,branch_and_staff,medium,frustrated,not_at_risk,,high
-satisfied_0007.wav,الكل ان شاء الله\0757.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-satisfied_0008.wav,الكل ان شاء الله\0769.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-satisfied_0009.wav,الكل ان شاء الله\0770.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0027.wav,الكل ان شاء الله\0777.mpeg,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0030.wav,الكل ان شاء الله\0784.mpeg,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0028.wav,الكل ان شاء الله\0788.mpeg,offers_and_packages,low,calm,not_at_risk,asks about the difference between home and mobile packages as prices are close,high
-frustrated_0031.wav,الكل ان شاء الله\0807.aac,billing_and_charges,high,frustrated,not_at_risk,,high
-calm_0029.wav,الكل ان شاء الله\0810.aac,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0030.wav,الكل ان شاء الله\0812.aac,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0032.wav,الكل ان شاء الله\0819.aac,billing_and_charges,high,frustrated,at_risk,,high
-frustrated_0033.wav,الكل ان شاء الله\0834.aac,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0031.wav,الكل ان شاء الله\0841.mpeg,app_and_account,medium,calm,not_at_risk,,high
-satisfied_0010.wav,الكل ان شاء الله\0853.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0032.wav,الكل ان شاء الله\0862.mpeg,other,medium,calm,not_at_risk,says branch prices differ from website prices,high
-calm_0033.wav,الكل ان شاء الله\0880.mpeg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0034.wav,الكل ان شاء الله\0887.mpeg,cancellation_request,low,calm,not_at_risk,,high
-calm_0035.wav,الكل ان شاء الله\0888.mpeg,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0034.wav,الكل ان شاء الله\0897.mp3,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0036.wav,الكل ان شاء الله\0909.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0037.wav,الكل ان شاء الله\0939.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0038.wav,الكل ان شاء الله\0949.mpeg,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0039.wav,الكل ان شاء الله\0953.mpeg,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0040.wav,الكل ان شاء الله\0968.mpeg,app_and_account,low,calm,not_at_risk,,high
-calm_0041.wav,الكل ان شاء الله\0977.mpeg,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0042.wav,الكل ان شاء الله\1011.m4a,offers_and_packages,low,calm,not_at_risk,asks about an internet package for children with content control,high
-calm_0043.wav,الكل ان شاء الله\1023.m4a,offers_and_packages,low,calm,not_at_risk,asks about unblocking a package to change it now,high
-frustrated_0035.wav,الكل ان شاء الله\1027.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0044.wav,الكل ان شاء الله\1060.m4a,offers_and_packages,medium,calm,not_at_risk,asks about an internet package for students,high
-calm_0045.wav,الكل ان شاء الله\1061.m4a,billing_and_charges,medium,calm,not_at_risk,,high
-satisfied_0011.wav,الكل ان شاء الله\1063.wav,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0036.wav,الكل ان شاء الله\1082.m4a,cancellation_request,low,frustrated,not_at_risk,,high
-frustrated_0037.wav,الكل ان شاء الله\1084.m4a,balance_and_data,high,frustrated,not_at_risk,,high
-frustrated_0038.wav,الكل ان شاء الله\1086.mp3,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-mad_0002.wav,الكل ان شاء الله\1095.m4a,branch_and_staff,medium,mad,not_at_risk,,high
-frustrated_0039.wav,الكل ان شاء الله\1098.mp3,network_and_connectivity,high,frustrated,not_at_risk,,high
-calm_0046.wav,الكل ان شاء الله\1107.m4a,balance_and_data,medium,calm,not_at_risk,,high
-calm_0047.wav,الكل ان شاء الله\1112.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0048.wav,الكل ان شاء الله\1162.mp3,branch_and_staff,medium,calm,not_at_risk,,high
-calm_0049.wav,الكل ان شاء الله\1164.m4a,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0050.wav,الكل ان شاء الله\1169.m4a,app_and_account,medium,calm,not_at_risk,,high
-satisfied_0012.wav,الكل ان شاء الله\1184.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0051.wav,الكل ان شاء الله\1214.mp3,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0040.wav,الكل ان شاء الله\1250.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0052.wav,الكل ان شاء الله\1255.m4a,offers_and_packages,low,calm,not_at_risk,suggestion for a simple package for elderly customers,high
-frustrated_0041.wav,الكل ان شاء الله\1261.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0053.wav,الكل ان شاء الله\1264.m4a,cancellation_request,low,calm,not_at_risk,,high
-calm_0054.wav,الكل ان شاء الله\1266.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-satisfied_0013.wav,الكل ان شاء الله\1301.aac,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0005.wav,الكل ان شاء الله\0110.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0005.wav,الكل ان شاء الله\0114.m4a,cancellation_request,medium,frustrated,not_at_risk,,high
+calm_0006.wav,الكل ان شاء الله\0116.mp4,app_and_account,medium,calm,not_at_risk,,high
+calm_0008.wav,الكل ان شاء الله\0134.aac,app_and_account,medium,calm,not_at_risk,,high
+calm_0009.wav,الكل ان شاء الله\0141.ogg,balance_and_data,medium,calm,not_at_risk,,high
+satisfied_0002.wav,الكل ان شاء الله\0150.aac,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0003.wav,الكل ان شاء الله\0168.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0006.wav,الكل ان شاء الله\0171.m4a,network_and_connectivity,medium,frustrated,not_at_risk,transcript garbled; network does not work on the top floor,low
+frustrated_0007.wav,الكل ان شاء الله\0176.m4a,other,low,frustrated,not_at_risk,number transfer completed but still shows under the old name,high
+calm_0010.wav,الكل ان شاء الله\0184.m4a,offers_and_packages,low,calm,not_at_risk,question about the difference between the home and mobile packages,high
+calm_0011.wav,الكل ان شاء الله\0191.mp4,cancellation_request,low,calm,not_at_risk,,high
+calm_0012.wav,الكل ان شاء الله\0218.aac,branch_and_staff,medium,calm,not_at_risk,,high
+calm_0013.wav,الكل ان شاء الله\0225.mpeg,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0008.wav,الكل ان شاء الله\0231.mpeg,billing_and_charges,medium,frustrated,not_at_risk,,high
+satisfied_0004.wav,الكل ان شاء الله\0249.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0014.wav,الكل ان شاء الله\0250.mp4,billing_and_charges,medium,calm,not_at_risk,,high
+satisfied_0005.wav,الكل ان شاء الله\0273.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0006.wav,الكل ان شاء الله\0289.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0016.wav,الكل ان شاء الله\0294.mp4,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0009.wav,الكل ان شاء الله\0302.aac,balance_and_data,medium,frustrated,not_at_risk,,high
+calm_0017.wav,الكل ان شاء الله\0303.aac,balance_and_data,medium,calm,not_at_risk,,high
+calm_0018.wav,الكل ان شاء الله\0314.aac,app_and_account,medium,calm,not_at_risk,,high
+calm_0019.wav,الكل ان شاء الله\0318.aac,offers_and_packages,low,calm,not_at_risk,asks for someone to explain the new package systems,high
+frustrated_0010.wav,الكل ان شاء الله\0333.wav,other,low,frustrated,not_at_risk,question about using reward points; service always unavailable,high
+frustrated_0011.wav,الكل ان شاء الله\0343.m4a,app_and_account,medium,frustrated,not_at_risk,transcript garbled; app does not save the data correctly,low
+calm_0020.wav,الكل ان شاء الله\0355.aac,other,low,calm,not_at_risk,question about the fastest way to pay the monthly bill,high
+calm_0021.wav,الكل ان شاء الله\0363.mpeg,cancellation_request,low,calm,not_at_risk,,high
+calm_0022.wav,الكل ان شاء الله\0381.mpeg,branch_and_staff,medium,calm,not_at_risk,,high
+calm_0023.wav,الكل ان شاء الله\0382.mpeg,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0012.wav,الكل ان شاء الله\0386.mpeg,app_and_account,medium,frustrated,not_at_risk,transcript garbled; app does not show remaining data,low
+frustrated_0013.wav,الكل ان شاء الله\0395.mp3,billing_and_charges,medium,frustrated,not_at_risk,transcript garbled; automatic services charged without request,low
+calm_0024.wav,الكل ان شاء الله\0399.mp3,cancellation_request,low,calm,not_at_risk,,high
+calm_0025.wav,الكل ان شاء الله\0407.aac,network_and_connectivity,medium,calm,not_at_risk,,high
+frustrated_0015.wav,الكل ان شاء الله\0409.aac,network_and_connectivity,medium,frustrated,not_at_risk,,high
+calm_0026.wav,الكل ان شاء الله\0411.aac,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0016.wav,الكل ان شاء الله\0418.aac,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0018.wav,الكل ان شاء الله\0476.mpeg,app_and_account,medium,frustrated,not_at_risk,,high
+frustrated_0019.wav,الكل ان شاء الله\0491.mpeg,balance_and_data,medium,frustrated,not_at_risk,,high
+satisfied_0007.wav,الكل ان شاء الله\0498.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0020.wav,الكل ان شاء الله\0507.aac,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0021.wav,الكل ان شاء الله\0522.aac,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0022.wav,الكل ان شاء الله\0523.aac,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0023.wav,الكل ان شاء الله\0526.aac,app_and_account,low,frustrated,not_at_risk,,high
+calm_0027.wav,الكل ان شاء الله\0570.mpeg,app_and_account,medium,calm,not_at_risk,,high
+satisfied_0008.wav,الكل ان شاء الله\0583.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0028.wav,الكل ان شاء الله\0586.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0029.wav,الكل ان شاء الله\0608.aac,other,low,calm,not_at_risk,receives unsuitable offers despite known account,high
+calm_0030.wav,الكل ان شاء الله\0622.aac,app_and_account,medium,calm,not_at_risk,,high
+calm_0031.wav,الكل ان شاء الله\0650.mpeg,app_and_account,medium,calm,not_at_risk,,high
+calm_0032.wav,الكل ان شاء الله\0658.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0033.wav,الكل ان شاء الله\0673.mpeg,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0034.wav,الكل ان شاء الله\0675.mpeg,app_and_account,medium,calm,not_at_risk,,high
+satisfied_0009.wav,الكل ان شاء الله\0678.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0035.wav,الكل ان شاء الله\0694.mpeg,app_and_account,medium,calm,not_at_risk,,high
+calm_0036.wav,الكل ان شاء الله\0703.aac,app_and_account,medium,calm,not_at_risk,,high
+calm_0037.wav,الكل ان شاء الله\0726.aac,offers_and_packages,low,calm,not_at_risk,asks about the difference between the 100-pound package and higher packages,high
+calm_0038.wav,الكل ان شاء الله\0729.aac,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0039.wav,الكل ان شاء الله\0733.aac,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0040.wav,الكل ان شاء الله\0738.aac,other,low,calm,not_at_risk,asks where the loyalty points service went,high
+frustrated_0024.wav,الكل ان شاء الله\0745.aac,billing_and_charges,medium,frustrated,not_at_risk,,high
+calm_0041.wav,الكل ان شاء الله\0751.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
+satisfied_0010.wav,الكل ان شاء الله\0770.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0025.wav,الكل ان شاء الله\0773.mpeg,no_reply_or_long_wait,high,frustrated,not_at_risk,,high
+calm_0042.wav,الكل ان شاء الله\0788.mpeg,offers_and_packages,low,calm,not_at_risk,asks about the difference between home and mobile packages as prices are close,high
+frustrated_0026.wav,الكل ان شاء الله\0794.mpeg,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0027.wav,الكل ان شاء الله\0807.aac,billing_and_charges,high,frustrated,not_at_risk,,high
+calm_0043.wav,الكل ان شاء الله\0810.aac,network_and_connectivity,medium,calm,not_at_risk,,high
+frustrated_0028.wav,الكل ان شاء الله\0815.aac,billing_and_charges,medium,frustrated,not_at_risk,,high
+calm_0044.wav,الكل ان شاء الله\0816.aac,app_and_account,medium,calm,not_at_risk,,high
+calm_0045.wav,الكل ان شاء الله\0831.aac,app_and_account,medium,calm,not_at_risk,,high
+calm_0046.wav,الكل ان شاء الله\0833.aac,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0029.wav,الكل ان شاء الله\0834.aac,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+satisfied_0011.wav,الكل ان شاء الله\0846.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0012.wav,الكل ان شاء الله\0853.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0013.wav,الكل ان شاء الله\0854.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0047.wav,الكل ان شاء الله\0863.mpeg,app_and_account,medium,calm,not_at_risk,,high
+calm_0048.wav,الكل ان شاء الله\0867.mpeg,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0049.wav,الكل ان شاء الله\0869.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0050.wav,الكل ان شاء الله\0873.mpeg,app_and_account,medium,calm,not_at_risk,,high
+calm_0051.wav,الكل ان شاء الله\0884.mp3,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0052.wav,الكل ان شاء الله\0896.mp3,offers_and_packages,low,calm,not_at_risk,asks if the current package can be changed to a faster one without extra fees,high
+calm_0053.wav,الكل ان شاء الله\0900.mpeg,other,low,calm,not_at_risk,asks why general inquiries changed suddenly,high
+frustrated_0030.wav,الكل ان شاء الله\0934.mpeg,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0031.wav,الكل ان شاء الله\0944.mpeg,branch_and_staff,medium,frustrated,not_at_risk,,high
+satisfied_0014.wav,الكل ان شاء الله\0946.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0054.wav,الكل ان شاء الله\0949.mpeg,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0032.wav,الكل ان شاء الله\0952.mpeg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0055.wav,الكل ان شاء الله\0959.mpeg,cancellation_request,low,calm,not_at_risk,,high
+frustrated_0033.wav,الكل ان شاء الله\0969.mpeg,billing_and_charges,medium,frustrated,not_at_risk,,high
+calm_0056.wav,الكل ان شاء الله\0972.mpeg,app_and_account,medium,calm,not_at_risk,,high
+satisfied_0015.wav,الكل ان شاء الله\0993.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0057.wav,الكل ان شاء الله\0998.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0058.wav,الكل ان شاء الله\1006.wav,balance_and_data,medium,calm,not_at_risk,,high
+calm_0059.wav,الكل ان شاء الله\1009.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0060.wav,الكل ان شاء الله\1020.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0034.wav,الكل ان شاء الله\1027.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0035.wav,الكل ان شاء الله\1047.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+calm_0061.wav,الكل ان شاء الله\1050.m4a,other,low,calm,not_at_risk,asks why number was blocked for making many calls in one day,high
+calm_0062.wav,الكل ان شاء الله\1072.m4a,app_and_account,medium,calm,not_at_risk,,high
+satisfied_0016.wav,الكل ان شاء الله\1120.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0036.wav,الكل ان شاء الله\1172.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0063.wav,الكل ان شاء الله\1195.m4a,sim_services,low,calm,not_at_risk,question or request that fits no complaint category,high
+calm_0064.wav,الكل ان شاء الله\1197.m4a,network_and_connectivity,high,calm,not_at_risk,,high
+calm_0065.wav,الكل ان شاء الله\1214.mp3,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0037.wav,الكل ان شاء الله\1215.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0038.wav,الكل ان شاء الله\1235.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0039.wav,الكل ان شاء الله\1249.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+calm_0066.wav,الكل ان شاء الله\1255.m4a,offers_and_packages,low,calm,not_at_risk,suggestion for a simple package for elderly customers,high
+frustrated_0040.wav,الكل ان شاء الله\1256.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0067.wav,الكل ان شاء الله\1280.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
+frustrated_0041.wav,الكل ان شاء الله\1299.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
 frustrated_0042.wav,الكل ان شاء الله\1307.wav,other,low,frustrated,not_at_risk,general complaint that every day brings a new problem with no final fix,high
-calm_0055.wav,الكل ان شاء الله\1325.m4a,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0043.wav,الكل ان شاء الله\1327.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0044.wav,الكل ان شاء الله\1338.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0056.wav,الكل ان شاء الله\1344.m4a,app_and_account,medium,calm,not_at_risk,,high
-calm_0057.wav,الكل ان شاء الله\1345.m4a,app_and_account,medium,calm,not_at_risk,,high
-calm_0058.wav,الكل ان شاء الله\1360.m4a,other,low,calm,not_at_risk,question about missing email confirmation after changing plan,high
-mad_0003.wav,الكل ان شاء الله\1361.m4a,billing_and_charges,medium,mad,not_at_risk,,high
-calm_0059.wav,الكل ان شاء الله\1367.m4a,other,low,calm,not_at_risk,suggestion for sign-language services for deaf customers,high
-calm_0060.wav,الكل ان شاء الله\1369.m4a,app_and_account,medium,calm,not_at_risk,,high
-calm_0061.wav,الكل ان شاء الله\1374.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0062.wav,الكل ان شاء الله\1377.m4a,balance_and_data,medium,calm,not_at_risk,,high
-calm_0063.wav,الكل ان شاء الله\1380.m4a,app_and_account,medium,calm,not_at_risk,,high
-mad_0004.wav,الكل ان شاء الله\1412.m4a,network_and_connectivity,medium,mad,not_at_risk,,high
-frustrated_0045.wav,الكل ان شاء الله\1428.mp3,balance_and_data,high,frustrated,not_at_risk,,high
-satisfied_0014.wav,الكل ان شاء الله\1437.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
-satisfied_0015.wav,الكل ان شاء الله\1442.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-mad_0005.wav,الكل ان شاء الله\1444.m4a,branch_and_staff,medium,mad,not_at_risk,,high
-calm_0064.wav,الكل ان شاء الله\1468.m4a,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0065.wav,الكل ان شاء الله\1471.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0066.wav,الكل ان شاء الله\1475.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-satisfied_0016.wav,الكل ان شاء الله\1509.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0067.wav,الكل ان شاء الله\1516.mp3,network_and_connectivity,high,calm,not_at_risk,,high
-frustrated_0046.wav,الكل ان شاء الله\1529.mp3,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0047.wav,الكل ان شاء الله\1557.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0048.wav,الكل ان شاء الله\1558.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0049.wav,الكل ان شاء الله\1572.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
-frustrated_0050.wav,الكل ان شاء الله\1581.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
-frustrated_0051.wav,الكل ان شاء الله\1583.m4a,offers_and_packages,medium,frustrated,not_at_risk,line system transfer not completed after three days,high
-frustrated_0052.wav,الكل ان شاء الله\1593.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
-calm_0068.wav,الكل ان شاء الله\1600.m4a,cancellation_request,low,calm,not_at_risk,,high
-frustrated_0053.wav,الكل ان شاء الله\1601.mp3,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0069.wav,الكل ان شاء الله\1605.m4a,cancellation_request,low,calm,not_at_risk,,high
-calm_0071.wav,الكل ان شاء الله\1620.m4a,no_reply_or_long_wait,medium,calm,not_at_risk,,high
-calm_0072.wav,الكل ان شاء الله\1641.ogg,offers_and_packages,low,calm,not_at_risk,question about difference between home and mobile packages,high
-frustrated_0054.wav,الكل ان شاء الله\1642.ogg,branch_and_staff,medium,frustrated,not_at_risk,transcript garbled,low
-frustrated_0055.wav,الكل ان شاء الله\1677.ogg,other,low,frustrated,not_at_risk,promotional messages continue after cancelling the subscription,high
-calm_0073.wav,الكل ان شاء الله\1679.ogg,billing_and_charges,medium,calm,not_at_risk,,high
-satisfied_0017.wav,الكل ان شاء الله\1682.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0056.wav,الكل ان شاء الله\1696.ogg,network_and_connectivity,high,frustrated,not_at_risk,,high
-satisfied_0018.wav,الكل ان شاء الله\1721.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0074.wav,الكل ان شاء الله\1723.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0075.wav,الكل ان شاء الله\1740.m4a,offers_and_packages,low,calm,not_at_risk,asking why there is no simple package for seniors,high
-frustrated_0057.wav,الكل ان شاء الله\1767.mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-calm_0076.wav,الكل ان شاء الله\1772.mp3,balance_and_data,medium,calm,not_at_risk,,high
-calm_0077.wav,الكل ان شاء الله\1790.mp4,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0058.wav,الكل ان شاء الله\18.m4a,network_and_connectivity,low,frustrated,not_at_risk,,high
-mad_0006.wav,الكل ان شاء الله\1806.mp4,branch_and_staff,high,mad,not_at_risk,,high
-satisfied_0019.wav,الكل ان شاء الله\1812.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
-satisfied_0020.wav,الكل ان شاء الله\1816.aac,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0078.wav,الكل ان شاء الله\1836.mpeg,app_and_account,medium,calm,not_at_risk,,high
-calm_0079.wav,الكل ان شاء الله\1858.mp3,offers_and_packages,low,calm,not_at_risk,question about discounts for people with special needs or elderly,high
-satisfied_0021.wav,الكل ان شاء الله\1885.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0060.wav,الكل ان شاء الله\1901.mp4,branch_and_staff,medium,frustrated,not_at_risk,,high
-satisfied_0022.wav,الكل ان شاء الله\1932.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0080.wav,الكل ان شاء الله\1940.mp4,balance_and_data,medium,calm,not_at_risk,,high
-calm_0081.wav,الكل ان شاء الله\1957.mp4,billing_and_charges,low,calm,not_at_risk,,high
-calm_0082.wav,الكل ان شاء الله\1958.m4a,billing_and_charges,low,calm,not_at_risk,,high
-frustrated_0061.wav,الكل ان شاء الله\1962.mpeg,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0062.wav,الكل ان شاء الله\1966.aac,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0083.wav,الكل ان شاء الله\1977.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0063.wav,الكل ان شاء الله\1983.mp4,balance_and_data,medium,frustrated,not_at_risk,transcript garbled,low
-frustrated_0064.wav,الكل ان شاء الله\1985.mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
-frustrated_0065.wav,الكل ان شاء الله\1989.mp4,billing_and_charges,high,frustrated,not_at_risk,,high
-calm_0084.wav,الكل ان شاء الله\1991.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-satisfied_0023.wav,الكل ان شاء الله\19q.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0066.wav,الكل ان شاء الله\2011.mp4,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0067.wav,الكل ان شاء الله\2015.mp4,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0068.wav,الكل ان شاء الله\2065.mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0069.wav,الكل ان شاء الله\2069.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
-calm_0085.wav,الكل ان شاء الله\2079.mp4,other,low,calm,not_at_risk,question about the fastest way to pay the monthly bill,high
-calm_0086.wav,الكل ان شاء الله\2088.mp4,branch_and_staff,medium,calm,not_at_risk,,high
-calm_0087.wav,الكل ان شاء الله\2092.m4a,app_and_account,medium,calm,not_at_risk,,high
-mad_0007.wav,الكل ان شاء الله\2093.m4a,other,high,mad,not_at_risk,"repeated unresolved general complaints, no specific service named",high
-frustrated_0070.wav,الكل ان شاء الله\2112.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0088.wav,الكل ان شاء الله\2113.aac,cancellation_request,low,calm,not_at_risk,,high
-satisfied_0024.wav,الكل ان شاء الله\2120.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0089.wav,الكل ان شاء الله\2126.m4a,balance_and_data,low,calm,not_at_risk,,high
-frustrated_0071.wav,الكل ان شاء الله\2131.mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0072.wav,الكل ان شاء الله\2140.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0090.wav,الكل ان شاء الله\2152.m4a,billing_and_charges,low,calm,not_at_risk,,high
-calm_0091.wav,الكل ان شاء الله\2158.ogg,other,low,calm,not_at_risk,asking why rewards points are unavailable,high
-frustrated_0073.wav,الكل ان شاء الله\2169.ogg,cancellation_request,medium,frustrated,not_at_risk,,high
-calm_0092.wav,الكل ان شاء الله\2173.ogg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0093.wav,الكل ان شاء الله\2177.ogg,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0074.wav,الكل ان شاء الله\2187.ogg,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0075.wav,الكل ان شاء الله\2189.ogg,balance_and_data,high,frustrated,not_at_risk,,high
-frustrated_0076.wav,الكل ان شاء الله\2192.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
-satisfied_0025.wav,الكل ان شاء الله\2210.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0077.wav,الكل ان شاء الله\2239.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0094.wav,الكل ان شاء الله\2243.m4a,network_and_connectivity,low,calm,not_at_risk,,high
-frustrated_0078.wav,الكل ان شاء الله\2253.m4a,network_and_connectivity,medium,frustrated,not_at_risk,garbled wording but complaint is about internet service,low
-calm_0095.wav,الكل ان شاء الله\2267.ogg,offers_and_packages,low,calm,not_at_risk,asking for an explanation of new package systems,high
-satisfied_0026.wav,الكل ان شاء الله\2268.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0079.wav,الكل ان شاء الله\2269.m4a,branch_and_staff,high,frustrated,not_at_risk,,high
-calm_0096.wav,الكل ان شاء الله\22m.m4a,balance_and_data,low,calm,not_at_risk,,high
-frustrated_0080.wav,الكل ان شاء الله\2303.aac,network_and_connectivity,medium,frustrated,not_at_risk,,high
-satisfied_0027.wav,الكل ان شاء الله\2328.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0081.wav,الكل ان شاء الله\2340.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0097.wav,الكل ان شاء الله\2348.m4a,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0082.wav,الكل ان شاء الله\2351.mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0098.wav,الكل ان شاء الله\2380.opus,cancellation_request,low,calm,not_at_risk,,high
-frustrated_0084.wav,الكل ان شاء الله\2389.ogg,app_and_account,medium,frustrated,not_at_risk,,high
-satisfied_0028.wav,الكل ان شاء الله\2401.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0099.wav,الكل ان شاء الله\2411.ogg,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0100.wav,الكل ان شاء الله\2425.ogg,offers_and_packages,low,calm,not_at_risk,question about offer eligibility in the app,high
-satisfied_0029.wav,الكل ان شاء الله\2437.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0101.wav,الكل ان شاء الله\2449.ogg,offers_and_packages,low,calm,not_at_risk,question about family offers covering several lines,high
-satisfied_0030.wav,الكل ان شاء الله\2458.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0102.wav,الكل ان شاء الله\2463.mp3,network_and_connectivity,high,calm,not_at_risk,,high
-calm_0103.wav,الكل ان شاء الله\2474.mp3,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0085.wav,الكل ان شاء الله\27d.mp3,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0104.wav,الكل ان شاء الله\27r.m4a,offers_and_packages,low,calm,not_at_risk,cannot change system from internet-only to calls,high
-frustrated_0086.wav,الكل ان شاء الله\3q.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-satisfied_0031.wav,الكل ان شاء الله\8 e.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0105.wav,الكل ان شاء الله\8 o.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0087.wav,الكل ان شاء الله\8oz Cafe and Restaurant 5.m4a,no_reply_or_long_wait,high,frustrated,not_at_risk,,high
-calm_0106.wav,الكل ان شاء الله\8s.m4a,balance_and_data,low,calm,not_at_risk,,high
-frustrated_0088.wav,الكل ان شاء الله\AUD-20251123-WA0130.mp3,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0089.wav,الكل ان شاء الله\AUD-20251124-WA0015.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0090.wav,الكل ان شاء الله\AUD-20251124-WA0026.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0091.wav,الكل ان شاء الله\AUD-20251124-WA0041.m4a,no_reply_or_long_wait,high,frustrated,not_at_risk,,high
-frustrated_0092.wav,الكل ان شاء الله\AUD-20251124-WA0086.mp3,network_and_connectivity,medium,frustrated,not_at_risk,,high
-frustrated_0093.wav,الكل ان شاء الله\AUDIO-2025-11-19-19-23-19.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0107.wav,الكل ان شاء الله\AUDIO-2025-11-21-01-32-32 3.m4a,branch_and_staff,medium,calm,not_at_risk,,high
-mad_0008.wav,الكل ان شاء الله\AUDIO-2025-11-21-01-32-35.m4a,billing_and_charges,medium,mad,not_at_risk,,high
-frustrated_0094.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-56-59(5).m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0108.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-58-56(2).m4a,balance_and_data,medium,calm,not_at_risk,,high
-calm_0109.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-58-56(7).m4a,sim_services,low,calm,not_at_risk,question about moving SIM to another device,high
-satisfied_0032.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-58-56.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0095.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-59-32(6).m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
-frustrated_0096.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-59-52(1).m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
-frustrated_0097.wav,الكل ان شاء الله\AUDIO-2025-11-24-23-00-27(4).m4a,cancellation_request,high,frustrated,not_at_risk,,high
-frustrated_0098.wav,الكل ان شاء الله\AUDIO-2025-11-25-01-41-55.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-satisfied_0033.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-04-19.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0110.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-20-08.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-satisfied_0034.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-55-21.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0111.wav,الكل ان شاء الله\AUDIO-2025-11-27-17-04-16.m4a,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0099.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-35-05.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0100.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-40-59.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0112.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-45-27.m4a,balance_and_data,medium,calm,not_at_risk,,high
-calm_0113.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-45-275.m4a,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0101.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-45-296.m4a,balance_and_data,low,frustrated,not_at_risk,transcript partly garbled; balance consumption complaint,low
-calm_0114.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-46-37.m4a,cancellation_request,low,calm,not_at_risk,,high
-calm_0115.wav,الكل ان شاء الله\AUDIO-2025-11-29-08-50-36.m4a,app_and_account,medium,calm,not_at_risk,,high
-satisfied_0035.wav,الكل ان شاء الله\AUDIO-2025-11-29-08-52-50.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0116.wav,الكل ان شاء الله\AUDIO-2025-11-29-11-35-12.m4a,network_and_connectivity,high,calm,not_at_risk,,high
-frustrated_0102.wav,الكل ان شاء الله\AUDIO-2025-11-29-22-29-53.mp3,other,low,frustrated,not_at_risk,"says there is no WhatsApp chat contact channel, only calls",high
-frustrated_0103.wav,الكل ان شاء الله\AUDIO-2025-12-01-12-45-51 10.mp3,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-mad_0009.wav,الكل ان شاء الله\AUDIO-2025-12-02-02-13-40.m4a,branch_and_staff,medium,mad,not_at_risk,,high
-calm_0117.wav,الكل ان شاء الله\AUDIO-2025-12-02-03-08-40.m4a,sim_services,low,calm,not_at_risk,asks if a second line with the same old number is possible,high
-calm_0118.wav,الكل ان شاء الله\AUDIO-2025-12-02-03-34-07.m4a,balance_and_data,medium,calm,not_at_risk,,high
-calm_0119.wav,الكل ان شاء الله\AUDIO-2025-12-02-03-34-27.m4a,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0104.wav,الكل ان شاء الله\AUDIO-2025-12-02-21-30-05.m4a,cancellation_request,medium,frustrated,not_at_risk,,high
-calm_0120.wav,الكل ان شاء الله\Bour Saeid Street 5.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0105.wav,الكل ان شاء الله\Concordia Compound 4.m4a,network_and_connectivity,medium,frustrated,not_at_risk,garbled wording about landline internet being slow,low
-calm_0121.wav,الكل ان شاء الله\Concordia Compound 9.m4a,network_and_connectivity,high,calm,not_at_risk,,high
-frustrated_0106.wav,الكل ان شاء الله\Dir Al Naheyah Street 12A 6.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0107.wav,الكل ان شاء الله\IT 5.mp3,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0108.wav,الكل ان شاء الله\Makalmat 6.m4a,cancellation_request,medium,frustrated,not_at_risk,,high
-frustrated_0109.wav,الكل ان شاء الله\New Recofrding 20.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0122.wav,الكل ان شاء الله\New Recofrding 25.m4a,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0110.wav,الكل ان شاء الله\New Recofrding 37.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0111.wav,الكل ان شاء الله\New Recording 44.m4a,no_reply_or_long_wait,high,frustrated,not_at_risk,,high
-frustrated_0112.wav,الكل ان شاء الله\New Recording 48.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0113.wav,الكل ان شاء الله\New Recording 5.m4a,sim_services,medium,frustrated,not_at_risk,reported lost SIM still active after more than 24 hours,high
-calm_0123.wav,الكل ان شاء الله\New Recording 64.m4a,cancellation_request,low,calm,not_at_risk,,high
-calm_0124.wav,الكل ان شاء الله\New Recording 6s9.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0125.wav,الكل ان شاء الله\New Recording 7e0.m4a,network_and_connectivity,low,calm,not_at_risk,,high
-frustrated_0114.wav,الكل ان شاء الله\New Recordingw 10 (1).m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
-frustrated_0115.wav,الكل ان شاء الله\New Recordiwng 5.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
-satisfied_0036.wav,الكل ان شاء الله\New Recorwding 3.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0126.wav,الكل ان شاء الله\New Recwording 14.m4a,cancellation_request,high,calm,not_at_risk,,high
-frustrated_0116.wav,الكل ان شاء الله\New recoprding 7.m4a,billing_and_charges,low,frustrated,not_at_risk,,high
-calm_0127.wav,الكل ان شاء الله\New recourding 1.m4a,offers_and_packages,low,calm,not_at_risk,asking about fast internet offers and prices,high
-calm_0128.wav,الكل ان شاء الله\New repcording 3.m4a,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0117.wav,الكل ان شاء الله\REC20251123232619.mp3,network_and_connectivity,medium,frustrated,not_at_risk,,high
-frustrated_0118.wav,الكل ان شاء الله\Re-fit Gym 3.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0129.wav,الكل ان شاء الله\Recording (8).m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-mad_0010.wav,الكل ان شاء الله\Recording.m4a,network_and_connectivity,high,mad,not_at_risk,,high
-mad_0011.wav,الكل ان شاء الله\Standard recording 1.mp3,billing_and_charges,medium,mad,not_at_risk,,high
-satisfied_0037.wav,الكل ان شاء الله\Standard recording 17.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
-satisfied_0038.wav,الكل ان شاء الله\Standard recording 18.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0119.wav,الكل ان شاء الله\Standard recording 23.mp3,no_reply_or_long_wait,medium,frustrated,not_at_risk,transcript garbled; customer service call drops after a long wait,low
-calm_0130.wav,الكل ان شاء الله\Standard recording 31.mp3,cancellation_request,medium,calm,not_at_risk,,high
-frustrated_0120.wav,الكل ان شاء الله\Standard recording 40.mp3,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0121.wav,الكل ان شاء الله\Standard recording 50.mp3,billing_and_charges,medium,frustrated,not_at_risk,,high
-mad_0012.wav,الكل ان شاء الله\Standard recording 8.mp3,billing_and_charges,medium,mad,not_at_risk,,high
-frustrated_0122.wav,الكل ان شاء الله\Street 306 11.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
-satisfied_0039.wav,الكل ان شاء الله\Street 306 20.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-satisfied_0040.wav,الكل ان شاء الله\Street 306 3.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0131.wav,الكل ان شاء الله\Street 36 10.m4a,no_reply_or_long_wait,medium,calm,not_at_risk,,high
-calm_0132.wav,الكل ان شاء الله\Street 36 11.m4a,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0123.wav,الكل ان شاء الله\Street 36 13.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0133.wav,الكل ان شاء الله\Street 36 29.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0124.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.18.46 AM (2).mpeg,app_and_account,high,frustrated,not_at_risk,,high
-mad_0013.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.18.47 AM (1).mp4,branch_and_staff,medium,mad,not_at_risk,,high
-calm_0134.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.18.48 AM (2).mp4,network_and_connectivity,high,calm,not_at_risk,,high
-calm_0135.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.18.54 AM (2).mp4,billing_and_charges,medium,calm,not_at_risk,,high
-satisfied_0041.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.18.54 AM (3).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0125.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.19.02 AM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
-satisfied_0042.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-20 at 1.45.24 PM (3).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0136.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-20 at 2.46.09 AM.mp4,balance_and_data,medium,calm,not_at_risk,,high
-calm_0137.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-20 at 7.35.32 PM.ogg,network_and_connectivity,low,calm,not_at_risk,,high
-frustrated_0126.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 3.28.51 PM (1).ogg,network_and_connectivity,medium,frustrated,not_at_risk,,high
-satisfied_0043.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.55.57 PM (1).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0127.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.04 PM (2).mp4,cancellation_request,medium,frustrated,not_at_risk,,high
-frustrated_0128.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.05 PM (3).mp4,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0138.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.06 PM.mp4,balance_and_data,medium,calm,not_at_risk,,high
-calm_0139.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.07 PM.mp4,cancellation_request,low,calm,not_at_risk,,high
-frustrated_0129.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.11 PM (1).mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0130.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.11 PM (3).mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0140.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.13 PM (2).mp4,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0141.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.31.25 PM (3).aac,billing_and_charges,low,calm,not_at_risk,,high
-frustrated_0131.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.33.35 PM (3).aac,cancellation_request,medium,frustrated,not_at_risk,,high
-frustrated_0132.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.35.38 PM.aac,network_and_connectivity,high,frustrated,not_at_risk,,high
-calm_0142.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.37.54 PM (3).aac,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0133.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.40.19 PM.aac,network_and_connectivity,high,frustrated,not_at_risk,,high
-calm_0143.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 2.07.14 PM (2).mp4,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0134.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 2.07.15 PM (1).mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0135.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 2.07.15 PM (4).mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
-mad_0014.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.55.16 PM (3).mpeg,branch_and_staff,medium,mad,not_at_risk,,high
-frustrated_0136.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.55.37 PM (2).mpeg,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0144.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.55.42 PM.mpeg,branch_and_staff,medium,calm,not_at_risk,,high
-frustrated_0137.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.56.19 PM (1).mpeg,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0138.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.48 PM (2).mp4,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0139.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.49 PM (4).mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0140.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.49 PM (5).mp4,cancellation_request,medium,frustrated,not_at_risk,,high
-frustrated_0141.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.49 PM.mp4,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0145.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.50 PM (3).mp4,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0146.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.52 PM (2).mp4,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0142.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.54 PM (5).aac,app_and_account,high,frustrated,not_at_risk,,high
-frustrated_0143.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.55 PM (2).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0144.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.56 PM (2).aac,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0145.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.56 PM.mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0146.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.57 PM (2).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0147.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.59 PM (2).mp4,branch_and_staff,medium,frustrated,not_at_risk,,high
-calm_0147.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.59 PM (4).mp4,app_and_account,low,calm,not_at_risk,,high
-satisfied_0044.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.09.06 PM (1).mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-satisfied_0045.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.09.14 PM (2).ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
-mad_0015.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.09.15 PM (1).ogg,billing_and_charges,medium,mad,not_at_risk,,high
-calm_0148.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.10.27 PM (3).mp4,app_and_account,low,calm,not_at_risk,,high
-calm_0149.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.11 PM (4).aac,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0150.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.13 PM.mp4,offers_and_packages,low,calm,not_at_risk,asking why there is no family bundle combining household lines,high
-calm_0151.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.15 PM (2).mp4,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0148.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.16 PM (4).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-satisfied_0046.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.17 PM (3).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0152.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.21 PM (2).mp4,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0149.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.23 PM (4).mp4,branch_and_staff,medium,frustrated,not_at_risk,,high
-frustrated_0150.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.26 PM (3).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-mad_0016.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.02.57 (7).mp4,branch_and_staff,medium,mad,not_at_risk,,high
-frustrated_0151.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.03.15 (7).mp4,billing_and_charges,high,frustrated,not_at_risk,,high
-frustrated_0152.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.04.56 (8).aac,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0153.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 18.13.22.ogg,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0154.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 18.36.46 (2).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0153.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.50 PM (3).ogg,other,low,calm,not_at_risk,"receives daily offer messages from an unknown number, asks if the service is real",high
-frustrated_0155.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.51 PM (2).ogg,balance_and_data,medium,frustrated,not_at_risk,transcript garbled,low
-calm_0154.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 12.54.17 PM (1).mp4,balance_and_data,medium,calm,not_at_risk,,high
-calm_0155.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 12.54.19 PM (1).mp4,app_and_account,medium,calm,not_at_risk,,high
-satisfied_0047.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 12.54.21 PM (4).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0156.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.00.16 PM.mp4,other,low,calm,not_at_risk,complaining that the rewards system is complicated and points expire,high
-calm_0157.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.01 AM (1).mp4,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0158.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.02 AM.mp4,network_and_connectivity,low,calm,not_at_risk,,high
-frustrated_0156.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.05 AM (1).mp4,other,low,frustrated,not_at_risk,still receives marketing calls after asking to stop them,high
-calm_0159.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.06 AM (2).mp4,cancellation_request,low,calm,not_at_risk,,high
-frustrated_0157.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.08 AM (4).aac,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0158.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.36.38 PM.ogg,balance_and_data,medium,frustrated,not_at_risk,,high
-satisfied_0048.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.36.40 PM (1).ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0159.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.36.43 PM.ogg,billing_and_charges,high,frustrated,not_at_risk,,high
-calm_0160.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.36.45 PM.ogg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0161.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.36.54 PM (1).ogg,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0160.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.36.57 PM.ogg,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0162.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.39 AM (1).mpeg,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0163.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.39 AM (2).mpeg,app_and_account,low,calm,not_at_risk,,high
-calm_0164.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.40 AM (1).mpeg,cancellation_request,low,calm,not_at_risk,,high
-frustrated_0161.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.42 AM (2).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0162.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.58 PM (6).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0163.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.59 PM (1).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0164.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.59 PM.mp4,cancellation_request,medium,frustrated,not_at_risk,,high
-frustrated_0165.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.06.46 PM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0165.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.02 PM (3).mp4,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0166.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.03 PM (3).mp4,offers_and_packages,low,frustrated,not_at_risk,"renewal notification did not arrive, so extra recharge was needed",high
-calm_0166.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.03 PM (5).mp4,balance_and_data,low,calm,not_at_risk,,high
-frustrated_0167.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.06 PM.mp4,cancellation_request,medium,frustrated,not_at_risk,,high
-calm_0167.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.10 PM (3).aac,balance_and_data,medium,calm,not_at_risk,,high
-calm_0168.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.04.29 PM (5).mp4,other,low,calm,not_at_risk,question about how to activate international service,high
-frustrated_0168.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.04.30 PM (3).mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0169.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.04.30 PM (5).mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0169.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.22 PM.mp4,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0170.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.23 PM (8).mp4,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0171.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.33 PM (1).mpeg,branch_and_staff,medium,frustrated,not_at_risk,,high
-calm_0170.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.50 PM (2).mp4,balance_and_data,medium,calm,not_at_risk,,high
-calm_0171.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.52 PM (3).mp4,branch_and_staff,medium,calm,not_at_risk,,high
-frustrated_0172.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.10 PM (4).mpeg,app_and_account,high,frustrated,not_at_risk,,high
-calm_0172.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.14 PM (7).mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0173.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.42 PM (1).mp4,app_and_account,low,calm,not_at_risk,,high
-calm_0174.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 1.52.07 AM.ogg,balance_and_data,low,calm,not_at_risk,,high
-frustrated_0173.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.53.26 PM (4).aac,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0175.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.53.28 PM (1).aac,offers_and_packages,low,calm,not_at_risk,question about new home internet offers and discounts for old customers,high
-calm_0176.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.54.16 PM (1).mp4,network_and_connectivity,low,calm,not_at_risk,,high
-calm_0177.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.54.16 PM (5).mp4,network_and_connectivity,low,calm,not_at_risk,,high
-calm_0178.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.55.21 PM (1).aac,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0174.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 12.06.11 PM.mpeg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0179.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 12.49.02 AM.aac,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0175.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 12.49.23 AM (1).aac,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0180.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.33.16 PM (2).mp4,app_and_account,medium,calm,not_at_risk,,high
-frustrated_0176.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.40.11 PM (1).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0177.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.40.18 PM (1).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0181.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 12.57.50 AM (2).mp4,offers_and_packages,low,calm,not_at_risk,asking about discounts for people with disabilities or seniors,high
-mad_0017.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 12.57.51 AM (2).mp4,billing_and_charges,medium,mad,not_at_risk,,high
-calm_0182.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.33.00 PM (1).aac,balance_and_data,low,calm,not_at_risk,,high
-frustrated_0178.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.33.01 PM (3).aac,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0183.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 11.55.00 PM (2).mp4,network_and_connectivity,low,calm,not_at_risk,,high
-calm_0184.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 11.55.06 PM (2).mp4,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0185.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 11.55.09 PM (1).mp4,balance_and_data,medium,calm,not_at_risk,,high
-mad_0018.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 11.55.10 PM.mp4,branch_and_staff,medium,mad,not_at_risk,,high
-frustrated_0179.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.13.58 PM (2).mp4,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0180.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.14.02 PM (4).mp4,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0186.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.14.11 PM (1).ogg,offers_and_packages,low,calm,not_at_risk,asks about upgrading the bundle to a faster one without extra fees,high
-calm_0187.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.14.13 PM (4).ogg,branch_and_staff,medium,calm,not_at_risk,,high
-frustrated_0181.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 4.41.44 PM (1).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0188.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 4.41.54 PM (2).mp4,network_and_connectivity,medium,calm,not_at_risk,transcript garbled,low
-satisfied_0049.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 5.29.45 PM (3).ogg,thanks_or_praise,low,satisfied,not_at_risk,transcript garbled,low
-frustrated_0182.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 5.29.51 PM (2).ogg,network_and_connectivity,medium,frustrated,not_at_risk,,high
-frustrated_0183.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 8.11.19 PM.ogg,branch_and_staff,medium,frustrated,not_at_risk,,high
-calm_0189.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 8.25.42 PM.mpeg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0190.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 8.25.45 PM.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
-satisfied_0050.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 8.25.50 PM.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-satisfied_0051.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 8.25.51 PM.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0184.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.17.58 PM.ogg,branch_and_staff,medium,frustrated,not_at_risk,,high
-calm_0191.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.18.02 PM (1).ogg,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0185.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.18.09 PM.ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0192.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.18.12 PM.ogg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0193.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.56.16 PM.ogg,offers_and_packages,low,calm,not_at_risk,question about discounts for elderly or people with special needs,high
-frustrated_0186.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.56.19 PM (1).ogg,network_and_connectivity,high,frustrated,not_at_risk,,high
-calm_0194.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.56.21 PM.ogg,app_and_account,medium,calm,not_at_risk,,high
-calm_0195.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.56.23 PM (1).ogg,balance_and_data,low,calm,not_at_risk,,high
-frustrated_0187.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.56.23 PM (2).ogg,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0188.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.50 AM.mpeg,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0196.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.57 AM.mp4,no_reply_or_long_wait,medium,calm,not_at_risk,,high
-frustrated_0189.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.30.00 AM (1).ogg,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0197.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.30.01 AM (2).ogg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0198.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.36 PM (1).ogg,offers_and_packages,low,calm,not_at_risk,question about the difference between home and mobile bundle prices,high
-frustrated_0190.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.39 PM (2).ogg,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0191.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.40 PM.ogg,app_and_account,medium,frustrated,not_at_risk,,high
-satisfied_0052.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.43 PM.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0192.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.46 PM.mpeg,app_and_account,medium,frustrated,not_at_risk,,high
-calm_0199.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.31.49 PM.mp4,app_and_account,medium,calm,not_at_risk,,high
-satisfied_0053.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.32.24 PM.mp4,no_reply_or_long_wait,medium,satisfied,not_at_risk,,high
-frustrated_0193.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.33.30 PM.mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0194.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.33.37 PM.mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0195.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.38.49 PM.mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-satisfied_0054.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.53.02 PM.aac,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0196.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.58.56 PM.mpeg,billing_and_charges,medium,frustrated,not_at_risk,garbled wording about unauthorized services and balance deductions,low
-frustrated_0197.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.14.40 AM.mp4,network_and_connectivity,high,frustrated,at_risk,,high
-frustrated_0198.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.14.45 AM (3).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0200.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.03 PM.ogg,other,low,calm,not_at_risk,question or request not fitting the other categories,high
-calm_0201.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.06 PM (4).ogg,network_and_connectivity,low,calm,not_at_risk,,high
-calm_0202.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.07 PM (7).ogg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0203.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.09 PM (7).ogg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0204.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.10 PM (4).ogg,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0199.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.12 PM (1).ogg,branch_and_staff,medium,frustrated,not_at_risk,,high
-calm_0205.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.13 PM (5).ogg,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0200.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.34.59 AM.ogg,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0206.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.05 AM (1).ogg,balance_and_data,medium,calm,not_at_risk,transcript garbled,low
-frustrated_0201.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.09 AM (1).ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0202.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.10 AM.ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0207.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.15 AM.ogg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0208.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.08 PM.ogg,network_and_connectivity,medium,calm,not_at_risk,,high
-frustrated_0203.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.09 PM (1).ogg,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0209.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.09 PM.ogg,app_and_account,medium,calm,not_at_risk,,high
-calm_0210.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.16 PM (2).ogg,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0211.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.16 PM.ogg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0212.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.54.22 PM (1).mp4,offers_and_packages,low,calm,not_at_risk,asking how to restore a disappeared package in the app,high
-frustrated_0204.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.54.23 PM (1).ogg,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0213.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.54.24 PM.ogg,balance_and_data,medium,calm,not_at_risk,,high
-calm_0214.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.54.27 PM (2).mpeg,sim_services,low,calm,not_at_risk,asking whether a second line can use the same number,high
-frustrated_0205.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.00.19 AM.mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-frustrated_0206.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.00.28 AM.mp4,billing_and_charges,medium,frustrated,at_risk,,high
-mad_0019.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.24.10 AM.mp4,branch_and_staff,high,mad,not_at_risk,,high
-calm_0215.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.26.10 AM.mpeg,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0207.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.26.23 AM.mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
-satisfied_0055.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.27.03 AM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0216.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 10.11.49 PM (3).mp4,balance_and_data,medium,calm,not_at_risk,,high
-calm_0217.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 10.11.49 PM.mp4,balance_and_data,medium,calm,not_at_risk,,high
-satisfied_0056.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 10.11.52 PM (2).mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0218.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 11.05.30 PM (2).ogg,offers_and_packages,low,calm,not_at_risk,renewal notification not received,high
-frustrated_0208.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.12.35 AM.mp4,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0209.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.19.29 AM.mp4,balance_and_data,low,frustrated,not_at_risk,,high
-frustrated_0210.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.19.31 AM.mp4,balance_and_data,low,frustrated,not_at_risk,,high
-frustrated_0211.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.33 PM (2).mpeg,network_and_connectivity,high,frustrated,not_at_risk,,high
-calm_0219.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.34 PM.mpeg,balance_and_data,low,calm,not_at_risk,,high
-mad_0020.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.47 PM.mpeg,no_reply_or_long_wait,high,mad,not_at_risk,,high
-frustrated_0212.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.56 PM (1).mp4,other,medium,frustrated,not_at_risk,promo SMS despite subscribed blocking service,high
-frustrated_0213.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.57 PM (1).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0220.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 6.20.06 PM (3).ogg,network_and_connectivity,low,calm,not_at_risk,,high
-frustrated_0214.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 6.20.06 PM (4).ogg,branch_and_staff,medium,frustrated,not_at_risk,,high
-calm_0221.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 6.20.07 PM (2).ogg,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0222.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.54 PM (1).mp4,network_and_connectivity,medium,calm,not_at_risk,transcript garbled,low
-frustrated_0215.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.56 PM (1).mp4,sim_services,high,frustrated,not_at_risk,"two numbers under same national ID, one stopped",high
-frustrated_0216.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.57 PM (2).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-mad_0021.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.57 PM (3).mp4,branch_and_staff,medium,mad,not_at_risk,,high
-calm_0223.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.58 PM.mpeg,balance_and_data,low,calm,not_at_risk,,high
-satisfied_0057.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.59 PM (1).mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0217.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-05 at 1.53.04 PM.ogg,branch_and_staff,medium,frustrated,not_at_risk,,high
-mad_0022.wav,الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.40.47 PM.mp4,other,medium,mad,not_at_risk,number ported to another company without consent,high
-calm_0224.wav,الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.40.50 PM.mp4,network_and_connectivity,medium,calm,not_at_risk,,high
-calm_0225.wav,الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.41.43 PM.mpeg,balance_and_data,medium,calm,not_at_risk,,high
-mad_0023.wav,الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.41.44 PM.mp4,billing_and_charges,medium,mad,not_at_risk,,high
-calm_0226.wav,الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.41.58 PM (2).mp4,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0218.wav,الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.41.59 PM (1).mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
-frustrated_0219.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.45 PM.ogg,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0220.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.48 PM (2).ogg,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0221.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.50 PM (3).ogg,branch_and_staff,medium,frustrated,not_at_risk,,high
-calm_0227.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.51 PM (2).ogg,offers_and_packages,low,calm,not_at_risk,cannot add daughter line to family package; told ineligible,high
-frustrated_0222.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.52 PM (1).ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-frustrated_0223.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.54 PM (1).ogg,network_and_connectivity,medium,frustrated,not_at_risk,,high
-frustrated_0224.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.55 PM.ogg,other,low,frustrated,not_at_risk,receiving harassing international calls; asks about bulk blocking,high
-calm_0228.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.57 PM (1).ogg,other,low,calm,not_at_risk,question or request not fitting the other categories,high
-frustrated_0225.wav,الكل ان شاء الله\WhatsApp Ptt 2025-12-01 at 11.18.55 PM.ogg,balance_and_data,medium,frustrated,not_at_risk,,high
-frustrated_0226.wav,الكل ان شاء الله\WhatsApp Ptt 2025-12-01 at 11.20.58 PM.ogg,branch_and_staff,medium,frustrated,not_at_risk,,high
-frustrated_0227.wav,الكل ان شاء الله\h17.m4a,no_reply_or_long_wait,high,frustrated,not_at_risk,,high
-frustrated_0228.wav,الكل ان شاء الله\h25.m4a,app_and_account,medium,frustrated,not_at_risk,,high
-frustrated_0229.wav,الكل ان شاء الله\h29.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0229.wav,الكل ان شاء الله\h36.m4a,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0230.wav,الكل ان شاء الله\h40.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0230.wav,الكل ان شاء الله\h45.m4a,network_and_connectivity,high,calm,not_at_risk,,high
-frustrated_0231.wav,الكل ان شاء الله\h56.m4a,cancellation_request,medium,frustrated,not_at_risk,,high
-frustrated_0232.wav,الكل ان شاء الله\h65.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
-mad_0024.wav,الكل ان شاء الله\h70.m4a,no_reply_or_long_wait,medium,mad,not_at_risk,,high
-calm_0231.wav,الكل ان شاء الله\h86.m4a,offers_and_packages,low,calm,not_at_risk,question about how to activate a package on the first of the month,high
-frustrated_0233.wav,الكل ان شاء الله\n17.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
-satisfied_0058.wav,الكل ان شاء الله\n19.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0234.wav,الكل ان شاء الله\n2.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0233.wav,الكل ان شاء الله\n41.m4a,balance_and_data,low,calm,not_at_risk,transcript garbled,low
-satisfied_0059.wav,الكل ان شاء الله\n42.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0234.wav,الكل ان شاء الله\n52.m4a,offers_and_packages,low,calm,not_at_risk,question or request not fitting the other categories,high
-frustrated_0235.wav,الكل ان شاء الله\n6.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
-calm_0235.wav,الكل ان شاء الله\n71.m4a,offers_and_packages,low,calm,not_at_risk,asks whether package auto-renews or needs manual renewal,high
-calm_0236.wav,الكل ان شاء الله\n76.m4a,balance_and_data,medium,calm,not_at_risk,,high
-frustrated_0236.wav,الكل ان شاء الله\n80.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0237.wav,الكل ان شاء الله\n88.ogx,other,low,calm,not_at_risk,question how to use accumulated points in the app,high
-frustrated_0237.wav,الكل ان شاء الله\n90.ogg,branch_and_staff,medium,frustrated,not_at_risk,transcript garbled; staff could not explain internet usage,low
-frustrated_0238.wav,الكل ان شاء الله\n95.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
-calm_0238.wav,الكل ان شاء الله\ss4.m4a,no_reply_or_long_wait,medium,calm,not_at_risk,,high
-frustrated_0239.wav,الكل ان شاء الله\v16.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0239.wav,الكل ان شاء الله\v22.m4a,billing_and_charges,medium,calm,not_at_risk,,high
-frustrated_0240.wav,الكل ان شاء الله\x25.mp3,billing_and_charges,medium,frustrated,not_at_risk,,high
-frustrated_0241.wav,الكل ان شاء الله\x72.mp3,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0240.wav,الكل ان شاء الله\المكالمهs 4.mp3,billing_and_charges,medium,calm,not_at_risk,,high
-calm_0241.wav,الكل ان شاء الله\تسجيل (12).m4a,app_and_account,low,calm,not_at_risk,,high
-frustrated_0242.wav,الكل ان شاء الله\تسجيل (2).m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
-calm_0242.wav,الكل ان شاء الله\تسجيل (9).m4a,app_and_account,low,calm,not_at_risk,,high
-satisfied_0060.wav,الكل ان شاء الله\تسجيل جديد ١٦.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0243.wav,الكل ان شاء الله\صوت ٢٥١١٢٣_٢٣١٩١٦.m4a,balance_and_data,medium,calm,not_at_risk,,high
-satisfied_0061.wav,الكل ان شاء الله\مكالمهs 7.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
-calm_0013.wav,الكل ان شاء الله\0458.mpeg,sim_services,low,calm,not_at_risk,asks if a second line can be made with same old number,high
-frustrated_0018.wav,الكل ان شاء الله\0375.mpeg,branch_and_staff,medium,frustrated,not_at_risk,"staff promised 48 hours, 4 days passed",low
-frustrated_0021.wav,الكل ان شاء الله\0442.aac,network_and_connectivity,high,frustrated,not_at_risk,internet works minutes then down for hours,low
-frustrated_0083.wav,الكل ان شاء الله\2363.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,"emailed Tuesday, still waiting for a reply",low
+frustrated_0043.wav,الكل ان شاء الله\1317.mp3,balance_and_data,high,frustrated,not_at_risk,,high
+frustrated_0044.wav,الكل ان شاء الله\1331.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
+calm_0068.wav,الكل ان شاء الله\1334.m4a,other,low,calm,not_at_risk,children subscribe to services without understanding; asks for child protection on the line,high
+calm_0069.wav,الكل ان شاء الله\1336.m4a,other,low,calm,not_at_risk,question about the fastest way to pay the monthly bill,high
+frustrated_0045.wav,الكل ان شاء الله\1338.m4a,app_and_account,medium,frustrated,not_at_risk,,high
+calm_0070.wav,الكل ان شاء الله\1351.m4a,other,low,calm,not_at_risk,Call Me Back messages arrive only after the other person already called,high
+calm_0071.wav,الكل ان شاء الله\1358.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0072.wav,الكل ان شاء الله\1389.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0073.wav,الكل ان شاء الله\1392.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0074.wav,الكل ان شاء الله\14.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0046.wav,الكل ان شاء الله\1419.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+calm_0075.wav,الكل ان شاء الله\1429.m4a,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0047.wav,الكل ان شاء الله\1432.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+mad_0001.wav,الكل ان شاء الله\1440.m4a,balance_and_data,medium,mad,not_at_risk,,high
+frustrated_0048.wav,الكل ان شاء الله\1448.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+calm_0076.wav,الكل ان شاء الله\1455.m4a,app_and_account,medium,calm,not_at_risk,,high
+calm_0077.wav,الكل ان شاء الله\1459.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0078.wav,الكل ان شاء الله\1461.mp3,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0079.wav,الكل ان شاء الله\1467.m4a,app_and_account,medium,calm,not_at_risk,,high
+calm_0080.wav,الكل ان شاء الله\1474.m4a,balance_and_data,medium,calm,not_at_risk,,high
+calm_0081.wav,الكل ان شاء الله\1480.m4a,network_and_connectivity,high,calm,not_at_risk,,high
+frustrated_0049.wav,الكل ان شاء الله\1484.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+calm_0082.wav,الكل ان شاء الله\1493.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0050.wav,الكل ان شاء الله\1494.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0051.wav,الكل ان شاء الله\1518.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0052.wav,الكل ان شاء الله\1566.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0083.wav,الكل ان شاء الله\1571.m4a,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0053.wav,الكل ان شاء الله\1574.mp3,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0054.wav,الكل ان شاء الله\1578.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0055.wav,الكل ان شاء الله\1583.m4a,offers_and_packages,medium,frustrated,not_at_risk,line system transfer not completed after three days,high
+frustrated_0056.wav,الكل ان شاء الله\1591.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0057.wav,الكل ان شاء الله\1593.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0058.wav,الكل ان شاء الله\1597.m4a,offers_and_packages,medium,frustrated,not_at_risk,package change request not completed after four days,high
+frustrated_0059.wav,الكل ان شاء الله\1599.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0060.wav,الكل ان شاء الله\1603.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
+satisfied_0017.wav,الكل ان شاء الله\1611.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0180.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.40 PM (1).ogg,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0201.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 11.05.50 PM (3).ogg,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0214.wav,الكل ان شاء الله\WhatsApp Ptt 2025-12-01 at 12.25.02 PM (2).ogg,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0148.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.06 AM (1).mp4,billing_and_charges,high,frustrated,not_at_risk,,high
+calm_0177.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.06.59 PM.mp4,other,low,calm,not_at_risk,question about how to set a cap on balance spending,high
+frustrated_0166.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.53.26 PM (4).aac,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0112.wav,الكل ان شاء الله\New Recofrding 8.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
+calm_0178.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.00 PM.mp4,offers_and_packages,low,calm,not_at_risk,question about a kids internet package with a content filter,high
+satisfied_0025.wav,الكل ان شاء الله\2061.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0187.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.11 PM (3).ogg,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0172.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.29.47 PM (3).mpeg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0082.wav,الكل ان شاء الله\2236.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0206.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.50 PM (5).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
+satisfied_0042.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.56 PM (1).aac,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0207.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.55 PM (5).mp4,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0191.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.09 PM (2).ogg,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0160.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.24 PM (6).mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0235.wav,الكل ان شاء الله\z1.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
+calm_0095.wav,الكل ان شاء الله\2054.mp4,cancellation_request,low,calm,not_at_risk,,high
+satisfied_0023.wav,الكل ان شاء الله\1d.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0081.wav,الكل ان شاء الله\2226.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0132.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.10.28 PM (1).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0120.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.02 PM (2).mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
+satisfied_0043.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.56 PM (1).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0216.wav,الكل ان شاء الله\Zahraa Al Maadi Street 2.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
+calm_0151.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.37.55 PM (2).aac,other,low,calm,not_at_risk,question why customer service is not available 24 hours,high
+frustrated_0240.wav,الكل ان شاء الله\صوت ٢٥١١٢٣_٢٣٢٠٣٧.m4a,app_and_account,medium,frustrated,not_at_risk,,high
+calm_0085.wav,الكل ان شاء الله\1697.ogg,other,low,calm,not_at_risk,question about a router installment plan with the monthly subscription,high
+satisfied_0074.wav,الكل ان شاء الله\Zahraa Al Maadi Street 9 (2).m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0097.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-57-30(3).m4a,app_and_account,medium,frustrated,not_at_risk,,high
+satisfied_0076.wav,الكل ان شاء الله\n57.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+mad_0010.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 20.35.30.ogg,network_and_connectivity,medium,mad,not_at_risk,,high
+frustrated_0142.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.51.48.mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
+satisfied_0058.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 4.41.47 PM (1).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0172.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.06 AM (2).mp4,cancellation_request,low,calm,not_at_risk,,high
+frustrated_0128.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.56.33 PM.mpeg,branch_and_staff,medium,frustrated,not_at_risk,,high
+satisfied_0053.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 12.57.51 AM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0125.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.37.48 PM.aac,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+satisfied_0036.wav,الكل ان شاء الله\Standard recording 15.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0178.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.50 AM (1).mpeg,billing_and_charges,high,frustrated,not_at_risk,,high
+calm_0235.wav,الكل ان شاء الله\h98.m4a,no_reply_or_long_wait,medium,calm,not_at_risk,,high
+calm_0207.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.45 PM (2).ogg,app_and_account,medium,calm,not_at_risk,,high
+calm_0142.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.19.03 AM (2).mp4,network_and_connectivity,medium,calm,not_at_risk,,high
+mad_0016.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.31.34 PM.mp4,billing_and_charges,medium,mad,not_at_risk,,high
+frustrated_0171.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 12.58.01 AM (2).aac,other,medium,frustrated,not_at_risk,received a used router instead of a new one,high
+satisfied_0019.wav,الكل ان شاء الله\1703.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0112.wav,الكل ان شاء الله\2450.ogg,sim_services,low,calm,not_at_risk,question about getting a new line with the old number,high
+calm_0195.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.13.58 PM (1).mp4,offers_and_packages,low,calm,not_at_risk,question about new internet offers for limited use,high
+calm_0201.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 8.25.46 PM.mpeg,app_and_account,medium,calm,not_at_risk,,high
+mad_0011.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.43 PM (1).ogg,no_reply_or_long_wait,medium,mad,not_at_risk,,high
+frustrated_0140.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.03.15 (7).mp4,billing_and_charges,high,frustrated,not_at_risk,,high
+frustrated_0189.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.13 PM (1).ogg,cancellation_request,medium,frustrated,not_at_risk,,high
+calm_0248.wav,الكل ان شاء الله\x91.mp3,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0154.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.55.39 PM.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
+satisfied_0061.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.41 PM.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0170.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 12.57.47 AM.mp4,app_and_account,medium,frustrated,not_at_risk,,high
+calm_0157.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.09.00 PM.ogg,app_and_account,high,calm,not_at_risk,,high
+calm_0190.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.40.11 PM (3).mp4,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0158.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.15 PM (2).mp4,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0202.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.18.43 AM.mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0088.wav,الكل ان شاء الله\2415.ogg,billing_and_charges,medium,frustrated,not_at_risk,,high
+satisfied_0033.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-19-21.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0154.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.42 PM (5).mpeg,billing_and_charges,medium,frustrated,not_at_risk,transcript garbled; add-on auto-activated with no clear way to stop it,low
+satisfied_0041.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.33.34 PM.aac,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0145.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.48 PM.ogg,billing_and_charges,high,frustrated,not_at_risk,"double charge when changing package, mixed with advice text",low
+frustrated_0220.wav,الكل ان شاء الله\h14.m4a,no_reply_or_long_wait,high,frustrated,not_at_risk,,high
+frustrated_0084.wav,الكل ان شاء الله\2284.ogg,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0162.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.52 PM.mp4,offers_and_packages,low,frustrated,not_at_risk,advertised packages said available for all lines but number is ineligible,high
+frustrated_0155.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.43 PM (4).mpeg,cancellation_request,medium,frustrated,not_at_risk,,high
+frustrated_0073.wav,الكل ان شاء الله\2027.mp4,app_and_account,medium,frustrated,not_at_risk,,high
+frustrated_0080.wav,الكل ان شاء الله\2198.ogg,billing_and_charges,medium,frustrated,not_at_risk,transcript garbled; services activated without request and balance deducted,low
+calm_0229.wav,الكل ان شاء الله\WhatsApp Ptt 2025-12-01 at 12.25.02 PM (3).ogg,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0139.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.27 PM.mp4,network_and_connectivity,high,frustrated,not_at_risk,transcript garbled; line disconnected suddenly and will not restart,low
+frustrated_0062.wav,الكل ان شاء الله\1796.mp3,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0194.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 8.36.50 PM (5).ogg,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0137.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.26 PM (3).mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
+calm_0217.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.17 PM (2).ogg,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0163.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.57 PM (1).mp4,other,low,frustrated,not_at_risk,"usage statement only available at the branch, asking if online is possible",high
+frustrated_0135.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.22 PM (4).mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
+calm_0148.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.04 PM.mp4,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0063.wav,الكل ان شاء الله\1813.mpeg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0204.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.33 PM (2).mpeg,network_and_connectivity,high,frustrated,not_at_risk,,high
+frustrated_0119.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 2.56.24 PM.ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0221.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.25.53 AM.mpeg,app_and_account,high,calm,not_at_risk,,high
+frustrated_0130.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.09.15 PM.ogg,app_and_account,medium,frustrated,not_at_risk,,high
+calm_0171.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.02 AM.mp4,network_and_connectivity,low,calm,not_at_risk,,high
+frustrated_0236.wav,الكل ان شاء الله\z10.m4a,other,low,frustrated,not_at_risk,no instructions included with the router,high
+calm_0166.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.47 PM (2).ogg,network_and_connectivity,low,calm,not_at_risk,"question about speed difference morning vs night, mixed with advice text",low
+satisfied_0052.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.22 PM (2).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0184.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.07 PM.ogg,app_and_account,medium,frustrated,not_at_risk,,high
+calm_0246.wav,الكل ان شاء الله\x87.mp3,network_and_connectivity,medium,calm,not_at_risk,,high
+frustrated_0109.wav,الكل ان شاء الله\M1.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+calm_0167.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.47 PM.ogg,balance_and_data,medium,calm,not_at_risk,,high
+calm_0245.wav,الكل ان شاء الله\x68.mp3,network_and_connectivity,low,calm,not_at_risk,,high
+calm_0119.wav,الكل ان شاء الله\AUDIO-2025-11-21-01-32-32 3.m4a,branch_and_staff,medium,calm,not_at_risk,,high
+calm_0250.wav,الكل ان شاء الله\صوت ٢٥١١٢٣_٢٣١٨٥٢.m4a,balance_and_data,medium,calm,not_at_risk,,high
+calm_0184.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.54.15 PM (1).mp4,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0219.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.07.43 AM.mp4,app_and_account,medium,calm,not_at_risk,,high
+calm_0198.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 5.29.47 PM.ogg,branch_and_staff,medium,calm,not_at_risk,,high
+calm_0088.wav,الكل ان شاء الله\1787.mpeg,balance_and_data,medium,calm,not_at_risk,,high
+calm_0089.wav,الكل ان شاء الله\1821.mpeg,branch_and_staff,medium,calm,not_at_risk,,high
+calm_0182.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.39 PM.mp4,balance_and_data,low,calm,not_at_risk,,high
+calm_0225.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.25 PM.mpeg,balance_and_data,medium,calm,not_at_risk,,high
+calm_0234.wav,الكل ان شاء الله\h45.m4a,network_and_connectivity,high,calm,not_at_risk,,high
+satisfied_0029.wav,الكل ان شاء الله\2354.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0141.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.19.03 AM (1).mp4,network_and_connectivity,high,calm,not_at_risk,,high
+satisfied_0050.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.01 PM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0210.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.34.06 PM.mp4,balance_and_data,medium,calm,not_at_risk,,high
+calm_0193.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.31.59 PM (1).aac,app_and_account,low,calm,not_at_risk,,high
+calm_0103.wav,الكل ان شاء الله\2308.mp4,branch_and_staff,medium,calm,not_at_risk,transcript garbled; staff promise not kept,low
+calm_0170.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.01.53 PM (2).mp4,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0244.wav,الكل ان شاء الله\x56.mp3,offers_and_packages,low,calm,not_at_risk,asks about new offers for existing users,high
+calm_0161.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.19.52.mp4,sim_services,low,calm,not_at_risk,asks whether package keeps working after moving SIM to another device,high
+frustrated_0144.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.43 PM.ogg,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0210.wav,الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.40.49 PM (1).mp4,app_and_account,high,frustrated,not_at_risk,,high
+satisfied_0073.wav,الكل ان شاء الله\WhatsApp Ptt 2025-12-01 at 11.21.40 PM.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0146.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.55.59 PM (1).mp4,other,low,calm,not_at_risk,asks about router installment plan with monthly subscription,high
+calm_0128.wav,الكل ان شاء الله\AUDIO-2025-12-02-01-05-49.m4a,app_and_account,medium,calm,not_at_risk,,high
+calm_0118.wav,الكل ان شاء الله\AUD-20251123-WA0160.m4a,balance_and_data,low,calm,not_at_risk,,high
+calm_0098.wav,الكل ان شاء الله\2118.m4a,network_and_connectivity,low,calm,not_at_risk,,high
+calm_0194.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.13.55 PM.mp4,network_and_connectivity,medium,calm,not_at_risk,,high
+mad_0004.wav,الكل ان شاء الله\2009.mpeg,billing_and_charges,medium,mad,not_at_risk,,high
+calm_0140.wav,الكل ان شاء الله\Street 36 10.m4a,no_reply_or_long_wait,medium,calm,not_at_risk,,high
+satisfied_0037.wav,الكل ان شاء الله\Street 306 18.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0231.wav,الكل ان شاء الله\WhatsApp Ptt 2025-12-01 at 12.25.03 PM (2).ogg,network_and_connectivity,medium,calm,not_at_risk,,high
+satisfied_0056.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.14.12 PM (2).ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0074.wav,الكل ان شاء الله\2031.mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+mad_0015.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.56 AM (3).mp4,branch_and_staff,medium,mad,not_at_risk,,high
+calm_0108.wav,الكل ان شاء الله\2357.ogg,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0064.wav,الكل ان شاء الله\1826.mp3,balance_and_data,medium,frustrated,not_at_risk,transcript garbled,low
+calm_0132.wav,الكل ان شاء الله\Makalmat 4.m4a,offers_and_packages,low,calm,not_at_risk,offers expire before they can be activated,high
+calm_0191.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 12.57.47 AM (2).mp4,network_and_connectivity,medium,calm,not_at_risk,,high
+frustrated_0078.wav,الكل ان شاء الله\2161.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0175.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.47 PM (1).aac,app_and_account,medium,calm,not_at_risk,,high
+satisfied_0045.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.09.10 PM.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0055.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.14.03 PM (1).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0232.wav,الكل ان شاء الله\Zahraa Al Maadi Street 6 (1).m4a,app_and_account,high,calm,not_at_risk,,high
+calm_0189.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.33.14 PM.mp4,no_reply_or_long_wait,medium,calm,not_at_risk,,high
+calm_0113.wav,الكل ان شاء الله\2459.mp3,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0105.wav,الكل ان شاء الله\AUDIO-2025-12-02-02-23-15.m4a,network_and_connectivity,medium,frustrated,not_at_risk,transcript too vague to tell,low
+mad_0013.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.33.00 PM (7).aac,network_and_connectivity,medium,mad,not_at_risk,,high
+frustrated_0090.wav,الكل ان شاء الله\33t.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+satisfied_0063.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.39.14 PM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0089.wav,الكل ان شاء الله\25d.mp3,network_and_connectivity,high,frustrated,not_at_risk,,high
+calm_0200.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 8.25.45 PM.mpeg,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0134.wav,الكل ان شاء الله\New Recofrding 24.m4a,balance_and_data,medium,calm,not_at_risk,,high
+calm_0236.wav,الكل ان شاء الله\n54.m4a,no_reply_or_long_wait,medium,calm,not_at_risk,,high
+satisfied_0065.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.52.49 PM.mp4,thanks_or_praise,low,satisfied,not_at_risk,transcript garbled,low
+frustrated_0192.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.54.25 PM (1).ogg,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0186.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.09 PM (2).ogg,billing_and_charges,medium,frustrated,not_at_risk,"transcript starts mid-sentence, garbled",low
+calm_0169.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.00.15 PM (5).mp4,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0131.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.10.27 PM (2).mp4,other,medium,frustrated,not_at_risk,"subscribed kids educational service, content not working",high
+frustrated_0165.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.47 PM (1).mp4,no_reply_or_long_wait,high,frustrated,not_at_risk,,high
+mad_0014.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 11.54.58 PM.mp4,branch_and_staff,medium,mad,not_at_risk,,high
+frustrated_0110.wav,الكل ان شاء الله\M6.m4a,no_reply_or_long_wait,high,frustrated,not_at_risk,transcript garbled,low
+calm_0084.wav,الكل ان شاء الله\1656.ogg,network_and_connectivity,high,calm,not_at_risk,,high
+mad_0007.wav,الكل ان شاء الله\AUDIO-2025-11-29-08-52-41.m4a,billing_and_charges,medium,mad,not_at_risk,,high
+calm_0204.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.47 AM (1).mpeg,network_and_connectivity,high,calm,not_at_risk,,high
+frustrated_0091.wav,الكل ان شاء الله\6e.mp3,other,medium,frustrated,not_at_risk,"subscribed kids educational service, content not working",high
+calm_0241.wav,الكل ان شاء الله\x38.mp3,balance_and_data,medium,calm,not_at_risk,,high
+calm_0238.wav,الكل ان شاء الله\n76.m4a,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0195.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.00.04 AM.mp4,network_and_connectivity,high,frustrated,not_at_risk,transcript garbled,low
+calm_0197.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 5.29.44 PM (1).ogg,app_and_account,medium,calm,not_at_risk,,high
+calm_0135.wav,الكل ان شاء الله\New Recording 45.m4a,branch_and_staff,medium,calm,not_at_risk,transcript garbled,low
+calm_0247.wav,الكل ان شاء الله\x9.mp3,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0061.wav,الكل ان شاء الله\1770.mp3,network_and_connectivity,medium,frustrated,not_at_risk,transcript garbled,low
+calm_0114.wav,الكل ان شاء الله\2461.mp3,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0101.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-06-40.m4a,network_and_connectivity,medium,frustrated,not_at_risk,transcript garbled,low
+frustrated_0133.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-24 at 12.07.49 AM (3).ogg,balance_and_data,medium,frustrated,not_at_risk,,high
+calm_0242.wav,الكل ان شاء الله\x4.mp3,billing_and_charges,high,calm,not_at_risk,,high
+calm_0136.wav,الكل ان شاء الله\New Recording 53.m4a,branch_and_staff,medium,calm,not_at_risk,transcript garbled,low
+satisfied_0026.wav,الكل ان شاء الله\2102.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0087.wav,الكل ان شاء الله\23n.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+satisfied_0066.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.14.46 AM (2).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0105.wav,الكل ان شاء الله\2318.mp4,offers_and_packages,low,calm,not_at_risk,asks if line system can change from postpaid to prepaid and the steps,high
+calm_0230.wav,الكل ان شاء الله\WhatsApp Ptt 2025-12-01 at 12.25.02 PM (5).ogg,other,low,calm,not_at_risk,asks why bills cannot be paid from the e-wallet,high
+frustrated_0197.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.00.21 AM.mp4,network_and_connectivity,high,frustrated,at_risk,,high
+calm_0179.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.45 PM (2).mp4,branch_and_staff,medium,calm,not_at_risk,transcript garbled,low
+calm_0162.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.29.55 (2).mp4,balance_and_data,medium,calm,not_at_risk,,high
+satisfied_0031.wav,الكل ان شاء الله\3d.m4a,thanks_or_praise,low,satisfied,not_at_risk,transcript garbled,low
+frustrated_0066.wav,الكل ان شاء الله\1862.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0098.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-59-32(6).m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+calm_0199.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 5.29.49 PM (2).ogg,network_and_connectivity,high,calm,not_at_risk,,high
+calm_0149.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.35.37 PM (3).aac,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0182.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.33.45 PM.mp4,billing_and_charges,high,frustrated,not_at_risk,,high
+calm_0228.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.50 PM (1).ogg,app_and_account,medium,calm,not_at_risk,,high
+calm_0174.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.43 AM (4).mp4,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0126.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-45-2822.m4a,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0092.wav,الكل ان شاء الله\7D.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+calm_0139.wav,الكل ان شاء الله\PTT-20251116-WA0043.opus,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0124.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-29-26.m4a,billing_and_charges,high,calm,not_at_risk,,high
+frustrated_0083.wav,الكل ان شاء الله\2253.m4a,network_and_connectivity,medium,frustrated,not_at_risk,garbled wording but complaint is about internet service,low
+frustrated_0126.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 2.07.14 PM (4).mp4,no_reply_or_long_wait,high,frustrated,not_at_risk,,high
+satisfied_0072.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.21.49 AM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0160.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.25 PM (1).aac,balance_and_data,low,calm,not_at_risk,,high
+frustrated_0219.wav,الكل ان شاء الله\h13.m4a,network_and_connectivity,high,frustrated,not_at_risk,,high
+satisfied_0044.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.08.58 PM.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0102.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-45-297.m4a,balance_and_data,low,frustrated,not_at_risk,,high
+frustrated_0167.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.55.29 PM (4).aac,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+satisfied_0075.wav,الكل ان شاء الله\n15.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0173.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.37 AM (1).mp4,branch_and_staff,low,calm,not_at_risk,,high
+calm_0186.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.55.17 PM (1).aac,cancellation_request,low,calm,not_at_risk,,high
+calm_0143.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-01 at 6.19.05 AM (1).mp4,balance_and_data,low,calm,not_at_risk,,high
+frustrated_0151.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.37 AM.mpeg,billing_and_charges,high,frustrated,not_at_risk,,high
+satisfied_0064.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.39.46 PM.mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0122.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-18-35.m4a,branch_and_staff,low,calm,not_at_risk,,high
+frustrated_0106.wav,الكل ان شاء الله\AUDIO-2025-12-02-21-30-46.m4a,cancellation_request,medium,frustrated,not_at_risk,,high
+frustrated_0159.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.05.21 PM (6).mp4,balance_and_data,low,frustrated,not_at_risk,,high
+satisfied_0020.wav,الكل ان شاء الله\1716.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
+mad_0008.wav,الكل ان شاء الله\AUDIO-2025-12-02-02-13-40.m4a,branch_and_staff,medium,mad,not_at_risk,,high
+calm_0233.wav,الكل ان شاء الله\h24.m4a,network_and_connectivity,low,calm,not_at_risk,,high
+frustrated_0153.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.41 AM (3).mp4,app_and_account,medium,frustrated,not_at_risk,,high
+calm_0159.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.21 PM.mp4,other,low,calm,not_at_risk,request for accessibility services for people with disabilities,high
+frustrated_0173.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.30.41 PM (2).ogg,billing_and_charges,medium,frustrated,not_at_risk,,high
+calm_0129.wav,الكل ان شاء الله\AUDIO-2025-12-02-01-05-51.m4a,balance_and_data,low,calm,not_at_risk,,high
+mad_0005.wav,الكل ان شاء الله\2504.m4a,branch_and_staff,medium,mad,not_at_risk,,high
+frustrated_0118.wav,الكل ان شاء الله\REC20251123232619.mp3,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0124.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.34.29 PM (1).aac,branch_and_staff,medium,frustrated,not_at_risk,,high
+mad_0009.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 20.34.54.ogg,balance_and_data,low,mad,not_at_risk,,high
+frustrated_0229.wav,الكل ان شاء الله\n68.m4a,cancellation_request,medium,frustrated,not_at_risk,,high
+frustrated_0157.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.13 PM (1).mpeg,other,low,frustrated,not_at_risk,number blocked after making many calls in one day,high
+frustrated_0096.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-56-59(4).m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0190.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.00 AM.ogg,app_and_account,medium,frustrated,not_at_risk,,high
+calm_0209.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.33.26 PM.mp4,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0069.wav,الكل ان شاء الله\1927.ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0104.wav,الكل ان شاء الله\2310.m4a,cancellation_request,low,calm,not_at_risk,,high
+frustrated_0203.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.19.31 AM.mp4,balance_and_data,low,frustrated,not_at_risk,,high
+frustrated_0072.wav,الكل ان شاء الله\2023.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+calm_0203.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.56.26 PM (1).ogg,offers_and_packages,low,calm,not_at_risk,question about difference between package 30 and 45,high
+calm_0152.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.42.58 PM.mpeg,balance_and_data,low,calm,not_at_risk,,high
+satisfied_0027.wav,الكل ان شاء الله\2219.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0123.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.33.35 PM (3).aac,cancellation_request,medium,frustrated,not_at_risk,,high
+calm_0147.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.01 PM (1).mp4,app_and_account,low,calm,not_at_risk,,high
+calm_0206.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.53.42 PM (3).ogg,network_and_connectivity,low,calm,not_at_risk,,high
+frustrated_0079.wav,الكل ان شاء الله\2197.ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0218.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.00.40 AM.mp4,other,low,calm,not_at_risk,"asking how to add international calls, prices and limits",high
+frustrated_0227.wav,الكل ان شاء الله\n44.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
+calm_0138.wav,الكل ان شاء الله\New Recwording 6.m4a,balance_and_data,medium,calm,not_at_risk,,high
+satisfied_0049.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 12.59.04 PM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0067.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.10 PM (1).ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0076.wav,الكل ان شاء الله\2109.mp4,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0225.wav,الكل ان شاء الله\h9.m4a,network_and_connectivity,high,frustrated,not_at_risk,,high
+frustrated_0114.wav,الكل ان شاء الله\New Recording 63.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+calm_0192.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 8.31.57 PM (6).aac,branch_and_staff,medium,calm,not_at_risk,,high
+frustrated_0208.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.58 PM (1).mp4,branch_and_staff,medium,frustrated,not_at_risk,,high
+calm_0224.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.19.28 AM.mp4,other,low,calm,not_at_risk,asking about fees for transferring balance between lines,high
+satisfied_0040.wav,الكل ان شاء الله\Street 36 4.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0086.wav,الكل ان شاء الله\1750.m4a,app_and_account,medium,calm,not_at_risk,,high
+calm_0183.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.44 PM (1).mp4,offers_and_packages,low,calm,not_at_risk,asking whether the package renews automatically or manually,high
+frustrated_0136.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.26 PM (2).mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
+frustrated_0113.wav,الكل ان شاء الله\New Recording 57.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0101.wav,الكل ان شاء الله\2252.m4a,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0156.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.01 PM (5).mp4,billing_and_charges,high,frustrated,not_at_risk,,high
+mad_0006.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-52-33.m4a,billing_and_charges,high,mad,not_at_risk,,high
+calm_0220.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.07.51 AM.mp4,other,low,calm,not_at_risk,asking why the Salafni service says not eligible,high
+frustrated_0213.wav,الكل ان شاء الله\WhatsApp Ptt 2025-11-30 at 9.31.45 PM (1).ogg,app_and_account,high,frustrated,not_at_risk,,high
+satisfied_0018.wav,الكل ان شاء الله\1681.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0232.wav,الكل ان شاء الله\x74.mp3,network_and_connectivity,high,frustrated,not_at_risk,,high
+calm_0213.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.05 PM (6).ogg,cancellation_request,high,calm,not_at_risk,,high
+calm_0109.wav,الكل ان شاء الله\2385.ogg,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0196.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.14.09 PM (3).mp4,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0211.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.03 PM (5).ogg,network_and_connectivity,high,calm,not_at_risk,,high
+frustrated_0121.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.03 PM (1).mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
+frustrated_0099.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-59-52(7).m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+satisfied_0028.wav,الكل ان شاء الله\2304.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0094.wav,الكل ان شاء الله\2004.mp4,app_and_account,medium,calm,not_at_risk,,high
+calm_0188.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.55.28 PM (3).aac,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0218.wav,الكل ان شاء الله\h1.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+satisfied_0024.wav,الكل ان شاء الله\2008.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0134.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.18 PM (2).mp4,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0094.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-55-55(1).m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+mad_0012.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.33.09 PM.mp4,branch_and_staff,medium,mad,not_at_risk,,high
+calm_0240.wav,الكل ان شاء الله\x35.mp3,balance_and_data,medium,calm,not_at_risk,,high
+calm_0181.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.14 PM (5).mpeg,other,low,calm,not_at_risk,asking how to benefit from collected points,high
+satisfied_0060.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.18.08 PM.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0032.wav,الكل ان شاء الله\AUD-20251117-WA0132.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0196.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.00.19 AM.mp4,network_and_connectivity,high,frustrated,not_at_risk,,high
+calm_0227.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.51 PM (3).mp4,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0212.wav,الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.41.44 PM.mpeg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0224.wav,الكل ان شاء الله\h83.m4a,network_and_connectivity,high,frustrated,not_at_risk,,high
+calm_0092.wav,الكل ان شاء الله\1991.m4a,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0216.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.11 PM (1).ogg,no_reply_or_long_wait,medium,calm,not_at_risk,,high
+calm_0111.wav,الكل ان شاء الله\2429.ogg,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0175.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.56.22 PM (2).ogg,network_and_connectivity,high,frustrated,not_at_risk,,high
+calm_0125.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-45-28.m4a,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0075.wav,الكل ان شاء الله\2087.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0215.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.04 PM.ogg,sim_services,low,calm,not_at_risk,question whether another plan is possible with the same number,high
+frustrated_0226.wav,الكل ان شاء الله\n27.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+satisfied_0059.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 4.41.50 PM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0133.wav,الكل ان شاء الله\Nasir Saber Street 2.m4a,offers_and_packages,low,calm,not_at_risk,question about discounts for people with special needs or seniors,high
+satisfied_0047.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.10.25 PM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+mad_0002.wav,الكل ان شاء الله\1806.mp4,branch_and_staff,high,mad,not_at_risk,,high
+frustrated_0108.wav,الكل ان شاء الله\Café Suprême 8.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0176.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.56.24 PM (1).ogg,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0193.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 8.36.45 PM (3).ogg,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0234.wav,الكل ان شاء الله\x99.mp3,other,low,frustrated,not_at_risk,complaint that everything must be done through the app,high
+frustrated_0143.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 18.36.45.mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0198.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.20.24 AM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0217.wav,الكل ان شاء الله\Zahraa Al Maadi Street 7.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0168.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 12.49.18 AM.aac,cancellation_request,low,frustrated,not_at_risk,transcript garbled; trying to stop a service that stays active,low
+frustrated_0071.wav,الكل ان شاء الله\1997.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
+calm_0131.wav,الكل ان شاء الله\IT 7.mp3,offers_and_packages,low,calm,not_at_risk,question about available student offers and requirements,high
+calm_0110.wav,الكل ان شاء الله\2412.ogg,balance_and_data,low,calm,not_at_risk,,high
+frustrated_0104.wav,الكل ان شاء الله\AUDIO-2025-11-29-09-34-41.m4a,cancellation_request,medium,frustrated,not_at_risk,,high
+satisfied_0051.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.07.03 PM (6).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0034.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-24-44.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0068.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 6.28.13 PM.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0129.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.49 PM.mp4,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0107.wav,الكل ان شاء الله\Bour Saeid Street 6.m4a,app_and_account,medium,frustrated,not_at_risk,,high
+frustrated_0174.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.18.09 PM.ogg,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0152.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 11.11.40 AM (4).mp4,app_and_account,high,frustrated,not_at_risk,,high
+frustrated_0215.wav,الكل ان شاء الله\Zahraa Al Maadi Street 11.m4a,network_and_connectivity,high,frustrated,not_at_risk,,high
+satisfied_0038.wav,الكل ان شاء الله\Street 36 15.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0127.wav,الكل ان شاء الله\AUDIO-2025-11-29-09-42-20.m4a,offers_and_packages,low,calm,not_at_risk,question about family offers covering several lines,high
+frustrated_0183.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.39.40 PM.mp4,billing_and_charges,medium,frustrated,not_at_risk,,high
+satisfied_0046.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-23 at 8.10.24 PM (2).mpeg,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0127.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.55.18 PM (1).mpeg,app_and_account,low,frustrated,not_at_risk,,high
+frustrated_0095.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-55-55.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0179.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.58 AM (2).ogg,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0221.wav,الكل ان شاء الله\h5.m4a,balance_and_data,high,frustrated,not_at_risk,,high
+mad_0017.wav,الكل ان شاء الله\h70.m4a,no_reply_or_long_wait,medium,mad,not_at_risk,,high
+frustrated_0149.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.06 AM (4).mp4,cancellation_request,medium,frustrated,not_at_risk,,high
+calm_0117.wav,الكل ان شاء الله\4_5841428673890098038.ogg,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0067.wav,الكل ان شاء الله\1863.mpeg,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0188.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.12 PM (1).ogg,branch_and_staff,medium,frustrated,not_at_risk,,high
+satisfied_0062.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.32.10 PM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0102.wav,الكل ان شاء الله\2299.ogg,network_and_connectivity,medium,calm,not_at_risk,,high
+frustrated_0238.wav,الكل ان شاء الله\تسجيل (2).m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
+satisfied_0054.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.14.01 PM (4).mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0022.wav,الكل ان شاء الله\1995.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0116.wav,الكل ان شاء الله\4_5841428673890098037.ogg,app_and_account,medium,calm,not_at_risk,,high
+calm_0099.wav,الكل ان شاء الله\2138.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0144.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-20 at 1.45.24 PM.mp4,billing_and_charges,medium,calm,not_at_risk,,high
+frustrated_0147.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 1.23.05 AM (1).mp4,other,low,frustrated,not_at_risk,still receives marketing calls after asking to stop them,high
+frustrated_0228.wav,الكل ان شاء الله\n65.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+calm_0137.wav,الكل ان شاء الله\New Recwording 2.m4a,billing_and_charges,low,calm,not_at_risk,,high
+mad_0003.wav,الكل ان شاء الله\2 o.m4a,network_and_connectivity,high,mad,not_at_risk,,high
+calm_0123.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-18-52.m4a,network_and_connectivity,low,calm,not_at_risk,,high
+frustrated_0103.wav,الكل ان شاء الله\AUDIO-2025-11-29-00-45-298.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0146.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 12.54.22 PM.mp4,offers_and_packages,low,frustrated,not_at_risk,was moved to another plan with no notification,high
+frustrated_0086.wav,الكل ان شاء الله\2376.m4a,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0200.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.24.04 AM.mp4,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0169.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-29 at 11.40.12 PM.mp4,sim_services,low,frustrated,not_at_risk,says a lost SIM was not blocked promptly,high
+calm_0145.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 7.10.19 PM.mp4,billing_and_charges,low,calm,not_at_risk,,high
+frustrated_0138.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 11.25.26 PM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0209.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-09 at 4.40.20 PM.ogg,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0100.wav,الكل ان شاء الله\AUDIO-2025-11-27-16-03-47.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0233.wav,الكل ان شاء الله\x78.mp3,network_and_connectivity,high,frustrated,not_at_risk,,high
+frustrated_0141.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 17.51.47.mp4,app_and_account,medium,frustrated,not_at_risk,,high
+calm_0091.wav,الكل ان شاء الله\1893.mp4,billing_and_charges,low,calm,not_at_risk,,high
+calm_0223.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.19.22 AM.mp4,balance_and_data,low,calm,not_at_risk,,high
+frustrated_0085.wav,الكل ان شاء الله\2375.opus,app_and_account,medium,frustrated,not_at_risk,,high
+frustrated_0230.wav,الكل ان شاء الله\x51.mp3,app_and_account,medium,frustrated,not_at_risk,,high
+frustrated_0237.wav,الكل ان شاء الله\z7.m4a,billing_and_charges,medium,frustrated,not_at_risk,,high
+frustrated_0150.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.36.43 PM.ogg,billing_and_charges,high,frustrated,not_at_risk,,high
+satisfied_0048.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 10.36.38 PM (2).ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0199.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.24.02 AM.mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+frustrated_0068.wav,الكل ان شاء الله\1912.aac,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0161.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 7.32.42 PM (1).mp4,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0164.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.12 PM (4).mpeg,network_and_connectivity,high,frustrated,not_at_risk,,high
+calm_0115.wav,الكل ان شاء الله\2474.mp3,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0158.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 5.04.31 PM (8).mp4,app_and_account,high,frustrated,not_at_risk,,high
+frustrated_0177.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.46 AM.mpeg,network_and_connectivity,medium,frustrated,not_at_risk,,high
+satisfied_0070.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.18.38 AM.mp4,thanks_or_praise,low,satisfied,not_at_risk,transcript garbled; thanks support team,low
+calm_0243.wav,الكل ان شاء الله\x47.mp3,cancellation_request,low,calm,not_at_risk,,high
+frustrated_0111.wav,الكل ان شاء الله\New Recofrding 15.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0093.wav,الكل ان شاء الله\AUD-20251123-WA0124.mp3,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0181.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.32.23 PM.mp4,app_and_account,medium,frustrated,not_at_risk,,high
+calm_0093.wav,الكل ان شاء الله\2 e.m4a,cancellation_request,low,calm,not_at_risk,,high
+calm_0121.wav,الكل ان شاء الله\AUDIO-2025-11-24-23-00-27(8).m4a,offers_and_packages,low,calm,not_at_risk,asks for details about the unlimited internet plan and its conditions,high
+frustrated_0185.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.08 PM (6).ogg,balance_and_data,medium,frustrated,not_at_risk,,high
+frustrated_0065.wav,الكل ان شاء الله\1847.m4a,balance_and_data,medium,frustrated,not_at_risk,,high
+satisfied_0035.wav,الكل ان شاء الله\AUDIO-2025-11-29-18-11-49.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0168.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.50 PM (2).ogg,balance_and_data,low,calm,not_at_risk,,high
+calm_0100.wav,الكل ان شاء الله\2172.ogg,balance_and_data,low,calm,not_at_risk,,high
+calm_0150.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 1.37.08 PM (2).aac,balance_and_data,low,calm,not_at_risk,,high
+calm_0156.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.59 PM.mp4,balance_and_data,low,calm,not_at_risk,,high
+calm_0222.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.27.09 AM.mp4,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0214.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 5.35.13 AM.ogg,app_and_account,medium,calm,not_at_risk,,high
+frustrated_0231.wav,الكل ان شاء الله\x71.mp3,network_and_connectivity,high,frustrated,not_at_risk,,high
+calm_0153.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 3.55.16 PM (2).mpeg,app_and_account,low,calm,not_at_risk,,high
+calm_0087.wav,الكل ان شاء الله\1772.mp3,balance_and_data,medium,calm,not_at_risk,,high
+frustrated_0211.wav,الكل ان شاء الله\WhatsApp Audio 2026-03-28 at 5.41.37 PM.mp4,network_and_connectivity,medium,frustrated,not_at_risk,,high
+calm_0155.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-22 at 7.28.49 PM (3).mp4,app_and_account,low,calm,not_at_risk,,high
+frustrated_0077.wav,الكل ان شاء الله\2133.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+frustrated_0116.wav,الكل ان شاء الله\New Recwording 12.m4a,cancellation_request,medium,frustrated,not_at_risk,,high
+calm_0208.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 11.31.52 PM.mp4,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0249.wav,الكل ان شاء الله\تسجيل (12).m4a,app_and_account,low,calm,not_at_risk,,high
+calm_0107.wav,الكل ان شاء الله\2343.m4a,billing_and_charges,medium,calm,not_at_risk,,high
+calm_0090.wav,الكل ان شاء الله\1872.m4a,other,low,calm,not_at_risk,question or request not fitting the other categories,high
+calm_0163.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-25 at 18.36.46 (4).mp4,billing_and_charges,medium,calm,not_at_risk,,high
+satisfied_0077.wav,الكل ان شاء الله\v23.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0239.wav,الكل ان شاء الله\n91.ogg,other,low,calm,not_at_risk,question about sign-language or special-needs services,high
+calm_0226.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 5.05.34 PM.mpeg,balance_and_data,low,calm,not_at_risk,,high
+calm_0176.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 2.06.55 PM (1).mp4,network_and_connectivity,medium,calm,not_at_risk,,high
+satisfied_0030.wav,الكل ان شاء الله\2496.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
+frustrated_0117.wav,الكل ان شاء الله\PTT-20251122-WA0191.opus,branch_and_staff,medium,frustrated,not_at_risk,,high
+frustrated_0070.wav,الكل ان شاء الله\1987.m4a,network_and_connectivity,medium,frustrated,not_at_risk,,high
+calm_0164.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.39 PM.ogg,billing_and_charges,medium,calm,not_at_risk,,high
+satisfied_0057.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 3.14.12 PM.ogg,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0237.wav,الكل ان شاء الله\n58.m4a,network_and_connectivity,low,calm,not_at_risk,,high
+calm_0202.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-30 at 9.18.07 PM.ogg,other,low,calm,not_at_risk,question about stopping caller-tune without calling support,high
+calm_0096.wav,الكل ان شاء الله\2078.mp4,network_and_connectivity,medium,calm,not_at_risk,,high
+calm_0187.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.55.20 PM.aac,network_and_connectivity,low,calm,not_at_risk,,high
+calm_0205.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 1.29.59 AM (1).ogg,balance_and_data,medium,calm,not_at_risk,,high
+calm_0180.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-27 at 8.23.10 PM (1).mpeg,offers_and_packages,low,calm,not_at_risk,question or request not fitting the other categories,high
+calm_0097.wav,الكل ان شاء الله\2105.mp4,offers_and_packages,low,calm,not_at_risk,question about a minimum top-up for auto-activation of packages,high
+frustrated_0122.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-21 at 9.56.10 PM (1).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0185.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-28 at 10.54.16 PM.mp4,other,low,calm,not_at_risk,question about one family account for an elderly mother,high
+satisfied_0069.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 1.26.32 AM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+satisfied_0039.wav,الكل ان شاء الله\Street 36 18.m4a,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0120.wav,الكل ان شاء الله\AUDIO-2025-11-24-22-58-56(2).m4a,balance_and_data,medium,calm,not_at_risk,,high
+calm_0106.wav,الكل ان شاء الله\2333.m4a,app_and_account,medium,calm,not_at_risk,,high
+satisfied_0071.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 12.18.42 AM.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
+calm_0212.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-01 at 12.25.03 PM.ogg,other,low,calm,not_at_risk,question or request not fitting the other categories,high
+frustrated_0115.wav,الكل ان شاء الله\New Recording 66 (2).m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
+calm_0130.wav,الكل ان شاء الله\AUDIO-2025-12-02-03-09-12.m4a,network_and_connectivity,low,calm,not_at_risk,,high
+satisfied_0021.wav,الكل ان شاء الله\1812.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
 frustrated_0002.wav,الكل ان شاء الله\0060.m4a,branch_and_staff,medium,frustrated,not_at_risk,support agent replies without listening; garbled tail,low
-calm_0005.wav,الكل ان شاء الله\0157.m4a,offers_and_packages,low,calm,not_at_risk,asks why bundle does not change,low
-frustrated_0059.wav,الكل ان شاء الله\1807.mp4,network_and_connectivity,high,frustrated,at_risk,"speed below advertised, affects work, may change provider",low
-calm_0006.wav,الكل ان شاء الله\0177.mp3,offers_and_packages,low,calm,not_at_risk,asks about a router installment plan with the monthly subscription,high
-calm_0070.wav,الكل ان شاء الله\1616.mp3,balance_and_data,medium,calm,not_at_risk,balance deducted for a games service; transcript garbled,low
-calm_0232.wav,الكل ان شاء الله\n34.m4a,offers_and_packages,low,calm,not_at_risk,asks the difference between home and mobile packages as prices are now close,high
+calm_0007.wav,الكل ان شاء الله\0117.mp4,sim_services,low,calm,not_at_risk,asks if a different line can be made from old number,high
+calm_0015.wav,الكل ان شاء الله\0265.mp4,app_and_account,medium,calm,not_at_risk,website says number is unregistered when entering it,low
+frustrated_0014.wav,الكل ان شاء الله\0405.aac,branch_and_staff,medium,frustrated,not_at_risk,told problem solved while still unsolved,high
+frustrated_0017.wav,الكل ان شاء الله\0442.aac,network_and_connectivity,high,frustrated,not_at_risk,internet works minutes then down for hours,low
+frustrated_0239.wav,الكل ان شاء الله\تسجيل (7).m4a,billing_and_charges,medium,frustrated,not_at_risk,Rosette service deducting without use,high
+calm_0165.wav,الكل ان شاء الله\WhatsApp Audio 2025-11-26 at 1.52.41 PM (1).ogg,network_and_connectivity,low,calm,not_at_risk,question about 4G only or 3G only network mode,low
+frustrated_0205.wav,الكل ان شاء الله\WhatsApp Audio 2025-12-02 at 7.54.49 PM (4).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,technician not arrived after a week,low
+frustrated_0222.wav,الكل ان شاء الله\h50.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,"promised a callback within 24 hours after a complaint, nobody called back; transcript garbled",low
+frustrated_0223.wav,الكل ان شاء الله\h7.m4a,other,high,frustrated,not_at_risk,"wallet transfer to a friend never arrived, money lost, support said wait 48 hours",high
