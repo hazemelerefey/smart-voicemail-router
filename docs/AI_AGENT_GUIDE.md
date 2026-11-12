@@ -2,7 +2,7 @@
 
 ## Smart Voicemail Router
 
-Use this guide when an AI agent helps with the Smart Voicemail Router (SVR) repository. The project is a local-first competition prototype, not a production telecom system. The PRD, architecture, and team allocation are version 1.2 and remain drafts for team review. Unresolved decisions are not permission to guess.
+Use this guide when an AI agent helps with the Smart Voicemail Router (SVR) repository. The project is a local-first competition prototype, not a production telecom system. The PRD, architecture, and team allocation are version 1.3. The dataset work is finished and the model selection is settled; the remaining open decisions are listed in the README. Unresolved decisions are not permission to guess.
 
 ## 1. Work in bounded tasks
 
@@ -18,11 +18,11 @@ If a label, permission, retention rule, provider choice, schema behavior, or pro
 - External text processing is not an ordinary default. It requires a valid, durable approval recorded before transfer and matched to the exact provider, purpose, and payload. Minimize and locally mask the text first. Text approval never permits audio transfer.
 - If the data permission or privacy boundary is uncertain, do not access or transmit the data. Ask the human owner.
 
-## 3. Do EDA before committing to labels
+## 3. EDA is done; do not change labels or splits
 
-Use the same authorized dataset snapshot for shared EDA. Check data rights and origin, file quality and language mix, missingness and duplicates, existing labels and ambiguity, privacy risks, and potential speaker/source leakage. Record the snapshot reference or checksum when permitted, commands or notebook version, assumptions, and limitations.
+The shared EDA is done, the taxonomy is agreed, and the labels exist and are being audited by the team. The clean training set holds 5,751 rows: train 4,031, validation 1,136, test 584, seed 42. Do not change the label classes, annotation rules, evaluation split, or thresholds without Hazem. The audit page is the mechanism for correcting labels: the team reviews them there every day, and the corrections are applied to the dataset in Phase 4.
 
-Do not finalize label classes, annotation rules, evaluation splits, thresholds, or label-dependent model comparisons until the team has reviewed the EDA and approved a shared, versioned data specification. Do not invent classes or silently freeze provisional labels. If data is unclear, missing, or unsupported, leave the value unknown and request human review.
+When you work with the data, use the same authorized dataset snapshot. Check data rights and origin, file quality and language mix, missingness and duplicates, existing labels and ambiguity, privacy risks, and potential speaker/source leakage. Record the snapshot reference or checksum when permitted, commands or notebook version, assumptions, and limitations. Do not invent classes or silently freeze provisional labels. If data is unclear, missing, or unsupported, leave the value unknown and request human review.
 
 ## 4. Keep the decision fields separate
 
@@ -38,7 +38,7 @@ Keep `customer_state_text`, optional `voice_state_candidate`, and optional `cust
 
 Never invent label definitions, dataset facts, permissions, model capabilities, metrics, test results, or production/security claims. Clearly mark unknowns and limitations. Report actual measurements with the dataset and split, sample counts, model/provider and configuration, runtime environment, metric, and relevant failures. Do not present targets or hypotheses as achieved results.
 
-For each code change, provide the tests or other checks actually run, their commands and observed outcomes, and any untested behavior or limitations. A human pair must review the diff and evidence before accepting agent-generated work. Passing tests alone does not prove that requirements are met.
+For each code change, provide the tests or other checks actually run, their commands and observed outcomes, and any untested behavior or limitations. A human team member must review the diff and evidence before accepting agent-generated work. Passing tests alone does not prove that requirements are met.
 
 ## 6. Run controlled experiments, with complete records
 
@@ -56,4 +56,4 @@ Record every run with:
 
 ## Source of authority
 
-This guide follows SVR-PRD-01, SVR-ARCH-02, and SVR-TEAM-03, all version 1.2. When a draft leaves a decision open or the documents conflict, do not guess: surface the question to the human project owner and wait for an approved decision.
+This guide follows SVR-PRD-01, SVR-ARCH-02, and SVR-TEAM-03, all version 1.3. When a draft leaves a decision open or the documents conflict, do not guess: surface the question to the human project owner and wait for an approved decision.

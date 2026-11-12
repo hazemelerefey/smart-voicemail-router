@@ -1,5 +1,5 @@
-# General development tools only. No application, model, audio, or accelerator runtime is selected.
-# Add the PyTorch/CUDA wheel only after target hardware and model selection.
+# General development tools only. No application, audio, or accelerator runtime is installed here. The model selection is settled (see SETUP.md).
+# Add the PyTorch/CUDA wheel only after the target hardware is selected.
 mypy==2.4.1
 pytest==9.2.0
 ruff==0.17.4

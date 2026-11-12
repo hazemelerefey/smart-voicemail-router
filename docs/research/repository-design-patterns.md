@@ -34,10 +34,10 @@ These are observations from the linked repository pages and README or file tree 
 
 ### README
 
-A useful landing page for this project should state its purpose and prototype status first, then show the intended workflow, the separation between complaint category, complaint urgency, customer state, voice evidence, and queue priority, and the local-first data boundary. It should link directly to the approved v1.2 documents, the CPU, GPU, and optional Colab guides, contribution rules, and evaluation guidance. It should say that labels and results are pending team review and measured evaluation. These are recommendations based on the project requirements and the observations above, not claims about ranking-page quality.
+A useful landing page for this project should state its purpose and prototype status first, then show the intended workflow, the separation between complaint category, complaint urgency, customer state, voice evidence, and queue priority, and the local-first data boundary. It should link directly to the v1.3 documents, the CPU, GPU, and optional Colab guides, contribution rules, and evaluation guidance. It should say that the labels exist and are being audited by the team, and that results are pending measured evaluation. These are recommendations based on the project requirements and the observations above, not claims about ranking-page quality.
 
 ### Structure
 
 Keep the approved project documents together under `docs/project/`, research notes under `docs/research/`, environment instructions and requirements in the planned `CPU case/`, `GPU case/`, and `Google Colab/` folders, and contribution rules at the root. When application work begins, add source, tests, and evaluation areas only with actual ownership and contract boundaries. This draft does not create application code or imply a finished runtime architecture.
 
-Reuse the abstract documentation practices, not project names, logos, colors, copy, product claims, or technology stacks. Preserve the pair ownership and v1.2 decisions approved for Smart Voicemail Router.
+Reuse the abstract documentation practices, not project names, logos, colors, copy, product claims, or technology stacks. Preserve the individual role ownership and v1.3 decisions for Smart Voicemail Router.

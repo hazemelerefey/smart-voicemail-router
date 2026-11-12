@@ -1,6 +1,6 @@
 # GPU case
 
-GPU acceleration is optional. The CPU path remains the general test baseline, and CUDA is not required for core tests. This draft does not select a target GPU, speech model, or PyTorch build.
+GPU acceleration is optional. The CPU path remains the general test baseline, and CUDA is not required for core tests. This draft does not select a target GPU or PyTorch build. The speech models are selected (Whisper large-v3, wav2vec2 XLS-R 300M).
 
 ## Create the optional tooling environment
 
@@ -24,6 +24,6 @@ The current `pytest==9.2.0` and `mypy==2.4.1` pins require Python 3.10 or later 
 
 ## PyTorch and CUDA installation
 
-Do not copy a PyTorch or CUDA wheel command from another machine. Choose the target hardware and model first, then use the [official PyTorch installation selector](https://pytorch.org/get-started/locally/) for the operating system, package manager, language, and compute platform that match the target. The exact wheel and install command are intentionally deferred until both the target hardware and model are known.
+Do not copy a PyTorch or CUDA wheel command from another machine. Choose the target hardware first, then use the [official PyTorch installation selector](https://pytorch.org/get-started/locally/) for the operating system, package manager, language, and compute platform that match the target. The exact wheel and install command are intentionally deferred until the target hardware is known; the model selection is settled.
 
 Record the selected hardware, runtime, PyTorch build, model, and measured results for each GPU experiment. Keep CUDA-specific dependencies isolated from the CPU requirements. A GPU environment does not itself establish that a model supports Egyptian Arabic or meets the project latency target.

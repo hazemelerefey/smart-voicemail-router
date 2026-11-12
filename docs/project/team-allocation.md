@@ -4,12 +4,11 @@
 
 **Document ID:** SVR-TEAM-03  
 **Version:** 1.3  
-**Status:** Individual role allocation approved by Hazem, 12 November 2026  
 **Updated:** 12 November 2026  
 **Formal project kickoff:** 11 November 2026  
 **Competition deadline:** Unknown; plan uses relative, gated phases
 
-> **Allocation rule:** Each member owns one role with real work and concrete deliverables, not a title. The dataset is finished and the model selection is approved. From here the team works in parallel phases until the system is done. Hazem reviews and merges all work.
+> **Allocation rule:** Each member owns one role with real work and concrete deliverables, not a title. The dataset is finished and the model selection is settled. From here the team works in parallel phases until the system is done. Hazem reviews and merges all work.
 
 ## 1. How this allocation was chosen
 
@@ -30,7 +29,7 @@ Every member audits the labels on the live audit page every day, in parallel wit
 
 ## 3. Shared dataset: done
 
-The dataset work is finished and verified. The SVR Voicemail Corpus holds 6,522 Egyptian Arabic customer voicemails. The clean training set holds 5,751 rows: train 4,031, validation 1,136, test 584, corrected stratified split, seed 42, whole text groups kept together. Class weights are computed and saved. The labeling notebook shows the model that produced the labels. The model selection report is approved and in the repository under research/ on team/hazem-training-lead.
+The dataset work is finished and verified. The SVR Voicemail Corpus holds 6,522 Egyptian Arabic customer voicemails. The clean training set holds 5,751 rows: train 4,031, validation 1,136, test 584, corrected stratified split, seed 42, whole text groups kept together. Class weights are computed and saved. The labeling notebook shows the model that produced the labels. The model selection report is complete and in the repository under research/ on team/hazem-training-lead.
 
 What remains open on the data side: the team audit of the labels, and the rights, consent, retention, and processing location decisions, which Hazem decides.
 
@@ -101,7 +100,7 @@ Do not infer a winning change from a different dataset split or simultaneous cha
 Treat these values from the v1.0 PRD/allocation as hypotheses until the first baseline confirms them. The old 0.75 "severity" metric is not yet mapped to complaint urgency or customer state; the team must agree which field and metric it measures.
 
 - Complaint-category macro-F1: 0.85 initial hypothesis.
-- Old severity macro-F1: 0.75 legacy hypothesis; do not relabel it as complaint-urgency performance until the taxonomy and evaluation protocol are approved.
+- Old severity macro-F1: 0.75 legacy hypothesis; do not relabel it as complaint-urgency performance. The taxonomy is agreed, but the severity mapping to a field and metric is still open.
 - Routing agreement with a documented human-reviewed ideal agent: 80% initial hypothesis.
 - End-to-end latency: p95 under 10 seconds for clips up to 60 seconds, measured separately by CPU, GPU, or an approved provider configuration.
 - Summary coverage: at least 95% of evaluable test clips; manually review faithfulness on 20 clips where available, and report the actual review count if fewer are available.

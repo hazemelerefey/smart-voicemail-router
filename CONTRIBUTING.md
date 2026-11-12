@@ -1,17 +1,17 @@
 # Contributing
 
-This guide follows the Smart Voicemail Router v1.2 team plan. The pair branch names and merge flow below are planned repository conventions. This local content draft does not create remote branches, merge work, or add collaborators.
+This guide follows the Smart Voicemail Router v1.3 team plan. The role branch names and merge flow below are the repository conventions.
 
-The current local setup-only snapshot places the complete setup commit on `master` as a child of a shared empty base. `develop` and all three pair branches point to that empty base. This temporary local layout does not set or verify the remote default branch; it is separate from the team workflow below, which uses `develop` for integration and reserves `master` for a final validated result.
+The repository has live branches on origin: `master`, `develop`, the six role branches, and `local-env`. The team workflow below uses `develop` for integration and reserves `master` for a final validated result.
 
 ## Contribution flow
 
 1. Read the current [PRD](docs/project/PRD.md), [architecture](docs/project/architecture.md), and [team allocation](docs/project/team-allocation.md) before starting a task.
-2. Work within the pair's assigned area. Keep changes bounded, testable, and reviewable. Use synthetic fixtures for routine work.
+2. Work within your role's assigned area. Keep changes bounded, testable, and reviewable. Use synthetic fixtures for routine work.
 3. Do not decide labels, annotation rules, data permissions, retention, provider choices, or shared schema behavior independently. Surface unresolved decisions to the project owner and wait for an approved decision.
 4. Run the checks relevant to the change. Report the exact commands, observed results, limitations, and any data-contract or dataset impact with the change.
-5. Push progress only to the pair's own branch after repository setup is authorized. Present the change and evidence to Hazem for review. Do not merge it yourself.
-6. Hazem validates accepted pair work and merges it into `develop`, the default integration branch. Hazem promotes only the final validated result to `master`.
+5. Push progress only to your role branch after repository setup is authorized. Present the change and evidence to Hazem for review. Do not merge it yourself.
+6. Hazem validates accepted role work and merges it into `develop`, the default integration branch. Hazem promotes only the final validated result to `master`.
 
 Use smaller, reviewable contributions. A proposed interface change should include a short written decision and coordinated updates to tests and consuming workstreams. A passing test is evidence about that test, not proof of every product requirement.
 
@@ -19,13 +19,16 @@ Use smaller, reviewable contributions. A proposed interface change should includ
 
 | Branch | Owner or purpose |
 |---|---|
-| `develop` | Default branch and integration line for accepted pair work |
+| `develop` | Default branch and integration line for accepted role work |
 | `master` | Final line for the validated result |
-| `team/audio-speech` | Hazem and Ibthal, audio and speech evidence |
-| `team/complaint-analysis` | Lama and Ahmed, complaint and customer understanding |
-| `team/routing-evaluation` | Sira and Aya, decision, routing, and evaluation |
+| `team/hazem-training-lead` | Hazem, Training Lead |
+| `team/sira-audio-speech` | Sira, Audio and Speech Engineer |
+| `team/lama-text-classification` | Lama, Text Classification Engineer |
+| `team/aya-ml-infrastructure-evaluation` | Aya, ML Infrastructure and Evaluation Engineer |
+| `team/ibthal-triage-routing` | Ibthal, Triage and Routing Engineer |
+| `team/arafa-systems-demo` | Arafa, Systems Integration and Demo Engineer |
 
-Create the three pair branches from the initial commit. Pair members work on their designated pair branch. Hazem is the merge decision owner for accepted pair work and the final promotion. Do not merge directly to `master`. Do not invite collaborators until Hazem supplies and approves their GitHub usernames.
+Each member works on their own role branch. Hazem is the merge decision owner for accepted role work and the final promotion. Do not merge directly to `master`. Do not invite collaborators until Hazem supplies and approves their GitHub usernames.
 
 ## Data and privacy rules
 

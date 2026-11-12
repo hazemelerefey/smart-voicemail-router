@@ -10,4 +10,4 @@ Google Colab or another free cloud notebook is optional. It is not the source of
 4. Record the notebook version, dataset snapshot reference if permitted, provider and model, runtime hardware, command or cell sequence, metrics, failures, and limitations.
 5. Treat the notebook runtime as disposable. Keep reviewed source and permitted result summaries in the authorized repository workflow, not private recordings or secrets.
 
-There is no notebook or dataset in this setup draft. Do not treat Colab as required for project work or as a substitute for the project's shared EDA and approval gates.
+The notebooks and dataset live on the `local-env` branch, not in this setup draft. Do not treat Colab as required for project work or as a substitute for the project's shared EDA and approval gates.

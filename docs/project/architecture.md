@@ -3,16 +3,16 @@
 ## Architecture and Diagrams
 
 **Document ID:** SVR-ARCH-02  
-**Version:** 1.2  
-**Status:** Draft for team review, with taxonomy, provider, and runtime choices pending data review  
-**Updated:** 10 November 2026  
+**Version:** 1.3  
+**Status:** Taxonomy agreed, models selected, labels under audit  
+**Updated:** 12 November 2026  
 **Formal project kickoff:** 11 November 2026
 
 > **Architecture position:** A local-first competition prototype with provider boundaries. On-premises delivery and production telecom readiness remain future work.
 
 ### Revision notes
 
-Version 1.2 aligns the architecture with the PRD and pair workstreams. It keeps complaint category, complaint urgency, customer state, voice evidence, and queue priority separate. Raw voice stays local by default; external text processing requires prior approval.
+Version 1.3 aligns the architecture with the PRD v1.3 and the six individual roles. It keeps complaint category, complaint urgency, customer state, voice evidence, and queue priority separate. Raw voice stays local by default; external text processing requires prior approval. The model selection is settled: Whisper large-v3 for transcription, EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio.
 
 ---
 
@@ -22,7 +22,7 @@ The system turns one single-speaker voicemail into a routed, explained callback 
 
 **Design principles**
 
-1. **Separate signals.** Complaint category, complaint urgency, customer state, voice evidence, churn risk (if retained), and queue priority are different fields.
+1. **Separate signals.** Complaint category, complaint urgency, customer state, voice evidence, churn risk, and queue priority are different fields.
 2. **Privacy by default.** Keep raw voice local. Mask identifiers before any explicitly permitted external text processing. Transcript masking does not anonymize audio.
 3. **Explain the decision.** Store evidence and show why the ticket received its priority and route.
 4. **Surface failures for review.** Low confidence, unsupported labels, provider errors, or no eligible agent produce a review state or unassigned ticket.
@@ -45,7 +45,7 @@ The editable source is in [`architecture-overview.mmd`](architecture-overview.mm
 | 4. Preprocessing | Normalize sample rate/channel as agreed, trim silence if safe, and measure clipping/noise/duration. | Clean audio plus quality metadata. Keep the original unchanged until retention rules allow deletion. |
 | 5. Speech path | Run STT locally by default; record language mix and uncertainty. | Raw transcript remains local; normalized transcript is generated separately. |
 | 6. Acoustic path | Calculate measurable features and, only if validated, a voice-state candidate. | Feature values and confidence/quality. Voice evidence is optional and not a definitive emotion. |
-| 7. Text analysis | Normalize telecom terms and identifiers locally; analyze the transcript. | Summary, complaint category, complaint urgency, and `customer_state_text`; enum values are gated on EDA. |
+| 7. Text analysis | Normalize telecom terms and identifiers locally; analyze the transcript. | Summary, complaint category, complaint urgency, and `customer_state_text`; enum values are the agreed taxonomy. |
 | 8. Fusion and decision | Combine only agreed fields, compute queue priority, and select an eligible agent. | Ticket fields, evidence, route reason, or human-review/unassigned status. `customer_state_final` is optional and requires an approved policy. |
 | 9. Persistence and events | Save tickets, agent data, assignments, processing events, transfer approvals, and audit history. | Local prototype database; processing status (`completed`/`needs_review`) and assignment status (`assigned`/`unassigned`) are inspectable. |
 | 10. Dashboard | Display the queue, ticket evidence, route, and callback brief. | Dashboard renders ticket data. |
@@ -73,7 +73,7 @@ Conceptual endpoints for the prototype:
 | `PATCH` | `/api/tickets/{id}` | Optional manual status/reassignment action with an audit event. |
 | WebSocket | `/ws/queue` | Stream queue/status updates for the live dashboard. |
 
-These are interface proposals. Pairs may start fixture-first scaffolding, provider adapters, EDA, and isolated unit tests before the final contract is frozen; agree stable production field/null/error behavior before integration. Keep fusion and routing in deterministic, separately testable business logic that does not depend on vendor-specific prompts.
+These are interface proposals. The team may start fixture-first scaffolding, provider adapters, and isolated unit tests before the final contract is frozen; agree stable production field/null/error behavior before integration. Keep fusion and routing in deterministic, separately testable business logic that does not depend on vendor-specific prompts.
 
 ## 4. Output semantics and contracts
 
@@ -81,16 +81,16 @@ The system-level ticket must preserve these separate concepts:
 
 | Field | Meaning | Source | Contract status |
 |---|---|---|---|
-| `complaint_category` | Type of issue. | Text analysis, later checked against the data dictionary. | Candidate list only; final labels after EDA. |
-| `complaint_urgency` | Time sensitivity/impact of the complaint. | Agreed complaint evidence and policy. | Class set and thresholds pending. |
-| `customer_state_text` | Customer state inferred from words. | Text analyzer. | Class set pending. |
+| `complaint_category` | Type of issue. | Text analysis, later checked against the data dictionary. | Agreed taxonomy: 11 values. |
+| `complaint_urgency` | Time sensitivity/impact of the complaint. | Agreed complaint evidence and policy. | Agreed: high, medium, low. Thresholds pending policy. |
+| `customer_state_text` | Customer state inferred from words. | Text analyzer. | Agreed: calm, frustrated, mad, satisfied, unclear. |
 | `voice_state_candidate` | Optional state estimate from voice. | Validated acoustic/voice model, if any. | Not a truth label; optional until validated. |
 | `customer_state_final` | Optional fused state, if a supported fusion policy is agreed. | Text and voice evidence. | Do not enable until rules and labels are agreed. |
-| `churn_risk` | Possible customer departure risk. | Text/customer request and approved policy. | Retain only if EDA and annotation can support it. |
+| `churn_risk` | Possible customer departure risk. | Text/customer request and approved policy. | Agreed: at_risk, not_at_risk. |
 | `priority_score` | Queue ordering value. | Approved urgency, other approved signals, and wait time. | Formula/weights to be calibrated and versioned. |
 | `route_reason` | Plain-language explanation of assignment or unassigned status. | Routing engine. | Required for every decision. |
 
-A provisional text-analysis object may use stable field names while leaving allowed values open until EDA. The field schema must reject labels outside the team-approved enum and set a review flag for unclear or unsupported content. The voice path must return separate features/confidence and must never overwrite complaint urgency. Voice-state evidence may be absent without blocking a valid complaint-urgency result.
+A provisional text-analysis object may use stable field names; the allowed values are the agreed taxonomy. The field schema must reject labels outside the team-approved enum and set a review flag for unclear or unsupported content. The voice path must return separate features/confidence and must never overwrite complaint urgency. Voice-state evidence may be absent without blocking a valid complaint-urgency result.
 
 ## 5. Data model
 
@@ -114,11 +114,11 @@ SQLite remains a candidate for a low-friction local demo. Choose storage and ret
 
 ### 6.1 Fusion rules
 
-Do not reproduce the old matrix that mixed customer emotion and complaint urgency. First agree field definitions and labels using the dataset. Then define a versioned, testable rule set for how text and validated voice evidence contribute to any final customer-state estimate. Keep `complaint_urgency` separate from customer-state fusion. Missing/low-quality voice evidence should not lower complaint urgency or force a customer-state label. If the text output is unclear or invalid, mark it for review; do not substitute a voice label for a missing complaint-urgency value.
+Do not reproduce the old matrix that mixed customer emotion and complaint urgency. The field definitions and labels are agreed (see section 4). Then define a versioned, testable rule set for how text and validated voice evidence contribute to any final customer-state estimate. Keep `complaint_urgency` separate from customer-state fusion. Missing/low-quality voice evidence should not lower complaint urgency or force a customer-state label. If the text output is unclear or invalid, mark it for review; do not substitute a voice label for a missing complaint-urgency value.
 
 ### 6.2 Queue priority
 
-A deterministic baseline can combine approved complaint urgency, any separately approved churn-risk signal, validated acoustic evidence if appropriate, explicit high-impact keywords, and waiting time. Exact weights, normalization, thresholds, and tie-breaking remain open until EDA and policy agreement. Every score should store its rule/config version and evidence. Queue ordering should have deterministic tie-breakers, such as oldest received first.
+A deterministic baseline can combine approved complaint urgency, any separately approved churn-risk signal, validated acoustic evidence if appropriate, explicit high-impact keywords, and waiting time. Exact weights, normalization, thresholds, and tie-breaking remain open until policy agreement; the EDA is done. Every score should store its rule/config version and evidence. Queue ordering should have deterministic tie-breakers, such as oldest received first.
 
 ### 6.3 Agent matching
 
@@ -130,7 +130,7 @@ If no agent meets the hard filters, leave the ticket unassigned, state why, and 
 
 ### Provider interfaces
 
-Keep interfaces for speech-to-text, text analysis, acoustic/voice analysis, and storage. Local implementations are the default path where practical. The external text adapter must reject every call unless it has a valid, matching pre-transfer approval record; it accepts masked text only and cannot transmit raw audio. Other external providers are not enabled by this approval record. Implementation details and model names are not locked in this revision. Check current model cards, licenses, APIs, and quotas at implementation time rather than hard-coding names into business logic.
+Keep interfaces for speech-to-text, text analysis, acoustic/voice analysis, and storage. Local implementations are the default path where practical. The external text adapter must reject every call unless it has a valid, matching pre-transfer approval record; it accepts masked text only and cannot transmit raw audio. Other external providers are not enabled by this approval record. The selected models are Whisper large-v3 for transcription, EgyBERT and MARBERTv2 for text classification, and wav2vec2 XLS-R 300M for direct audio classification, with the Egyptian checkpoint IbrahimAmin/egyptian-arabic-wav2vec2-xlsr-53. Check current model cards, licenses, APIs, and quotas at implementation time rather than hard-coding names into business logic.
 
 No model is assumed to be language-independent or accurate on Egyptian Arabic phone audio. Compare candidates on the team's own approved data and report the limits.
 
@@ -142,21 +142,24 @@ No model is assumed to be language-independent or accurate on Egyptian Arabic ph
 | GPU local | Optional acceleration for selected local inference experiments. | Add GPU-specific libraries only when the selected model needs them; isolate CUDA/PyTorch dependencies from the CPU baseline. Record GPU and runtime versions. |
 | Google Colab/free cloud plan | Optional disposable experiment environment when data rules permit. | It is not the source of truth; sync source/results through the later repository process. Do not upload private voice data or secrets unless explicitly permitted. Free resources and runtime availability are not guaranteed. |
 
-Separate CPU/GPU dependency sets and environment READMEs belong to the later repository setup phase; no requirements files or environments are created in this document revision. The exact PyTorch/CUDA versions must wait until a model and target GPU are chosen.
+Separate CPU/GPU dependency sets and environment READMEs belong to the later repository setup phase; no requirements files or environments are created in this document revision. The exact PyTorch/CUDA versions must wait until a target GPU is chosen; the model selection is settled.
 
 ### UI and packaging
 
-The final demo needs a browser dashboard. Frontend and deployment ownership remain open at kickoff. After the pair-owned core produces its first integrated fixture run, Hazem will name the implementer(s) before demo-readiness; his own implementation role remains open. Until then, pairs should keep contracts stable and test with mocks so UI or packaging decisions do not block signal, fusion, routing, or evaluation work. Docker and production packaging are outside the current architecture scope.
+The final demo needs a browser dashboard. Arafa owns Systems Integration and Demo, including the dashboard and deployment. Until then, the team should keep contracts stable and test with mocks so UI or packaging decisions do not block signal, fusion, routing, or evaluation work. Docker and production packaging are outside the current architecture scope.
 
-## 8. Module responsibilities and pair interfaces
+## 8. Module responsibilities and role interfaces
 
-| Pair workstream | Owns the first implementation of | Provides to the next stage |
+| Role | Owns the first implementation of | Provides to the next stage |
 |---|---|---|
-| Hazem & Ibthal: Audio and speech evidence | Local audio validation/preprocessing, STT adapter/benchmark, transcript quality/language-mix metadata, acoustic features, optional voice-state candidate. | `AudioAnalysis`: local audio references, transcript + confidence/language metadata, audio-quality/acoustic evidence; no final queue decision. |
-| Lama & Ahmed: Complaint and customer understanding | Transcript normalization/glossary/identifier masking, structured text analysis, summary, complaint category/urgency/customer-state fields, customer request/script, label agreement after EDA. | Versioned `TextAnalysis` object with approved labels and review/confidence fields. |
-| Sira & Aya: Decision, routing, and evaluation | Versioned fusion/priority/routing rules, agent/skill data model, no-match behavior, pure tests, evaluation/integration runner, run records. | `TriageDecision`: priority, assignment/unassigned state, reason, contributing evidence/rule version and evaluation results. |
+| Sira, Audio and Speech Engineer | Local audio validation/preprocessing, STT adapter/benchmark, transcript quality/language-mix metadata, acoustic features, optional voice-state candidate. | `AudioAnalysis`: local audio references, transcript + confidence/language metadata, audio-quality/acoustic evidence; no final queue decision. |
+| Lama, Text Classification Engineer | Transcript normalization/glossary/identifier masking, structured text analysis, summary, complaint category/urgency/customer-state fields, customer request/script. | Versioned `TextAnalysis` object with agreed labels and review/confidence fields. |
+| Ibthal, Triage and Routing Engineer | Versioned fusion/priority/routing rules, agent/skill data model, no-match behavior. | `TriageDecision`: priority, assignment/unassigned state, reason, contributing evidence/rule version. |
+| Aya, ML Infrastructure and Evaluation Engineer | Training infrastructure, evaluation/integration runner, run records, pure tests. | Evaluation results and run records. |
+| Hazem, Training Lead | Training pipeline, model selection and fine-tuning coordination, final test evaluation oversight. | Trained models and the training configuration. |
+| Arafa, Systems Integration and Demo Engineer | End-to-end pipeline integration, API contracts, dashboard, demo. | The integrated system and the demo. |
 
-All three pairs run the same initial EDA before any pair freezes model classes. They use one dataset snapshot and shared schemas. UI and deployment owners remain unassigned until the team assesses the core work.
+The shared EDA is done; the team uses one dataset snapshot and shared schemas. Arafa owns the demo and deployment.
 
 ## 9. Technology decisions and open points
 
@@ -166,11 +169,11 @@ All three pairs run the same initial EDA before any pair freezes model classes. 
 | API | FastAPI/Pydantic are reasonable candidates. | Need for async tasks/WebSocket and final interface contracts. |
 | Database | Local SQLite candidate for a demo. | Retention, file path safety, concurrency and later migration needs. |
 | Audio | ffmpeg plus Python audio libraries are candidates. | License/installation, supported formats, audio quality and CPU/GPU needs. |
-| STT | Local-first provider adapter; candidate comparison after EDA. | Egyptian Arabic/code-switching accuracy, rights, latency, hardware and competition rules. |
-| Text model | Local or explicitly approved external model behind an interface. | Data-transfer permission, structured-output reliability, cost/quota, latency and language performance. |
-| Voice model | Acoustic features first; pretrained voice-state model only if evidence supports it. | License, label fit, phone-quality performance, bias and confidence calibration. |
-| Dashboard | A projector-readable browser dashboard is required for the final demo. | Stack and detailed owner are deferred; English UI with Arabic content is a working possibility, not a final language decision. |
-| Packaging | Reproducible local run instructions are needed. | Full deployment owner and Docker/hosting are deferred until core proof. |
+| STT | Whisper large-v3, local-first provider adapter. | Egyptian Arabic/code-switching accuracy, rights, latency, hardware and competition rules. |
+| Text model | EgyBERT and MARBERTv2 fine-tuned in parallel, behind an interface. | Structured-output reliability, cost/quota, latency and language performance. |
+| Voice model | wav2vec2 XLS-R 300M for direct audio classification, Egyptian checkpoint IbrahimAmin/egyptian-arabic-wav2vec2-xlsr-53; acoustic features first; pretrained voice-state model only if evidence supports it. | License, label fit, phone-quality performance, bias and confidence calibration. |
+| Dashboard | A projector-readable browser dashboard is required for the final demo. | Stack is open; Arafa owns the dashboard and demo. English UI with Arabic content is a working possibility, not a final language decision. |
+| Packaging | Reproducible local run instructions are needed. | Arafa owns deployment. Docker/hosting are deferred until core proof. |
 
 ## 10. Future commercial path: on-premises
 
@@ -191,6 +194,6 @@ An operator deployment inside its own infrastructure belongs to a future product
 
 ## Appendix A. Architecture constraints carried into repository setup
 
-- No repository, branches, requirements folders, or deployment configuration are created as part of this document revision.
+- The repository, branches, and requirements folders exist. The deployment configuration is still open.
 - When the repository phase is authorized, define separate CPU and GPU dependency paths and optional Colab instructions; do not make CUDA a baseline requirement.
-- Keep data access rules, label/schema version, experiment records, and interface tests close to the code so all three pairs can work without guessing.
+- Keep data access rules, label/schema version, experiment records, and interface tests close to the code so the whole team can work without guessing.

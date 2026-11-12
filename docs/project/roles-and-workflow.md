@@ -11,7 +11,7 @@
 
 This guide tells every team member exactly what their role means, what to do, and how to do it, from the first clone on their machine to the finished system. Read your own role section fully. Read the parallel workflow and the dependencies section so you know who needs what from you and when. Nothing here is a title. Every role has real work, concrete deliverables, and a clear way to know when it is done.
 
-The project turns a single-speaker Egyptian Arabic customer voicemail into an explainable callback ticket. The dataset is finished. The model selection is approved. What remains is to build the models, integrate the system, evaluate it, and retrain once on the audited labels.
+The project turns a single-speaker Egyptian Arabic customer voicemail into an explainable callback ticket. The dataset is finished. The model selection is settled. What remains is to build the models, integrate the system, evaluate it, and retrain once on the audited labels.
 
 ## The big picture
 
@@ -343,7 +343,7 @@ You own the decision: how the four model outputs become a queue priority and a c
 
 ### What you need from others
 
-- The field definitions and the taxonomy, from Hazem, already approved.
+- The field definitions and the taxonomy, from Hazem, already agreed.
 - The model outputs, from Lama and Sira, first as validation predictions in Phase 2, then as test predictions in Phase 3.
 - The routing agreement target and the human-reviewed ideal, from the team.
 - Aya's evaluation harness, to measure routing agreement the same way everything else is measured.

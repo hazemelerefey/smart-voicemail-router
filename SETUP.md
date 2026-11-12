@@ -1,6 +1,6 @@
 # Setup guide
 
-This repository draft contains project documents and general development tools. It does not yet include application code, an application runtime, a dataset, or a selected model.
+This repository contains project documents and general development tools. It does not yet include application code or an application runtime. The model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription), and the dataset lives on the `local-env` branch.
 
 ## Choose an environment
 
@@ -12,8 +12,8 @@ The requirements paths are `CPU case/requirements.txt` and `GPU case/requirement
 
 ## PyTorch and CUDA
 
-GPU acceleration is optional. Do not install a guessed PyTorch wheel. First select the target hardware and model, then use the [official PyTorch installation selector](https://pytorch.org/get-started/locally/) to choose the operating system, package manager, language, and compute platform. Record the resulting wheel choice and environment for the experiment. The exact PyTorch/CUDA wheel is deferred until hardware and model selection.
+GPU acceleration is optional. Do not install a guessed PyTorch wheel. First select the target hardware, then use the [official PyTorch installation selector](https://pytorch.org/get-started/locally/) to choose the operating system, package manager, language, and compute platform. Record the resulting wheel choice and environment for the experiment. The exact PyTorch/CUDA wheel is deferred until the target hardware is selected; the model selection is settled.
 
 ## Data
 
-No dataset or sample audio is included in this draft. Confirm data source, rights, consent, competition rules, and permitted processing location before use. Never force-add private recordings or transcripts. Only reviewed, approved derived summaries may be considered for later commit, if their specific content and use have been approved.
+No dataset or sample audio is included on this branch. The dataset lives on the `local-env` branch. Confirm data source, rights, consent, competition rules, and permitted processing location before use. Never force-add private recordings or transcripts. Only reviewed, approved derived summaries may be considered for later commit, if their specific content and use have been approved.

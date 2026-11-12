@@ -3,9 +3,9 @@
 ## Product Requirements Document
 
 **Document ID:** SVR-PRD-01  
-**Version:** 1.2  
-**Status:** Draft for team review, with dataset taxonomy and evaluation protocol pending EDA  
-**Updated:** 10 November 2026  
+**Version:** 1.3  
+**Status:** Dataset and taxonomy finished; model selection settled; labels under audit  
+**Updated:** 12 November 2026  
 **Formal project kickoff:** 11 November 2026  
 **Competition deadline:** Not yet known
 
@@ -13,7 +13,7 @@
 
 ### Revision notes
 
-Version 1.2 sets a local-first privacy boundary, separates complaint urgency from customer state, and leaves label values pending shared EDA and team agreement. The Team Allocation Plan uses relative, gated phases because the competition deadline and weekly capacity are unknown.
+Version 1.3 records the finished dataset (SVR Voicemail Corpus, 6,522 voicemails, 5,751 clean training rows), the agreed taxonomy, the settled model selection, and the six individual roles that replace the old pair workstreams. The Team Allocation Plan uses relative, gated phases because the competition deadline and weekly capacity are unknown.
 
 ---
 
@@ -40,13 +40,13 @@ These are different product fields and must not be used as synonyms:
 
 | Field | Meaning | How it affects the system | Status of labels |
 |---|---|---|---|
-| **Complaint category** | The type of problem being reported (for example, a network or billing issue). | Helps identify which agent skills are relevant. | Candidate values exist in v1.0, but final values require EDA and team agreement. |
-| **Complaint urgency** | How time-sensitive or impact-heavy the complaint itself is. | Can affect queue priority and escalation rules. It is not a mood. | Class set and annotation rules are pending the dataset review. |
-| **Customer state** | The customer's interaction/emotional state (for example, calm, dissatisfied, or angry, if supported by the data). | Gives the callback agent context. Text and validated voice cues may provide separate evidence. | Class set is pending the dataset review; no final labels are approved yet. |
-| **Churn risk** | Evidence that the customer may leave the service, if this dimension proves useful and can be labeled consistently. | May be a separate business-risk signal. A cancellation threat is evidence to assess, not an automatic urgency label. | Retain only after EDA and team agreement. |
-| **Queue priority** | A system-generated ordering score or bucket combining approved operational signals and waiting time. | Sorts the queue; it is not itself complaint urgency or customer state. | Formula and weights are provisional until labels and policy are agreed. |
+| **Complaint category** | The type of problem being reported (for example, a network or billing issue). | Helps identify which agent skills are relevant. | Agreed: 11 values: network_and_connectivity, billing_and_charges, balance_and_data, app_and_account, branch_and_staff, no_reply_or_long_wait, cancellation_request, thanks_or_praise, other, offers_and_packages, sim_services. |
+| **Complaint urgency** | How time-sensitive or impact-heavy the complaint itself is. | Can affect queue priority and escalation rules. It is not a mood. | Agreed: 3 values, high, medium, low, judged from the complaint only, never from tone. |
+| **Customer state** | The customer's interaction/emotional state (for example, calm, dissatisfied, or angry, if supported by the data). | Gives the callback agent context. Text and validated voice cues may provide separate evidence. | Agreed: 5 values, calm, frustrated, mad, satisfied, unclear. |
+| **Churn risk** | Evidence that the customer may leave the service, if this dimension proves useful and can be labeled consistently. | May be a separate business-risk signal. A cancellation threat is evidence to assess, not an automatic urgency label. | Agreed: 2 values, at_risk, not_at_risk, only on explicit departure language. |
+| **Queue priority** | A system-generated ordering score or bucket combining approved operational signals and waiting time. | Sorts the queue; it is not itself complaint urgency or customer state. | Formula and weights are provisional until policy is agreed; the labels are agreed. |
 
-The label values must come from the shared dataset review and annotation policy. Until then, model implementations must not invent or silently freeze classes. Ambiguous or unsupported results must be marked for human review.
+The label values come from the agreed taxonomy and annotation guide. Model implementations must not invent or silently freeze classes. Ambiguous or unsupported results must be marked for human review.
 
 ## 4. Goals and non-goals
 
@@ -68,7 +68,7 @@ The label values must come from the shared dataset review and annotation policy.
 - Authentication, authorization, and multi-role access control; use a single demo-user mode.
 - Building or fine-tuning a speech model from scratch as a default plan.
 - On-premises delivery is a future commercial direction after the prototype demonstrates value; it requires a separate implementation and security review.
-- Finalized label values before the dataset has been inspected and the team has agreed on annotation rules.
+- Changing the agreed label values or the frozen test split without Hazem.
 
 ## 5. Users
 
@@ -86,18 +86,18 @@ The label values must come from the shared dataset review and annotation policy.
 - Accept WAV, MP3, and M4A files up to 25 MB and up to 60 seconds; recommend 15 to 60 second clips for the MVP. Do not reject a shorter valid clip solely for being under 15 seconds unless the dataset review establishes a minimum.
 - Keep original voice recordings within the approved local data boundary by default. Preprocess a working copy for analysis.
 - Produce a transcript and language-mix indication; normalize telecom terms only under a documented glossary.
-- Produce a structured text analysis with separate complaint category, complaint urgency, and customer-state fields. Final label values are gated on EDA.
+- Produce a structured text analysis with separate complaint category, complaint urgency, and customer-state fields, using the agreed label values.
 - Compute and expose audio quality/acoustic evidence. A voice-state/emotion label is included only if the team validates the model and annotation approach for the available data.
 - Fuse approved signals into a transparent priority and routing recommendation; record the inputs and reason.
 - Store tickets, seeded demo agents, assignments, and audit events locally for the prototype.
-- Provide a dashboard for upload and browser-based live recording, live queue, ticket details, evidence, and callback brief. Hazem will name the UI implementer(s) after the first integrated fixture run and before demo-readiness. His implementation role remains open.
+- Provide a dashboard for upload and browser-based live recording, live queue, ticket details, evidence, and callback brief. Arafa owns Systems Integration and Demo, including the dashboard.
 - Provide a reproducible evaluation path and report actual results.
 
 ### Lower-priority or deferred
 
 - WebSocket updates, manual reassignment, analytics, and production packaging may be sequenced after the core data contract and end-to-end pipeline are stable.
 - External cloud inference, if used at all, is an opt-in experiment under the privacy gate below, not the default path.
-- Hazem will name the deployment/packaging implementer(s) after the first integrated fixture run and before demo-readiness. No pair is pre-assigned solely to this work, and Hazem's implementation role remains open.
+- Arafa owns Systems Integration and Demo, including deployment and packaging.
 
 ## 7. User stories and acceptance criteria
 
@@ -115,7 +115,7 @@ The label values must come from the shared dataset review and annotation policy.
 
 ## 8. Analysis contract
 
-Pairs may start independent EDA, fixture-first scaffolding, provider adapters, and unit tests before the final contract is frozen. Agree stable field names and null/error behavior before production integration. The following is a **shape proposal**, not a final class taxonomy. Placeholder labels must be replaced by the approved enum values after EDA; they must not be passed to production code as free-form predictions.
+The team may start fixture-first scaffolding, provider adapters, and unit tests before the final contract is frozen. Agree stable field names and null/error behavior before production integration. The contract below uses the agreed label values. Placeholder labels must not be passed to production code as free-form predictions.
 
 ```json
 {
@@ -123,7 +123,7 @@ Pairs may start independent EDA, fixture-first scaffolding, provider adapters, a
   "complaint_category": "<approved_category_label>",
   "complaint_urgency": "<approved_urgency_label>",
   "customer_state_text": "<approved_customer_state_label>",
-  "churn_risk": "<approved_label_or_omitted_after_EDA>",
+  "churn_risk": "<approved_label>",
   "keywords": [],
   "customer_request": "<faithful, concise request>",
   "language_mix": "<approved_language_mix_value>",
@@ -152,7 +152,7 @@ The system-level ticket additionally carries `priority_score` (or an agreed alte
 | FR-09 | Recommend an eligible agent by approved skill/category, shift/availability, capacity, and language fit; define unassigned/manual-review behavior. | P0 |
 | FR-10 | Persist local prototype records for voicemails, tickets, agents, assignments, processing status, and audit events. | P0 |
 | FR-11 | Provide REST endpoints for upload/recording submission and ticket review; provide a WebSocket stream for live queue/status updates. | P0 |
-| FR-12 | Provide a dashboard for upload and browser-based live recording, queue, ticket evidence, playback where permitted, routing, and callback brief. Hazem names the UI implementer(s) after the first integrated fixture run and before demo-readiness; his own implementation role remains open. | P0 |
+| FR-12 | Provide a dashboard for upload and browser-based live recording, queue, ticket evidence, playback where permitted, routing, and callback brief. Arafa owns Systems Integration and Demo, including the dashboard. | P0 |
 | FR-13 | Store per-stage timing and errors for evaluation and debugging. | P1 |
 | FR-14 | Support manual reassignment/status change if time and demo needs permit; write audit events. | P1 |
 | FR-15 | Define provider interfaces; do not claim that a config switch alone delivers an on-premises system. | P1 |
@@ -190,11 +190,11 @@ Keep business logic separate from provider implementations. Preserve CPU executi
 
 ## 11. Dataset and evaluation plan
 
-The v1.0 estimate was 50 to 100 telecom-style recordings. The dataset and access method are not yet known; it may be unlabeled, and some proposed classes may not exist.
+The dataset is the SVR Voicemail Corpus: 6,522 Egyptian Arabic customer voicemails, 12.63 hours of audio. The clean training set holds 5,751 rows: train 4,031, validation 1,136, test 584, corrected stratified split, seed 42. The labels come from a model and are being audited by the team every day; the audit corrections are applied in Phase 4.
 
-Before finalizing labels or model comparisons, **each of the three pairs** will independently inspect the same authorized dataset snapshot and prepare an EDA note. At the earliest weekly comparison meeting, the team will reconcile findings and agree one shared data dictionary, label/annotation guide, privacy boundary, and split protocol.
+The shared EDA is done and produced one data dictionary, label/annotation guide, privacy boundary, and split protocol. The dataset, labels, and split are described above.
 
-EDA must cover, at minimum: license/consent and data origin; file count, duration, format, and quality; language mix; missingness and duplicates; existing labels and class counts; label ambiguity; potential speaker/recording leakage; PII and retention risks; and a proposed train/dev/test strategy. The test set should be separated by speaker/source where feasible so near-duplicate or same-speaker material does not inflate results.
+EDA covered, at minimum: license/consent and data origin; file count, duration, format, and quality; language mix; missingness and duplicates; existing labels and class counts; label ambiguity; potential speaker/recording leakage; PII and retention risks; and a proposed train/validation/test strategy. The test set should be separated by speaker/source where feasible so near-duplicate or same-speaker material does not inflate results.
 
 Report only metrics appropriate to the agreed labels and reference data:
 
@@ -208,7 +208,7 @@ Report only metrics appropriate to the agreed labels and reference data:
 
 - The competition prototype receives a single customer speaker, not a live multi-party call; diarization is out of scope.
 - Official project kickoff is 11 November 2026. The competition deadline and weekly time capacity are unknown, so the plan uses relative phases and exit gates rather than invented dates or durations.
-- Team pairs are Hazem & Ibthal, Lama & Ahmed, and Sira & Aya. Workstream proposals are in the Team Allocation Plan; they are based on architecture boundaries, not on unprovided skill profiles.
+- The team works in six individual roles: Hazem, Training Lead; Sira, Audio and Speech Engineer; Lama, Text Classification Engineer; Aya, ML Infrastructure and Evaluation Engineer; Ibthal, Triage and Routing Engineer; Arafa, Systems Integration and Demo Engineer. Role assignments are in the Team Allocation Plan; they are based on architecture boundaries, not on unprovided skill profiles.
 - Team members have a mix of CPU/GPU computers; free cloud plans and Colab may be available but are optional. Do not make them a required dependency.
 - External API use and dataset rights still require confirmation against competition rules and actual dataset terms.
 - On-premises delivery is a possible future commercial direction after validation, not a current product promise.
@@ -218,24 +218,24 @@ Report only metrics appropriate to the agreed labels and reference data:
 | Risk | Impact | Mitigation |
 |---|---|---|
 | Dataset is inaccessible, unlicensed, unconsented, or too small | Blocks valid model evaluation and may create privacy risk. | Verify rights/access before ingestion; use permitted/synthetic alternatives; keep a clear limitation log. |
-| Labels are missing or inconsistent | Invalid metrics and unstable model contract. | Three independent EDA passes on one snapshot; compare at the earliest meeting; approve one annotation guide before training/evaluation. |
+| Labels are missing or inconsistent | Invalid metrics and unstable model contract. | The shared EDA is done and one annotation guide is agreed; the team audits the labels daily and applies corrections in Phase 4. |
 | Complaint urgency is confused with customer emotion | Wrong queue decisions and misleading demo. | Keep independent fields in schema, code, UI, routing, and evaluation; test the distinction. |
 | Voice model fails on Egyptian Arabic or phone-quality audio | Misleading state inference. | Treat voice as optional evidence, validate on relevant data, expose uncertainty, and fall back to human review. |
 | Cloud provider receives identifiable voice/data | Privacy, consent, or competition-policy issue. | No raw audio to external services by default; require a documented approval gate; prefer local processing. |
 | Provider outage or rate limits | Demo failure. | Local path and exact-clip cached demo fallback; pre-recorded backup; do not cache arbitrary inputs. |
 | Latency target is not met on mixed hardware | Overclaiming performance. | Measure by environment/provider and report actual p50/p95 with conditions. |
-| Scope expands before core proof | Unfinished pipeline. | Gate work by the relative phases; reserve UI/deployment ownership for Hazem after core work is assessed. |
+| Scope expands before core proof | Unfinished pipeline. | Gate work by the relative phases; Arafa owns the demo and deployment. |
 
 ## 14. Open decisions
 
-1. Dataset access, permissions, actual size, labels, and the agreed annotation guide.
-2. Final complaint-category, complaint-urgency, customer-state, and optional churn-risk labels.
+1. Dataset rights, consent, retention, and processing locations. The dataset itself is known: SVR Voicemail Corpus, 6,522 voicemails, 5,751 clean training rows, split train 4,031 / validation 1,136 / test 584.
+2. The split freeze (the corrected v2 split is the working split; freezing it is Hazem's decision).
 3. Whether external providers are allowed by the competition and the dataset terms; exact approved providers and budget/quota.
 4. Retention/deletion period and who can access local recordings.
-5. Which models/providers meet the data, language, hardware, and latency constraints after benchmark.
+5. Which hardware meets the data, language, and latency constraints after benchmark. The model selection is settled: EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription.
 6. Final dashboard language and competition demo format/judging criteria.
 7. Competition deadline and any changes needed to phase priority once known.
-8. Exact division of frontend and deployment assignments, which Hazem will decide after core progress is assessed.
+8. The Python baseline and the training hardware.
 
 ## Appendix A. Glossary
 
