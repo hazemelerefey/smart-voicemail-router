@@ -45,40 +45,61 @@ def _wav_duration_s(data: bytes) -> float:
         return frames / rate
 
 
-def validate_and_measure(file_bytes: bytes, filename: str, voicemail_id: str) -> AudioMeta:
-    """Validate format, size and duration. Raises ValueError with the reason."""
+def validate_metadata(
+    filename: str,
+    size_bytes: int,
+    duration_s: float | None = None,
+    duration_checked: bool = False,
+    voicemail_id: str = "",
+) -> AudioMeta:
+    """Validate upload metadata only. No audio bytes are read here: the
+    endpoint measures them first (validate_and_measure) and the pipeline
+    runs on this metadata, so bytes never enter a background task."""
     ext = _extension(filename)
     if ext not in ALLOWED_EXTENSIONS:
         raise ValueError(
             f"unsupported format {ext or '(none)'}: only WAV, MP3, M4A are accepted"
         )
-    if len(file_bytes) > MAX_BYTES:
-        raise ValueError(
-            f"file is {len(file_bytes)} bytes, over the 25 MB limit"
-        )
-    if len(file_bytes) == 0:
+    if size_bytes > MAX_BYTES:
+        raise ValueError(f"file is {size_bytes} bytes, over the 25 MB limit")
+    if size_bytes == 0:
         raise ValueError("empty file")
-    fmt = ext.lstrip(".")
+    if duration_checked and duration_s is not None and duration_s > MAX_DURATION_S:
+        raise ValueError(
+            f"duration {duration_s:.1f}s exceeds the 60 second maximum"
+        )
+    return AudioMeta(
+        voicemail_id=voicemail_id,
+        filename=filename,
+        format=ext.lstrip("."),
+        size_bytes=size_bytes,
+        duration_s=duration_s,
+        duration_checked=duration_checked,
+    )
+
+
+def validate_and_measure(file_bytes: bytes, filename: str, voicemail_id: str) -> AudioMeta:
+    """Validate format, size and duration. Raises ValueError with the reason.
+
+    The only place audio bytes are read: the endpoint calls this, then
+    discards the bytes. Format, size and empty are checked first, so an
+    oversize file reports the 25 MB limit instead of a parse error. WAV
+    duration is measured here with the stdlib ``wave`` module; MP3/M4A
+    duration stays unmeasured, see below.
+    """
+    # Format, size and empty first (duration not measured yet).
+    validate_metadata(filename, len(file_bytes), None, False, voicemail_id)
     duration: float | None = None
     duration_checked = False
-    if fmt == "wav":
+    if _extension(filename) == ".wav":
         try:
             duration = _wav_duration_s(file_bytes)
         except (wave.Error, EOFError, ValueError) as exc:
             raise ValueError(f"unreadable WAV file: {exc}") from exc
         duration_checked = True
-        if duration > MAX_DURATION_S:
-            raise ValueError(
-                f"duration {duration:.1f}s exceeds the 60 second maximum"
-            )
     # MP3/M4A duration is not measurable with the stdlib alone. Phase 2
     # (Sira's audio pipeline) measures it at intake; until then the file
     # is accepted on format and size only and duration_checked stays False.
-    return AudioMeta(
-        voicemail_id=voicemail_id,
-        filename=filename,
-        format=fmt,
-        size_bytes=len(file_bytes),
-        duration_s=duration,
-        duration_checked=duration_checked,
+    return validate_metadata(
+        filename, len(file_bytes), duration, duration_checked, voicemail_id
     )

@@ -20,6 +20,7 @@ from .schemas import (
     utcnow_iso,
 )
 from .stages import classification, intake, stt, ticket as ticket_stage, triage, voice
+from .stages.intake import AudioMeta
 
 # Stage names in pipeline order (contracts section 1).
 STAGE_NAMES = ("intake", "stt", "text_analysis", "voice_evidence", "triage")
@@ -44,8 +45,7 @@ class PipelineResult:
 
 
 def run_pipeline(
-    file_bytes: bytes,
-    filename: str,
+    audio_meta: AudioMeta,
     voicemail_id: str,
     ticket_id: str | None = None,
     *,
@@ -54,11 +54,15 @@ def run_pipeline(
 ) -> PipelineResult:
     """Run intake -> STT -> text analysis -> voice evidence -> triage -> ticket.
 
-    All stages are mocks returning the contracts section 9 fixture values.
-    ``classification_override`` lets tests (and only tests) feed a different
-    TextAnalysis payload, e.g. a null category, to prove the null/review
-    rules. A failed stage never produces a silent normal ticket: the run
-    ends as ``needs_review`` with the failed stage recorded.
+    Runs on upload metadata only (filename, size, duration). Audio bytes
+    never enter this function: the endpoint measures them first with
+    ``validate_and_measure`` and discards them, and the background task
+    carries only the AudioMeta. All stages are mocks returning the contracts
+    section 9 fixture values. ``classification_override`` lets tests (and
+    only tests) feed a different TextAnalysis payload, e.g. a null category,
+    to prove the null/review rules. A failed stage never produces a silent
+    normal ticket: the run ends as ``needs_review`` with the failed stage
+    recorded.
     """
     timer = Timer()
     stage_status: dict[str, str] = {}
@@ -81,10 +85,18 @@ def run_pipeline(
         )
         return PipelineResult(ticket, audio, text, voice_evidence, decision)
 
-    # 1. Intake: validate format, size, duration; record audio metadata.
+    # 1. Intake: re-validate the metadata; record audio metadata.
+    # No bytes here: validate_metadata checks format, size and duration
+    # from the AudioMeta the endpoint measured.
     with timer.stage("intake") as elapsed:
         try:
-            audio_meta = intake.validate_and_measure(file_bytes, filename, voicemail_id)
+            audio_meta = intake.validate_metadata(
+                audio_meta.filename,
+                audio_meta.size_bytes,
+                audio_meta.duration_s,
+                audio_meta.duration_checked,
+                voicemail_id,
+            )
         except ValueError as exc:
             stage_timing_ms["intake"] = elapsed()
             return fail(f"Intake rejected the upload: {exc}", "intake")

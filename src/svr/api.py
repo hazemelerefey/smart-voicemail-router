@@ -9,8 +9,8 @@ Endpoints:
   GET    /api/agents            seeded demo agents only
   PATCH  /api/tickets/{id}      manual status / reassignment, with audit event
   GET    /api/latency           p95 latency report with hardware (section 7)
-  WS     /ws/queue              queue snapshot on connect (Phase 1 stub;
-                                live broadcast lands in Phase 3)
+  WS     /ws/queue              queue snapshot on connect, plus a live
+                                ticket_update broadcast when a run completes
   GET    /                      plain HTML demo page (upload, run, ticket)
 """
 
@@ -34,7 +34,7 @@ from . import agents as agents_module
 from .latency import summarize_latency
 from .pipeline import run_pipeline
 from .schemas import Agent, AssignmentStatus, TicketDetail, TicketStatus, utcnow_iso
-from .stages.intake import validate_and_measure
+from .stages.intake import AudioMeta, validate_and_measure
 from .store import STORE
 
 app = FastAPI(title="SVR Phase 1 API (mock pipeline)", version="1.0.0-mock")
@@ -42,8 +42,10 @@ app = FastAPI(title="SVR Phase 1 API (mock pipeline)", version="1.0.0-mock")
 
 # ---------------------------------------------------------------- WebSocket
 class QueueHub:
-    """Phase 1 stub hub: sends the queue snapshot on connect and stays open.
-    Live broadcast of status updates lands in Phase 3."""
+    """Queue hub: sends the queue snapshot on connect, then broadcasts a
+    ticket_update to every connected client when a run completes. A push
+    broadcaster refinement (dedicated broadcaster task, reconnect handling)
+    stays a Phase 3 item."""
 
     def __init__(self) -> None:
         self._connections: list[WebSocket] = []
@@ -71,9 +73,20 @@ HUB = QueueHub()
 
 
 # ------------------------------------------------------------------ helpers
-def _run_and_store(ticket_id: str, voicemail_id: str, data: bytes, filename: str) -> None:
-    result = run_pipeline(data, filename, voicemail_id, ticket_id=ticket_id)
-    STORE.complete(result)
+async def _run_and_store(ticket_id: str, voicemail_id: str, meta: AudioMeta) -> None:
+    """Run the mock pipeline on upload metadata only (no audio bytes are
+    carried here), store the finished ticket, then broadcast the completed
+    ticket to every connected /ws/queue client."""
+    result = run_pipeline(meta, voicemail_id, ticket_id=ticket_id)
+    ticket = STORE.complete(result)
+    await HUB.broadcast(
+        {
+            "type": "ticket_update",
+            "ticket_id": ticket.id,
+            "ticket": ticket.model_dump(mode="json"),
+            "tickets": [t.model_dump(mode="json") for t in STORE.list_tickets()],
+        }
+    )
 
 
 class SubmitResponse(BaseModel):
@@ -99,17 +112,23 @@ async def submit_voicemail(
     is visible as queued/processing within 2 seconds, before analysis
     begins (contracts section 5). Analysis runs in the background.
     Invalid format, size or duration is rejected here with a clear 400
-    error (contracts section 5); valid input is never rejected."""
+    error (contracts section 5); valid input is never rejected. Uploaded
+    bytes are read only to check size and format, then discarded: the
+    background task carries the measured metadata only, and Phase 1
+    persists no audio."""
     data = await file.read()
     filename = file.filename or "upload.wav"
-    try:
-        validate_and_measure(data, filename, "pending")
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
     voicemail_id = f"voicemail-{uuid.uuid4().hex[:12]}"
     ticket_id = f"ticket-{uuid.uuid4().hex[:12]}"
+    try:
+        meta: AudioMeta = validate_and_measure(data, filename, voicemail_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    finally:
+        # Bytes are discarded after this check. Phase 1 persists no audio.
+        del data
     STORE.create_placeholder(ticket_id, voicemail_id)
-    background_tasks.add_task(_run_and_store, ticket_id, voicemail_id, data, filename)
+    background_tasks.add_task(_run_and_store, ticket_id, voicemail_id, meta)
     return SubmitResponse(
         ticket_id=ticket_id,
         voicemail_id=voicemail_id,
@@ -159,8 +178,9 @@ async def get_latency() -> dict:
 
 @app.websocket("/ws/queue")
 async def queue_socket(websocket: WebSocket) -> None:
-    """Phase 1 stub: sends the queue snapshot on connect, then stays open
-    for status updates. Full live broadcast lands in Phase 3."""
+    """Queue stream: sends the queue snapshot on connect, then a live
+    ticket_update broadcast each time a run completes (see _run_and_store).
+    A push broadcaster refinement stays a Phase 3 item."""
     await HUB.connect(websocket)
     try:
         while True:

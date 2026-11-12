@@ -6,6 +6,7 @@ import wave
 from svr import fixtures
 from svr.latency import p95, percentile, summarize_latency
 from svr.pipeline import fixture_ticket, run_pipeline
+from svr.stages.intake import AudioMeta, validate_and_measure
 
 
 def make_wav_bytes(duration_s: float = 1.0, rate: int = 16000) -> bytes:
@@ -18,8 +19,26 @@ def make_wav_bytes(duration_s: float = 1.0, rate: int = 16000) -> bytes:
     return buf.getvalue()
 
 
+def make_meta(
+    voicemail_id: str,
+    filename: str = "test.wav",
+    size_bytes: int = 32044,
+    duration_s: float | None = 1.0,
+    duration_checked: bool = True,
+) -> AudioMeta:
+    """Valid upload metadata: 1 s, 16 kHz mono 16-bit WAV (32044 bytes)."""
+    return AudioMeta(
+        voicemail_id=voicemail_id,
+        filename=filename,
+        format="wav",
+        size_bytes=size_bytes,
+        duration_s=duration_s,
+        duration_checked=duration_checked,
+    )
+
+
 def test_end_to_end_mock_pipeline_matches_fixture_shape():
-    result = run_pipeline(make_wav_bytes(), "test.wav", "voicemail-test-001")
+    result = run_pipeline(make_meta("voicemail-test-001"), "voicemail-test-001")
     ticket = result.ticket
     assert ticket.ticket_status.value == "completed"
     assert ticket.assignment_status.value == "assigned"
@@ -44,7 +63,7 @@ def test_end_to_end_mock_pipeline_matches_fixture_shape():
 
 
 def test_stage_status_and_timings_present_on_every_ticket():
-    result = run_pipeline(make_wav_bytes(), "test.wav", "voicemail-test-002")
+    result = run_pipeline(make_meta("voicemail-test-002"), "voicemail-test-002")
     ticket = result.ticket
     assert ticket.stage_status == {
         "intake": "ok",
@@ -62,8 +81,7 @@ def test_stage_status_and_timings_present_on_every_ticket():
 
 def test_null_category_goes_to_needs_review_not_a_guess():
     result = run_pipeline(
-        make_wav_bytes(),
-        "test.wav",
+        make_meta("voicemail-test-003"),
         "voicemail-test-003",
         classification_override={"complaint_category": None},
     )
@@ -75,8 +93,7 @@ def test_null_category_goes_to_needs_review_not_a_guess():
 
 def test_out_of_enum_label_goes_to_needs_review():
     result = run_pipeline(
-        make_wav_bytes(),
-        "test.wav",
+        make_meta("voicemail-test-004"),
         "voicemail-test-004",
         classification_override={"complaint_category": "offers_and_packages"},
     )
@@ -87,10 +104,41 @@ def test_out_of_enum_label_goes_to_needs_review():
 
 
 def test_invalid_upload_goes_to_needs_review():
-    result = run_pipeline(b"not audio at all", "test.txt", "voicemail-test-005")
+    bad_meta = AudioMeta(
+        voicemail_id="voicemail-test-005",
+        filename="test.txt",
+        format="txt",
+        size_bytes=15,
+        duration_s=None,
+        duration_checked=False,
+    )
+    result = run_pipeline(bad_meta, "voicemail-test-005")
     ticket = result.ticket
     assert ticket.ticket_status.value == "needs_review"
     assert ticket.needs_human_review is True
+
+
+def test_metadata_only_intake_rejects_oversize_and_overlong():
+    too_big = run_pipeline(
+        make_meta("voicemail-test-005b", size_bytes=25 * 1024 * 1024 + 1),
+        "voicemail-test-005b",
+    )
+    assert too_big.ticket.ticket_status.value == "needs_review"
+    assert too_big.ticket.stage_status["intake"] == "failed"
+    too_long = run_pipeline(
+        make_meta("voicemail-test-005c", size_bytes=32044 * 61, duration_s=61.0),
+        "voicemail-test-005c",
+    )
+    assert too_long.ticket.ticket_status.value == "needs_review"
+    assert too_long.ticket.stage_status["intake"] == "failed"
+
+
+def test_validate_and_measure_still_measures_wav_duration():
+    meta = validate_and_measure(make_wav_bytes(), "test.wav", "voicemail-test-005d")
+    assert meta.duration_s == 1.0
+    assert meta.duration_checked is True
+    assert meta.size_bytes == 32044
+    assert meta.format == "wav"
 
 
 def test_p95_helper():

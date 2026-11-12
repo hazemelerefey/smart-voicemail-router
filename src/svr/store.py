@@ -33,7 +33,9 @@ class TicketStore:
 
     def create_placeholder(self, ticket_id: str, voicemail_id: str) -> Ticket:
         """Ticket visible as queued/processing within 2 seconds of submit
-        (contracts section 5), before analysis begins."""
+        (contracts section 5), before analysis begins. It carries no labels
+        and needs_human_review True until its run finishes, so a queued
+        record can never be mistaken for an answer."""
         ticket = Ticket(
             id=ticket_id,
             voicemail_id=voicemail_id,
@@ -44,7 +46,7 @@ class TicketStore:
             customer_request="",
             suggested_script="",
             transcript="",
-            needs_human_review=False,
+            needs_human_review=True,
             cached=False,
             stage_status={"intake": "pending"},
             stage_timing_ms={},

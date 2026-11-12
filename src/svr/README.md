@@ -1,9 +1,32 @@
 # SVR Phase 1: pipeline skeleton, API and demo (Role 6, Arafa)
 
-Branch: `team/arafa-systems-demo`. Local work only, nothing pushed.
+Branch: `team/arafa-systems-demo`.
 Source of truth: **SVR Contracts v1.0** (`arafa-contracts-v1.md` in the
 competition goal files), `schema_version: 1`,
 `label_version: "taxonomy-2026-11-11"`. Role guide: SVR-TEAM-04 Role 6.
+
+## Merge note, 2026-11-12
+
+Two Phase 1 skeletons existed in parallel: this one under `src/svr/` and
+a second one under `svr_pipeline/` in a separate worktree. This
+implementation is the one kept, and the three behaviours worth keeping
+from the second one were ported into it:
+
+1. **Queued placeholder safety.** A queued/processing ticket carries
+   `needs_human_review: true` and no labels until its run finishes, so
+   it can never be mistaken for an answer.
+2. **WebSocket live updates.** Connected `/ws/queue` clients receive a
+   `ticket_update` broadcast when a run completes, in addition to the
+   snapshot on connect.
+3. **Metadata-only background runs.** The endpoint validates the upload
+   and measures it, then discards the bytes. The background task carries
+   only the measured metadata (filename, size, duration); the pipeline
+   runs on `AudioMeta`, never on audio bytes. Phase 1 persists no audio.
+
+The `svr_pipeline/` worktree was retired into this implementation after
+the merge was verified; its package layout, contracts separation, demo
+and test layout were not ported. A push broadcaster refinement
+(dedicated broadcaster task, reconnect handling) stays a Phase 3 item.
 
 ## How to run
 
@@ -56,18 +79,19 @@ first stage to last, with per-stage status and `stage_timing_ms` plus
 
 API (`src/svr/api.py`, contracts section 6):
 
-- `POST /api/voicemails` — 202 + ticket id, ticket visible as
+- `POST /api/voicemails`: 202 + ticket id, ticket visible as
   queued/processing within 2 seconds, analysis in the background. Invalid
   format, size or duration is rejected with a clear 400 error.
-- `GET /api/tickets/{id}` — ticket fields, evidence, timing, route reason,
+- `GET /api/tickets/{id}`: ticket fields, evidence, timing, route reason,
   audit events.
-- `GET /api/agents` — seeded demo agents only, no real people.
-- `PATCH /api/tickets/{id}` — manual status / reassignment, audit event.
-- `GET /api/latency` — p95 report with hardware recorded (section 7).
-- `WS /ws/queue` — Phase 1 stub: queue snapshot on connect, stays open.
-  Live broadcast lands in Phase 3.
-- `GET /` — plain HTML demo (upload, run, ticket display).
-- `GET /health` — mode, schema and label versions.
+- `GET /api/agents`: seeded demo agents only, no real people.
+- `PATCH /api/tickets/{id}`: manual status / reassignment, audit event.
+- `GET /api/latency`: p95 report with hardware recorded (section 7).
+- `WS /ws/queue`: queue snapshot on connect, plus a live `ticket_update`
+  broadcast when a run completes. A push broadcaster refinement stays
+  Phase 3.
+- `GET /`: plain HTML demo (upload, run, ticket display).
+- `GET /health`: mode, schema and label versions.
 
 ## What is mock vs real
 
@@ -133,8 +157,10 @@ isolation before moving on (Role 6 Phase 2):
   those containers, so duration is checked for WAV only
   (`duration_checked: false` on the evidence). Sira's audio pipeline
   measures it in Phase 2.
-- The WebSocket is a stub (snapshot on connect). Live status broadcast
-  lands in Phase 3.
 - The in-memory store is per-process: restarting the API clears tickets.
 - `cached` is always false: cached output is allowed only for the exact
   preapproved demo file (contracts section 4.6) and no such file exists yet.
+- PATCH named-agent reassignment still needs a contracts decision: the
+  Ticket object carries no agent id field, the agent id lives on the
+  TriageDecision. PATCH covers ticket status, assignment status and a
+  validated `assigned_agent_id` for the audit trail only.

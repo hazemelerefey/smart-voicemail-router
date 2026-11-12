@@ -17,6 +17,7 @@ import uuid
 
 from .pipeline import run_pipeline
 from .schemas import Ticket
+from .stages.intake import validate_and_measure
 
 
 def format_ticket_markdown(ticket: Ticket) -> str:
@@ -43,14 +44,24 @@ def format_ticket_markdown(ticket: Ticket) -> str:
 
 
 def run_demo(file_path: str | None) -> tuple[str, str]:
-    """Gradio callback: run the mock pipeline on the uploaded file."""
+    """Gradio callback: run the mock pipeline on the uploaded file.
+
+    Bytes are read only to measure size and format, then discarded; the
+    pipeline runs on the measured metadata. An invalid upload returns a
+    clear error message instead of a ticket."""
     if not file_path:
         return "Upload an audio file first (WAV / MP3 / M4A, max 25 MB, 60 s).", ""
     filename = os.path.basename(file_path)
     with open(file_path, "rb") as fh:
         data = fh.read()
     voicemail_id = f"voicemail-{uuid.uuid4().hex[:12]}"
-    result = run_pipeline(data, filename, voicemail_id)
+    try:
+        meta = validate_and_measure(data, filename, voicemail_id)
+    except ValueError as exc:
+        return f"Upload rejected: {exc}", ""
+    finally:
+        del data
+    result = run_pipeline(meta, voicemail_id)
     return format_ticket_markdown(result.ticket), json.dumps(
         result.ticket.model_dump(), indent=2
     )
