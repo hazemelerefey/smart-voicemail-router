@@ -11,7 +11,7 @@
 
 A local-first competition prototype designed to turn a single-speaker Egyptian Arabic voicemail, including English telecom terms, into an explainable callback ticket.
 
-> **Project status:** The dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,751 clean training rows. The taxonomy is agreed and the model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. This repository holds the project documents and environment guidance; the dataset, notebooks, and model work live on the `local-env` and team role branches.
+> **Project status:** The dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,751 clean training rows. The taxonomy is agreed and the model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team on the [SVR Data Annotation page](https://svr-data-annotation.vercel.app). This repository holds the project documents and environment guidance; the dataset, notebooks, and model work live on the `local-env` and team role branches.
 
 ## Project intent
 
