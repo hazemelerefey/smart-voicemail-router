@@ -4,7 +4,6 @@
 
 **Document ID:** SVR-TEAM-04  
 **Version:** 1.0  
-**Status:** Approved by Hazem, 12 November 2026  
 **Updated:** 12 November 2026  
 **Companion document:** SVR-TEAM-03 Team Allocation v1.3 (the roles and phases in brief)
 
