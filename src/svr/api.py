@@ -1,0 +1,213 @@
+"""SVR Phase 1 API (contracts section 6).
+
+FastAPI app. All endpoints work on the mock pipeline; no model is loaded
+and no real data is involved.
+
+Endpoints:
+  POST   /api/voicemails        submit an upload, 202 + ticket id + status
+  GET    /api/tickets/{id}      ticket fields, evidence, timing, route reason
+  GET    /api/agents            seeded demo agents only
+  PATCH  /api/tickets/{id}      manual status / reassignment, with audit event
+  GET    /api/latency           p95 latency report with hardware (section 7)
+  WS     /ws/queue              queue snapshot on connect (Phase 1 stub;
+                                live broadcast lands in Phase 3)
+  GET    /                      plain HTML demo page (upload, run, ticket)
+"""
+
+from __future__ import annotations
+
+import uuid
+
+from fastapi import (
+    BackgroundTasks,
+    FastAPI,
+    File,
+    HTTPException,
+    UploadFile,
+    WebSocket,
+    WebSocketDisconnect,
+)
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+
+from . import agents as agents_module
+from .latency import summarize_latency
+from .pipeline import run_pipeline
+from .schemas import Agent, AssignmentStatus, TicketDetail, TicketStatus, utcnow_iso
+from .stages.intake import validate_and_measure
+from .store import STORE
+
+app = FastAPI(title="SVR Phase 1 API (mock pipeline)", version="1.0.0-mock")
+
+
+# ---------------------------------------------------------------- WebSocket
+class QueueHub:
+    """Phase 1 stub hub: sends the queue snapshot on connect and stays open.
+    Live broadcast of status updates lands in Phase 3."""
+
+    def __init__(self) -> None:
+        self._connections: list[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket) -> None:
+        await websocket.accept()
+        self._connections.append(websocket)
+        await websocket.send_json(
+            {"type": "queue_snapshot", "tickets": [t.model_dump() for t in STORE.list_tickets()]}
+        )
+
+    def disconnect(self, websocket: WebSocket) -> None:
+        if websocket in self._connections:
+            self._connections.remove(websocket)
+
+    async def broadcast(self, message: dict) -> None:
+        for ws in list(self._connections):
+            try:
+                await ws.send_json(message)
+            except Exception:
+                self._connections.remove(ws)
+
+
+HUB = QueueHub()
+
+
+# ------------------------------------------------------------------ helpers
+def _run_and_store(ticket_id: str, voicemail_id: str, data: bytes, filename: str) -> None:
+    result = run_pipeline(data, filename, voicemail_id, ticket_id=ticket_id)
+    STORE.complete(result)
+
+
+class SubmitResponse(BaseModel):
+    ticket_id: str
+    voicemail_id: str
+    status: str
+    message: str
+
+
+class PatchTicket(BaseModel):
+    ticket_status: TicketStatus | None = None
+    assignment_status: AssignmentStatus | None = None
+    assigned_agent_id: str | None = None
+    actor: str = "demo-user"
+
+
+# ----------------------------------------------------------------- endpoints
+@app.post("/api/voicemails", status_code=202, response_model=SubmitResponse)
+async def submit_voicemail(
+    background_tasks: BackgroundTasks, file: UploadFile = File(...)
+) -> SubmitResponse:
+    """Submit an upload. 202 Accepted with ticket id and status; the ticket
+    is visible as queued/processing within 2 seconds, before analysis
+    begins (contracts section 5). Analysis runs in the background.
+    Invalid format, size or duration is rejected here with a clear 400
+    error (contracts section 5); valid input is never rejected."""
+    data = await file.read()
+    filename = file.filename or "upload.wav"
+    try:
+        validate_and_measure(data, filename, "pending")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    voicemail_id = f"voicemail-{uuid.uuid4().hex[:12]}"
+    ticket_id = f"ticket-{uuid.uuid4().hex[:12]}"
+    STORE.create_placeholder(ticket_id, voicemail_id)
+    background_tasks.add_task(_run_and_store, ticket_id, voicemail_id, data, filename)
+    return SubmitResponse(
+        ticket_id=ticket_id,
+        voicemail_id=voicemail_id,
+        status="processing",
+        message="Accepted. Poll GET /api/tickets/{ticket_id} for the result.",
+    )
+
+
+@app.get("/api/tickets/{ticket_id}", response_model=TicketDetail)
+async def get_ticket(ticket_id: str) -> TicketDetail:
+    detail = STORE.get_detail(ticket_id)
+    if detail is None:
+        raise HTTPException(status_code=404, detail="ticket not found")
+    return detail
+
+
+@app.get("/api/agents", response_model=list[Agent])
+async def get_agents() -> list[Agent]:
+    """Seeded demo agents only. No real people."""
+    return agents_module.list_agents()
+
+
+@app.patch("/api/tickets/{ticket_id}", response_model=TicketDetail)
+async def patch_ticket(ticket_id: str, patch: PatchTicket) -> TicketDetail:
+    if patch.assigned_agent_id is not None and agents_module.get_agent(patch.assigned_agent_id) is None:
+        raise HTTPException(status_code=404, detail="agent not found")
+    updated = STORE.update(
+        ticket_id,
+        ticket_status=patch.ticket_status.value if patch.ticket_status else None,
+        assignment_status=patch.assignment_status.value if patch.assignment_status else None,
+        assigned_agent_id=patch.assigned_agent_id,
+        actor=patch.actor,
+    )
+    if updated is None:
+        raise HTTPException(status_code=404, detail="ticket not found")
+    detail = STORE.get_detail(ticket_id)
+    assert detail is not None
+    return detail
+
+
+@app.get("/api/latency")
+async def get_latency() -> dict:
+    """p95 latency report (contracts section 7), with hardware recorded."""
+    processing, stages = STORE.latency_samples()
+    return summarize_latency(processing, stages)
+
+
+@app.websocket("/ws/queue")
+async def queue_socket(websocket: WebSocket) -> None:
+    """Phase 1 stub: sends the queue snapshot on connect, then stays open
+    for status updates. Full live broadcast lands in Phase 3."""
+    await HUB.connect(websocket)
+    try:
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        HUB.disconnect(websocket)
+
+
+@app.get("/", response_class=HTMLResponse)
+async def demo_page() -> str:
+    """Plain HTML demo (upload, run, ticket display). Gradio demo is in
+    demo.py; this page needs no extra dependency."""
+    return """<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>SVR Phase 1 Demo (mock)</title>
+<style>body{font-family:sans-serif;max-width:720px;margin:2em auto;padding:0 1em}
+pre{background:#f4f4f4;padding:1em;overflow:auto}.flag{font-weight:bold}
+.cached{color:#b00}.ok{color:#080}</style></head><body>
+<h1>Smart Voicemail Router, Phase 1 Demo (MOCK)</h1>
+<p>Upload a WAV / MP3 / M4A file (max 25 MB, 60 s). The pipeline is a mock:
+fixed fixture transcript and fields, no real model, no real data.</p>
+<form id="f"><input type="file" name="file" accept=".wav,.mp3,.m4a" required>
+<button type="submit">Run pipeline</button></form>
+<p id="status"></p>
+<h2>Ticket</h2>
+<div id="ticket"><p><i>No run yet.</i></p></div>
+<script>
+const f=document.getElementById('f'),s=document.getElementById('status'),t=document.getElementById('ticket');
+f.addEventListener('submit',async e=>{e.preventDefault();
+  s.textContent='Uploading…';t.innerHTML='';
+  const r=await fetch('/api/voicemails',{method:'POST',body:new FormData(f)});
+  const j=await r.json();
+  if(!r.ok){s.textContent='Error: '+(j.detail||r.status);return;}
+  s.textContent='Ticket '+j.ticket_id+' ('+j.status+'). Polling…';
+  for(let i=0;i<40;i++){await new Promise(r=>setTimeout(r,250));
+    const g=await fetch('/api/tickets/'+j.ticket_id);const d=await g.json();
+    if(d.ticket_status==='completed'||d.ticket_status==='needs_review'){
+      s.textContent='Done in '+d.processing_ms+' ms.';
+      t.innerHTML='<p>cached: <span class="flag '+(d.cached?'cached':'ok')+'">'+d.cached+'</span> &nbsp; '
+        +'needs_human_review: <span class="flag '+(d.needs_human_review?'cached':'ok')+'">'+d.needs_human_review+'</span></p>'
+        +'<p><b>Route reason:</b> '+d.route_reason+'</p>'
+        +'<p><b>Stage timings (ms):</b> '+JSON.stringify(d.stage_timing_ms)+'</p>'
+        +'<pre>'+JSON.stringify(d,null,2)+'</pre>';
+      return;}}
+  s.textContent='Still processing after 10 s.';});
+</script></body></html>"""
+
+
+@app.get("/health")
+async def health() -> dict:
+    return {"status": "ok", "schema_version": 1, "label_version": "taxonomy-2026-11-11", "mode": "mock", "time": utcnow_iso()}
