@@ -161,7 +161,7 @@ The system-level ticket additionally carries `priority_score` (or an agreed alte
 | FR-18 | Support Arabic right-to-left transcript display where present. | P1 |
 | FR-19 | Add an analytics page only after core ticket flow and evaluation are stable. | P2 |
 | FR-20 | Before any external text call, require a durable approval record tied to purpose, basis/scope, approver/time, provider/model, exact payload reference/class, retention terms, and transfer ID; block calls without an exact valid match. This record does not authorize raw-audio transfer. | P0 if external text processing is enabled |
-|
+
 ## 10. Non-functional requirements and privacy
 
 ### Performance
