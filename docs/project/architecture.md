@@ -114,6 +114,8 @@ SQLite remains a candidate for a low-friction local demo. Choose storage and ret
 
 ### 6.1 Fusion rules
 
+**Data note:** the voicemails are simulated. They were recorded by people for data collection, not by real customers, and the emotions in them are acted. Even a human annotator cannot reliably judge the emotion (mad, calm, and the rest) from the voice alone. For that reason the transcription and the words are the main signal: the category, the urgency, and the customer state are all judged from the words. The audio emotion model is an experiment. It must prove it adds signal over the text alone, and if it does not, it is dropped.
+
 Do not reproduce the old matrix that mixed customer emotion and complaint urgency. The field definitions and labels are agreed (see section 4). Then define a versioned, testable rule set for how text and validated voice evidence contribute to any final customer-state estimate. Keep `complaint_urgency` separate from customer-state fusion. Missing/low-quality voice evidence should not lower complaint urgency or force a customer-state label. If the text output is unclear or invalid, mark it for review; do not substitute a voice label for a missing complaint-urgency value.
 
 ### 6.2 Queue priority

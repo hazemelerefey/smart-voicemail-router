@@ -48,6 +48,8 @@ These are different product fields and must not be used as synonyms:
 
 The label values come from the agreed taxonomy and annotation guide. Model implementations must not invent or silently freeze classes. Ambiguous or unsupported results must be marked for human review.
 
+**Data note:** the voicemails are simulated. They were recorded by people for data collection, not by real customers, and the emotions in them are acted. Even a human annotator cannot reliably judge the emotion (mad, calm, and the rest) from the voice alone. For that reason the transcription and the words are the main signal: the category, the urgency, and the customer state are all judged from the words. The audio emotion model is an experiment. It must prove it adds signal over the text alone, and if it does not, it is dropped.
+
 ## 4. Goals and non-goals
 
 ### Competition MVP goals

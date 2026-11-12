@@ -19,6 +19,9 @@ The system has four steps, in order:
 
 1. **Audio in.** A voicemail arrives. It is checked, normalized to 16 kHz mono WAV, and transcribed with Whisper large-v3.
 2. **Understand.** A model reads the transcript and predicts four fields: complaint category, complaint urgency, customer state, and churn risk. An audio model can add evidence from the voice itself.
+
+   **Data note:** the voicemails are simulated. They were recorded by people for data collection, not by real customers, and the emotions in them are acted. Even a human annotator cannot reliably judge the emotion (mad, calm, and the rest) from the voice alone. For that reason the transcription and the words are the main signal: the category, the urgency, and the customer state are all judged from the words. The audio emotion model is an experiment. It must prove it adds signal over the text alone, and if it does not, it is dropped.
+
 3. **Decide.** Triage logic turns the four fields into a queue priority and an explainable callback ticket.
 4. **Deliver.** The ticket goes to the agent with the reason, and the whole run is measured for accuracy and latency.
 
