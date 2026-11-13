@@ -95,6 +95,23 @@ def validate_metadata(
     )
 
 
+def _check_container_magic(data: bytes, ext: str) -> None:
+    """Container sniffing, so a non-audio file renamed to .mp3 or .m4a is
+    rejected at intake instead of passing on its suffix alone. WAV is
+    validated by ``wave.open`` itself (RIFF header), so it needs no check
+    here. MP3 accepts an ID3 tag or a frame sync; M4A needs the ftyp box."""
+    if ext == ".mp3":
+        if data[:3] == b"ID3":
+            return
+        if len(data) >= 2 and data[0] == 0xFF and (data[1] & 0xE0) == 0xE0:
+            return
+        raise ValueError("file is not a valid MP3 file (no ID3 tag or frame sync)")
+    if ext == ".m4a":
+        if len(data) >= 8 and data[4:8] == b"ftyp":
+            return
+        raise ValueError("file is not a valid M4A file (no ftyp box)")
+
+
 def validate_and_measure(file_bytes: bytes, filename: str, voicemail_id: str) -> AudioMeta:
     """Validate format, size and duration. Raises ValueError with the reason.
 
@@ -106,6 +123,9 @@ def validate_and_measure(file_bytes: bytes, filename: str, voicemail_id: str) ->
     """
     # Format, size and empty first (duration not measured yet).
     validate_metadata(filename, len(file_bytes), None, False, voicemail_id)
+    ext = _extension(filename)
+    if ext in (".mp3", ".m4a"):
+        _check_container_magic(file_bytes, ext)
     duration: float | None = None
     duration_checked = False
     sample_rate_hz: int | None = None

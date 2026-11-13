@@ -11,6 +11,7 @@ from __future__ import annotations
 import threading
 import uuid
 
+from . import agents as agents_module
 from .pipeline import PipelineResult
 from .schemas import (
     AssignmentStatus,
@@ -66,7 +67,10 @@ class TicketStore:
         return ticket
 
     def complete(self, result: PipelineResult) -> Ticket:
-        """Store a finished pipeline run and audit its completion."""
+        """Store a finished pipeline run and audit its completion.
+
+        The run is finished, so the unit of agent capacity its routing
+        consumed is released (concurrent-load accounting, issue #6)."""
         ticket = result.ticket
         with self._lock:
             self._tickets[ticket.id] = ticket
@@ -80,6 +84,8 @@ class TicketStore:
                     actor="system",
                 )
             )
+        if result.decision is not None and result.decision.assigned_agent_id:
+            agents_module.release(result.decision.assigned_agent_id)
         return ticket
 
     def get(self, ticket_id: str) -> Ticket | None:
@@ -112,7 +118,12 @@ class TicketStore:
         actor: str = "demo-user",
     ) -> Ticket | None:
         """Manual status / reassignment action, with an audit event
-        (contracts section 6, PATCH /api/tickets/{id})."""
+        (contracts section 6, PATCH /api/tickets/{id}).
+
+        Raises ValueError on an invalid assignment (unknown agent, agent
+        at capacity, contradictory assignment fields): the API turns it
+        into a 400 and nothing is stored.
+        """
         with self._lock:
             ticket = self._tickets.get(ticket_id)
             if ticket is None:
@@ -122,10 +133,30 @@ class TicketStore:
                 changes["ticket_status"] = TicketStatus(ticket_status)
             if assignment_status is not None:
                 changes["assignment_status"] = AssignmentStatus(assignment_status)
+            # Capacity accounting (issue #6) happens before anything is
+            # stored, so a failed consume leaves the old assignment intact.
+            # A reassignment releases the old agent and consumes the new
+            # one; unassigning releases the old agent.
+            result = self._details.get(ticket_id)
+            old_agent_id = (
+                result.decision.assigned_agent_id
+                if result is not None and result.decision is not None
+                else None
+            )
+            if assigned_agent_id is not None and assigned_agent_id != old_agent_id:
+                if not agents_module.consume(assigned_agent_id):
+                    raise ValueError(f"agent {assigned_agent_id} is at capacity")
+                if old_agent_id is not None:
+                    agents_module.release(old_agent_id)
+            elif (
+                assignment_status is not None
+                and AssignmentStatus(assignment_status) == AssignmentStatus.UNASSIGNED
+                and old_agent_id is not None
+            ):
+                agents_module.release(old_agent_id)
             updated = ticket.model_copy(update=changes)
             self._tickets[ticket_id] = updated
             # Keep the stored detail in sync.
-            result = self._details.get(ticket_id)
             if result is not None:
                 result.ticket = updated
                 # Persist the reassignment on the stored triage decision as

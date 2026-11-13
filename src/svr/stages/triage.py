@@ -13,7 +13,7 @@ pick an unqualified agent (contracts section 3.4).
 from __future__ import annotations
 
 from .. import fixtures
-from ..agents import find_eligible_agent
+from ..agents import assign_agent
 from ..schemas import AssignmentStatus, TextAnalysis, TriageDecision, VoiceEvidence
 
 MOCK_TRIAGE_CONFIG_VERSION = "mock-triage-0.1"
@@ -22,10 +22,15 @@ MOCK_TRIAGE_CONFIG_VERSION = "mock-triage-0.1"
 def triage_mock(
     text: TextAnalysis, voice_evidence: VoiceEvidence | None
 ) -> TriageDecision:
-    """Mock triage: fixture route reason, seeded-agent assignment."""
+    """Mock triage: fixture route reason, seeded-agent assignment.
+
+    Assignment consumes one unit of the chosen agent's capacity
+    (``assign_agent``); the unit is released when the run finishes or the
+    ticket is reassigned (see ``agents``).
+    """
     agent = None
     if text.complaint_category is not None:
-        agent = find_eligible_agent(text.complaint_category)
+        agent = assign_agent(text.complaint_category)
     if agent is not None:
         assignment_status = AssignmentStatus.ASSIGNED
         assigned_agent_id: str | None = agent.id

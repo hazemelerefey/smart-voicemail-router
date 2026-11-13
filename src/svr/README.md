@@ -89,7 +89,9 @@ API (`src/svr/api.py`, contracts section 6):
 
 - `POST /api/voicemails`: 202 + ticket id, ticket visible as
   queued/processing within 2 seconds, analysis in the background. Invalid
-  format, size or duration is rejected with a clear 400 error.
+  format, size or duration is rejected with a clear 400 error (duration
+  enforced for WAV only; MP3/M4A duration is measured in Phase 2 by the
+  Audio/Speech role).
 - `GET /api/tickets/{id}`: ticket fields, evidence, timing, route reason,
   audit events.
 - `GET /api/agents`: seeded demo agents only, no real people.

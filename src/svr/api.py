@@ -234,13 +234,18 @@ async def patch_ticket(ticket_id: str, patch: PatchTicket) -> TicketDetail:
                 status_code=400,
                 detail="assignment_status assigned requires an assigned_agent_id",
             )
-    updated = STORE.update(
-        ticket_id,
-        ticket_status=patch.ticket_status.value if patch.ticket_status else None,
-        assignment_status=assignment_status.value if assignment_status else None,
-        assigned_agent_id=patch.assigned_agent_id,
-        actor=patch.actor,
-    )
+    try:
+        updated = STORE.update(
+            ticket_id,
+            ticket_status=patch.ticket_status.value if patch.ticket_status else None,
+            assignment_status=assignment_status.value if assignment_status else None,
+            assigned_agent_id=patch.assigned_agent_id,
+            actor=patch.actor,
+        )
+    except ValueError as exc:
+        # Invalid assignment or status change (agent at capacity,
+        # contradictory fields, invalid transition): a 400, nothing stored.
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     if updated is None:
         raise HTTPException(status_code=404, detail="ticket not found")
     detail = STORE.get_detail(ticket_id)

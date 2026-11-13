@@ -257,3 +257,59 @@ def test_classification_override_rejects_forbidden_keys():
     )
     assert result.ticket.ticket_status.value == "needs_review"
     assert result.ticket.voicemail_id == "voicemail-test-009b"
+
+
+def test_assign_agent_consumes_capacity_and_returns_none_when_full():
+    """Assigning two tickets to the same agent increases its reported load,
+    and when the agent is at capacity routing finds no eligible agent."""
+    from svr import agents as agents_module
+    from svr.schemas import ComplaintCategory
+
+    category = ComplaintCategory.NETWORK_AND_CONNECTIVITY
+    first = agents_module.assign_agent(category)
+    second = agents_module.assign_agent(category)
+    assert first is not None and first.id == "agent-demo-network"
+    assert second is not None and second.id == "agent-demo-network"
+    loads = {a.id: a.current_load for a in agents_module.list_agents()}
+    assert loads["agent-demo-network"] == 3  # seeded 1 + two assignments
+    # Fill it: two more assignments reach capacity 5.
+    assert agents_module.assign_agent(category) is not None
+    assert agents_module.assign_agent(category) is not None
+    assert loads["agent-demo-network"] == 3  # list_agents copies, not live
+    assert {a.id: a.current_load for a in agents_module.list_agents()}[
+        "agent-demo-network"
+    ] == 5
+    # At capacity, and no other agent has the network skill: unassigned.
+    assert agents_module.assign_agent(category) is None
+
+
+def test_list_agents_returns_deep_copies():
+    """Mutating an agent returned by list_agents never mutates the seed."""
+    from svr import agents as agents_module
+
+    listed = agents_module.list_agents()
+    listed[0].current_load = 999
+    listed[0].skills.clear()
+    stored = agents_module.list_agents()[0]
+    assert stored.current_load == 1
+    assert len(stored.skills) == 2
+
+
+def test_pipeline_run_consumes_and_complete_releases_capacity():
+    """A routed run consumes one unit of the agent's capacity, and the
+    unit is released when the run finishes and is stored."""
+    from svr import agents as agents_module
+    from svr.store import TicketStore
+
+    def _load(agent_id: str) -> int:
+        return {
+            a.id: a.current_load for a in agents_module.list_agents()
+        }[agent_id]
+
+    assert _load("agent-demo-network") == 1
+    result = run_pipeline(make_meta("voicemail-test-010"), "voicemail-test-010")
+    assert result.decision is not None
+    assert result.decision.assigned_agent_id == "agent-demo-network"
+    assert _load("agent-demo-network") == 2
+    TicketStore().complete(result)
+    assert _load("agent-demo-network") == 1

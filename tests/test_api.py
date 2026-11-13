@@ -81,6 +81,46 @@ def test_submit_rejects_wrong_format():
     assert "WAV, MP3, M4A" in resp.json()["detail"]
 
 
+def test_submit_rejects_non_audio_renamed_to_mp3():
+    """Format validation is not suffix-only: a text file renamed to .mp3
+    is rejected at intake (no ID3 tag or MP3 frame sync)."""
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.mp3", b"hello, not audio at all", "audio/mpeg")},
+    )
+    assert resp.status_code == 400
+    assert "not a valid MP3" in resp.json()["detail"]
+
+
+def test_submit_rejects_non_audio_renamed_to_m4a():
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.m4a", b"hello, not audio at all", "audio/mp4")},
+    )
+    assert resp.status_code == 400
+    assert "not a valid M4A" in resp.json()["detail"]
+
+
+def test_submit_accepts_m4a_with_ftyp():
+    """A file with a real ftyp box is accepted as M4A; its duration stays
+    unmeasured (null) until Phase 2 measures it."""
+    resp = client.post(
+        "/api/voicemails",
+        files={
+            "file": (
+                "test.m4a",
+                b"\x00\x00\x00\x18ftypM4A " + b"\x00" * 100,
+                "audio/mp4",
+            )
+        },
+    )
+    assert resp.status_code == 202, resp.text
+    ticket = poll_ticket(resp.json()["ticket_id"])
+    assert ticket["ticket_status"] == "completed"
+    assert ticket["audio_evidence"]["format"] == "m4a"
+    assert ticket["audio_evidence"]["duration_s"] is None
+
+
 def test_submit_rejects_oversize_file():
     resp = client.post(
         "/api/voicemails",

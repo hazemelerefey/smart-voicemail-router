@@ -11,6 +11,8 @@ import os
 import sys
 from pathlib import Path
 
+import pytest
+
 for _var in (
     "HTTP_PROXY",
     "HTTPS_PROXY",
@@ -25,3 +27,15 @@ for _var in (
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
+
+
+@pytest.fixture(autouse=True)
+def _reset_demo_state():
+    """Isolate tests: restore the seeded agent loads before and after each
+    test, so capacity consumed by one test never leaks into the next
+    (issue #6). The store reset lands with issue #9."""
+    from svr import agents as agents_module
+
+    agents_module.reset_loads()
+    yield
+    agents_module.reset_loads()
