@@ -153,7 +153,9 @@ def run_pipeline(
     stage_status["triage"] = "ok"
     stage_timing_ms["triage"] = elapsed()
 
-    # 6. Ticket assembly.
+    # 6. Ticket assembly. The status is derived by assemble_ticket
+    # itself (null label or review flag means NEEDS_REVIEW); a failure
+    # here ends the run as needs_review with the stage recorded.
     try:
         ticket = ticket_stage.assemble_ticket(
             ticket_id=ticket_id or f"ticket-{voicemail_id}",
@@ -169,24 +171,6 @@ def run_pipeline(
         )
     except Exception as exc:
         return fail(f"Ticket assembly failed: {exc}", "ticket")
-    needs_review = bool(text.needs_human_review) or any(
-        value is None
-        for value in (
-            text.complaint_category,
-            text.complaint_urgency,
-            text.customer_state_text,
-            text.churn_risk,
-        )
-    )
-    if needs_review:
-        # Null label + needs_human_review is a correct output (section 4.1);
-        # the ticket status reflects it instead of pretending to be complete.
-        ticket = ticket.model_copy(
-            update={
-                "ticket_status": TicketStatus.NEEDS_REVIEW,
-                "needs_human_review": True,
-            }
-        )
     return PipelineResult(ticket, audio, text, voice_evidence, decision)
 
 

@@ -33,11 +33,47 @@ def assemble_ticket(
     processing_ms: float,
     created_at: str | None = None,
 ) -> Ticket:
-    """Assemble a completed ticket from the stage outputs."""
+    """Assemble a ticket from the stage outputs.
+
+    The status is derived here, not by the caller: a null label or a
+    review flag means NEEDS_REVIEW, otherwise COMPLETED, and
+    ``needs_human_review`` is set to match. All stage outputs must belong
+    to the same voicemail, and no stage may have failed; anything else
+    raises ValueError instead of silently assembling a wrong ticket.
+    """
+    ids = {audio.voicemail_id, text.voicemail_id, decision.voicemail_id}
+    if voice_evidence is not None:
+        ids.add(voice_evidence.voicemail_id)
+    if ids != {voicemail_id}:
+        raise ValueError(
+            "stage outputs belong to different voicemails: "
+            + ", ".join(sorted(ids))
+            + f" (expected {voicemail_id})"
+        )
+    failed = sorted(
+        stage for stage, status in stage_status.items() if status == "failed"
+    )
+    if failed:
+        raise ValueError(
+            "cannot assemble a ticket: failed stages: " + ", ".join(failed)
+        )
+    # Null label + needs_human_review is a correct output (section 4.1);
+    # the ticket status reflects it instead of pretending to be complete.
+    needs_review = bool(text.needs_human_review) or any(
+        value is None
+        for value in (
+            text.complaint_category,
+            text.complaint_urgency,
+            text.customer_state_text,
+            text.churn_risk,
+        )
+    )
     return Ticket(
         id=ticket_id,
         voicemail_id=voicemail_id,
-        ticket_status=TicketStatus.COMPLETED,
+        ticket_status=TicketStatus.NEEDS_REVIEW
+        if needs_review
+        else TicketStatus.COMPLETED,
         assignment_status=decision.assignment_status,
         priority_score=decision.priority_score,
         route_reason=decision.route_reason,
@@ -53,7 +89,7 @@ def assemble_ticket(
             voice_evidence.voice_state_candidate if voice_evidence else None
         ),
         churn_risk=text.churn_risk,
-        needs_human_review=text.needs_human_review,
+        needs_human_review=needs_review,
         cached=False,
         stage_status=dict(stage_status),
         stage_timing_ms=dict(stage_timing_ms),

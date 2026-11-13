@@ -237,6 +237,45 @@ def test_patch_unknown_ticket_404_even_with_unknown_agent():
     assert resp.json()["detail"] == "ticket not found"
 
 
+def test_patch_invalid_status_transition_400(monkeypatch):
+    """The state machine is enforced through the API: completed cannot go
+    back to queued, and a needs_review ticket with null labels cannot be
+    completed."""
+    import svr.stages.triage as triage_module
+
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
+    )
+    ticket_id = resp.json()["ticket_id"]
+    poll_ticket(ticket_id)
+    assert (
+        client.patch(
+            f"/api/tickets/{ticket_id}", json={"ticket_status": "queued"}
+        ).status_code
+        == 400
+    )
+
+    def _boom(*args, **kwargs):
+        raise ValueError("forced triage failure for the test")
+
+    monkeypatch.setattr(triage_module, "triage_mock", _boom)
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
+    )
+    review_id = resp.json()["ticket_id"]
+    review = poll_ticket(review_id)
+    assert review["ticket_status"] == "needs_review"
+    assert review["complaint_category"] is None
+    assert (
+        client.patch(
+            f"/api/tickets/{review_id}", json={"ticket_status": "completed"}
+        ).status_code
+        == 400
+    )
+
+
 def test_patch_contradictory_assignment_400():
     """Contradictory assignment fields are rejected: an agent id with
     unassigned, and assigned with no agent id on a ticket that has none."""
