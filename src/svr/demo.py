@@ -17,7 +17,27 @@ import uuid
 
 from .pipeline import run_pipeline
 from .schemas import Ticket
-from .stages.intake import validate_and_measure
+from .stages.intake import MAX_BYTES, validate_and_measure
+
+# Uploads are read in 1 MiB chunks (issue #5): the size limit is enforced
+# during ingest, never after the whole file is in memory.
+_CHUNK_SIZE = 1024 * 1024
+
+
+def _read_file_limited(path: str, limit_bytes: int = MAX_BYTES) -> bytes:
+    """Read a file in chunks, aborting past the size limit without ever
+    holding more than one chunk plus the limit in memory."""
+    data = bytearray()
+    with open(path, "rb") as fh:
+        while True:
+            chunk = fh.read(_CHUNK_SIZE)
+            if not chunk:
+                return bytes(data)
+            if len(data) + len(chunk) > limit_bytes:
+                raise ValueError(
+                    f"file exceeds the {limit_bytes // (1024 * 1024)} MB limit"
+                )
+            data += chunk
 
 
 def format_ticket_markdown(ticket: Ticket) -> str:
@@ -52,8 +72,10 @@ def run_demo(file_path: str | None) -> tuple[str, str]:
     if not file_path:
         return "Upload an audio file first (WAV / MP3 / M4A, max 25 MB, 60 s).", ""
     filename = os.path.basename(file_path)
-    with open(file_path, "rb") as fh:
-        data = fh.read()
+    try:
+        data = _read_file_limited(file_path)
+    except ValueError as exc:
+        return f"Upload rejected: {exc}", ""
     voicemail_id = f"voicemail-{uuid.uuid4().hex[:12]}"
     try:
         meta = validate_and_measure(data, filename, voicemail_id)

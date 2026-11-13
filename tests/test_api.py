@@ -90,6 +90,29 @@ def test_submit_rejects_oversize_file():
     assert "25 MB" in resp.json()["detail"]
 
 
+def test_oversize_file_is_rejected_before_validation(monkeypatch):
+    """The chunked read aborts past 25 MB: intake validation is never
+    reached for an oversize upload, so the server never reads the whole
+    file into memory to reject it."""
+    import svr.api as api_module
+
+    calls: list = []
+    real_validate = api_module.validate_and_measure
+
+    def _recording(*args, **kwargs):
+        calls.append(args)
+        return real_validate(*args, **kwargs)
+
+    monkeypatch.setattr(api_module, "validate_and_measure", _recording)
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("big.wav", b"\x00" * (25 * 1024 * 1024 + 1), "audio/wav")},
+    )
+    assert resp.status_code == 400
+    assert "25 MB" in resp.json()["detail"]
+    assert calls == []
+
+
 def test_submit_rejects_wav_over_60s():
     resp = client.post(
         "/api/voicemails",
@@ -317,6 +340,36 @@ def test_demo_markdown_shows_flags_timings_and_reason():
     assert "Route reason:" in text
     assert "Stage timings:" in text
     assert "fusion disabled" in text
+
+
+def test_demo_run_rejects_oversize_file(tmp_path):
+    """The Gradio demo rejects an oversize file the same way as the API:
+    during the chunked read, with the 25 MB message."""
+    from svr.demo import run_demo
+
+    big = tmp_path / "big.wav"
+    big.write_bytes(b"\x00" * (25 * 1024 * 1024 + 1))
+    message, raw = run_demo(str(big))
+    assert message.startswith("Upload rejected:")
+    assert "25 MB" in message
+    assert raw == ""
+
+
+def test_demo_run_accepts_wav_file(tmp_path):
+    """The Gradio demo runs the mock pipeline on a WAV file and returns
+    the ticket markdown plus the ticket JSON."""
+    import json
+
+    from svr.demo import run_demo
+
+    wav = tmp_path / "test.wav"
+    wav.write_bytes(make_wav_bytes())
+    message, raw = run_demo(str(wav))
+    assert "Ticket" in message
+    assert "Route reason:" in message
+    data = json.loads(raw)
+    assert data["ticket_status"] == "completed"
+    assert data["complaint_category"] == "network_and_connectivity"
 
 
 def test_wav_ticket_evidence_reports_measured_values():

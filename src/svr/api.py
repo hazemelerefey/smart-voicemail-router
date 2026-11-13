@@ -34,9 +34,29 @@ from . import agents as agents_module
 from .latency import summarize_latency
 from .pipeline import PipelineResult, run_pipeline
 from .schemas import Agent, AssignmentStatus, TicketDetail, TicketStatus, utcnow_iso
-from .stages.intake import AudioMeta, validate_and_measure
+from .stages.intake import MAX_BYTES, AudioMeta, validate_and_measure
 from .stages.ticket import build_review_ticket
 from .store import STORE
+
+# Uploads are read in 1 MiB chunks (issue #5): the size limit is enforced
+# during ingest, never after the whole file is in memory.
+_CHUNK_SIZE = 1024 * 1024
+
+
+async def _read_upload_limited(file: UploadFile, limit_bytes: int = MAX_BYTES) -> bytes:
+    """Read an upload in chunks, aborting past the size limit. Never holds
+    more than one chunk plus the limit in memory, and never calls intake
+    validation on an oversize file: the 25 MB rejection happens here."""
+    data = bytearray()
+    while True:
+        chunk = await file.read(_CHUNK_SIZE)
+        if not chunk:
+            return bytes(data)
+        if len(data) + len(chunk) > limit_bytes:
+            raise ValueError(
+                f"file exceeds the {limit_bytes // (1024 * 1024)} MB limit"
+            )
+        data += chunk
 
 app = FastAPI(title="SVR Phase 1 API (mock pipeline)", version="1.0.0-mock")
 
@@ -134,11 +154,18 @@ async def submit_voicemail(
     is visible as queued/processing within 2 seconds, before analysis
     begins (contracts section 5). Analysis runs in the background.
     Invalid format, size or duration is rejected here with a clear 400
-    error (contracts section 5); valid input is never rejected. Uploaded
+    error (contracts section 5); valid input is never rejected. The size
+    limit is enforced while the upload streams in (1 MiB chunks), so an
+    oversize file is rejected before it is ever fully read. Duration is
+    enforced for WAV only: MP3/M4A duration is not measurable with the
+    stdlib, and Sira's audio pipeline measures it in Phase 2. Uploaded
     bytes are read only to check size and format, then discarded: the
     background task carries the measured metadata only, and Phase 1
     persists no audio."""
-    data = await file.read()
+    try:
+        data = await _read_upload_limited(file)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     filename = file.filename or "upload.wav"
     voicemail_id = f"voicemail-{uuid.uuid4().hex[:12]}"
     ticket_id = f"ticket-{uuid.uuid4().hex[:12]}"
