@@ -66,10 +66,10 @@ git checkout team/<your-name>-<your-role>
 
 ### الخطوة 4: هات البيانات
 
-dataset عايشة على الفرع `local-env`، منفصلة عن فروع الكود، عشان الصوت حجمه كبير. هاتها جنب الكود باستخدام worktree عشان يكون عندك الاتنين مع بعض:
+dataset عايشة على الفرع `smart-voicemail-router`، منفصلة عن فروع الكود، عشان الصوت حجمه كبير. هاتها جنب الكود باستخدام worktree عشان يكون عندك الاتنين مع بعض:
 
 ```
-git worktree add ../svr-data local-env
+git worktree add ../svr-data smart-voicemail-router
 ```
 
 دلوقتي بقى عندك مجلدين. المجلد `svr/` فيه فرع دورك والكود. والمجلد `svr-data/` فيه dataset: الصوت في `dataset/train` و`dataset/val` و`dataset/test`، والدفاتر في `notebooks/`، وtraining tables في `final/`. مجلد البيانات ده مرجع ليك. اقرأ منه. ومتعدّلش الصوت ولا الجداول اللي فيه. والكود بيشاور على مجلد البيانات بمسار، زي `../svr-data/dataset`.

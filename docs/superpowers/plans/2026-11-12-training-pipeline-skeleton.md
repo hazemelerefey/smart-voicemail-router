@@ -21,7 +21,7 @@
 - Split: train / validation / test, never "dev". Ratio 70/20/10. Counts: train 4,031 / val 1,136 / test 584, total 5,751, seed 42.
 - Dataset is the SVR Voicemail Corpus. Audio is 16 kHz mono WAV.
 - Branch: team/hazem-training-lead. Hazem reviews and merges to develop. Push each finished piece as soon as it is done and verified, never batch.
-- The data lives on the local-env branch (worktree ../svr-data). The notebook reads from the worktree path, never from a hardcoded absolute path that only works on one machine.
+- The data lives on the smart-voicemail-router branch (worktree ../svr-data). The notebook reads from the worktree path, never from a hardcoded absolute path that only works on one machine.
 - Venv: ~/workspace/ai-customer-support/.venv-eda/bin/python (pandas 2.1.4, scikit-learn 1.9.1). No torch, no transformers, no GPU. Notebooks use object-oriented matplotlib API only (no pyplot) and display saved PNGs via IPython.display.Image.
 
 ## Review Focus

@@ -112,10 +112,10 @@ cd svr
 
 ### الخطوة 8: هات الـ data
 
-الـ dataset عايش على الـ branch اللي اسمه `local-env`، منفصل عن فروع الكود، لأن الـ audio كبير. هاته جنب الكود بتاعك بـ worktree عشان يبقى عندك الاتنين في نفس الوقت:
+الـ dataset عايش على الـ branch اللي اسمه `smart-voicemail-router`، منفصل عن فروع الكود، لأن الـ audio كبير. هاته جنب الكود بتاعك بـ worktree عشان يبقى عندك الاتنين في نفس الوقت:
 
 ```
-git worktree add ../svr-data local-env
+git worktree add ../svr-data smart-voicemail-router
 ```
 
 دلوقتي عندك فولدرين. `svr/` فيه الـ branch بتاع دورك والكود بتاعك. `svr-data/` فيه الـ dataset: الـ audio في `dataset/train` و `dataset/val` و `dataset/test`، والـ notebooks في `notebooks/`، وجداول التدريب في `final/`. فولدر الـ data ده مرجع ليك. اقرا منه. متعدّلش الـ audio ولا الجداول اللي فيه. الكود بتاعك بيشاور على فولدر الـ data بمسار، مثلا `../svr-data/dataset`.

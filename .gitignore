@@ -1,0 +1,43 @@
+# This branch intentionally contains the dataset.
+# Do NOT exclude dataset/, *.csv, *.wav, or audio files.
+# The dataset lives on this branch so members can clone and start working.
+
+# Local credentials and secrets
+.env
+secrets/
+*.pem
+*.key
+credentials.*
+
+# Local Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Model artifacts and weights
+models/
+checkpoints/
+*.pt
+*.pth
+*.safetensors
+*.onnx
+*.joblib
+*.pkl
+
+# Experiment caches
+mlruns/
+wandb/
+*.log
+
+# OS files
+.DS_Store
+
+# Archives
+*.zip
+*.tar.gz
+*.rar

@@ -66,10 +66,10 @@ Your branch name is in the role table in Section 2 of SVR-TEAM-03 and in your ro
 
 ### Step 4: Get the data
 
-The dataset lives on the `local-env` branch, separate from the code branches, because the audio is large. Check it out alongside your code with a worktree so you have both at once:
+The dataset lives on the `smart-voicemail-router` branch, separate from the code branches, because the audio is large. Check it out alongside your code with a worktree so you have both at once:
 
 ```
-git worktree add ../svr-data local-env
+git worktree add ../svr-data smart-voicemail-router
 ```
 
 You now have two folders. `svr/` holds your role branch and your code. `svr-data/` holds the dataset: the audio in `dataset/train`, `dataset/val`, `dataset/test`, the notebooks in `notebooks/`, and the training tables in `final/`. The data folder is your reference. Read from it. Do not edit the audio or the tables in it. Your code points at the data folder with a path, for example `../svr-data/dataset`.
