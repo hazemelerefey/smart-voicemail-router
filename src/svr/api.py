@@ -32,9 +32,10 @@ from pydantic import BaseModel
 
 from . import agents as agents_module
 from .latency import summarize_latency
-from .pipeline import run_pipeline
+from .pipeline import PipelineResult, run_pipeline
 from .schemas import Agent, AssignmentStatus, TicketDetail, TicketStatus, utcnow_iso
 from .stages.intake import AudioMeta, validate_and_measure
+from .stages.ticket import build_review_ticket
 from .store import STORE
 
 app = FastAPI(title="SVR Phase 1 API (mock pipeline)", version="1.0.0-mock")
@@ -76,9 +77,30 @@ HUB = QueueHub()
 async def _run_and_store(ticket_id: str, voicemail_id: str, meta: AudioMeta) -> None:
     """Run the mock pipeline on upload metadata only (no audio bytes are
     carried here), store the finished ticket, then broadcast the completed
-    ticket to every connected /ws/queue client."""
-    result = run_pipeline(meta, voicemail_id, ticket_id=ticket_id)
-    ticket = STORE.complete(result)
+    ticket to every connected /ws/queue client.
+
+    A pipeline exception outside the per-stage fail path must never leave
+    the ticket stuck at ``processing``: the run is stored as a
+    ``needs_review`` ticket instead, and the failure is still broadcast.
+    """
+    try:
+        result = run_pipeline(meta, voicemail_id, ticket_id=ticket_id)
+        ticket = STORE.complete(result)
+    except Exception as exc:
+        review = build_review_ticket(
+            ticket_id=ticket_id,
+            voicemail_id=voicemail_id,
+            route_reason=f"Pipeline failed unexpectedly: {exc}",
+            stage_status={"pipeline": "failed"},
+            stage_timing_ms={},
+            processing_ms=0.0,
+        )
+        try:
+            ticket = STORE.complete(PipelineResult(review, None, None, None, None))
+        except Exception:
+            # The store itself failed: still broadcast the review ticket
+            # below so the client is never left waiting on "processing".
+            ticket = review
     await HUB.broadcast(
         {
             "type": "ticket_update",

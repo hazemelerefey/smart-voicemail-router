@@ -131,17 +131,42 @@ def run_pipeline(
     # 4. Voice evidence (mock): skipped in Phase 1. The audio model lands
     # with Sira in Phase 2; until then there is no voice_state_candidate.
     with timer.stage("voice_evidence") as elapsed:
-        voice_evidence = voice.voice_evidence_mock(audio)
+        try:
+            voice_evidence = voice.voice_evidence_mock(audio)
+        except Exception as exc:
+            # Any stage failure ends the run as needs_review, never as a
+            # silent normal ticket (see the module docstring guarantee).
+            stage_timing_ms["voice_evidence"] = elapsed()
+            return fail(f"Voice evidence failed: {exc}", "voice_evidence")
     stage_status["voice_evidence"] = "skipped" if voice_evidence is None else "ok"
     stage_timing_ms["voice_evidence"] = elapsed()
 
     # 5. Triage (mock): fixed route reason, seeded-agent assignment.
     with timer.stage("triage") as elapsed:
-        decision = triage.triage_mock(text, voice_evidence)
+        try:
+            decision = triage.triage_mock(text, voice_evidence)
+        except Exception as exc:
+            stage_timing_ms["triage"] = elapsed()
+            return fail(f"Triage failed: {exc}", "triage")
     stage_status["triage"] = "ok"
     stage_timing_ms["triage"] = elapsed()
 
     # 6. Ticket assembly.
+    try:
+        ticket = ticket_stage.assemble_ticket(
+            ticket_id=ticket_id or f"ticket-{voicemail_id}",
+            voicemail_id=voicemail_id,
+            audio=audio,
+            text=text,
+            voice_evidence=voice_evidence,
+            decision=decision,
+            stage_status=stage_status,
+            stage_timing_ms=stage_timing_ms,
+            processing_ms=timer.elapsed_ms(),
+            created_at=now(),
+        )
+    except Exception as exc:
+        return fail(f"Ticket assembly failed: {exc}", "ticket")
     needs_review = bool(text.needs_human_review) or any(
         value is None
         for value in (
@@ -150,18 +175,6 @@ def run_pipeline(
             text.customer_state_text,
             text.churn_risk,
         )
-    )
-    ticket = ticket_stage.assemble_ticket(
-        ticket_id=ticket_id or f"ticket-{voicemail_id}",
-        voicemail_id=voicemail_id,
-        audio=audio,
-        text=text,
-        voice_evidence=voice_evidence,
-        decision=decision,
-        stage_status=stage_status,
-        stage_timing_ms=stage_timing_ms,
-        processing_ms=timer.elapsed_ms(),
-        created_at=now(),
     )
     if needs_review:
         # Null label + needs_human_review is a correct output (section 4.1);

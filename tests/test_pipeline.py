@@ -166,3 +166,37 @@ def test_latency_summary_reports_hardware_and_slowest_stage():
 
 def test_fixture_ticket_helper():
     assert fixture_ticket().id == fixtures.FIXTURE_TICKET_ID
+
+
+def _boom(*args, **kwargs):
+    raise ValueError("forced stage failure for the test")
+
+
+def test_voice_failure_goes_to_needs_review(monkeypatch):
+    monkeypatch.setattr("svr.stages.voice.voice_evidence_mock", _boom)
+    result = run_pipeline(make_meta("voicemail-test-006"), "voicemail-test-006")
+    ticket = result.ticket
+    assert ticket.ticket_status.value == "needs_review"
+    assert ticket.needs_human_review is True
+    assert ticket.stage_status["voice_evidence"] == "failed"
+    assert "voice evidence failed" in ticket.route_reason.lower()
+
+
+def test_triage_failure_goes_to_needs_review(monkeypatch):
+    monkeypatch.setattr("svr.stages.triage.triage_mock", _boom)
+    result = run_pipeline(make_meta("voicemail-test-007"), "voicemail-test-007")
+    ticket = result.ticket
+    assert ticket.ticket_status.value == "needs_review"
+    assert ticket.needs_human_review is True
+    assert ticket.stage_status["triage"] == "failed"
+    assert "triage failed" in ticket.route_reason.lower()
+
+
+def test_ticket_assembly_failure_goes_to_needs_review(monkeypatch):
+    monkeypatch.setattr("svr.stages.ticket.assemble_ticket", _boom)
+    result = run_pipeline(make_meta("voicemail-test-008"), "voicemail-test-008")
+    ticket = result.ticket
+    assert ticket.ticket_status.value == "needs_review"
+    assert ticket.needs_human_review is True
+    assert ticket.stage_status["ticket"] == "failed"
+    assert "ticket assembly failed" in ticket.route_reason.lower()

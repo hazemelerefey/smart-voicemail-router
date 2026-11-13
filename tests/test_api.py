@@ -238,3 +238,49 @@ def test_demo_markdown_shows_flags_timings_and_reason():
     assert "Route reason:" in text
     assert "Stage timings:" in text
     assert "fusion disabled" in text
+
+
+def test_background_task_exception_still_broadcasts_needs_review(monkeypatch):
+    """A pipeline exception outside the per-stage fail path still stores a
+    needs_review ticket and still broadcasts a ticket_update: the client is
+    never left on "Still processing"."""
+    import threading
+
+    import svr.api as api_module
+
+    monkeypatch.setattr(
+        api_module,
+        "run_pipeline",
+        lambda *args, **kwargs: (_ for _ in ()).throw(
+            RuntimeError("forced pipeline failure for the test")
+        ),
+    )
+    received: dict = {}
+
+    def _recv(ws):
+        try:
+            received["msg"] = ws.receive_json()
+        except Exception as exc:  # noqa: BLE001 - record, do not raise in thread
+            received["error"] = exc
+
+    with client.websocket_connect("/ws/queue") as ws:
+        assert ws.receive_json()["type"] == "queue_snapshot"
+        resp = client.post(
+            "/api/voicemails",
+            files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
+        )
+        assert resp.status_code == 202, resp.text
+        ticket_id = resp.json()["ticket_id"]
+        thread = threading.Thread(target=_recv, args=(ws,), daemon=True)
+        thread.start()
+        thread.join(timeout=5.0)
+        assert not thread.is_alive(), "no websocket update received in 5s"
+        assert "error" not in received, received["error"]
+        msg = received["msg"]
+        assert msg["type"] == "ticket_update"
+        assert msg["ticket_id"] == ticket_id
+        assert msg["ticket"]["ticket_status"] == "needs_review"
+        assert "pipeline failed" in msg["ticket"]["route_reason"].lower()
+    detail = client.get(f"/api/tickets/{ticket_id}").json()
+    assert detail["ticket_status"] == "needs_review"
+    assert detail["stage_status"].get("pipeline") == "failed"
