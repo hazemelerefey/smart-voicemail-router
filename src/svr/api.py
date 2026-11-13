@@ -175,19 +175,50 @@ async def get_agents() -> list[Agent]:
 
 @app.patch("/api/tickets/{ticket_id}", response_model=TicketDetail)
 async def patch_ticket(ticket_id: str, patch: PatchTicket) -> TicketDetail:
+    # Ticket existence first: a PATCH on a missing ticket is a 404 for the
+    # ticket, even when the agent id is also invalid (issue #4).
+    if STORE.get(ticket_id) is None:
+        raise HTTPException(status_code=404, detail="ticket not found")
     if patch.assigned_agent_id is not None and agents_module.get_agent(patch.assigned_agent_id) is None:
         raise HTTPException(status_code=404, detail="agent not found")
+    assignment_status = patch.assignment_status
+    if (
+        assignment_status == AssignmentStatus.UNASSIGNED
+        and patch.assigned_agent_id is not None
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail="cannot set assigned_agent_id while assignment_status is unassigned",
+        )
+    if patch.assigned_agent_id is not None and assignment_status is None:
+        # Naming an agent assigns the ticket.
+        assignment_status = AssignmentStatus.ASSIGNED
+    if assignment_status == AssignmentStatus.ASSIGNED and patch.assigned_agent_id is None:
+        # "assigned" with no agent id is rejected unless the ticket already
+        # has an assigned agent.
+        detail = STORE.get_detail(ticket_id)
+        current_agent = (
+            detail.triage_decision.assigned_agent_id
+            if detail is not None and detail.triage_decision is not None
+            else None
+        )
+        if current_agent is None:
+            raise HTTPException(
+                status_code=400,
+                detail="assignment_status assigned requires an assigned_agent_id",
+            )
     updated = STORE.update(
         ticket_id,
         ticket_status=patch.ticket_status.value if patch.ticket_status else None,
-        assignment_status=patch.assignment_status.value if patch.assignment_status else None,
+        assignment_status=assignment_status.value if assignment_status else None,
         assigned_agent_id=patch.assigned_agent_id,
         actor=patch.actor,
     )
     if updated is None:
         raise HTTPException(status_code=404, detail="ticket not found")
     detail = STORE.get_detail(ticket_id)
-    assert detail is not None
+    if detail is None:
+        raise HTTPException(status_code=404, detail="ticket not found")
     return detail
 
 

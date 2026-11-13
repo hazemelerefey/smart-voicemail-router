@@ -134,6 +134,85 @@ def test_patch_ticket_writes_audit_event():
     assert detail["triage_decision"]["route_reason"]
 
 
+def test_patch_reassignment_persists_on_triage_decision():
+    """PATCH with a valid agent id changes the stored triage decision, so
+    GET shows the new agent as structured data, not free text."""
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
+    )
+    ticket_id = resp.json()["ticket_id"]
+    poll_ticket(ticket_id)
+    assert (
+        client.get(f"/api/tickets/{ticket_id}")
+        .json()["triage_decision"]["assigned_agent_id"]
+        == "agent-demo-network"
+    )
+    patched = client.patch(
+        f"/api/tickets/{ticket_id}",
+        json={"assigned_agent_id": "agent-demo-billing"},
+    )
+    assert patched.status_code == 200, patched.text
+    assert patched.json()["assignment_status"] == "assigned"
+    assert (
+        patched.json()["triage_decision"]["assigned_agent_id"]
+        == "agent-demo-billing"
+    )
+    detail = client.get(f"/api/tickets/{ticket_id}").json()
+    assert detail["triage_decision"]["assigned_agent_id"] == "agent-demo-billing"
+    assert detail["triage_decision"]["assignment_status"] == "assigned"
+
+
+def test_patch_unknown_ticket_404_even_with_unknown_agent():
+    """Ticket existence is checked first: a PATCH on a missing ticket is a
+    404 for the ticket, even when the agent id is also invalid."""
+    resp = client.patch(
+        "/api/tickets/ticket-does-not-exist",
+        json={"assigned_agent_id": "agent-does-not-exist"},
+    )
+    assert resp.status_code == 404
+    assert resp.json()["detail"] == "ticket not found"
+
+
+def test_patch_contradictory_assignment_400():
+    """Contradictory assignment fields are rejected: an agent id with
+    unassigned, and assigned with no agent id on a ticket that has none."""
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
+    )
+    ticket_id = resp.json()["ticket_id"]
+    poll_ticket(ticket_id)
+    assert (
+        client.patch(
+            f"/api/tickets/{ticket_id}",
+            json={
+                "assignment_status": "unassigned",
+                "assigned_agent_id": "agent-demo-network",
+            },
+        ).status_code
+        == 400
+    )
+    # Unassign first, then "assigned" with no agent id must fail.
+    assert (
+        client.patch(
+            f"/api/tickets/{ticket_id}", json={"assignment_status": "unassigned"}
+        ).status_code
+        == 200
+    )
+    assert (
+        client.get(f"/api/tickets/{ticket_id}")
+        .json()["triage_decision"]["assigned_agent_id"]
+        is None
+    )
+    assert (
+        client.patch(
+            f"/api/tickets/{ticket_id}", json={"assignment_status": "assigned"}
+        ).status_code
+        == 400
+    )
+
+
 def test_patch_unknown_agent_404():
     resp = client.post(
         "/api/voicemails",

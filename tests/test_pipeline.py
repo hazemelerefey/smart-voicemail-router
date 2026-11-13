@@ -222,3 +222,38 @@ def test_ticket_assembly_failure_goes_to_needs_review(monkeypatch):
     assert ticket.needs_human_review is True
     assert ticket.stage_status["ticket"] == "failed"
     assert "ticket assembly failed" in ticket.route_reason.lower()
+
+
+def test_classification_override_rejects_forbidden_keys():
+    """The override allowlist: only the four label fields may be injected.
+    Forging voicemail_id or needs_human_review is rejected, and the forged
+    value never lands in a ticket."""
+    import pytest
+
+    from svr.stages.classification import classify_mock
+    from svr.stages.intake import validate_and_measure
+    from svr.stages.stt import transcribe_mock
+
+    audio = transcribe_mock(
+        validate_and_measure(make_wav_bytes(), "test.wav", "voicemail-test-009")
+    )
+    with pytest.raises(ValueError, match="not allowed"):
+        classify_mock(audio, override={"voicemail_id": "voicemail-forged"})
+    with pytest.raises(ValueError, match="not allowed"):
+        classify_mock(audio, override={"needs_human_review": False})
+    with pytest.raises(ValueError, match="not allowed"):
+        classify_mock(audio, override={"schema_version": 999})
+    # The four label fields are still overridable.
+    assert (
+        classify_mock(audio, override={"complaint_category": None}).complaint_category
+        is None
+    )
+    # Through the pipeline a forbidden key ends the run as needs_review,
+    # with the forged value nowhere in the ticket.
+    result = run_pipeline(
+        make_meta("voicemail-test-009b"),
+        "voicemail-test-009b",
+        classification_override={"voicemail_id": "voicemail-forged"},
+    )
+    assert result.ticket.ticket_status.value == "needs_review"
+    assert result.ticket.voicemail_id == "voicemail-test-009b"

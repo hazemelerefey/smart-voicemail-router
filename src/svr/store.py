@@ -128,6 +128,25 @@ class TicketStore:
             result = self._details.get(ticket_id)
             if result is not None:
                 result.ticket = updated
+                # Persist the reassignment on the stored triage decision as
+                # structured data, so GET shows the new agent (issue #4).
+                # It is never recorded only as free text in the audit event.
+                if result.decision is not None and (
+                    assigned_agent_id is not None or assignment_status is not None
+                ):
+                    decision_changes: dict = {}
+                    if assignment_status is not None:
+                        new_status = AssignmentStatus(assignment_status)
+                        decision_changes["assignment_status"] = new_status
+                        if new_status == AssignmentStatus.UNASSIGNED:
+                            decision_changes["assigned_agent_id"] = None
+                    if assigned_agent_id is not None:
+                        decision_changes["assigned_agent_id"] = assigned_agent_id
+                        decision_changes["assignment_status"] = AssignmentStatus.ASSIGNED
+                    if decision_changes:
+                        result.decision = result.decision.model_copy(
+                            update=decision_changes
+                        )
             detail = ", ".join(f"{k}={v}" for k, v in changes.items())
             if assigned_agent_id is not None:
                 detail += f", assigned_agent_id={assigned_agent_id}"
