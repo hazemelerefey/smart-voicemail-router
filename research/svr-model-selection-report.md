@@ -6,6 +6,8 @@
 **Task:** Multi-task classification, four labels per voicemail: complaint_category (9 classes), complaint_urgency (3 classes), customer_state (5 classes), churn_risk (2 classes, at_risk 0.5 percent).
 **Sources:** 46 research notes in the vault at `research/notes/`, covering models, methods, training, and papers. Every factual claim below traces to a vault note or a fetched source.
 
+Note: this report was written on 12 November 2026 when the clean set was 5,751 rows (train 4,031, validation 1,136, test 584). The clean set was later reduced to 5,096 rows (train 3,575, validation 1,003, test 518) by excluding the 655 worst transcripts (Whisper logprob below -0.30). The numbers in this report refer to the 5,751 row set. The current numbers and the current recommendations are in `recommendations.md` in this folder.
+
 ---
 
 ## Part 1: Recommended Models and Hyperparameters
