@@ -13,7 +13,7 @@
 
 ### Revision notes
 
-Version 1.3 records the finished dataset (SVR Voicemail Corpus, 6,522 voicemails, 5,751 clean training rows), the agreed taxonomy, the settled model selection, and the six individual roles that replace the old pair workstreams. The Team Allocation Plan uses relative, gated phases because the competition deadline and weekly capacity are unknown.
+Version 1.3 records the finished dataset (SVR Voicemail Corpus, 6,522 voicemails, 5,096 clean training rows), the agreed taxonomy, the settled model selection, and the six individual roles that replace the old pair workstreams. The Team Allocation Plan uses relative, gated phases because the competition deadline and weekly capacity are unknown.
 
 ---
 
@@ -192,7 +192,7 @@ Keep business logic separate from provider implementations. Preserve CPU executi
 
 ## 11. Dataset and evaluation plan
 
-The dataset is the SVR Voicemail Corpus: 6,522 Egyptian Arabic customer voicemails, 12.63 hours of audio. The clean training set holds 5,751 rows: train 4,031, validation 1,136, test 584, corrected stratified split, seed 42. The labels come from a model and are being audited by the team every day; the audit corrections are applied in Phase 4.
+The dataset is the SVR Voicemail Corpus: 6,522 Egyptian Arabic customer voicemails, 12.63 hours of audio. The clean training set holds 5,096 rows: train 3,575, validation 1,003, test 518, corrected stratified split, seed 42. The 655 worst transcripts (Whisper logprob below -0.30) were excluded from the clean set. The labels come from a model and are being audited by the team every day; the audit corrections are applied in Phase 4.
 
 The shared EDA is done and produced one data dictionary, label/annotation guide, privacy boundary, and split protocol. The dataset, labels, and split are described above.
 
@@ -230,7 +230,7 @@ Report only metrics appropriate to the agreed labels and reference data:
 
 ## 14. Open decisions
 
-1. Dataset rights, consent, retention, and processing locations. The dataset itself is known: SVR Voicemail Corpus, 6,522 voicemails, 5,751 clean training rows, split train 4,031 / validation 1,136 / test 584.
+1. Dataset rights, consent, retention, and processing locations. The dataset itself is known: SVR Voicemail Corpus, 6,522 voicemails, 5,096 clean training rows, split train 3,575 / validation 1,003 / test 518.
 2. The split freeze (the corrected v2 split is the working split; freezing it is Hazem's decision).
 3. Whether external providers are allowed by the competition and the dataset terms; exact approved providers and budget/quota.
 4. Retention/deletion period and who can access local recordings.

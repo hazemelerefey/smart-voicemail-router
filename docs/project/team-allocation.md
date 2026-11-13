@@ -12,7 +12,7 @@
 
 ## 1. How this allocation was chosen
 
-The dataset is finished: the SVR Voicemail Corpus, 5,751 clean training rows, corrected stratified split, class weights, and a model selection report that picks EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, and Whisper large-v3 for transcription. The work that remains follows the system boundaries in SVR-ARCH-02: training, audio and speech, text classification, training infrastructure and evaluation, triage and routing, and system integration and demo. Each role owns one of those boundaries end to end. The team audits the labels in parallel, every day, while training proceeds.
+The dataset is finished: the SVR Voicemail Corpus, 5,096 clean training rows, corrected stratified split, class weights, and a model selection report that picks EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, and Whisper large-v3 for transcription. The work that remains follows the system boundaries in SVR-ARCH-02: training, audio and speech, text classification, training infrastructure and evaluation, triage and routing, and system integration and demo. Each role owns one of those boundaries end to end. The team audits the labels in parallel, every day, while training proceeds.
 
 ## 2. Role allocation
 
@@ -29,7 +29,7 @@ Every member audits the labels on the live audit page every day, in parallel wit
 
 ## 3. Shared dataset: done
 
-The dataset work is finished and verified. The SVR Voicemail Corpus holds 6,522 Egyptian Arabic customer voicemails. The clean training set holds 5,751 rows: train 4,031, validation 1,136, test 584, corrected stratified split, seed 42, whole text groups kept together. Class weights are computed and saved. The labeling notebook shows the model that produced the labels. The model selection report is complete and in the repository under research/ on team/hazem-training-lead.
+The dataset work is finished and verified. The SVR Voicemail Corpus holds 6,522 Egyptian Arabic customer voicemails. The clean training set holds 5,096 rows: train 3,575, validation 1,003, test 518, corrected stratified split, seed 42, whole text groups kept together. The 655 worst transcripts (Whisper logprob below -0.30) were excluded from the clean set. Class weights are computed and saved. The labeling notebook shows the model that produced the labels. The model selection report is complete and in the repository under research/ on team/hazem-training-lead.
 
 What remains open on the data side: the team audit of the labels, and the rights, consent, retention, and processing location decisions, which Hazem decides.
 
@@ -53,7 +53,7 @@ The competition deadline and weekly time availability are unknown, so the plan u
 |---|---|---|
 | **Phase 1: Foundations** | Hazem sets up the training pipeline. Sira builds the audio pipeline and the XLS-R baseline. Lama sets up single-task fine-tuning. Aya builds the training infrastructure, the TF-IDF baseline, and the evaluation harness. Ibthal writes the triage rules and the ticket format. Arafa builds the end-to-end pipeline skeleton and the demo skeleton. The label audit runs daily in parallel. | Each role demonstrates its inputs and outputs on fixtures; the training pipeline runs end to end on the clean training set. |
 | **Phase 2: Core models** | Lama runs single-task fine-tuning for EgyBERT and MARBERTv2 in parallel, then the multi-task model. Sira tests the audio model and audio-text fusion if the data supports it. Aya runs hyperparameter tuning and validation, and picks the winner by validation mean macro-F1, with the tie-break rule from the model selection report. | Validation metrics exist for every field; the winning text model and audio model are named. |
-| **Phase 3: Evaluation and integration** | Aya runs the final test evaluation once on the frozen 584-row test set, then the error analysis. Ibthal finalizes the triage logic against the real model outputs. Arafa integrates the full pipeline and measures latency. | One reproducible end-to-end run with real metrics; the demo runs cleanly under declared conditions. |
+| **Phase 3: Evaluation and integration** | Aya runs the final test evaluation once on the frozen 518-row test set, then the error analysis. Ibthal finalizes the triage logic against the real model outputs. Arafa integrates the full pipeline and measures latency. | One reproducible end-to-end run with real metrics; the demo runs cleanly under declared conditions. |
 | **Phase 4: Retrain on audited labels** | After the audit finishes, Hazem applies the corrections to the dataset. The team reruns the training notebooks on the cleaned dataset. Aya re-evaluates. No architecture or hyperparameter changes. | Final dataset with corrected labels; final model retrained and re-evaluated; competition deliverables complete. |
 
 The phases follow their exit gates rather than calendar estimates. Revisit their order at the weekly meeting and record the reason. A blocked data/privacy gate does not permit model work on unapproved material.
@@ -111,7 +111,7 @@ Always report dataset size, label counts, split policy, model/config, hardware/p
 ## 9. Current open decisions
 
 - Dataset rights, consent, retention period, and processing locations. The repository is public by Hazem's decision, so the voicemails are openly reachable.
-- Split freeze: the corrected v2 split (train 4,031, validation 1,136, test 584) is the working split; freezing it is Hazem's decision.
+- Split freeze: the corrected v2 split (train 3,575, validation 1,003, test 518) is the working split; freezing it is Hazem's decision.
 - External API/provider permissions and any quota/budget.
 - Exact local CPU/GPU hardware and which experiments, if any, use Colab.
 - Competition judging criteria, demo format, and deadline.
