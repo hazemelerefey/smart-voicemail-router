@@ -16,6 +16,7 @@ Endpoints:
 
 from __future__ import annotations
 
+import threading
 import uuid
 
 from fastapi import (
@@ -28,12 +29,20 @@ from fastapi import (
     WebSocketDisconnect,
 )
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
 
 from . import agents as agents_module
 from .latency import summarize_latency
 from .pipeline import PipelineResult, run_pipeline
-from .schemas import Agent, AssignmentStatus, TicketDetail, TicketStatus, utcnow_iso
+from .schemas import (
+    LABEL_VERSION,
+    SCHEMA_VERSION,
+    Agent,
+    AssignmentStatus,
+    TicketDetail,
+    TicketStatus,
+    utcnow_iso,
+)
 from .stages.intake import MAX_BYTES, AudioMeta, validate_and_measure
 from .stages.ticket import build_review_ticket
 from .store import STORE
@@ -66,28 +75,44 @@ class QueueHub:
     """Queue hub: sends the queue snapshot on connect, then broadcasts a
     ticket_update to every connected client when a run completes. A push
     broadcaster refinement (dedicated broadcaster task, reconnect handling)
-    stays a Phase 3 item."""
+    stays a Phase 3 item.
+
+    The connection list is guarded by a lock, and dead connections are
+    removed after a failed send, so a dropped client never stays in the
+    list (issue #9).
+    """
 
     def __init__(self) -> None:
         self._connections: list[WebSocket] = []
+        self._lock = threading.Lock()
 
     async def connect(self, websocket: WebSocket) -> None:
         await websocket.accept()
-        self._connections.append(websocket)
+        with self._lock:
+            self._connections.append(websocket)
         await websocket.send_json(
             {"type": "queue_snapshot", "tickets": [t.model_dump() for t in STORE.list_tickets()]}
         )
 
     def disconnect(self, websocket: WebSocket) -> None:
-        if websocket in self._connections:
-            self._connections.remove(websocket)
+        with self._lock:
+            if websocket in self._connections:
+                self._connections.remove(websocket)
 
     async def broadcast(self, message: dict) -> None:
-        for ws in list(self._connections):
+        with self._lock:
+            targets = list(self._connections)
+        dead: list[WebSocket] = []
+        for ws in targets:
             try:
                 await ws.send_json(message)
             except Exception:
-                self._connections.remove(ws)
+                dead.append(ws)
+        if dead:
+            with self._lock:
+                for ws in dead:
+                    if ws in self._connections:
+                        self._connections.remove(ws)
 
 
 HUB = QueueHub()
@@ -138,6 +163,14 @@ class SubmitResponse(BaseModel):
     message: str
 
 
+# Known audit actors: the six team members plus the system actors the
+# store itself uses ("system" for pipeline events, "demo-user" for the
+# demo). Any other actor value is rejected on PATCH (issue #9).
+KNOWN_ACTORS = frozenset(
+    {"system", "demo-user", "hazem", "arafa", "sira", "lama", "aya", "ibthal"}
+)
+
+
 class PatchTicket(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -146,6 +179,18 @@ class PatchTicket(BaseModel):
     assigned_agent_id: str | None = None
     actor: str = "demo-user"
 
+    @field_validator("actor")
+    @classmethod
+    def _validate_actor(cls, value: str) -> str:
+        # The audit actor is validated against a known set (issue #9):
+        # any caller stamping events as someone else is rejected.
+        if value not in KNOWN_ACTORS:
+            raise ValueError(
+                f"unknown audit actor: {value!r}; known actors: "
+                + ", ".join(sorted(KNOWN_ACTORS))
+            )
+        return value
+
 
 # ----------------------------------------------------------------- endpoints
 @app.post("/api/voicemails", status_code=202, response_model=SubmitResponse)
@@ -153,7 +198,7 @@ async def submit_voicemail(
     background_tasks: BackgroundTasks, file: UploadFile = File(...)
 ) -> SubmitResponse:
     """Submit an upload. 202 Accepted with ticket id and status; the ticket
-    is visible as queued/processing within 2 seconds, before analysis
+    is visible as processing within 2 seconds, before analysis
     begins (contracts section 5). Analysis runs in the background.
     Invalid format, size or duration is rejected here with a clear 400
     error (contracts section 5); valid input is never rejected. The size
@@ -295,8 +340,10 @@ fixed fixture transcript and fields, no real model, no real data.</p>
 <div id="ticket"><p><i>No run yet.</i></p></div>
 <script>
 const f=document.getElementById('f'),s=document.getElementById('status'),t=document.getElementById('ticket');
+function el(tag,text){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;}
+function flagSpan(value){const n=el('span',String(value));n.className='flag '+(value?'cached':'ok');return n;}
 f.addEventListener('submit',async e=>{e.preventDefault();
-  s.textContent='Uploading…';t.innerHTML='';
+  s.textContent='Uploading…';t.replaceChildren();
   const r=await fetch('/api/voicemails',{method:'POST',body:new FormData(f)});
   const j=await r.json();
   if(!r.ok){s.textContent='Error: '+(j.detail||r.status);return;}
@@ -305,11 +352,10 @@ f.addEventListener('submit',async e=>{e.preventDefault();
     const g=await fetch('/api/tickets/'+j.ticket_id);const d=await g.json();
     if(d.ticket_status==='completed'||d.ticket_status==='needs_review'){
       s.textContent='Done in '+d.processing_ms+' ms.';
-      t.innerHTML='<p>cached: <span class="flag '+(d.cached?'cached':'ok')+'">'+d.cached+'</span> &nbsp; '
-        +'needs_human_review: <span class="flag '+(d.needs_human_review?'cached':'ok')+'">'+d.needs_human_review+'</span></p>'
-        +'<p><b>Route reason:</b> '+d.route_reason+'</p>'
-        +'<p><b>Stage timings (ms):</b> '+JSON.stringify(d.stage_timing_ms)+'</p>'
-        +'<pre>'+JSON.stringify(d,null,2)+'</pre>';
+      const p1=el('p');p1.append('cached: ',flagSpan(d.cached),'  needs_human_review: ',flagSpan(d.needs_human_review));
+      const p2=el('p');p2.append(el('b','Route reason: '),document.createTextNode(d.route_reason));
+      const p3=el('p');p3.append(el('b','Stage timings (ms): '),document.createTextNode(JSON.stringify(d.stage_timing_ms)));
+      t.replaceChildren(p1,p2,p3,el('pre',JSON.stringify(d,null,2)));
       return;}}
   s.textContent='Still processing after 10 s.';});
 </script></body></html>"""
@@ -317,4 +363,4 @@ f.addEventListener('submit',async e=>{e.preventDefault();
 
 @app.get("/health")
 async def health() -> dict:
-    return {"status": "ok", "schema_version": 1, "label_version": "taxonomy-2026-11-11", "mode": "mock", "time": utcnow_iso()}
+    return {"status": "ok", "schema_version": SCHEMA_VERSION, "label_version": LABEL_VERSION, "mode": "mock", "time": utcnow_iso()}

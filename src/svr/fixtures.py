@@ -7,6 +7,8 @@ until the real components land in Phase 2.
 
 from __future__ import annotations
 
+from .schemas import LABEL_VERSION, SCHEMA_VERSION
+
 # Fixed mock transcript. The real transcript comes from Sira's Whisper
 # large-v3 STT in Phase 2; until then the STT stage returns this string.
 FIXTURE_TRANSCRIPT = "[fixture transcript]"
@@ -30,8 +32,8 @@ FIXTURE_TEXT_ANALYSIS: dict = {
     ),
     "confidence": 0.9,
     "needs_human_review": False,
-    "schema_version": 1,
-    "label_version": "taxonomy-2026-11-11",
+    "schema_version": SCHEMA_VERSION,
+    "label_version": LABEL_VERSION,
 }
 
 FIXTURE_ROUTE_REASON = (
@@ -40,8 +42,10 @@ FIXTURE_ROUTE_REASON = (
     "because the priority formula is not agreed yet, see contracts section 10."
 )
 
-# Contracts section 9 fixture ticket, verbatim values. The pipeline builds a
-# ticket in exactly this shape; ids and created_at are set per run.
+# Contracts section 9 fixture ticket, verbatim values. This dict is a
+# fixed example: its ids and created_at are fixed here. The pipeline
+# builds a ticket in exactly this shape, with fresh ids and timestamps
+# set per run.
 FIXTURE_TICKET: dict = {
     "id": FIXTURE_TICKET_ID,
     "voicemail_id": FIXTURE_VOICEMAIL_ID,
@@ -79,7 +83,7 @@ FIXTURE_TICKET: dict = {
         "triage": 80,
     },
     "processing_ms": 2900,
-    "schema_version": 1,
-    "label_version": "taxonomy-2026-11-11",
+    "schema_version": SCHEMA_VERSION,
+    "label_version": LABEL_VERSION,
     "created_at": "2026-11-12T00:00:00Z",
 }

@@ -16,7 +16,7 @@ import os
 import uuid
 
 from .pipeline import run_pipeline
-from .schemas import Ticket
+from .schemas import Ticket, TicketDetail
 from .stages.intake import MAX_BYTES, validate_and_measure
 
 # Uploads are read in 1 MiB chunks (issue #5): the size limit is enforced
@@ -84,8 +84,18 @@ def run_demo(file_path: str | None) -> tuple[str, str]:
     finally:
         del data
     result = run_pipeline(meta, voicemail_id)
+    # The demo serialises the same object the API returns: a TicketDetail
+    # (ticket + evidence, no audit events in the demo), not a bare Ticket.
+    detail = TicketDetail(
+        **result.ticket.model_dump(),
+        audio_evidence=result.audio,
+        text_analysis=result.text,
+        voice_evidence=result.voice_evidence,
+        triage_decision=result.decision,
+        events=[],
+    )
     return format_ticket_markdown(result.ticket), json.dumps(
-        result.ticket.model_dump(), indent=2
+        detail.model_dump(), indent=2
     )
 
 

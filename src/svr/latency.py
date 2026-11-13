@@ -1,9 +1,14 @@
 """Latency measurement (contracts section 7).
 
 Target: p95 under 10 seconds for clips up to 60 seconds. Every ticket
-carries ``stage_timing_ms`` and ``processing_ms``. If latency is over
-target, the slowest stage is reported to its owner, never hidden in an
-average. Hardware is recorded with every report.
+carries ``stage_timing_ms`` and ``processing_ms``. The slowest stage is
+named in the report, never hidden in an average. Hardware is recorded
+with every report.
+
+``processing_ms`` covers the pipeline run only: upload transfer time,
+intake measurement time, and queue time are excluded, so the report
+understates the end-to-end time a client experiences. That is a known
+limitation of the Phase 1 measurement, not a bug in the report.
 """
 
 from __future__ import annotations
@@ -19,6 +24,8 @@ from typing import Callable, Iterator
 
 def percentile(values: list[float], pct: float = 95.0) -> float | None:
     """Nearest-rank percentile. Returns None for an empty list."""
+    if pct < 0 or pct > 100:
+        raise ValueError(f"percentile must be between 0 and 100, got {pct}")
     if not values:
         return None
     ordered = sorted(values)
@@ -36,19 +43,40 @@ class Timer:
 
     def __init__(self) -> None:
         self._start = time.perf_counter()
+        self.stage_timings: dict[str, float] = {}
 
     def elapsed_ms(self) -> float:
         return round((time.perf_counter() - self._start) * 1000, 2)
 
     @contextmanager
-    def stage(self, _name: str) -> Iterator[Callable[[], float]]:
-        """Time one stage; yields a callable returning its elapsed ms."""
+    def stage(self, name: str) -> Iterator[Callable[[], float]]:
+        """Time one stage; yields a callable returning its elapsed ms.
+
+        The value freezes when the ``with`` block exits, so calling the
+        callable later never inflates the stage time with later work. The
+        frozen value is also recorded on ``stage_timings`` under the
+        stage name.
+        """
         start = time.perf_counter()
-        yield lambda: round((time.perf_counter() - start) * 1000, 2)
+        frozen: dict[str, float] = {}
+
+        def _elapsed() -> float:
+            if "value" in frozen:
+                return frozen["value"]
+            return round((time.perf_counter() - start) * 1000, 2)
+
+        yield _elapsed
+        frozen["value"] = round((time.perf_counter() - start) * 1000, 2)
+        self.stage_timings[name] = frozen["value"]
 
 
 def hardware_report() -> dict:
-    """Hardware / runtime record, attached to every latency report."""
+    """Hardware / runtime record, attached to every latency report.
+
+    ``cpu_count`` and ``memory_total_mb`` are null when the platform does
+    not expose them (rare on the demo hosts); a null there means
+    "unknown", not zero.
+    """
     try:
         mem_total_mb = round(os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES") / 1024 / 1024)
     except (ValueError, OSError, AttributeError):
@@ -68,7 +96,17 @@ def summarize_latency(
     stage_timings: list[dict[str, float]],
     target_ms: float = 10_000.0,
 ) -> dict:
-    """p95 report over a set of runs: total p95, per-stage p95, slowest stage."""
+    """p95 report over a set of runs: total p95, per-stage p95, slowest stage.
+
+    ``within_target`` is null when there are no runs: a report with no
+    data is not a target breach.
+    """
+    if len(processing_ms_values) != len(stage_timings):
+        raise ValueError(
+            "processing_ms_values and stage_timings must have the same "
+            f"length (got {len(processing_ms_values)} and "
+            f"{len(stage_timings)})"
+        )
     per_stage: dict[str, list[float]] = {}
     for timings in stage_timings:
         for stage, value in timings.items():
@@ -80,7 +118,7 @@ def summarize_latency(
         "runs": len(processing_ms_values),
         "p95_processing_ms": total_p95,
         "target_ms": target_ms,
-        "within_target": total_p95 is not None and total_p95 < target_ms,
+        "within_target": None if total_p95 is None else total_p95 < target_ms,
         "stage_p95_ms": stage_p95,
         "slowest_stage": slowest,
         "hardware": hardware_report(),

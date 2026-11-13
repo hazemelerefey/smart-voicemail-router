@@ -2,7 +2,7 @@
 
 A local-first competition prototype that turns a single-speaker Egyptian Arabic voicemail, including English telecom terms, into an explainable callback ticket.
 
-> **Project status:** the dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,751 clean training rows. The taxonomy is agreed and the model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. This branch, `team/arafa-systems-demo`, carries the Role 6 Phase 1 pipeline skeleton with mocks, API, and demo: 32 tests passing, verified live. Project documents and environment guidance live on `master`.
+> **Project status:** the dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,751 clean training rows. The taxonomy is approved and the model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. The category count is still to be confirmed by Hazem (9 in the model report, 10 approved, 11 in the audit app, 12 in the dataset tables); see Open decisions. This branch, `team/arafa-systems-demo`, carries the Role 6 Phase 1 pipeline skeleton with mocks, API, and demo: 86 tests passing, verified live. Project documents and environment guidance live on `master`.
 
 ## What it does
 
@@ -13,10 +13,10 @@ Pipeline, in order:
 ```text
 voicemail
   -> intake (validate WAV / MP3 / M4A, 25 MB, 60 s max)
-  -> STT (Whisper large-v3)
-  -> text classification (EgyBERT / MARBERTv2, four heads)
-  -> voice evidence (wav2vec2 XLS-R 300M)
-  -> triage and routing
+  -> STT (mock in Phase 1; Whisper large-v3 in Phase 2)
+  -> text classification (mock in Phase 1; EgyBERT / MARBERTv2 in Phase 2)
+  -> voice evidence (skipped in Phase 1; wav2vec2 XLS-R 300M in Phase 2)
+  -> triage and routing (mock in Phase 1)
   -> ticket
 ```
 
@@ -58,7 +58,7 @@ No recordings or transcripts are committed on this branch. The `.gitignore` excl
 │   └── svr-model-selection-report.md   # EgyBERT + MARBERTv2, XLS-R 300M, 14 papers
 ├── src/
 │   └── svr/                     # Role 6 Phase 1 pipeline skeleton, API, demo
-└── tests/                        # API, pipeline, and schema tests (32 passing)
+└── tests/                        # API, pipeline, schema, and store tests (86 passing)
 ```
 
 Project documents (PRD, architecture, team allocation, roles guide) and environment setup (CPU, GPU, Colab) live on [`master`](https://github.com/hazemelerefey/smart-voicemail-router/tree/master). The dataset and model work live on the `local-env` and team role branches.
@@ -76,7 +76,7 @@ python3 -m venv .venv
 .venv/bin/pip install -r src/svr/requirements.txt
 bash src/svr/run_api.sh        # API at http://127.0.0.1:8000, HTML demo at /
 bash src/svr/run_demo.sh       # Gradio demo at http://127.0.0.1:7860
-.venv/bin/python -m pytest tests/ -q   # 32 tests
+.venv/bin/python -m pytest tests/ -q   # 86 tests
 ```
 
 Phase 1 persists no audio: uploads are validated and measured, then the bytes are discarded, and the pipeline runs on metadata only. Phase 2 swaps the mocks for real components as they land (Sira audio pipeline, Lama text model, Ibthal ticket generator), one at a time, each tested in isolation. Phase 3 integrates everything, measures p95 latency, and runs the demo five consecutive times cleanly.

@@ -1,25 +1,15 @@
 """API tests: submit, poll, agents, patch + audit, latency, websocket."""
 
-import io
 import time
-import wave
 
+import pytest
+from conftest import make_wav_bytes
 from fastapi.testclient import TestClient
 
 from svr.api import app
 from svr.store import STORE
 
 client = TestClient(app)
-
-
-def make_wav_bytes(duration_s: float = 1.0, rate: int = 16000, channels: int = 1) -> bytes:
-    buf = io.BytesIO()
-    with wave.open(buf, "wb") as wav:
-        wav.setnchannels(channels)
-        wav.setsampwidth(2)
-        wav.setframerate(rate)
-        wav.writeframes(b"\x00\x00" * channels * int(rate * duration_s))
-    return buf.getvalue()
 
 
 def poll_ticket(ticket_id: str, timeout_s: float = 5.0) -> dict:
@@ -56,20 +46,79 @@ def test_submit_wav_returns_202_and_ticket_completes():
     assert ticket["processing_ms"] < 10_000
     assert ticket["transcript"] == "[fixture transcript]"
     assert "Assigned because" in ticket["route_reason"]
+    # The full contract, not just the headline fields.
+    assert ticket["assignment_status"] == "assigned"
+    assert ticket["priority_score"] is None
+    assert ticket["summary"]
+    assert ticket["customer_request"]
+    assert ticket["suggested_script"]
+    assert ticket["voice_state_candidate"] is None
+    assert ticket["schema_version"] == 1
+    assert ticket["label_version"] == "taxonomy-2026-11-11"
+    assert set(ticket["stage_status"]) == {
+        "intake",
+        "stt",
+        "text_analysis",
+        "voice_evidence",
+        "triage",
+    }
+    assert set(ticket["stage_timing_ms"]) == set(ticket["stage_status"])
+    assert all(v >= 0 for v in ticket["stage_timing_ms"].values())
+    evidence = ticket["audio_evidence"]
+    assert evidence["transcript"] == "[fixture transcript]"
+    assert evidence["stt_provider"] == "mock"
+    text = ticket["text_analysis"]
+    assert text["confidence"] == 0.9
+    assert text["summary"] == ticket["summary"]
+    decision = ticket["triage_decision"]
+    assert decision["assigned_agent_id"] == "agent-demo-network"
+    assert decision["assignment_status"] == "assigned"
+    assert decision["route_reason"] == ticket["route_reason"]
+    events = [e["event"] for e in ticket["events"]]
+    assert events == ["submitted", "completed"]
 
 
 def test_ticket_visible_within_2s_of_submit():
+    """Submit-to-visible time: the ticket is visible immediately as a
+    placeholder, and the run finishes well within 2 seconds of submit."""
+    start = time.time()
     resp = client.post(
         "/api/voicemails",
         files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
     )
     assert resp.status_code == 202
     ticket_id = resp.json()["ticket_id"]
-    start = time.time()
     got = client.get(f"/api/tickets/{ticket_id}")
-    assert time.time() - start < 2.0
     assert got.status_code == 200
     assert got.json()["ticket_status"] in ("processing", "completed", "needs_review")
+    ticket = poll_ticket(ticket_id, timeout_s=2.0)
+    assert time.time() - start < 2.0
+    assert ticket["ticket_status"] in ("completed", "needs_review")
+
+
+def test_placeholder_visible_through_api():
+    """Placeholder safety through the API: a queued/processing ticket
+    carries no labels and needs_human_review True, so it can never be
+    mistaken for an answer. The placeholder is created exactly the way
+    the submit endpoint creates it, then read back through GET."""
+    STORE.create_placeholder(
+        "ticket-placeholder-api-001", "voicemail-placeholder-api-001"
+    )
+    resp = client.get("/api/tickets/ticket-placeholder-api-001")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["ticket_status"] == "processing"
+    assert data["needs_human_review"] is True
+    assert data["complaint_category"] is None
+    assert data["complaint_urgency"] is None
+    assert data["customer_state_text"] is None
+    assert data["churn_risk"] is None
+    assert data["transcript"] == ""
+    assert data["summary"] == ""
+    assert data["audio_evidence"] is None
+    assert data["text_analysis"] is None
+    assert data["triage_decision"] is None
+    assert [e["event"] for e in data["events"]] == ["submitted"]
 
 
 def test_submit_rejects_wrong_format():
@@ -160,6 +209,40 @@ def test_submit_rejects_wav_over_60s():
     )
     assert resp.status_code == 400
     assert "60 second" in resp.json()["detail"]
+
+
+def test_submit_accepts_wav_exactly_60s():
+    """Boundary: exactly 60.0 s passes the duration check (over rejects)."""
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("exact.wav", make_wav_bytes(duration_s=60.0), "audio/wav")},
+    )
+    assert resp.status_code == 202, resp.text
+    ticket = poll_ticket(resp.json()["ticket_id"])
+    assert ticket["ticket_status"] == "completed"
+    assert ticket["audio_evidence"]["duration_s"] == 60.0
+
+
+def test_submit_accepts_exactly_25_mib():
+    """Boundary: exactly 25 MiB passes the size check (over rejects)."""
+    import io
+    import wave
+
+    frames = (25 * 1024 * 1024 - 44) // 4  # 192 kHz stereo, 16-bit
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as wav:
+        wav.setnchannels(2)
+        wav.setsampwidth(2)
+        wav.setframerate(192000)
+        wav.writeframes(b"\x00\x00" * 2 * frames)
+    data = buf.getvalue()
+    assert len(data) == 25 * 1024 * 1024
+    resp = client.post(
+        "/api/voicemails", files={"file": ("exact.wav", data, "audio/wav")}
+    )
+    assert resp.status_code == 202, resp.text
+    ticket = poll_ticket(resp.json()["ticket_id"])
+    assert ticket["ticket_status"] == "completed"
 
 
 def test_get_unknown_ticket_404():
@@ -332,13 +415,41 @@ def test_patch_unknown_agent_404():
 
 
 def test_latency_endpoint_reports_p95_and_hardware():
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
+    )
+    assert resp.status_code == 202, resp.text
+    poll_ticket(resp.json()["ticket_id"])
     resp = client.get("/api/latency")
     assert resp.status_code == 200
     data = resp.json()
-    assert "p95_processing_ms" in data
-    assert "hardware" in data
+    assert data["runs"] >= 1
+    assert data["p95_processing_ms"] is not None
+    assert data["p95_processing_ms"] < 10_000.0
+    assert data["within_target"] is True
     assert data["target_ms"] == 10_000.0
+    assert data["slowest_stage"] in {
+        "intake",
+        "stt",
+        "text_analysis",
+        "voice_evidence",
+        "triage",
+    }
+    assert data["stage_p95_ms"]["stt"] is not None
     assert data["hardware"]["cpu_count"] is not None
+
+
+def test_latency_endpoint_with_no_runs_is_not_a_breach():
+    """A report with no data is not a target breach: p95 is null and
+    within_target is null, not False."""
+    resp = client.get("/api/latency")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["runs"] == 0
+    assert data["p95_processing_ms"] is None
+    assert data["within_target"] is None
+    assert data["slowest_stage"] is None
 
 
 def test_placeholder_ticket_needs_review_and_has_no_labels():
@@ -364,11 +475,16 @@ def test_websocket_queue_snapshot():
         msg = ws.receive_json()
         assert msg["type"] == "queue_snapshot"
         assert isinstance(msg["tickets"], list)
+    # A dropped client is removed from the hub, not left in the list.
+    from svr.api import HUB
+
+    assert HUB._connections == []
 
 
 def test_websocket_receives_completed_ticket_update():
     """A connected /ws/queue client gets a ticket_update when a POSTed run
-    completes, not just the snapshot on connect."""
+    completes, not just the snapshot on connect. The update carries the
+    full ticket content, and the snapshot list carries it too."""
     import threading
 
     received: dict = {}
@@ -397,6 +513,48 @@ def test_websocket_receives_completed_ticket_update():
         assert msg["ticket_id"] == ticket_id
         assert msg["ticket"]["ticket_status"] == "completed"
         assert msg["ticket"]["complaint_category"] == "network_and_connectivity"
+        assert "Assigned because" in msg["ticket"]["route_reason"]
+        assert msg["ticket"]["stage_status"]["voice_evidence"] == "skipped"
+        assert msg["ticket"]["processing_ms"] > 0
+        assert msg["ticket"]["transcript"] == "[fixture transcript]"
+        assert any(t["id"] == ticket_id for t in msg["tickets"])
+
+
+def test_demo_page_returns_html_without_innerhtml():
+    """GET / serves the HTML demo, and server data is rendered with
+    textContent/DOM APIs, never innerHTML (no latent XSS)."""
+    resp = client.get("/")
+    assert resp.status_code == 200
+    assert "Smart Voicemail Router" in resp.text
+    assert "<form" in resp.text
+    assert "innerHTML" not in resp.text
+    assert "textContent" in resp.text
+    assert "replaceChildren" in resp.text
+
+
+def test_patch_rejects_unknown_actor():
+    """The audit actor is validated against a known set: a caller cannot
+    stamp events as someone else."""
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
+    )
+    ticket_id = resp.json()["ticket_id"]
+    poll_ticket(ticket_id)
+    assert (
+        client.patch(
+            f"/api/tickets/{ticket_id}",
+            json={"assignment_status": "unassigned", "actor": "mallory"},
+        ).status_code
+        == 422
+    )
+    assert (
+        client.patch(
+            f"/api/tickets/{ticket_id}",
+            json={"assignment_status": "unassigned", "actor": "hazem"},
+        ).status_code
+        == 200
+    )
 
 
 def test_health_endpoint():
@@ -449,6 +607,22 @@ def test_demo_run_accepts_wav_file(tmp_path):
     data = json.loads(raw)
     assert data["ticket_status"] == "completed"
     assert data["complaint_category"] == "network_and_connectivity"
+    # The demo serialises the same TicketDetail shape as the API.
+    assert data["audio_evidence"]["transcript"] == "[fixture transcript]"
+    assert data["text_analysis"]["confidence"] == 0.9
+    assert (
+        data["triage_decision"]["assigned_agent_id"] == "agent-demo-network"
+    )
+    assert data["events"] == []
+
+
+def test_gradio_demo_builds():
+    gradio = pytest.importorskip("gradio")
+    from svr.demo import build_demo
+
+    demo = build_demo()
+    assert demo is not None
+    assert hasattr(demo, "launch")
 
 
 def test_wav_ticket_evidence_reports_measured_values():

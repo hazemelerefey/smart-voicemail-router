@@ -1,22 +1,12 @@
 """Pipeline tests: end-to-end mock run, null/review rules, latency."""
 
-import io
-import wave
+import pytest
 
+from conftest import make_wav_bytes
 from svr import fixtures
-from svr.latency import p95, percentile, summarize_latency
+from svr.latency import Timer, p95, percentile, summarize_latency
 from svr.pipeline import fixture_ticket, run_pipeline
-from svr.stages.intake import AudioMeta, validate_and_measure
-
-
-def make_wav_bytes(duration_s: float = 1.0, rate: int = 16000, channels: int = 1) -> bytes:
-    buf = io.BytesIO()
-    with wave.open(buf, "wb") as wav:
-        wav.setnchannels(channels)
-        wav.setsampwidth(2)
-        wav.setframerate(rate)
-        wav.writeframes(b"\x00\x00" * channels * int(rate * duration_s))
-    return buf.getvalue()
+from svr.stages.intake import AudioMeta, validate_and_measure, validate_metadata
 
 
 def make_meta(
@@ -188,6 +178,74 @@ def test_latency_summary_reports_hardware_and_slowest_stage():
 
 def test_fixture_ticket_helper():
     assert fixture_ticket().id == fixtures.FIXTURE_TICKET_ID
+
+
+def test_validate_metadata_boundaries():
+    """Boundary values: exactly 25 MiB and exactly 60.0 s pass; one byte
+    or a tenth of a second over rejects."""
+    assert (
+        validate_metadata("test.wav", 25 * 1024 * 1024, 60.0, True, "voicemail-b-001").size_bytes
+        == 25 * 1024 * 1024
+    )
+    with pytest.raises(ValueError, match="25 MB"):
+        validate_metadata("test.wav", 25 * 1024 * 1024 + 1, None, False, "voicemail-b-002")
+    with pytest.raises(ValueError, match="60 second"):
+        validate_metadata("test.wav", 100, 60.1, True, "voicemail-b-003")
+
+
+def test_audio_meta_rejects_bad_voicemail_id():
+    """voicemail_id shape: no slashes, no whitespace, at most 64 chars."""
+    with pytest.raises(ValueError, match="voicemail_id"):
+        AudioMeta(
+            voicemail_id="voicemail/bad id",
+            filename="test.wav",
+            format="wav",
+            size_bytes=100,
+            duration_s=1.0,
+            duration_checked=True,
+        )
+    with pytest.raises(ValueError, match="voicemail_id"):
+        AudioMeta(
+            voicemail_id="x" * 65,
+            filename="test.wav",
+            format="wav",
+            size_bytes=100,
+            duration_s=1.0,
+            duration_checked=True,
+        )
+
+
+def test_timer_stage_freezes_elapsed_on_exit():
+    """Timer.stage records the name and freezes the elapsed value when the
+    block exits: calling it later never inflates the stage time."""
+    import time
+
+    timer = Timer()
+    with timer.stage("intake") as elapsed:
+        time.sleep(0.01)
+    first = elapsed()
+    assert first >= 10
+    time.sleep(0.02)
+    assert elapsed() == first
+    assert timer.stage_timings["intake"] == first
+
+
+def test_percentile_rejects_out_of_range():
+    with pytest.raises(ValueError):
+        percentile([1, 2, 3], 101.0)
+    with pytest.raises(ValueError):
+        percentile([1, 2, 3], -1.0)
+    assert percentile([10, 20, 30, 40], 50.0) == 20
+
+
+def test_summarize_latency_rejects_mismatched_inputs():
+    with pytest.raises(ValueError, match="same length"):
+        summarize_latency([100.0], [{"intake": 10}, {"intake": 12}])
+    report = summarize_latency([], [])
+    assert report["runs"] == 0
+    assert report["p95_processing_ms"] is None
+    assert report["within_target"] is None
+    assert report["slowest_stage"] is None
 
 
 def _boom(*args, **kwargs):

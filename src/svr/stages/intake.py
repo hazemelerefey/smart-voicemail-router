@@ -15,7 +15,6 @@ from dataclasses import dataclass
 MAX_BYTES = 25 * 1024 * 1024  # 25 MB, contracts section 5
 MAX_DURATION_S = 60.0  # 60 seconds, contracts section 5
 ALLOWED_EXTENSIONS = {".wav", ".mp3", ".m4a"}
-ALLOWED_FORMATS = {"wav", "mp3", "m4a"}
 
 
 @dataclass
@@ -35,6 +34,21 @@ class AudioMeta:
     duration_checked: bool
     sample_rate_hz: int | None = None
     channels: int | None = None
+
+    def __post_init__(self) -> None:
+        # voicemail_id shape (issue #9): a non-empty id must be a plain
+        # token, no slashes, no whitespace, at most 64 characters. An
+        # empty id is allowed only as the "not assigned yet" default.
+        if self.voicemail_id:
+            if (
+                len(self.voicemail_id) > 64
+                or "/" in self.voicemail_id
+                or "\\" in self.voicemail_id
+                or any(c.isspace() for c in self.voicemail_id)
+            ):
+                raise ValueError(
+                    f"invalid voicemail_id shape: {self.voicemail_id!r}"
+                )
 
 
 def _extension(filename: str) -> str:

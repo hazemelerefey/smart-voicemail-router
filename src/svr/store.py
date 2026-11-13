@@ -19,7 +19,6 @@ from .schemas import (
     TicketDetail,
     TicketEvent,
     TicketStatus,
-    utcnow_iso,
 )
 
 
@@ -64,7 +63,7 @@ class TicketStore:
             self._events.clear()
 
     def create_placeholder(self, ticket_id: str, voicemail_id: str) -> Ticket:
-        """Ticket visible as queued/processing within 2 seconds of submit
+        """Ticket visible as processing within 2 seconds of submit
         (contracts section 5), before analysis begins. It carries no labels
         and needs_human_review True until its run finishes, so a queued
         record can never be mistaken for an answer."""
@@ -92,7 +91,7 @@ class TicketStore:
             self._tickets[ticket_id] = ticket
             self._events.setdefault(ticket_id, []).append(
                 TicketEvent(
-                    id=f"evt-{uuid.uuid4().hex[:8]}",
+                    id=f"evt-{uuid.uuid4().hex}",
                     ticket_id=ticket_id,
                     event="submitted",
                     detail="Voicemail submitted, pipeline run started.",
@@ -130,7 +129,7 @@ class TicketStore:
             self._details[ticket.id] = result
             self._events.setdefault(ticket.id, []).append(
                 TicketEvent(
-                    id=f"evt-{uuid.uuid4().hex[:8]}",
+                    id=f"evt-{uuid.uuid4().hex}",
                     ticket_id=ticket.id,
                     event="completed" if ticket.ticket_status.value == "completed" else "needs_review",
                     detail=f"Pipeline finished in {ticket.processing_ms} ms.",
@@ -300,7 +299,7 @@ class TicketStore:
                 detail += f", assigned_agent_id={assigned_agent_id}"
             self._events.setdefault(ticket_id, []).append(
                 TicketEvent(
-                    id=f"evt-{uuid.uuid4().hex[:8]}",
+                    id=f"evt-{uuid.uuid4().hex}",
                     ticket_id=ticket_id,
                     event="manual_update",
                     detail=detail or "no change",

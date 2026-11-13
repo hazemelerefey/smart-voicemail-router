@@ -13,6 +13,8 @@ ticket is marked for human review instead of guessing (rule 1).
 
 from __future__ import annotations
 
+import copy
+
 from .. import fixtures
 from ..schemas import AudioEvidence, TextAnalysis
 from pydantic import ValidationError
@@ -37,7 +39,7 @@ def classify_mock(
     of the fixture payload, e.g. ``{"complaint_category": None}`` to prove
     the null/review rules, or an invalid value to prove rejection. Only the
     four label fields may be overridden; anything else is rejected."""
-    payload = dict(fixtures.FIXTURE_TEXT_ANALYSIS)
+    payload = copy.deepcopy(fixtures.FIXTURE_TEXT_ANALYSIS)
     payload["voicemail_id"] = audio.voicemail_id
     if override:
         forbidden = sorted(set(override) - ALLOWED_OVERRIDE_KEYS)

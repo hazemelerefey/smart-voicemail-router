@@ -3,8 +3,9 @@
 Owner: Ahmed Gamal Arfa ([@AhmdArFa](https://github.com/AhmdArFa)),
 Systems Integration and Demo Engineer.
 Branch: `team/arafa-systems-demo`.
-Status: pushed. Latest commits `33b692f` (skeleton) and `5029e75` (merge),
-32 tests passing, verified live. Last update: 12 November 2026.
+Status: pushed. Phase 1 audit fixes for Hazem's issues #2-#9 applied on
+this branch, 86 tests passing, verified live 13 November 2026.
+Last update: 13 November 2026.
 Source of truth: **SVR Contracts v1.0** (`arafa-contracts-v1.md` in the
 competition goal files), `schema_version: 1`,
 `label_version: "taxonomy-2026-11-11"`. Role guide: SVR-TEAM-04 Role 6.
@@ -16,7 +17,7 @@ a second one under `svr_pipeline/` in a separate worktree. This
 implementation is the one kept, and the three behaviours worth keeping
 from the second one were ported into it:
 
-1. **Queued placeholder safety.** A queued/processing ticket carries
+1. **Queued placeholder safety.** A processing ticket carries
    `needs_human_review: true` and no labels until its run finishes, so
    it can never be mistaken for an answer.
 2. **WebSocket live updates.** Connected `/ws/queue` clients receive a
@@ -88,7 +89,7 @@ first stage to last, with per-stage status and `stage_timing_ms` plus
 API (`src/svr/api.py`, contracts section 6):
 
 - `POST /api/voicemails`: 202 + ticket id, ticket visible as
-  queued/processing within 2 seconds, analysis in the background. Invalid
+  processing within 2 seconds, analysis in the background. Invalid
   format, size or duration is rejected with a clear 400 error (duration
   enforced for WAV only; MP3/M4A duration is measured in Phase 2 by the
   Audio/Speech role).
@@ -162,6 +163,17 @@ isolation before moving on (Role 6 Phase 2):
   store; SQLite is a candidate for the local demo.
 - **Competition deadline, judging criteria, demo format.** Hazem.
 
+## Open demo posture
+
+This is an open local demo, not a production service: no authentication,
+no rate limiting, and no request-size limit at the app layer beyond the
+25 MB upload limit (enforced while the upload streams in). Any caller
+can submit a voicemail, read any ticket, and PATCH any ticket's status
+or assignment; audit actors are validated against a known set, but that
+is not authentication. Run it on localhost only, never expose it
+publicly, and never point it at real customer data. Authentication and
+rate limiting are a Phase 3 decision, not a Phase 1 requirement.
+
 ## Known limitations
 
 - MP3/M4A duration is not measured at intake: the stdlib cannot parse
@@ -171,7 +183,6 @@ isolation before moving on (Role 6 Phase 2):
 - The in-memory store is per-process: restarting the API clears tickets.
 - `cached` is always false: cached output is allowed only for the exact
   preapproved demo file (contracts section 4.6) and no such file exists yet.
-- PATCH named-agent reassignment still needs a contracts decision: the
-  Ticket object carries no agent id field, the agent id lives on the
-  TriageDecision. PATCH covers ticket status, assignment status and a
-  validated `assigned_agent_id` for the audit trail only.
+- Agent capacity is concurrent load: assigning a run consumes one unit,
+  released when the run finishes or the ticket is reassigned/unassigned.
+  Loads reset when the API restarts.

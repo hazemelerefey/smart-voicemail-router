@@ -6,7 +6,7 @@ audio or transcript is read.
 
 from __future__ import annotations
 
-import time
+import copy
 from typing import Callable
 
 from .latency import Timer
@@ -21,9 +21,6 @@ from .schemas import (
 )
 from .stages import classification, intake, stt, ticket as ticket_stage, triage, voice
 from .stages.intake import AudioMeta
-
-# Stage names in pipeline order (contracts section 1).
-STAGE_NAMES = ("intake", "stt", "text_analysis", "voice_evidence", "triage")
 
 
 class PipelineResult:
@@ -178,4 +175,4 @@ def fixture_ticket() -> Ticket:
     """The contracts section 9 fixture ticket, as a validated Ticket."""
     from . import fixtures
 
-    return Ticket.model_validate(fixtures.FIXTURE_TICKET)
+    return Ticket.model_validate(copy.deepcopy(fixtures.FIXTURE_TICKET))
