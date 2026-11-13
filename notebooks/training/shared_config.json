@@ -11,7 +11,7 @@
   "split_ratio": "70/20/10",
   "dataset_version": "v2",
   "dataset": "svr-voicemail-corpus",
-  "train_rows": 4031,
-  "val_rows": 1136,
-  "test_rows": 584
+  "train_rows": 3994,
+  "val_rows": 1130,
+  "test_rows": 576
 }

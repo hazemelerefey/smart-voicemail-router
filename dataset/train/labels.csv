@@ -3964,51 +3964,14 @@ calm_1230.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-29 at 11.33.07 PM.mp4,
 calm_1519.wav,svr-voicemail-corpus\WhatsApp Audio 2025-12-02 at 7.55.00 PM (3).mpeg,billing_and_charges,medium,calm,not_at_risk,,high
 satisfied_0173.wav,svr-voicemail-corpus\2053.mp4,thanks_or_praise,low,satisfied,not_at_risk,,high
 calm_1449.wav,svr-voicemail-corpus\WhatsApp Audio 2025-12-01 at 8.36.46 PM (1).ogg,other,low,calm,not_at_risk,question or request not fitting the other categories,high
-calm_0003.wav,svr-voicemail-corpus\0017.mp3,network_and_connectivity,medium,calm,not_at_risk,SMS not reaching company line despite working network,high
-frustrated_0027.wav,svr-voicemail-corpus\0084.m4a,network_and_connectivity,medium,frustrated,not_at_risk,calls keep cutting since network changed in area,low
-frustrated_0032.wav,svr-voicemail-corpus\0102.m4a,billing_and_charges,medium,frustrated,not_at_risk,unwanted deduction for a service never needed,low
-frustrated_0034.wav,svr-voicemail-corpus\0104.m4a,billing_and_charges,medium,frustrated,not_at_risk,deduction messages for services never subscribed to,high
-calm_0024.wav,svr-voicemail-corpus\0112.m4a,offers_and_packages,low,calm,not_at_risk,asks about new mobile offer with internet bundle,low
 calm_0041.wav,svr-voicemail-corpus\0203.aac,billing_and_charges,medium,calm,not_at_risk,bill amount unreasonably high,high
 frustrated_0075.wav,svr-voicemail-corpus\0248.mp4,network_and_connectivity,high,frustrated,not_at_risk,"network zero at certain times of day, messages do not arrive",high
-frustrated_0079.wav,svr-voicemail-corpus\0263.mp4,billing_and_charges,high,frustrated,not_at_risk,refund not received 5 days after failed transaction,high
-frustrated_0095.wav,svr-voicemail-corpus\0305.aac,app_and_account,medium,frustrated,not_at_risk,app code always says error,low
 calm_0062.wav,svr-voicemail-corpus\0328.mpeg,cancellation_request,low,calm,not_at_risk,asked to cancel a service but still gets messages about it,high
-frustrated_0106.wav,svr-voicemail-corpus\0336.m4a,balance_and_data,medium,frustrated,not_at_risk,unwanted deduction from balance,low
-frustrated_0129.wav,svr-voicemail-corpus\0375.mpeg,branch_and_staff,medium,frustrated,not_at_risk,"staff promised 48 hours, 4 days passed",low
-calm_0103.wav,svr-voicemail-corpus\0549.aac,no_reply_or_long_wait,medium,calm,not_at_risk,waits half an hour to reach customer service,high
-frustrated_0190.wav,svr-voicemail-corpus\0555.aac,sim_services,high,frustrated,not_at_risk,"wallet data lost after SIM change, no way to recover it",low
-calm_0160.wav,svr-voicemail-corpus\0696.mpeg,other,low,calm,not_at_risk,asks how to stop unwanted messages,low
-calm_0165.wav,svr-voicemail-corpus\0705.aac,balance_and_data,medium,calm,not_at_risk,top-up code rejected as wrong,low
-satisfied_0078.wav,svr-voicemail-corpus\0979.mpeg,thanks_or_praise,low,satisfied,not_at_risk,thanks for network improvement,low
-frustrated_0272.wav,svr-voicemail-corpus\0982.mpeg,network_and_connectivity,medium,frustrated,not_at_risk,no signal improvement after new network and SIM,low
-frustrated_0284.wav,svr-voicemail-corpus\1003.wav,network_and_connectivity,medium,frustrated,not_at_risk,bad network for a long time; garbled tail,low
-frustrated_0286.wav,svr-voicemail-corpus\1024.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,website inquiry unanswered after a week,low
-frustrated_0299.wav,svr-voicemail-corpus\1083.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,"technical support very late, asks them to hurry",low
-frustrated_0353.wav,svr-voicemail-corpus\1373.m4a,billing_and_charges,high,frustrated,not_at_risk,refund not received 5 days after failed transaction,high
 calm_0450.wav,svr-voicemail-corpus\1504.mp3,other,low,calm,not_at_risk,why no option to pay bill from e-wallet,high
-frustrated_0711.wav,svr-voicemail-corpus\8oz Cafe and Restaurant.m4a,billing_and_charges,high,frustrated,not_at_risk,refund not received 5 days after failed transaction,low
-calm_1541.wav,svr-voicemail-corpus\WhatsApp Audio 2026-03-28 at 5.42.02 PM.mpeg,network_and_connectivity,high,calm,not_at_risk,"router lights on but no internet, restart did not help",low
 frustrated_1526.wav,svr-voicemail-corpus\WhatsApp Audio 2025-12-01 at 8.36.51 PM.ogg,billing_and_charges,medium,frustrated,not_at_risk,"bill suddenly increased this month, asks for review",high
 calm_1571.wav,svr-voicemail-corpus\h59.m4a,other,low,calm,not_at_risk,asks for a call me back,low
-frustrated_0483.wav,svr-voicemail-corpus\1823.mp4,network_and_connectivity,high,frustrated,not_at_risk,"speed below advertised, no improvement after calls, affects work",high
-frustrated_1741.wav,svr-voicemail-corpus\x23.mp3,network_and_connectivity,medium,frustrated,not_at_risk,"incoming calls not shown, harmed by it",high
-frustrated_1586.wav,svr-voicemail-corpus\WhatsApp Audio 2025-12-02 at 11.05.30 PM (1).ogg,balance_and_data,medium,frustrated,not_at_risk,contradictory messages: bundle renewed then finished,low
-calm_1124.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-27 at 12.59.42 PM (8).mpeg,offers_and_packages,low,calm,not_at_risk,can bundle renew after expiry or wait to month start,low
 frustrated_0991.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-21 at 9.56.02 PM (4).mp4,branch_and_staff,medium,frustrated,not_at_risk,staff dismisses deduction complaint as normal,high
 calm_1027.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-25 at 11.25.15 PM (4).mp4,sim_services,medium,calm,not_at_risk,SIM suddenly says not supported,high
-frustrated_0478.wav,svr-voicemail-corpus\1807.mp4,network_and_connectivity,high,frustrated,at_risk,"speed below advertised, affects work, may change provider",low
-frustrated_0720.wav,svr-voicemail-corpus\AUD-20251117-WA0051.m4a,branch_and_staff,medium,frustrated,not_at_risk,technical support spoke oddly and caused a work problem,low
-frustrated_1427.wav,svr-voicemail-corpus\WhatsApp Audio 2025-12-01 at 1.29.55 AM (1).mpeg,network_and_connectivity,high,frustrated,not_at_risk,internet stops every night at 10pm,high
-frustrated_1205.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-27 at 12.59.45 PM (2).aac,billing_and_charges,high,frustrated,not_at_risk,payment not received after 72 hours,low
-frustrated_0646.wav,svr-voicemail-corpus\2363.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,"emailed Tuesday, still waiting for a reply",low
-frustrated_1618.wav,svr-voicemail-corpus\WhatsApp Audio 2025-12-02 at 7.54.49 PM (3).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,"line installation requested months ago, nobody came",low
-calm_0948.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-21 at 9.56.01 PM.mp4,balance_and_data,medium,calm,not_at_risk,bundle renewed an hour early and a day deducted,high
-calm_1143.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-27 at 2.07.06 PM (3).aac,offers_and_packages,low,calm,not_at_risk,can bundle be activated after expiry or must wait,low
-calm_0880.wav,svr-voicemail-corpus\New recoprding 9.m4a,offers_and_packages,low,calm,not_at_risk,asks about internet offers for travel,low
-frustrated_0717.wav,svr-voicemail-corpus\AUD-20251104-WA0043.m4a,balance_and_data,medium,frustrated,not_at_risk,bundle drains fast without use,low
-frustrated_1298.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-29 at 11.33.09 PM (1).mp4,network_and_connectivity,high,frustrated,not_at_risk,"router disconnects 2 hours after restart, no support answer",high
-frustrated_1195.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-27 at 11.11.43 AM (2).mp4,app_and_account,medium,frustrated,not_at_risk,settings update requested weekly and breaks settings,low
 calm_0464.wav,svr-voicemail-corpus\1595.mp3,network_and_connectivity,medium,calm,not_at_risk,"internet speed changed suddenly, wants to know why",high
 frustrated_0434.wav,svr-voicemail-corpus\1612.mp3,balance_and_data,medium,frustrated,not_at_risk,internet package ran out in under two days with normal use,high
 calm_0469.wav,svr-voicemail-corpus\1616.mp3,balance_and_data,medium,calm,not_at_risk,balance deducted for a games service; transcript garbled,low

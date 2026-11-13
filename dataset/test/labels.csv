@@ -573,13 +573,5 @@ calm_0212.wav,svr-voicemail-corpus\WhatsApp Audio 2025-12-01 at 12.25.03 PM.ogg,
 frustrated_0115.wav,svr-voicemail-corpus\New Recording 66 (2).m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
 calm_0130.wav,svr-voicemail-corpus\AUDIO-2025-12-02-03-09-12.m4a,network_and_connectivity,low,calm,not_at_risk,,high
 satisfied_0021.wav,svr-voicemail-corpus\1812.mp3,thanks_or_praise,low,satisfied,not_at_risk,,high
-frustrated_0002.wav,svr-voicemail-corpus\0060.m4a,branch_and_staff,medium,frustrated,not_at_risk,support agent replies without listening; garbled tail,low
-calm_0007.wav,svr-voicemail-corpus\0117.mp4,sim_services,low,calm,not_at_risk,asks if a different line can be made from old number,high
-calm_0015.wav,svr-voicemail-corpus\0265.mp4,app_and_account,medium,calm,not_at_risk,website says number is unregistered when entering it,low
-frustrated_0014.wav,svr-voicemail-corpus\0405.aac,branch_and_staff,medium,frustrated,not_at_risk,told problem solved while still unsolved,high
-frustrated_0017.wav,svr-voicemail-corpus\0442.aac,network_and_connectivity,high,frustrated,not_at_risk,internet works minutes then down for hours,low
-frustrated_0239.wav,svr-voicemail-corpus\تسجيل (7).m4a,billing_and_charges,medium,frustrated,not_at_risk,Rosette service deducting without use,high
-calm_0165.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-26 at 1.52.41 PM (1).ogg,network_and_connectivity,low,calm,not_at_risk,question about 4G only or 3G only network mode,low
-frustrated_0205.wav,svr-voicemail-corpus\WhatsApp Audio 2025-12-02 at 7.54.49 PM (4).mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,technician not arrived after a week,low
 frustrated_0222.wav,svr-voicemail-corpus\h50.m4a,no_reply_or_long_wait,medium,frustrated,not_at_risk,"promised a callback within 24 hours after a complaint, nobody called back; transcript garbled",low
 frustrated_0223.wav,svr-voicemail-corpus\h7.m4a,other,high,frustrated,not_at_risk,"wallet transfer to a friend never arrived, money lost, support said wait 48 hours",high

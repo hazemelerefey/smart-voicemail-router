@@ -1122,15 +1122,9 @@ calm_0360.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-29 at 8.31.55 PM (1).a
 calm_0328.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-27 at 12.59.45 PM (2).mp4,network_and_connectivity,low,calm,not_at_risk,,high
 frustrated_0140.wav,svr-voicemail-corpus\1880.mp4,no_reply_or_long_wait,medium,frustrated,not_at_risk,,high
 frustrated_0174.wav,svr-voicemail-corpus\2303.aac,network_and_connectivity,medium,frustrated,not_at_risk,,high
-calm_0008.wav,svr-voicemail-corpus\0157.m4a,offers_and_packages,low,calm,not_at_risk,asks why bundle does not change,low
-calm_0015.wav,svr-voicemail-corpus\0253.mp4,network_and_connectivity,high,calm,not_at_risk,calls ring with no sound then line cuts; asks to fix it,high
 calm_0029.wav,svr-voicemail-corpus\0458.mpeg,sim_services,low,calm,not_at_risk,asks if a second line can be made with same old number,high
-frustrated_0445.wav,svr-voicemail-corpus\WhatsApp Audio 2025-12-02 at 10.15.12 PM (1).mpeg,offers_and_packages,low,frustrated,not_at_risk,should not have to wait for bundle to end to change it,high
 calm_0168.wav,svr-voicemail-corpus\2097.mp4,offers_and_packages,low,calm,not_at_risk,why no renewal,high
 frustrated_0293.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-23 at 8.08.58 PM (1).ogg,billing_and_charges,medium,frustrated,not_at_risk,balance deducted by news service never subscribed to,high
-frustrated_0129.wav,svr-voicemail-corpus\1760.mp3,branch_and_staff,medium,frustrated,not_at_risk,"staff price vs website price mismatch, called misleading",low
-frustrated_0302.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-25 at 11.25.15 PM (3).mp4,offers_and_packages,low,frustrated,not_at_risk,who notifies of bundle expiry; sudden no internet,high
-frustrated_0205.wav,svr-voicemail-corpus\AUDIO-2025-11-21-01-32-32 2.m4a,balance_and_data,medium,frustrated,not_at_risk,Salafny says not eligible though always tops up,low
 calm_0010.wav,svr-voicemail-corpus\0177.mp3,offers_and_packages,low,calm,not_at_risk,asks about a router installment plan with the monthly subscription,high
 unclear_0001.wav,svr-voicemail-corpus\WhatsApp Audio 2025-11-22 at 2.07.14 PM (5).mp4,balance_and_data,medium,unclear,not_at_risk,transcript heavily garbled; package seems to drain early though WhatsApp is unused,low
 frustrated_0484.wav,svr-voicemail-corpus\n36.m4a,cancellation_request,low,frustrated,not_at_risk,ad messages keep coming after opting out with STOP; garbled tail,high
