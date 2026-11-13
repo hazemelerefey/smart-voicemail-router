@@ -6,6 +6,8 @@
 **Task:** Multi-task classification, four labels per voicemail: complaint_category (9 classes), complaint_urgency (3 classes), customer_state (5 classes), churn_risk (2 classes, at_risk 0.5 percent).
 **Sources:** 46 research notes in the vault at `research/notes/`, covering models, methods, training, and papers. Every factual claim below traces to a vault note or a fetched source.
 
+Note: this report was written on 12 November 2026 when the clean set was 5,751 rows (train 4,031, validation 1,136, test 584). The clean set was later reduced to 5,096 rows (train 3,575, validation 1,003, test 518) by excluding the 655 worst transcripts (Whisper logprob below -0.30). The numbers in this report refer to the 5,751 row set. The current numbers and the current recommendations are in `recommendations.md` in this folder.
+
 ---
 
 ## Part 1: Recommended Models and Hyperparameters
@@ -122,6 +124,7 @@ For churn (at_risk 0.5 percent): at_risk precision, recall, F1 with raw counts, 
 - Labels are unaudited: the training labels may contain mistakes, and the team audit runs in parallel with training for about a month. Train normally on the current labels, and do not wait for the audit. When the audit finishes and the corrections are applied, Phase 7 retrains on the cleaned dataset. A low result before the audit does not mean the model or the hyperparameters are wrong.
 - Small dataset: 4,031 training rows is small for fine-tuning. That is why the learning rate is low (2e-5, not 5e-5), epochs are capped at 5 with early stopping, and 5 seeds are required. Never trust a single run.
 - Severe imbalance: churn at_risk is 0.5 percent (about 22 training rows). No training-time method alone fixes that. Class weights plus validation threshold tuning are mandatory, and churn must be reported on validation plus test pooled with raw counts, never on test alone.
+- **Data note:** the voicemails are simulated. They were recorded by people for data collection, not by real customers, and the emotions in them are acted. Even a human annotator cannot reliably judge the emotion (mad, calm, and the rest) from the voice alone. For that reason the transcription and the words are the main signal: the category, the urgency, and the customer state are all judged from the words. The audio emotion model is an experiment. It must prove it adds signal over the text alone, and if it does not, it is dropped.
 
 ## Part 2: Picked Papers
 
