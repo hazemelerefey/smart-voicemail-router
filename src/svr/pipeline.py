@@ -96,6 +96,8 @@ def run_pipeline(
                 audio_meta.duration_s,
                 audio_meta.duration_checked,
                 voicemail_id,
+                audio_meta.sample_rate_hz,
+                audio_meta.channels,
             )
         except ValueError as exc:
             stage_timing_ms["intake"] = elapsed()

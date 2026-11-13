@@ -12,13 +12,13 @@ from svr.store import STORE
 client = TestClient(app)
 
 
-def make_wav_bytes(duration_s: float = 1.0, rate: int = 16000) -> bytes:
+def make_wav_bytes(duration_s: float = 1.0, rate: int = 16000, channels: int = 1) -> bytes:
     buf = io.BytesIO()
     with wave.open(buf, "wb") as wav:
-        wav.setnchannels(1)
+        wav.setnchannels(channels)
         wav.setsampwidth(2)
         wav.setframerate(rate)
-        wav.writeframes(b"\x00\x00" * int(rate * duration_s))
+        wav.writeframes(b"\x00\x00" * channels * int(rate * duration_s))
     return buf.getvalue()
 
 
@@ -238,6 +238,62 @@ def test_demo_markdown_shows_flags_timings_and_reason():
     assert "Route reason:" in text
     assert "Stage timings:" in text
     assert "fusion disabled" in text
+
+
+def test_wav_ticket_evidence_reports_measured_values():
+    """A live WAV ticket shows audio_path_local null (Phase 1 persists no
+    audio) and duration/sample rate/channels equal to the real WAV header."""
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
+    )
+    assert resp.status_code == 202, resp.text
+    ticket = poll_ticket(resp.json()["ticket_id"])
+    evidence = ticket["audio_evidence"]
+    assert evidence["audio_path_local"] is None
+    assert evidence["duration_s"] == 1.0
+    assert evidence["sample_rate_hz"] == 16000
+    assert evidence["channels"] == 1
+    assert evidence["format"] == "wav"
+
+
+def test_stereo_wav_ticket_evidence_reports_header_values():
+    """A 44.1 kHz stereo WAV does not get evidence claiming 16 kHz mono."""
+    resp = client.post(
+        "/api/voicemails",
+        files={
+            "file": (
+                "stereo.wav",
+                make_wav_bytes(duration_s=1.0, rate=44100, channels=2),
+                "audio/wav",
+            )
+        },
+    )
+    assert resp.status_code == 202, resp.text
+    ticket = poll_ticket(resp.json()["ticket_id"])
+    evidence = ticket["audio_evidence"]
+    assert evidence["audio_path_local"] is None
+    assert evidence["duration_s"] == 1.0
+    assert evidence["sample_rate_hz"] == 44100
+    assert evidence["channels"] == 2
+
+
+def test_mp3_ticket_evidence_leaves_unmeasured_fields_null():
+    """A live MP3 ticket shows duration/sample rate/channels null, never
+    0.0 or a hardcoded value, and no uploads/ path."""
+    resp = client.post(
+        "/api/voicemails",
+        files={"file": ("test.mp3", b"ID3" + b"\x00" * 100, "audio/mpeg")},
+    )
+    assert resp.status_code == 202, resp.text
+    ticket = poll_ticket(resp.json()["ticket_id"])
+    assert ticket["ticket_status"] == "completed"
+    evidence = ticket["audio_evidence"]
+    assert evidence["audio_path_local"] is None
+    assert evidence["duration_s"] is None
+    assert evidence["sample_rate_hz"] is None
+    assert evidence["channels"] is None
+    assert evidence["format"] == "mp3"
 
 
 def test_background_task_exception_still_broadcasts_needs_review(monkeypatch):

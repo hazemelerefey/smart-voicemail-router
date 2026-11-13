@@ -20,7 +20,12 @@ ALLOWED_FORMATS = {"wav", "mp3", "m4a"}
 
 @dataclass
 class AudioMeta:
-    """Intake output: what is known about the audio before STT."""
+    """Intake output: what is known about the audio before STT.
+
+    ``duration_s``, ``sample_rate_hz`` and ``channels`` are measured from
+    the WAV header when the format is WAV; they stay null for MP3/M4A,
+    whose duration the stdlib cannot measure (Phase 2, Sira).
+    """
 
     voicemail_id: str
     filename: str
@@ -28,6 +33,8 @@ class AudioMeta:
     size_bytes: int
     duration_s: float | None
     duration_checked: bool
+    sample_rate_hz: int | None = None
+    channels: int | None = None
 
 
 def _extension(filename: str) -> str:
@@ -36,13 +43,19 @@ def _extension(filename: str) -> str:
     return name[dot:].lower() if dot != -1 else ""
 
 
-def _wav_duration_s(data: bytes) -> float:
+def _wav_info(data: bytes) -> tuple[float, int, int]:
+    """Measured WAV values from the file header: duration, sample rate,
+    channel count. Raises ValueError on an invalid header."""
     with wave.open(io.BytesIO(data), "rb") as wav:
         frames = wav.getnframes()
         rate = wav.getframerate()
         if rate <= 0:
             raise ValueError("WAV file has an invalid frame rate")
-        return frames / rate
+        return frames / rate, rate, wav.getnchannels()
+
+
+def _wav_duration_s(data: bytes) -> float:
+    return _wav_info(data)[0]
 
 
 def validate_metadata(
@@ -51,6 +64,8 @@ def validate_metadata(
     duration_s: float | None = None,
     duration_checked: bool = False,
     voicemail_id: str = "",
+    sample_rate_hz: int | None = None,
+    channels: int | None = None,
 ) -> AudioMeta:
     """Validate upload metadata only. No audio bytes are read here: the
     endpoint measures them first (validate_and_measure) and the pipeline
@@ -75,6 +90,8 @@ def validate_metadata(
         size_bytes=size_bytes,
         duration_s=duration_s,
         duration_checked=duration_checked,
+        sample_rate_hz=sample_rate_hz,
+        channels=channels,
     )
 
 
@@ -91,9 +108,11 @@ def validate_and_measure(file_bytes: bytes, filename: str, voicemail_id: str) ->
     validate_metadata(filename, len(file_bytes), None, False, voicemail_id)
     duration: float | None = None
     duration_checked = False
+    sample_rate_hz: int | None = None
+    channels: int | None = None
     if _extension(filename) == ".wav":
         try:
-            duration = _wav_duration_s(file_bytes)
+            duration, sample_rate_hz, channels = _wav_info(file_bytes)
         except (wave.Error, EOFError, ValueError) as exc:
             raise ValueError(f"unreadable WAV file: {exc}") from exc
         duration_checked = True
@@ -101,5 +120,11 @@ def validate_and_measure(file_bytes: bytes, filename: str, voicemail_id: str) ->
     # (Sira's audio pipeline) measures it at intake; until then the file
     # is accepted on format and size only and duration_checked stays False.
     return validate_metadata(
-        filename, len(file_bytes), duration, duration_checked, voicemail_id
+        filename,
+        len(file_bytes),
+        duration,
+        duration_checked,
+        voicemail_id,
+        sample_rate_hz,
+        channels,
     )

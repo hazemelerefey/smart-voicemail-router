@@ -80,14 +80,21 @@ def utcnow_iso() -> str:
 
 
 class AudioEvidence(BaseModel):
-    """Contracts section 3.1, produced by Sira (mocked in Phase 1)."""
+    """Contracts section 3.1, produced by Sira (mocked in Phase 1).
+
+    Phase 1 persists no audio, so ``audio_path_local`` is null: the field
+    must never assert a file that was never written. ``duration_s``,
+    ``sample_rate_hz`` and ``channels`` are null when unmeasured (MP3/M4A);
+    0.0 is never a substitute for "not measured". For WAV they carry the
+    values read from the file header by intake (stdlib ``wave``).
+    """
 
     voicemail_id: str
-    audio_path_local: str
-    duration_s: float
+    audio_path_local: str | None = None
+    duration_s: float | None = None
     format: str
-    sample_rate_hz: int = 16000
-    channels: int = 1
+    sample_rate_hz: int | None = None
+    channels: int | None = None
     transcript: str
     stt_provider: str
     stt_model_version: str

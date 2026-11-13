@@ -9,13 +9,13 @@ from svr.pipeline import fixture_ticket, run_pipeline
 from svr.stages.intake import AudioMeta, validate_and_measure
 
 
-def make_wav_bytes(duration_s: float = 1.0, rate: int = 16000) -> bytes:
+def make_wav_bytes(duration_s: float = 1.0, rate: int = 16000, channels: int = 1) -> bytes:
     buf = io.BytesIO()
     with wave.open(buf, "wb") as wav:
-        wav.setnchannels(1)
+        wav.setnchannels(channels)
         wav.setsampwidth(2)
         wav.setframerate(rate)
-        wav.writeframes(b"\x00\x00" * int(rate * duration_s))
+        wav.writeframes(b"\x00\x00" * channels * int(rate * duration_s))
     return buf.getvalue()
 
 
@@ -139,6 +139,28 @@ def test_validate_and_measure_still_measures_wav_duration():
     assert meta.duration_checked is True
     assert meta.size_bytes == 32044
     assert meta.format == "wav"
+
+
+def test_validate_and_measure_reads_wav_header_values():
+    meta = validate_and_measure(
+        make_wav_bytes(duration_s=1.0, rate=44100, channels=2),
+        "stereo.wav",
+        "voicemail-test-005e",
+    )
+    assert meta.duration_s == 1.0
+    assert meta.sample_rate_hz == 44100
+    assert meta.channels == 2
+    assert meta.duration_checked is True
+
+
+def test_validate_and_measure_leaves_mp3_values_null():
+    meta = validate_and_measure(
+        b"ID3" + b"\x00" * 100, "test.mp3", "voicemail-test-005f"
+    )
+    assert meta.duration_s is None
+    assert meta.sample_rate_hz is None
+    assert meta.channels is None
+    assert meta.duration_checked is False
 
 
 def test_p95_helper():

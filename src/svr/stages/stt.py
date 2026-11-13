@@ -17,14 +17,19 @@ MOCK_STT_MODEL_VERSION = "mock-stt-0.1"
 
 
 def transcribe_mock(meta: AudioMeta) -> AudioEvidence:
-    """Mock STT: fixed fixture transcript, no audio is read or sent anywhere."""
+    """Mock STT: fixed fixture transcript, no audio is read or sent anywhere.
+
+    Evidence reports only measured values. Phase 1 persists no audio, so
+    ``audio_path_local`` is null; WAV duration, sample rate and channels
+    come from the header intake measured; MP3/M4A stay null (unmeasured).
+    """
     return AudioEvidence(
         voicemail_id=meta.voicemail_id,
-        audio_path_local=f"uploads/{meta.voicemail_id}.{meta.format}",
-        duration_s=meta.duration_s if meta.duration_s is not None else 0.0,
+        audio_path_local=None,
+        duration_s=meta.duration_s,
         format=meta.format,
-        sample_rate_hz=16000,
-        channels=1,
+        sample_rate_hz=meta.sample_rate_hz,
+        channels=meta.channels,
         transcript=fixtures.FIXTURE_TRANSCRIPT,
         stt_provider=MOCK_STT_PROVIDER,
         stt_model_version=MOCK_STT_MODEL_VERSION,
