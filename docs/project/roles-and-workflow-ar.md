@@ -25,7 +25,7 @@
 3. **القرار.** منطق الفرز بيحوّل الحقول الأربعة لqueue priority وcallback ticket مفسّرة.
 4. **التسليم.** الticket بتروح للموظف مع السبب، والتشغيل كله بيتقاس من ناحية accuracy and speed.
 
-dataset هي SVR Voicemail Corpus: عدد 6,522 رسالة صوتية، وعدد 5,751 صف تدريب نظيف، متقسمة تدريب 4,031، وvalidation 1,136، واختبار 584، seed 42. التسميات جاية من model، والفريق بيراجعها كل يوم لمدة شهر تقريبا. التدريب ماشي بالتوازي مع المراجعة على التسميات الحالية. ولما المراجعة تخلص، التسميات بتتصحح وmodels بتتدرب من تاني. retrain دي هي المرحلة الرابعة.
+dataset هي SVR Voicemail Corpus: عدد ⁦6,522⁩ رسالة صوتية، وعدد ⁦5,751⁩ صف تدريب نظيف، متقسمة train ⁦4,031⁩، و validation ⁦1,136⁩، و test 584، seed 42. التسميات جاية من model، والفريق بيراجعها كل يوم لمدة شهر تقريبا. التدريب ماشي بالتوازي مع المراجعة على التسميات الحالية. ولما المراجعة تخلص، التسميات بتتصحح وmodels بتتدرب من تاني. retrain دي هي المرحلة الرابعة.
 
 الشغل ماشي في أربع مراحل:
 
@@ -90,8 +90,8 @@ source .venv/bin/activate
 نفّذ الفحوصات دي قبل ما تبدأ شغل. ولازم كلها تنجح:
 
 1. training tables موجودة في `svr-data/final/`: وهي clean_training_train.csv وclean_training_val.csv وclean_training_test.csv.
-2. عدد الصفوف هو تدريب 4,031، وvalidation 1,136، واختبار 584، والمجموع 5,751.
-3. مجلدات الصوت فيها العدد نفسه: `dataset/train` فيه 4,031 ملف، و`dataset/val` فيه 1,136 ملف، و`dataset/test` فيه 584 ملف.
+2. عدد الصفوف هو train ⁦4,031⁩، و validation ⁦1,136⁩، و test 584، والمجموع ⁦5,751⁩.
+3. مجلدات الصوت فيها العدد نفسه: `dataset/train` فيه ⁦4,031⁩ ملف، و`dataset/val` فيه ⁦1,136⁩ ملف، و`dataset/test` فيه 584 ملف.
 4. كل ملف صوتي هو WAV بتردد 16 كيلوهرتز وقناة واحدة وبيشتغل.
 
 ولو أي عدد غلط، وقف وقول لحازم. ومتدرّبش على dataset متأكدتش منها.
@@ -178,7 +178,7 @@ training notebooks بتشتغل من الأول للآخر من غير أخطا�
 
 ### شغلك خطوة بخطوة
 
-**المرحلة 1.** اتأكدي من الصوت. وتأكدي إن training audio files اللي عددها 5,751 هي WAV بتردد 16 كيلوهرتز وقناة واحدة ومطابقة لtraining tables. وابني فحص الاستقبال اللي بيرفض الصوت الوحش وبيسجل السبب. وشغّلي Whisper large-v3 على عينة وسجّلي transcription quality وconfig. وابني XLS-R baseline: حمّلي facebook/wav2vec2-xls-r-300m، وجمّدي encoder، ودرّبي رأس تصنيف بسيط على train split، وسجّلي validation metrics. وbaseline ده بيقول للفريق الصوت لوحده يقدر يعمل إيه.
+**المرحلة 1.** اتأكدي من الصوت. وتأكدي إن training audio files اللي عددها ⁦5,751⁩ هي WAV بتردد 16 كيلوهرتز وقناة واحدة ومطابقة لtraining tables. وابني فحص الاستقبال اللي بيرفض الصوت الوحش وبيسجل السبب. وشغّلي Whisper large-v3 على عينة وسجّلي transcription quality وconfig. وابني XLS-R baseline: حمّلي facebook/wav2vec2-xls-r-300m، وجمّدي encoder، ودرّبي رأس تصنيف بسيط على train split، وسجّلي validation metrics. وbaseline ده بيقول للفريق الصوت لوحده يقدر يعمل إيه.
 
 **المرحلة 2.** درّبي audio model. ابدئي من Egyptian checkpoint IbrahimAmin/egyptian-arabic-wav2vec2-xlsr-53 لو اتحمّلت واتحقق منها. وخلّي encoder مجمد الأول، وبعدين اضبطي جزئيا الطبقات العليا من 2 لـ 4 طبقات. وسجّلي validation metrics لكل حقل ب5 seeds نفسها اللي بيستخدمها text model، عشان النتائج تتقارن. واختبري fusion الصوت مع النص بس لو audio baseline أظهر إشارة حقيقية: فلو audio model مضافش حاجة فوق النص لوحده، قولي ده بوضوح ومتفرضيش fusion. ولو fusion ساعد، سلّمي audio features للمى بالصيغة الموثقة.
 
@@ -202,7 +202,7 @@ training notebooks بتشتغل من الأول للآخر من غير أخطا�
 
 ### تعرفي إزاي إنك خلصتي
 
-audio pipeline بيتحقق من كل training files اللي عددها 5,751. وSTT validation متسجل. وaudio model عنده metrics validation لكل حقل ب5 seeds. وقرار fusion متسجل بالأدلة، سواء كانت الإجابة آه أو لأ.
+audio pipeline بيتحقق من كل training files اللي عددها ⁦5,751⁩. وSTT validation متسجل. وaudio model عنده metrics validation لكل حقل ب5 seeds. وقرار fusion متسجل بالأدلة، سواء كانت الإجابة آه أو لأ.
 
 ## الدور 3: لمى، Text Classification Engineer
 
