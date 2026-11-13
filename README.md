@@ -11,9 +11,10 @@ Ready branch. This branch has everything a member needs to clone and start worki
 - The latest docs in `docs/`.
 - The Phase 1 guides in `docs/project/`.
 - The model selection report in `research/`.
-- Arafa's pipeline skeleton in `src/svr/`, with tests in `tests/`.
 - Per-member requirements in `requirements/`.
 - `MEMBER.md`.
+
+Arafa's pipeline skeleton is NOT on this branch. It stays on his local machine until he fixes the audit issues, then he pushes it and members pull it.
 
 This branch was renamed from local-env. It is the data branch: the dataset lives on this branch.
 
@@ -41,4 +42,4 @@ The worktree folder for role branches is still `svr-data`: `git worktree add ../
 ## Notes
 
 - The taxonomy category count is not settled (9 vs 10 vs 11 vs 12). Hazem confirms the approved list. Do not change any label value.
-- Arafa's pipeline skeleton is merged unfixed. GitHub issues #1-#9 track the fixes.
+- Arafa's pipeline skeleton is NOT on this branch. It stays on his local machine while he fixes the audit issues (GitHub issues #1-#9). When the fixes are done he pushes it, and members pull it.
