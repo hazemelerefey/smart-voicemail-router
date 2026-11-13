@@ -28,7 +28,7 @@ from fastapi import (
     WebSocketDisconnect,
 )
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from . import agents as agents_module
 from .latency import summarize_latency
@@ -139,6 +139,8 @@ class SubmitResponse(BaseModel):
 
 
 class PatchTicket(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     ticket_status: TicketStatus | None = None
     assignment_status: AssignmentStatus | None = None
     assigned_agent_id: str | None = None

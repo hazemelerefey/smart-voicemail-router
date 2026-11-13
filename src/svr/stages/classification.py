@@ -49,6 +49,19 @@ def classify_mock(
                 + ", ".join(sorted(ALLOWED_OVERRIDE_KEYS))
             )
         payload.update(override)
+    # A null label is a correct output only with the review flag set
+    # (contracts section 4, rule 1): the mock sets it, so the TextAnalysis
+    # it returns always satisfies the schema's null/review rule.
+    if any(
+        payload.get(field) is None
+        for field in (
+            "complaint_category",
+            "complaint_urgency",
+            "customer_state_text",
+            "churn_risk",
+        )
+    ):
+        payload["needs_human_review"] = True
     try:
         return TextAnalysis.model_validate(payload)
     except ValidationError as exc:
