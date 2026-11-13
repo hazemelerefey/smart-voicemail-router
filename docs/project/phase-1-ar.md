@@ -24,8 +24,9 @@
 الـ dataset هو SVR Voicemail Corpus. الأرقام دي هي الأساس، وكل الشغل بيتبني عليها:
 
 - **⁦6,522⁩** رسالة صوتية في المجموع.
-- **⁦5,751⁩** صف نضيف للتدريب، بعد ما اتشال منهم الصفوف المستبعدة والمكررة.
-- الـ ⁦5,751⁩ صف دول متقسمين كده: **train ⁦4,031⁩** و **validation ⁦1,136⁩** و **test 584**. (⁦4,031⁩ + ⁦1,136⁩ + 584 = ⁦5,751⁩.)
+- **⁦5,096⁩** صف نضيف للتدريب، بعد ما اتشال منهم الصفوف المستبعدة والمكررة.
+- الـ ⁦5,096⁩ صف دول متقسمين كده: **train ⁦3,575⁩** و **validation ⁦1,003⁩** و **test 518**. (⁦3,575⁩ + ⁦1,003⁩ + 518 = ⁦5,096⁩.)
+- اتشال أسوأ 655 transcript من الـ clean set، لأن الـ Whisper logprob بتاعها أقل من -0.30.
 - الـ seed بتاع التقسيم هو 42.
 
 ## قبل ما تبدأ: من الـ terminal لأول run
@@ -142,8 +143,8 @@ pip install pandas numpy scikit-learn
 شغّل الفحوصات دي قبل ما تبدأ الشغل. كلها لازم تعدي:
 
 1. جداول التدريب موجودة في `svr-data/final/`: clean_training_train.csv و clean_training_val.csv و clean_training_test.csv.
-2. عدد الصفوف هو train ⁦4,031⁩ و validation ⁦1,136⁩ و test 584، والمجموع ⁦5,751⁩.
-3. فولدرات الـ audio فيها نفس الأعداد: `dataset/train` فيه ⁦4,031⁩ ملف، و `dataset/val` فيه ⁦1,136⁩ ملف، و `dataset/test` فيه 584 ملف.
+2. عدد الصفوف هو train ⁦3,575⁩ و validation ⁦1,003⁩ و test 518، والمجموع ⁦5,096⁩.
+3. فولدرات الـ audio فيها نفس الأعداد: `dataset/train` فيه ⁦3,575⁩ ملف، و `dataset/val` فيه ⁦1,003⁩ ملف، و `dataset/test` فيه 518 ملف.
 4. كل ملف صوتي هو 16 kHz mono WAV وبيشتغل.
 
 لو أي عدد غلط، وقف وقول لل training leader. متدربش على dataset انت متأكدتش منه.
@@ -158,7 +159,7 @@ pip install pandas numpy scikit-learn
 4. فولدر `svr/` موجود وفيه الـ branch بتاع دورك.
 5. فولدر `svr-data/` موجود وفيه الـ dataset.
 6. الـ virtual environment متفعل، والـ packages الأساسية متنصبة.
-7. أعداد الـ data صح: train ⁦4,031⁩ و validation ⁦1,136⁩ و test 584.
+7. أعداد الـ data صح: train ⁦3,575⁩ و validation ⁦1,003⁩ و test 518.
 
 لو كل ده صح، انت جاهز تشتغل على المشروع.
 
@@ -206,7 +207,7 @@ pip install pandas numpy scikit-learn
 
 ### شغلك في المرحلة الأولى
 
-اتأكدي من الـ audio. اتأكدي إن ملفات التدريب الـ ⁦5,751⁩ كلها 16 kHz mono WAV ومطابقة لجداول التدريب. ابني الـ intake check اللي بيرفض الـ audio البايظ وبيسجل ليه اترفض. شغّلي Whisper large-v3 على عينة وسجلي جودة الـ transcription والـ configuration المستخدمة. ابني الـ XLS-R baseline: حمّلي facebook/wav2vec2-xls-r-300m، جمّدي الـ encoder، درّبي classifier head بسيط على الـ training split، وسجلي الـ validation metrics. الـ baseline ده بيقول للفريق الصوت لوحده يقدر يعمل إيه.
+اتأكدي من الـ audio. اتأكدي إن ملفات التدريب الـ ⁦5,096⁩ كلها 16 kHz mono WAV ومطابقة لجداول التدريب. ابني الـ intake check اللي بيرفض الـ audio البايظ وبيسجل ليه اترفض. شغّلي Whisper large-v3 على عينة وسجلي جودة الـ transcription والـ configuration المستخدمة. ابني الـ XLS-R baseline: حمّلي facebook/wav2vec2-xls-r-300m، جمّدي الـ encoder، درّبي classifier head بسيط على الـ training split، وسجلي الـ validation metrics. الـ baseline ده بيقول للفريق الصوت لوحده يقدر يعمل إيه.
 
 ### اللي غيرك محتاجه منك
 
@@ -216,7 +217,7 @@ pip install pandas numpy scikit-learn
 
 ### تعرفي إزاي إنك خلصتي
 
-الـ audio pipeline بيأكد على كل ملفات التدريب الـ ⁦5,751⁩. الـ STT validation متسجلة. الـ XLS-R baseline ليه validation metrics.
+الـ audio pipeline بيأكد على كل ملفات التدريب الـ ⁦5,096⁩. الـ STT validation متسجلة. الـ XLS-R baseline ليه validation metrics.
 
 ## الدور 3: لمى، Text Classification Engineer
 
@@ -368,7 +369,7 @@ pip install pandas numpy scikit-learn
 المرحلة الأولى خلصت لما:
 
 1. الـ training pipeline skeleton والـ shared config موجودين، وكل دور بيستخدمهم.
-2. سيرا أكدت على الـ ⁦5,751⁩ ملف صوتي، والـ XLS-R baseline متسجل.
+2. سيرا أكدت على الـ ⁦5,096⁩ ملف صوتي، والـ XLS-R baseline متسجل.
 3. لمى جهزت الـ single-task setup، والـ smoke test عدّى.
 4. آية سلمت الـ training infrastructure والـ TF-IDF baseline متسجل.
 5. ابتهال كتبت جدول قواعد الـ triage وصيغة التذكرة، والمولّد بيشتغل على fixtures.

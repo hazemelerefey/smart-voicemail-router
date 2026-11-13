@@ -19,12 +19,14 @@
 حازم بيكتب الـ training notebook skeleton اللي كل دور بيستخدمه. الـ notebook ده بيعمل كده:
 
 1. بيحمّل التلات جداول النضيفة من `svr-data/final/`:
-   - `clean_training_train.csv`، عدد الصفوف ⁦4,031⁩.
-   - `clean_training_val.csv`، عدد الصفوف ⁦1,136⁩.
-   - `clean_training_test.csv`، عدد الصفوف 584.
-2. بيتأكد إن فولدرات الـ audio مطابقة: `dataset/train/` فيه ⁦4,031⁩ ملف WAV، و `dataset/val/` فيه ⁦1,136⁩ ملف، و `dataset/test/` فيه 584 ملف.
+   - `clean_training_train.csv`، عدد الصفوف ⁦3,575⁩.
+   - `clean_training_val.csv`، عدد الصفوف ⁦1,003⁩.
+   - `clean_training_test.csv`، عدد الصفوف 518.
+2. بيتأكد إن فولدرات الـ audio مطابقة: `dataset/train/` فيه ⁦3,575⁩ ملف WAV، و `dataset/val/` فيه ⁦1,003⁩ ملف، و `dataset/test/` فيه 518 ملف.
 3. بيحدد الـ shared config اللي كل دور بيستخدمها: seed 42، و max sequence length 128، والتقسيم 70/20/10، ونسخة الـ dataset v2.
 4. الـ notebook ده هو الهيكل. لمى وسيرا وآية كلهم بيبنوا عليه. محدش بيبني على setup مختلف.
+
+اتشال أسوأ 655 transcript من الـ clean set، لأن الـ Whisper logprob بتاعها أقل من -0.30.
 
 ### مثال حقيقي: المراجعة والدمج
 
@@ -67,7 +69,7 @@
 
 ### مثال حقيقي: الـ TF-IDF baseline
 
-آية بتشغل الـ TF-IDF baseline. ده TF-IDF features مع logistic regression، model واحد لكل field، متدرب على الـ ⁦4,031⁩ صف بتوع الـ train، ومتقيّم على الـ ⁦1,136⁩ صف بتوع الـ validation. هي بتسجل الـ validation macro-F1 لكل field. الـ baseline ده هو المرجع اللي الـ neural models لازم تتفوق عليه.
+آية بتشغل الـ TF-IDF baseline. ده TF-IDF features مع logistic regression، model واحد لكل field، متدرب على الـ ⁦3,575⁩ صف بتوع الـ train، ومتقيّم على الـ ⁦1,003⁩ صف بتوع الـ validation. هي بتسجل الـ validation macro-F1 لكل field. الـ baseline ده هو المرجع اللي الـ neural models لازم تتفوق عليه.
 
 ## فين بيتقابلوا
 

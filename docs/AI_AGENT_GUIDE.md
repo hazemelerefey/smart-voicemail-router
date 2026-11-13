@@ -20,7 +20,7 @@ If a label, permission, retention rule, provider choice, schema behavior, or pro
 
 ## 3. EDA is done; do not change labels or splits
 
-The shared EDA is done, the taxonomy is agreed, and the labels exist and are being audited by the team. The clean training set holds 5,751 rows: train 4,031, validation 1,136, test 584, seed 42. Do not change the label classes, annotation rules, evaluation split, or thresholds without Hazem. The audit page is the mechanism for correcting labels: the team reviews them there every day, and the corrections are applied to the dataset in Phase 4.
+The shared EDA is done, the taxonomy is agreed, and the labels exist and are being audited by the team. The clean training set holds 5,096 rows: train 3,575, validation 1,003, test 518, seed 42. The 655 worst transcripts (Whisper logprob below -0.30) were excluded from the clean set. Do not change the label classes, annotation rules, evaluation split, or thresholds without Hazem. The audit page is the mechanism for correcting labels: the team reviews them there every day, and the corrections are applied to the dataset in Phase 4.
 
 When you work with the data, use the same authorized dataset snapshot. Check data rights and origin, file quality and language mix, missingness and duplicates, existing labels and ambiguity, privacy risks, and potential speaker/source leakage. Record the snapshot reference or checksum when permitted, commands or notebook version, assumptions, and limitations. Do not invent classes or silently freeze provisional labels. If data is unclear, missing, or unsupported, leave the value unknown and request human review.
 

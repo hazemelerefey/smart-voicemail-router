@@ -4,7 +4,8 @@ Ready branch. This branch has everything a member needs to clone and start worki
 
 ## What is on this branch
 
-- The dataset: SVR Voicemail Corpus, 6,522 voicemails, 5,751 clean training rows, split train 4,031 / validation 1,136 / test 584, seed 42.
+- The dataset: SVR Voicemail Corpus, 6,522 voicemails, 5,096 clean training rows, split train 3,575 / validation 1,003 / test 518, seed 42.
+- The 655 worst transcripts (Whisper logprob below -0.30) were excluded from the clean set.
 - The clean training tables in `final/`.
 - The preparation notebooks in `notebooks/`.
 - The training skeleton in `notebooks/training/`.
@@ -34,7 +35,7 @@ This branch was renamed from local-env. It is the data branch: the dataset lives
 1. Clone this branch from VS Code: `git clone -b smart-voicemail-router https://github.com/hazemelerefey/smart-voicemail-router.git`
 2. Edit `MEMBER.md` to your own name. Do not commit that change.
 3. Create a Python 3.11 virtual environment and install base plus your member requirements file.
-4. Verify the counts: train 4,031 / validation 1,136 / test 584.
+4. Verify the counts: train 3,575 / validation 1,003 / test 518.
 5. Read `docs/project/roles-and-workflow.md` and start your role's Phase 1 work.
 
 The worktree folder for role branches is still `svr-data`: `git worktree add ../svr-data smart-voicemail-router`.

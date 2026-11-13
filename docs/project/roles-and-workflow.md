@@ -25,7 +25,7 @@ The system has four steps, in order:
 3. **Decide.** Triage logic turns the four fields into a queue priority and an explainable callback ticket.
 4. **Deliver.** The ticket goes to the agent with the reason, and the whole run is measured for accuracy and latency.
 
-The dataset is the SVR Voicemail Corpus: 6,522 voicemails, 5,751 clean training rows, split train 4,031, validation 1,136, test 584, seed 42. The labels come from a model and are being audited by the team every day for about a month. Training proceeds on the current labels in parallel with the audit. When the audit finishes, the labels are corrected and the models are retrained. That retrain is Phase 4.
+The dataset is the SVR Voicemail Corpus: 6,522 voicemails, 5,096 clean training rows, split train 3,575, validation 1,003, test 518, seed 42. The labels come from a model and are being audited by the team every day for about a month. Training proceeds on the current labels in parallel with the audit. When the audit finishes, the labels are corrected and the models are retrained. That retrain is Phase 4. The 655 worst transcripts (Whisper logprob below -0.30) were excluded from the clean set.
 
 The work runs in four phases:
 
@@ -90,8 +90,8 @@ Install the packages your role needs. The base packages for everyone are pandas,
 Run these checks before you start work. All of them must pass:
 
 1. The training tables exist in `svr-data/final/`: clean_training_train.csv, clean_training_val.csv, clean_training_test.csv.
-2. The row counts are train 4,031, validation 1,136, test 584, total 5,751.
-3. The audio folders hold the same counts: `dataset/train` 4,031 files, `dataset/val` 1,136 files, `dataset/test` 584 files.
+2. The row counts are train 3,575, validation 1,003, test 518, total 5,096.
+3. The audio folders hold the same counts: `dataset/train` 3,575 files, `dataset/val` 1,003 files, `dataset/test` 518 files.
 4. Every audio file is a 16 kHz mono WAV and plays.
 
 If any count is wrong, stop and tell Hazem. Do not train on a dataset you have not verified.
@@ -129,7 +129,7 @@ You own the whole training effort and the final model. You are the person who ma
 
 **Phase 2.** Coordinate the model work. Lama runs the text fine-tuning, Sira runs the audio model, Aya runs the evaluation. You review the validation results and confirm the winner by the rule in the model selection report: highest validation mean macro-F1, and if EgyBERT and MARBERTv2 are within one standard deviation, pick MARBERTv2. Record the decision and the numbers behind it.
 
-**Phase 3.** Oversee the final test evaluation. Confirm the test set is evaluated exactly once, on the frozen 584-row test set, with no re-splitting and no tuning on the test set. Review the error analysis. Confirm the integrated pipeline runs end to end.
+**Phase 3.** Oversee the final test evaluation. Confirm the test set is evaluated exactly once, on the frozen 518-row test set, with no re-splitting and no tuning on the test set. Review the error analysis. Confirm the integrated pipeline runs end to end.
 
 **Phase 4.** After the audit finishes, take the exported audit edits from the audit page. Apply the corrections to the dataset labels. Rerun the training notebooks on the cleaned dataset with the same architecture and hyperparameters. Have Aya re-evaluate. Deliver the final model.
 
@@ -178,7 +178,7 @@ You own everything that comes from the voice itself: the audio, the transcriptio
 
 ### Your work, step by step
 
-**Phase 1.** Verify the audio. Confirm the 5,751 training audio files are 16 kHz mono WAV and match the training tables. Build the intake check that rejects bad audio and records why. Run Whisper large-v3 on a sample and record the transcription quality and the configuration. Build the XLS-R baseline: load facebook/wav2vec2-xls-r-300m, freeze the encoder, train a simple classifier head on the training split, and record the validation metrics. This baseline tells the team what the audio alone can do.
+**Phase 1.** Verify the audio. Confirm the 5,096 training audio files are 16 kHz mono WAV and match the training tables. Build the intake check that rejects bad audio and records why. Run Whisper large-v3 on a sample and record the transcription quality and the configuration. Build the XLS-R baseline: load facebook/wav2vec2-xls-r-300m, freeze the encoder, train a simple classifier head on the training split, and record the validation metrics. This baseline tells the team what the audio alone can do.
 
 **Phase 2.** Train the audio model. Start from the Egyptian checkpoint IbrahimAmin/egyptian-arabic-wav2vec2-xlsr-53 if it loads and validates. Keep the encoder frozen first, then partially fine-tune the top 2 to 4 layers. Record validation metrics per field with the same 5 seeds the text model uses, so the results are comparable. Test audio-text fusion only if the audio baseline shows real signal: if the audio model adds nothing over text alone, say so plainly and do not force fusion. If fusion helps, deliver the audio features to Lama in the documented format.
 
@@ -202,7 +202,7 @@ You own everything that comes from the voice itself: the audio, the transcriptio
 
 ### How you know you are done
 
-The audio pipeline verifies all 5,751 training files. The STT validation is recorded. The audio model has validation metrics per field with 5 seeds. The fusion decision is recorded with evidence, whether the answer is yes or no.
+The audio pipeline verifies all 5,096 training files. The STT validation is recorded. The audio model has validation metrics per field with 5 seeds. The fusion decision is recorded with evidence, whether the answer is yes or no.
 
 ## Role 3: Lama, Text Classification Engineer
 
@@ -287,7 +287,7 @@ You own the machinery that makes the training trustworthy: the infrastructure ev
 
 **Phase 2.** Support the fine-tuning. Help Lama and Sira run their experiments on the infrastructure. Run the hyperparameter sweep for the text model with Lama: learning rate 1e-5, 2e-5, 3e-5, and record the validation result for each. Run the validation for every model and record the metrics the same way every time. Do not let anyone report a result without a run record.
 
-**Phase 3.** Run the final test evaluation. Take the winning model from Lama and the audio model from Sira. Evaluate each exactly once on the frozen 584-row test set. Record the per-field metrics, the sample counts, and the failures. Then run the error analysis: where does the model fail, what do the failures have in common, and what would fix them. Write the evaluation report with the actual numbers, the configuration, the hardware, and the limitations. State plainly what the data cannot support.
+**Phase 3.** Run the final test evaluation. Take the winning model from Lama and the audio model from Sira. Evaluate each exactly once on the frozen 518-row test set. Record the per-field metrics, the sample counts, and the failures. Then run the error analysis: where does the model fail, what do the failures have in common, and what would fix them. Write the evaluation report with the actual numbers, the configuration, the hardware, and the limitations. State plainly what the data cannot support.
 
 **Phase 4.** After the audit corrections, re-evaluate the retrained model on the test set, once, the same way. Record the new results alongside the old ones so the change is visible.
 
