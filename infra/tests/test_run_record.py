@@ -33,6 +33,23 @@ def cfg(**overrides):
     return ExperimentConfig(**base)
 
 
+REASON = "unclear has no rows in train, so the model never trains on it (Hazem's decision)."
+
+
+def exception(**overrides):
+    # The shape of one entry of the harness report's `exceptions` list.
+    e = {
+        "field": "customer_state",
+        "excluded_labels": ["unclear"],
+        "rows_excluded": 1,
+        "n_scored": 1002,
+        "n_total_rows": 1003,
+        "reason": REASON,
+    }
+    e.update(overrides)
+    return e
+
+
 def metrics(value=0.7):
     return {name: value for name in REQUIRED_METRICS}
 
@@ -56,6 +73,7 @@ def build(**overrides):
         evaluated_split="val",
         artifacts={"predictions": ["runs/exp_001/predictions_val.json"]},
         device="cpu",
+        exceptions=[exception()],
         reference_config=cfg(model="MARBERTv2"),
         changed_factor="model",
         reference_run_id="002",
@@ -195,6 +213,63 @@ def test_empty_hypothesis_or_device_is_rejected():
 def test_bad_artifact_paths_are_rejected(bad):
     with pytest.raises(RunRecordError):
         build(artifacts={"predictions": [bad]})
+
+
+def test_the_exceptions_are_stored_in_the_record():
+    rec = build()
+    assert rec["exceptions"] == [exception()]
+    assert rec["schema_version"] == 2
+
+
+def test_an_empty_exceptions_list_is_allowed_but_the_argument_is_required():
+    assert build(exceptions=[])["exceptions"] == []
+    with pytest.raises(TypeError):
+        build_run_record(
+            run_id="001", hypothesis="h", config=cfg(), shared_config=SHARED,
+            per_seed=seed_results(cfg()), evaluated_split="val", artifacts={}, device="cpu",
+        )
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        "none",                                                   # not a list
+        [1],                                                      # not a dict
+        [{"field": "customer_state"}],                            # keys missing
+        [exception(extra_key=1)],                                 # an extra key
+        [exception(field="not_a_field")],                         # no metric for this field
+        [exception(), exception()],                               # the same field twice
+        [exception(excluded_labels=[])],                          # no labels
+        [exception(excluded_labels="unclear")],                   # not a list
+        [exception(reason="  ")],                                 # no reason
+        [exception(rows_excluded=-1, n_scored=1004)],             # a negative count
+        [exception(n_scored=1000)],                               # the counts do not add up
+        [exception(n_total_rows=500, n_scored=499)],              # not the size of the split
+        [exception(rows_excluded=True, n_scored=1002)],           # a bool is not a count
+    ],
+)
+def test_bad_exceptions_are_rejected(bad):
+    with pytest.raises(RunRecordError):
+        build(exceptions=bad)
+
+
+def test_exception_row_counts_follow_the_evaluated_split():
+    config = cfg()
+    results = seed_results(config, split="test")
+    test_exception = exception(rows_excluded=0, n_scored=518, n_total_rows=518)
+    rec = build(per_seed=results, evaluated_split="test", exceptions=[test_exception])
+    assert rec["exceptions"][0]["n_total_rows"] == 518
+    with pytest.raises(RunRecordError, match="shared config"):
+        build(per_seed=results, evaluated_split="test", exceptions=[exception()])
+
+
+def test_load_rejects_the_old_schema(tmp_path):
+    rec = build()
+    rec["schema_version"] = 1
+    path = tmp_path / "old.json"
+    path.write_text(json.dumps(rec), encoding="utf-8")
+    with pytest.raises(RunRecordError, match="schema_version"):
+        load_run_record(path)
 
 
 def test_save_and_load_round_trip(tmp_path):

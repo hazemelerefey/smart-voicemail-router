@@ -286,7 +286,7 @@ def test_harness_output_feeds_the_run_record():
     shared = {
         "split_seed": 42, "experiment_seeds": [42, 1337, 2023, 7, 99], "max_seq_len": 128,
         "split_ratio": "70/20/10", "dataset_version": "v2", "dataset": "x",
-        "train_rows": 3575, "val_rows": 1003, "test_rows": 518,
+        "train_rows": 70, "val_rows": 10, "test_rows": 20,
     }
     classes = {
         "complaint_category": ["a", "b"],
@@ -301,10 +301,12 @@ def test_harness_output_feeds_the_run_record():
         for i in range(1, 11)
     ]
     config = ExperimentConfig(model="mock", dataset_version="v2")
+    reports = []
 
     def evaluate_one_seed(seed):
         preds = make_mock_predictions(truth, classes, wrong_every=2 + seed % 3, exclusions_by_field=exclusions)
         report = evaluate_predictions("val", truth, preds, classes, exclusions)
+        reports.append(report)
         return seed_metrics(report["fields"])
 
     results = run_over_seeds(evaluate_one_seed, shared["experiment_seeds"])
@@ -312,7 +314,15 @@ def test_harness_output_feeds_the_run_record():
     record = build_run_record(
         run_id="001", hypothesis="the harness output is accepted by the run record",
         config=config, shared_config=shared, per_seed=per_seed, evaluated_split="val",
-        artifacts={}, device="cpu",
+        artifacts={}, device="cpu", exceptions=reports[0]["exceptions"],
     )
     assert "customer_state_macro_f1" in record["aggregate"]
     assert record["aggregate"]["churn_risk_macro_f1"]["n"] == 5
+    assert record["exceptions"] == [{
+        "field": "customer_state",
+        "excluded_labels": ["unclear"],
+        "rows_excluded": 1,
+        "n_scored": 9,
+        "n_total_rows": 10,
+        "reason": REASON,
+    }]

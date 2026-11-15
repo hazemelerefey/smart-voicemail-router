@@ -9,6 +9,10 @@ What is computed, not typed by hand:
 - held_constant is derived from the config (everything except the changed factor).
 - aggregate (mean and std over seeds) is computed from the per-seed results.
 - the check that exactly one factor changed compares against a reference config.
+
+`exceptions` lists every rule that left rows out of a field's score (for example the
+`unclear` rows of customer_state). It is taken from the harness report, and it is
+required: pass an empty list when nothing was left out, so it is never forgotten.
 """
 import importlib.metadata
 import json
@@ -21,7 +25,7 @@ from pathlib import Path, PurePosixPath, PureWindowsPath
 from infra.experiment_config import changed_fields, validate_against_shared
 from infra.seeds import summarize_metrics
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 EVALUATED_SPLITS = ("val", "test")
 
 # The metric names in Hazem's make_result_record (training pipeline skeleton).
@@ -42,6 +46,7 @@ TOP_LEVEL_KEYS = (
     "config",
     "dataset",
     "evaluated_split",
+    "exceptions",
     "per_seed",
     "aggregate",
     "artifacts",
@@ -159,6 +164,46 @@ def _check_per_seed(per_seed, run_id, config, evaluated_split, shared_config):
                 raise RunRecordError(f"seed {r['seed']}: {name} must be between 0 and 1, got {value}")
 
 
+_EXCEPTION_KEYS = {
+    "field", "excluded_labels", "rows_excluded", "n_scored", "n_total_rows", "reason",
+}
+
+
+def _check_exceptions(exceptions, per_seed, evaluated_split, shared_config):
+    """Each exception is one entry of the harness report's `exceptions` list."""
+    if not isinstance(exceptions, list):
+        raise RunRecordError("exceptions must be a list (an empty list when nothing was left out)")
+    expected_rows = shared_config[f"{evaluated_split}_rows"]
+    metric_names = set(per_seed[0]["metrics"])
+    seen = set()
+    for e in exceptions:
+        if not isinstance(e, dict) or set(e) != _EXCEPTION_KEYS:
+            raise RunRecordError(f"each exception needs exactly the keys {sorted(_EXCEPTION_KEYS)}")
+        field = e["field"]
+        if not _is_text(field) or f"{field}_macro_f1" not in metric_names:
+            raise RunRecordError(f"exception for {field!r}: no metric {field}_macro_f1 in this run")
+        if field in seen:
+            raise RunRecordError(f"more than one exception for {field!r}")
+        seen.add(field)
+        labels = e["excluded_labels"]
+        if not isinstance(labels, list) or not labels or not all(_is_text(x) for x in labels):
+            raise RunRecordError(f"exception for {field}: excluded_labels must be a non-empty list of strings")
+        if not _is_text(e["reason"]):
+            raise RunRecordError(f"exception for {field} needs a reason")
+        counts = [e["rows_excluded"], e["n_scored"], e["n_total_rows"]]
+        if not all(isinstance(c, int) and not isinstance(c, bool) and c >= 0 for c in counts):
+            raise RunRecordError(f"exception for {field}: the row counts must be non-negative integers")
+        if e["rows_excluded"] + e["n_scored"] != e["n_total_rows"]:
+            raise RunRecordError(
+                f"exception for {field}: rows_excluded + n_scored must equal n_total_rows"
+            )
+        if e["n_total_rows"] != expected_rows:
+            raise RunRecordError(
+                f"exception for {field}: n_total_rows is {e['n_total_rows']} but the shared config "
+                f"has {expected_rows} rows in {evaluated_split}"
+            )
+
+
 def build_run_record(
     run_id,
     hypothesis,
@@ -168,6 +213,7 @@ def build_run_record(
     evaluated_split,
     artifacts,
     device,
+    exceptions,
     reference_config=None,
     changed_factor=None,
     reference_run_id=None,
@@ -197,6 +243,7 @@ def build_run_record(
             )
 
     _check_per_seed(per_seed, run_id, config, evaluated_split, shared_config)
+    _check_exceptions(exceptions, per_seed, evaluated_split, shared_config)
     _check_artifacts(artifacts)
     environment = collect_environment(device)
 
@@ -218,6 +265,7 @@ def build_run_record(
             },
         },
         "evaluated_split": evaluated_split,
+        "exceptions": exceptions,
         "per_seed": per_seed,
         "aggregate": summarize_metrics([r["metrics"] for r in per_seed], ddof=ddof),
         "artifacts": artifacts,
