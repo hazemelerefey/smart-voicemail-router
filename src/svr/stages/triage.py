@@ -3,8 +3,9 @@
 Phase 1 mock: fixed route reason from the contracts section 9 fixture and
 assignment to the first seeded demo agent whose approved skill matches the
 complaint category, who is on shift, and who has capacity. If no eligible
-agent exists the ticket stays ``unassigned`` with the reason, it does not
-pick an unqualified agent (contracts section 3.4).
+agent exists the ticket stays ``unassigned`` for human routing review; it
+does not infer a skill mapping or pick an unqualified agent (contracts
+section 3.4 and PRD US-5).
 
 ``priority_score`` stays null: the priority formula and weights are OPEN
 (contracts section 10), owned by Ibthal, approved by Hazem.
@@ -39,8 +40,9 @@ def triage_mock(
         assignment_status = AssignmentStatus.UNASSIGNED
         assigned_agent_id = None
         route_reason = (
-            "No eligible agent is on shift with capacity for this complaint "
-            "category, so the ticket stays unassigned for human routing."
+            "No seeded agent has an approved skill match and available "
+            "capacity for this complaint category, so the ticket stays "
+            "unassigned for human routing review."
         )
     signals = []
     if text.complaint_category is not None:

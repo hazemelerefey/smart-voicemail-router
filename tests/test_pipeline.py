@@ -46,6 +46,9 @@ def test_end_to_end_mock_pipeline_matches_fixture_shape():
     assert ticket.transcript == fixtures.FIXTURE_TRANSCRIPT
     assert ticket.route_reason == fixtures.FIXTURE_ROUTE_REASON
     assert result.decision is not None
+    assert result.decision.priority_score is None  # policy remains unapproved
+    assert result.decision.queue_priority is None
+    assert result.decision.label_version == "taxonomy-2026-11-15"
     assert result.decision.assigned_agent_id == "agent-demo-network"
     assert result.text is not None
     assert result.audio is not None
@@ -79,6 +82,32 @@ def test_null_category_goes_to_needs_review_not_a_guess():
     assert ticket.ticket_status.value == "needs_review"
     assert ticket.needs_human_review is True
     assert ticket.complaint_category is None
+
+
+@pytest.mark.parametrize("category", ["offers_and_packages", "sim_services"])
+def test_new_categories_without_approved_skill_mapping_request_human_review(category):
+    from svr import agents as agents_module
+
+    loads_before = {a.id: a.current_load for a in agents_module.list_agents()}
+    result = run_pipeline(
+        make_meta(f"voicemail-{category}"),
+        f"voicemail-{category}",
+        classification_override={"complaint_category": category},
+    )
+
+    assert result.ticket.complaint_category.value == category
+    assert result.ticket.label_version == "taxonomy-2026-11-15"
+    assert result.ticket.assignment_status.value == "unassigned"
+    assert result.ticket.ticket_status.value == "needs_review"
+    assert result.ticket.needs_human_review is True
+    assert result.decision is not None
+    assert result.decision.assignment_status.value == "unassigned"
+    assert result.decision.assigned_agent_id is None
+    assert result.decision.label_version == "taxonomy-2026-11-15"
+    assert result.decision.priority_score is None
+    assert result.decision.queue_priority is None
+    assert "human routing review" in result.ticket.route_reason.lower()
+    assert {a.id: a.current_load for a in agents_module.list_agents()} == loads_before
 
 
 def test_out_of_enum_label_goes_to_needs_review():
@@ -371,3 +400,39 @@ def test_pipeline_run_consumes_and_complete_releases_capacity():
     assert _load("agent-demo-network") == 2
     TicketStore().complete(result)
     assert _load("agent-demo-network") == 1
+
+
+def test_manual_retry_after_ticket_failure_does_not_leak_capacity(monkeypatch):
+    """A failed assembly is stored for review and releases its assignment;
+    a later rerun can use capacity without accumulating a leaked load."""
+    from svr import agents as agents_module
+    from svr.stages import ticket as ticket_stage
+    from svr.store import TicketStore
+
+    store = TicketStore()
+    voicemail_id = "voicemail-retry-cleanup"
+    failed_ticket_id = "ticket-retry-failed"
+    original_assemble = ticket_stage.assemble_ticket
+    monkeypatch.setattr("svr.stages.ticket.assemble_ticket", _boom)
+
+    failed = run_pipeline(
+        make_meta(voicemail_id), voicemail_id, ticket_id=failed_ticket_id
+    )
+    assert failed.ticket.ticket_status.value == "needs_review"
+    assert failed.decision is not None
+    assert failed.decision.assigned_agent_id == "agent-demo-network"
+    assert agents_module.get_agent("agent-demo-network").current_load == 2
+
+    store.create_placeholder(failed_ticket_id, voicemail_id)
+    store.complete(failed)
+    assert agents_module.get_agent("agent-demo-network").current_load == 1
+
+    monkeypatch.setattr("svr.stages.ticket.assemble_ticket", original_assemble)
+    retry = run_pipeline(
+        make_meta(voicemail_id), voicemail_id, ticket_id="ticket-retry-success"
+    )
+    assert retry.ticket.ticket_status.value == "completed"
+    assert agents_module.get_agent("agent-demo-network").current_load == 2
+    store.create_placeholder("ticket-retry-success", voicemail_id)
+    store.complete(retry)
+    assert agents_module.get_agent("agent-demo-network").current_load == 1

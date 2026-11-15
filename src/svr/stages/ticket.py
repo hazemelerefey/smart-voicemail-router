@@ -57,15 +57,20 @@ def assemble_ticket(
         raise ValueError(
             "cannot assemble a ticket: failed stages: " + ", ".join(failed)
         )
-    # Null label + needs_human_review is a correct output (section 4.1);
-    # the ticket status reflects it instead of pretending to be complete.
-    needs_review = bool(text.needs_human_review) or any(
-        value is None
-        for value in (
-            text.complaint_category,
-            text.complaint_urgency,
-            text.customer_state_text,
-            text.churn_risk,
+    # Null label + needs_human_review is a correct output (section 4.1).
+    # The PRD also requires an unassigned ticket to request human routing
+    # review; do not silently mark it complete when no eligible agent exists.
+    needs_review = (
+        bool(text.needs_human_review)
+        or decision.assignment_status == AssignmentStatus.UNASSIGNED
+        or any(
+            value is None
+            for value in (
+                text.complaint_category,
+                text.complaint_urgency,
+                text.customer_state_text,
+                text.churn_risk,
+            )
         )
     )
     return Ticket(

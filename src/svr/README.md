@@ -112,9 +112,11 @@ transcript, no real customer data, no model loaded, no network call):
 - STT transcript: `[fixture transcript]`
 - Classification: `network_and_connectivity` / `medium` / `frustrated` /
   `not_at_risk`, confidence 0.9
-- Triage: fixed route reason, assignment to the first seeded demo agent
-  with a matching skill, on shift, with capacity
-- `priority_score`: null, `customer_state_final`: null, `cached`: false
+- Triage: assignment to the first seeded demo agent with a matching skill,
+  on shift, and with capacity; when there is no eligible match the ticket
+  stays `unassigned` and requests human routing review (PRD US-5).
+- `priority_score` and `queue_priority`: null until the priority policy is
+  approved; `customer_state_final`: null; `cached`: false
 
 REAL (implemented and tested): schema validation with the approved enums,
 null/review rules, input validation, per-stage timing, p95 helper,
@@ -149,9 +151,16 @@ isolation before moving on (Role 6 Phase 2):
   the approved Phase 1 mock output; once Hazem defines the values, the
   "null mix goes to review" rule is switched on.
 - **Priority formula, ranges, thresholds, weights undefined.** Owner
-  Ibthal, Hazem approves. `priority_score` and `queue_priority` stay null.
+  Ibthal, Hazem approves. `priority_score` and `queue_priority` stay null;
+  the proposal to force review for missing priority factors is pending
+  Hazem's approval and is not applied.
 - **Skill-to-category mapping and tier policy undefined.** Routing uses
   only the seeded agents' listed skills and says so in `route_reason`.
+  Categories without a seeded approved match stay `unassigned` and request
+  human routing review; no mapping is inferred.
+- **Retry policy undefined for Phase 1.** The mock pipeline has no provider
+  call to retry; stage failures go to `needs_review`. Provider-specific or
+  controlled retries require the applicable provider contract/approval.
 - **Fusion rules undefined.** `customer_state_final` stays null; the Ticket
   model rejects any non-null value. Fusion is a third field when enabled,
   never a replacement for text/voice evidence.
