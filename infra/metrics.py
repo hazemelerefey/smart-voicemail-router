@@ -6,16 +6,14 @@ precision and recall, per-class precision / recall / F1 with the support, the
 confusion matrix as counts, and accuracy for context. Micro-F1 is not reported on
 its own: on single-label data it equals accuracy.
 
-Two things are never guessed here:
-- The class list is always passed in explicitly. It is not inferred from the data,
-  so a class that has no rows in a split (for example `unclear` in some splits) is
-  visible and reported instead of silently disappearing.
-- How classes without any rows count in the macro average (`macro_over`) has no
-  default. The caller must say which one it is using, and the result records it.
+The class list is always passed in explicitly. It is not inferred from the data, so
+a class that has no rows in a split is visible and reported (`classes_without_support`)
+instead of silently disappearing. The macro average is taken over exactly the classes
+in that list: a class with no rows counts as 0 in it. A label that must not be scored
+(for example `unclear` for customer_state) is not put in the list, and its rows are
+removed before scoring (see harness.py).
 """
 import numpy as np
-
-MACRO_OVER = ("all_classes", "classes_with_support")
 
 
 class MetricsError(ValueError):
@@ -41,10 +39,8 @@ def _safe_divide(numerator, denominator):
     return float(numerator) / float(denominator) if denominator > 0 else 0.0
 
 
-def evaluate_field(y_true, y_pred, classes, macro_over):
+def evaluate_field(y_true, y_pred, classes):
     y_true, y_pred, classes = list(y_true), list(y_pred), list(classes)
-    if macro_over not in MACRO_OVER:
-        raise MetricsError(f"macro_over must be one of {MACRO_OVER}, got {macro_over!r}")
     if not classes or not all(isinstance(c, str) and c for c in classes):
         raise MetricsError("classes must be a non-empty list of non-empty strings")
     if len(set(classes)) != len(classes):
@@ -74,14 +70,12 @@ def evaluate_field(y_true, y_pred, classes, macro_over):
             "support": int(support[i]),
         }
 
-    included = [c for c in classes if macro_over == "all_classes" or per_class[c]["support"] > 0]
     macro = {
-        key: float(np.mean([per_class[c][key] for c in included]))
+        key: float(np.mean([per_class[c][key] for c in classes]))
         for key in ("precision", "recall", "f1")
     }
     return {
         "n": len(y_true),
-        "macro_over": macro_over,
         "classes": classes,
         "classes_without_support": [c for c in classes if per_class[c]["support"] == 0],
         "accuracy": float(tp.sum()) / len(y_true),

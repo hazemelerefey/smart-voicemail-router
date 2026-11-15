@@ -23,7 +23,7 @@ Y_PRED = ["a", "a", "b", "b", "c", "c"]
 
 
 def report(**overrides):
-    args = dict(y_true=Y_TRUE, y_pred=Y_PRED, classes=CLASSES, macro_over="all_classes")
+    args = dict(y_true=Y_TRUE, y_pred=Y_PRED, classes=CLASSES)
     args.update(overrides)
     return evaluate_field(**args)
 
@@ -64,7 +64,7 @@ def test_result_shape():
         "labels": CLASSES,
         "counts": [[2, 1, 0], [0, 1, 1], [0, 0, 1]],
     }
-    assert r["macro_over"] == "all_classes"
+    assert "macro_over" not in r
     assert r["classes_without_support"] == []
     assert "micro" not in str(r.keys()) and "micro_f1" not in r
 
@@ -75,40 +75,35 @@ def test_perfect_predictions():
     assert r["accuracy"] == pytest.approx(1.0)
 
 
-def test_a_class_with_no_rows_changes_the_macro_depending_on_macro_over():
+def test_a_class_with_no_rows_counts_as_zero_in_the_macro_and_is_reported():
     classes = ["a", "b", "unclear"]
     y = ["a", "a", "b", "b"]
-    everything = evaluate_field(y, y, classes, macro_over="all_classes")
-    present_only = evaluate_field(y, y, classes, macro_over="classes_with_support")
-    assert everything["macro"]["f1"] == pytest.approx(2 / 3)  # unclear counts as F1 = 0
-    assert present_only["macro"]["f1"] == pytest.approx(1.0)  # unclear is left out
-    assert everything["classes_without_support"] == ["unclear"]
-    assert present_only["classes_without_support"] == ["unclear"]
-    assert present_only["macro_over"] == "classes_with_support"
-    assert everything["per_class"]["unclear"] == {
+    r = evaluate_field(y, y, classes)
+    assert r["macro"]["f1"] == pytest.approx(2 / 3)  # unclear counts as F1 = 0
+    assert r["classes_without_support"] == ["unclear"]
+    assert r["per_class"]["unclear"] == {
         "precision": 0.0, "recall": 0.0, "f1": 0.0, "support": 0,
     }
+
+
+def test_a_class_left_out_of_the_list_is_not_in_the_macro():
+    # The caller leaves "unclear" out of the class list, so the macro is over a and b only.
+    y = ["a", "a", "b", "b"]
+    r = evaluate_field(y, y, ["a", "b"])
+    assert r["macro"]["f1"] == pytest.approx(1.0)
+    assert r["classes"] == ["a", "b"]
+    assert r["classes_without_support"] == []
 
 
 def test_predicting_a_class_with_no_rows_is_still_an_error_for_the_others():
     classes = ["a", "b", "unclear"]
     y_true = ["a", "b", "a", "b"]
     y_pred = ["a", "b", "unclear", "b"]
-    r = evaluate_field(y_true, y_pred, classes, macro_over="classes_with_support")
+    r = evaluate_field(y_true, y_pred, classes)
     assert r["per_class"]["a"]["recall"] == pytest.approx(0.5)
     assert r["per_class"]["unclear"]["precision"] == 0.0
     assert r["accuracy"] == pytest.approx(0.75)
     assert r["confusion_matrix"]["counts"][0] == [1, 0, 1]
-
-
-def test_macro_over_has_no_default():
-    with pytest.raises(TypeError):
-        evaluate_field(Y_TRUE, Y_PRED, CLASSES)
-
-
-def test_bad_macro_over_is_rejected():
-    with pytest.raises(MetricsError, match="macro_over"):
-        report(macro_over="everything")
 
 
 def test_labels_outside_the_class_list_are_rejected():
@@ -143,7 +138,7 @@ def test_bad_class_lists_are_rejected():
 
 def test_classes_are_not_inferred_from_the_data():
     # "c" never appears in the labels but is in the class list, so it is reported.
-    r = evaluate_field(["a", "b"], ["a", "b"], ["a", "b", "c"], macro_over="all_classes")
+    r = evaluate_field(["a", "b"], ["a", "b"], ["a", "b", "c"])
     assert r["classes"] == ["a", "b", "c"]
     assert r["classes_without_support"] == ["c"]
     assert len(r["confusion_matrix"]["counts"]) == 3
@@ -153,7 +148,7 @@ def test_agrees_with_scikit_learn():
     sk = pytest.importorskip("sklearn.metrics")
     y_true = ["a", "b", "c", "a", "b", "c", "a", "a", "b", "c", "c", "b"]
     y_pred = ["a", "c", "c", "b", "b", "a", "a", "a", "c", "c", "b", "b"]
-    r = evaluate_field(y_true, y_pred, CLASSES, macro_over="all_classes")
+    r = evaluate_field(y_true, y_pred, CLASSES)
     p, rec, f1, sup = sk.precision_recall_fscore_support(
         y_true, y_pred, labels=CLASSES, average=None, zero_division=0
     )
