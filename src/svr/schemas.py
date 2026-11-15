@@ -1,4 +1,4 @@
-"""SVR Contracts v1.0 (schema_version 1, label_version taxonomy-2026-11-11).
+"""SVR Contracts v1.0 (schema_version 1, label_version taxonomy-2026-11-15).
 
 Pydantic models for every contract object in
 ``~/workspace/goals/ai-voicemail-intelligence-competition/files/arafa-contracts-v1.md``
@@ -20,11 +20,11 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 SCHEMA_VERSION = 1
-LABEL_VERSION = "taxonomy-2026-11-11"
+LABEL_VERSION = "taxonomy-2026-11-15"
 
 
 class ComplaintCategory(str, Enum):
-    """10 approved complaint_category values (contracts section 2)."""
+    """11 PRD-approved complaint_category values (contracts section 2)."""
 
     NETWORK_AND_CONNECTIVITY = "network_and_connectivity"
     BILLING_AND_CHARGES = "billing_and_charges"
@@ -34,8 +34,9 @@ class ComplaintCategory(str, Enum):
     NO_REPLY_OR_LONG_WAIT = "no_reply_or_long_wait"
     CANCELLATION_REQUEST = "cancellation_request"
     THANKS_OR_PRAISE = "thanks_or_praise"
-    GREETING_ONLY = "greeting_only"
     OTHER = "other"
+    OFFERS_AND_PACKAGES = "offers_and_packages"
+    SIM_SERVICES = "sim_services"
 
 
 class ComplaintUrgency(str, Enum):
@@ -126,7 +127,7 @@ class AudioEvidence(BaseModel):
     language_mix: str | None = None
     audio_quality: dict = Field(default_factory=dict)
     schema_version: Literal[1] = SCHEMA_VERSION
-    label_version: Literal["taxonomy-2026-11-11"] = LABEL_VERSION
+    label_version: Literal["taxonomy-2026-11-15"] = LABEL_VERSION
 
     @field_validator("language_mix")
     @classmethod
@@ -180,7 +181,7 @@ class TextAnalysis(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     needs_human_review: bool
     schema_version: Literal[1] = SCHEMA_VERSION
-    label_version: Literal["taxonomy-2026-11-11"] = LABEL_VERSION
+    label_version: Literal["taxonomy-2026-11-15"] = LABEL_VERSION
 
     @field_validator("language_mix")
     @classmethod
@@ -230,7 +231,7 @@ class VoiceEvidence(BaseModel):
     voice_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     model_version: str
     schema_version: Literal[1] = SCHEMA_VERSION
-    label_version: Literal["taxonomy-2026-11-11"] = LABEL_VERSION
+    label_version: Literal["taxonomy-2026-11-15"] = LABEL_VERSION
 
 
 class TriageDecision(BaseModel):
@@ -250,7 +251,7 @@ class TriageDecision(BaseModel):
     config_version: str
     evaluation: dict | None = None
     schema_version: Literal[1] = SCHEMA_VERSION
-    label_version: Literal["taxonomy-2026-11-11"] = LABEL_VERSION
+    label_version: Literal["taxonomy-2026-11-15"] = LABEL_VERSION
 
 
 class Ticket(BaseModel):
@@ -284,7 +285,7 @@ class Ticket(BaseModel):
     stage_timing_ms: dict[str, float] = Field(default_factory=dict)
     processing_ms: float = Field(default=0.0, ge=0.0)
     schema_version: Literal[1] = SCHEMA_VERSION
-    label_version: Literal["taxonomy-2026-11-11"] = LABEL_VERSION
+    label_version: Literal["taxonomy-2026-11-15"] = LABEL_VERSION
     created_at: str = Field(default_factory=utcnow_iso)
 
     @field_validator("stage_timing_ms")

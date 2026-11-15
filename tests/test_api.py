@@ -54,7 +54,7 @@ def test_submit_wav_returns_202_and_ticket_completes():
     assert ticket["suggested_script"]
     assert ticket["voice_state_candidate"] is None
     assert ticket["schema_version"] == 1
-    assert ticket["label_version"] == "taxonomy-2026-11-11"
+    assert ticket["label_version"] == "taxonomy-2026-11-15"
     assert set(ticket["stage_status"]) == {
         "intake",
         "stt",
@@ -561,7 +561,7 @@ def test_health_endpoint():
     resp = client.get("/health")
     assert resp.status_code == 200
     assert resp.json()["mode"] == "mock"
-    assert resp.json()["label_version"] == "taxonomy-2026-11-11"
+    assert resp.json()["label_version"] == "taxonomy-2026-11-15"
 
 
 def test_demo_markdown_shows_flags_timings_and_reason():

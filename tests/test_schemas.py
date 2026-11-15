@@ -33,7 +33,7 @@ def _audio_payload(**overrides) -> dict:
         "language_mix": None,
         "audio_quality": {},
         "schema_version": 1,
-        "label_version": "taxonomy-2026-11-11",
+        "label_version": "taxonomy-2026-11-15",
     }
     payload.update(overrides)
     return payload
@@ -51,14 +51,14 @@ def _decision_payload(**overrides) -> dict:
         "config_version": "mock-triage-0.1",
         "evaluation": None,
         "schema_version": 1,
-        "label_version": "taxonomy-2026-11-11",
+        "label_version": "taxonomy-2026-11-15",
     }
     payload.update(overrides)
     return payload
 
 
 def test_enum_counts_match_contracts_section_2():
-    assert len(ComplaintCategory) == 10
+    assert len(ComplaintCategory) == 11
     assert len(ComplaintUrgency) == 3
     assert len(CustomerState) == 5
     assert len(ChurnRisk) == 2
@@ -72,8 +72,9 @@ def test_enum_counts_match_contracts_section_2():
         "no_reply_or_long_wait",
         "cancellation_request",
         "thanks_or_praise",
-        "greeting_only",
         "other",
+        "offers_and_packages",
+        "sim_services",
     }
     assert {u.value for u in ComplaintUrgency} == {"high", "medium", "low"}
     assert {s.value for s in CustomerState} == {
@@ -89,7 +90,7 @@ def test_enum_counts_match_contracts_section_2():
 def test_fixture_ticket_validates():
     ticket = Ticket.model_validate(fixtures.FIXTURE_TICKET)
     assert ticket.schema_version == 1
-    assert ticket.label_version == "taxonomy-2026-11-11"
+    assert ticket.label_version == "taxonomy-2026-11-15"
     assert ticket.complaint_category == ComplaintCategory.NETWORK_AND_CONNECTIVITY
     assert ticket.complaint_urgency == ComplaintUrgency.MEDIUM
     assert ticket.customer_state_text == CustomerState.FRUSTRATED
@@ -100,9 +101,17 @@ def test_fixture_ticket_validates():
 
 def test_out_of_enum_category_is_rejected():
     payload = dict(fixtures.FIXTURE_TEXT_ANALYSIS)
-    payload["complaint_category"] = "offers_and_packages"  # NOT an approved value
+    payload["complaint_category"] = "greeting_only"  # NOT an approved value
     with pytest.raises(ValidationError):
         TextAnalysis.model_validate(payload)
+
+
+def test_new_prd_categories_are_accepted():
+    for category in ("offers_and_packages", "sim_services"):
+        payload = dict(fixtures.FIXTURE_TEXT_ANALYSIS)
+        payload["complaint_category"] = category
+        analysis = TextAnalysis.model_validate(payload)
+        assert analysis.complaint_category.value == category
 
 
 def test_out_of_enum_state_is_rejected():
@@ -220,11 +229,11 @@ def test_audio_path_local_must_live_under_uploads():
 
 def test_every_contract_object_carries_label_version():
     assert AudioEvidence.model_validate(_audio_payload()).label_version == (
-        "taxonomy-2026-11-11"
+        "taxonomy-2026-11-15"
     )
     assert (
         TextAnalysis.model_validate(fixtures.FIXTURE_TEXT_ANALYSIS).label_version
-        == "taxonomy-2026-11-11"
+        == "taxonomy-2026-11-15"
     )
     voice = VoiceEvidence.model_validate(
         {
@@ -232,11 +241,11 @@ def test_every_contract_object_carries_label_version():
             "model_version": "mock-voice-0.1",
         }
     )
-    assert voice.label_version == "taxonomy-2026-11-11"
+    assert voice.label_version == "taxonomy-2026-11-15"
     decision = TriageDecision.model_validate(_decision_payload())
-    assert decision.label_version == "taxonomy-2026-11-11"
+    assert decision.label_version == "taxonomy-2026-11-15"
     assert Ticket.model_validate(fixtures.FIXTURE_TICKET).label_version == (
-        "taxonomy-2026-11-11"
+        "taxonomy-2026-11-15"
     )
 
 

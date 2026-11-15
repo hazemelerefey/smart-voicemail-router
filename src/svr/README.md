@@ -8,7 +8,7 @@ this branch, 86 tests passing, verified live 13 November 2026.
 Last update: 13 November 2026.
 Source of truth: **SVR Contracts v1.0** (`arafa-contracts-v1.md` in the
 competition goal files), `schema_version: 1`,
-`label_version: "taxonomy-2026-11-11"`. Role guide: SVR-TEAM-04 Role 6.
+`label_version: "taxonomy-2026-11-15"`. Role guide: SVR-TEAM-04 Role 6.
 
 ## Merge note, 2026-11-12
 
@@ -134,18 +134,16 @@ isolation before moving on (Role 6 Phase 2):
   priority formula once agreed.
 - Aya: evaluation harness plugs into `latency.py` reporting.
 
-## Open conflicts, do not guess (contracts section 10)
+## Open decisions, do not guess (contracts section 10)
 
-- **Complaint category 9 vs 10 classes.** Model selection report says 9,
-  approved taxonomy lists 10. This build uses the 10 approved values.
-  Hazem to confirm whether the report excludes `greeting_only` or `other`.
-- **New, observed 2026-11-12 in the audit app:** the audit app's Category
-  list has **11 options**, and `Offers and packages` appears there (seen on
-  voicemail 3) but is not among the 10 approved values. The dataset tables
-  use **12 values**, adding `sim_services` as well. So the count is now
-  9 (report) vs 10 (taxonomy) vs 11 (audit app) vs 12 (dataset tables).
-  Flagged for Hazem, not resolved here; this build still uses the 10
-  approved values and rejects anything else.
+- **Complaint category.** The approved PRD taxonomy has 11 values:
+  `network_and_connectivity`, `billing_and_charges`, `balance_and_data`,
+  `app_and_account`, `branch_and_staff`, `no_reply_or_long_wait`,
+  `cancellation_request`, `thanks_or_praise`, `other`,
+  `offers_and_packages`, and `sim_services`. The runtime schema follows
+  this list and rejects `greeting_only`. Older annotation and dataset
+  artifacts may still need alignment by their data owners before training
+  or evaluation.
 - **`language_mix` values undefined.** Producers send null. The mock does
   not force a review on a null mix alone, because the section 9 fixture is
   the approved Phase 1 mock output; once Hazem defines the values, the

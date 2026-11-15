@@ -67,7 +67,7 @@ Project documents (PRD, architecture, team allocation, roles guide) and environm
 
 Owner: Ahmed Gamal Arfa ([@AhmdArFa](https://github.com/AhmdArFa)), Systems Integration and Demo Engineer.
 
-`src/svr/` is the end-to-end pipeline skeleton with mocks, built on SVR Contracts v1.0 (`schema_version: 1`, `label_version: "taxonomy-2026-11-11"`). Full detail, including what is mock vs real, the API, and the open decisions, is in [`src/svr/README.md`](src/svr/README.md).
+`src/svr/` is the end-to-end pipeline skeleton with mocks, built on SVR Contracts v1.0 (`schema_version: 1`, `label_version: "taxonomy-2026-11-15"`). Full detail, including what is mock vs real, the API, and the open decisions, is in [`src/svr/README.md`](src/svr/README.md).
 
 Quick start, Python 3.11 or newer (developed on 3.12.3), from the repo root:
 
@@ -104,7 +104,7 @@ Key sources on this branch: [`research/svr-model-selection-report.md`](research/
 
 ## Open decisions, do not guess
 
-- **Complaint category count.** Approved taxonomy lists 10 values. The model selection report says 9. The audit app offers 11, including `offers_and_packages`. The dataset tables use 12, adding `sim_services`. Hazem to confirm the approved list. Until then, outputs using the two extra labels land in `needs_review`.
+- **Complaint category.** The approved PRD list has 11 values: `network_and_connectivity`, `billing_and_charges`, `balance_and_data`, `app_and_account`, `branch_and_staff`, `no_reply_or_long_wait`, `cancellation_request`, `thanks_or_praise`, `other`, `offers_and_packages`, and `sim_services`. The systems schema follows this list. Older annotation and dataset artifacts still include `greeting_only` or other class counts and need alignment by the data owners before training or evaluation.
 - **Priority formula, ranges, thresholds, weights.** Undefined. Owner Ibthal, Hazem approves.
 - **`language_mix` values.** Undefined. Producers send null.
 - **Skill-to-category mapping and tier policy.** Undefined.

@@ -42,7 +42,7 @@ def test_end_to_end_mock_pipeline_matches_fixture_shape():
     assert ticket.needs_human_review is False
     assert ticket.cached is False
     assert ticket.schema_version == 1
-    assert ticket.label_version == "taxonomy-2026-11-11"
+    assert ticket.label_version == "taxonomy-2026-11-15"
     assert ticket.transcript == fixtures.FIXTURE_TRANSCRIPT
     assert ticket.route_reason == fixtures.FIXTURE_ROUTE_REASON
     assert result.decision is not None
@@ -85,7 +85,7 @@ def test_out_of_enum_label_goes_to_needs_review():
     result = run_pipeline(
         make_meta("voicemail-test-004"),
         "voicemail-test-004",
-        classification_override={"complaint_category": "offers_and_packages"},
+        classification_override={"complaint_category": "greeting_only"},
     )
     ticket = result.ticket
     assert ticket.ticket_status.value == "needs_review"

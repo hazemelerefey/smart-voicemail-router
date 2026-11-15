@@ -54,7 +54,6 @@ SEEDED_AGENTS: list[Agent] = [
             ComplaintCategory.BRANCH_AND_STAFF,
             ComplaintCategory.CANCELLATION_REQUEST,
             ComplaintCategory.THANKS_OR_PRAISE,
-            ComplaintCategory.GREETING_ONLY,
             ComplaintCategory.OTHER,
         ],
         tier="L2",
