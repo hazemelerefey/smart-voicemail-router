@@ -24,7 +24,7 @@ test split is evaluated exactly once is a separate guard.
 from infra.metrics import MetricsError, combine_macro_f1, evaluate_field
 from infra.run_record import EVALUATED_SPLITS
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 DEFAULT_LABEL_STATUS = (
     "The labels come from a model and are still being audited by the team. "

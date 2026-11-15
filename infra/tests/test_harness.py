@@ -118,6 +118,7 @@ def test_report_shape_and_label_status():
     assert list(r) == [
         "schema_version", "split", "n", "label_status", "fields", "exceptions", "combined_macro_f1",
     ]
+    assert r["schema_version"] == 2
     assert r["split"] == "val"
     assert list(r["fields"]) == ["field_x", "field_y"]
     assert r["label_status"] == DEFAULT_LABEL_STATUS
