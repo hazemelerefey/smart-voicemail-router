@@ -14,7 +14,7 @@ Label version: `taxonomy-2026-11-15`
 
 The notebook `notebooks/triage-routing/triage_routing_phase1.ipynb` implements an explainable decision prototype on synthetic inputs and fictional seeded agents. It produces official `TriageDecision` objects, preserves human-review requirements, and verifies the handoff to Arafa's existing ticket assembler.
 
-Hazem approves the priority formula implemented here. I add urgency points, churn points, and customer_state_text points, then populate priority_score and queue_priority. Fusion stays disabled. Missing-input handling requires Hazem confirmation.
+Hazem approves the priority formula and missing-input policy implemented here. I add urgency points, churn points, and customer_state_text points, then populate priority_score and queue_priority when all three inputs are present. If any input is null, both priority fields remain null and human review is required. Fusion stays disabled.
 
 This work does not load models, access datasets, read recordings, evaluate the real test split, or measure routing agreement. It creates no competing ticket assembler. The 80 percent agreement target remains a later evaluation requirement, not a result of these mock tests.
 
@@ -138,9 +138,11 @@ Queue buckets are 6 = urgent, 5 = high, 3-4 = normal, and 1-2 = low.
 | `low` | `not_at_risk` | mad/frustrated | 1 | 2 | `low` |
 | `low` | `not_at_risk` | calm/satisfied/unclear | 0 | 1 | `low` |
 
-### Missing-input policy requiring Hazem confirmation
+### Approved missing-input priority policy
 
-A missing urgency, churn risk, or customer_state_text leaves both priority fields null and preserves human review. I choose this conservative continuation of existing review behavior pending Hazem confirmation. Missing category leaves routing unassigned, while complete scoring inputs still allow priority calculation. A valid category may receive a demo reservation while another missing label still requires review.
+Hazem gives final approval to requiring all three inputs, `complaint_urgency`, `churn_risk`, and `customer_state_text`, to calculate priority. If any one is null, both `priority_score` and `queue_priority` must remain null, and human review is required. Default values must never be substituted and missing inputs must never be inferred. An explicit `customer_state_text="unclear"` is valid and contributes 0 points; null requires human review and prevents priority calculation.
+
+Missing category leaves routing unassigned, while complete scoring inputs still allow priority calculation. A valid category may receive a demo reservation while another missing label still requires review.
 
 Invalid required labels, versions, or unexpected fields raise official validation errors before reservation. The caller uses Arafa's existing failed-run review path. No replacement labels, default points, or voice-based values are guessed. Explicit `unclear` is an approved state worth 0 and differs from a missing state.
 
@@ -298,7 +300,7 @@ The client overrides the kernel executable in memory to use this virtual environ
 
 ## Pending approvals and readiness
 
-Hazem still needs to confirm the missing-input policy, production skill mapping, tier policy, agent tie-breaking, fusion, and language_mix values. The supplied formula, score range, bucket thresholds, and verified 11-category contract are implemented.
+Hazem still needs to confirm production skill mapping, tier policy, agent tie-breaking, fusion, and language_mix values. The approved formula, missing-input policy, score range, bucket thresholds, and verified 11-category contract are implemented.
 
 Arafa and Ibthal must confirm extraction from the notebook, shared runtime agent state, and retry/error cleanup ownership. The two new categories currently lack seeded skills. Unassigned tickets with complete labels can still receive completed status from the official assembler. Upstream priority comments need alignment with Hazem's new approval. Older dataset and annotation labels require their owners' alignment before evaluation.
 
