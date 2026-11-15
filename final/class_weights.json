@@ -1,38 +1,38 @@
 {
-  "rows": 5096,
-  "method": "sklearn compute_class_weight, balanced, on the clean training set",
+  "rows": 3575,
+  "method": "sklearn compute_class_weight, balanced, on the train split only (3575 rows). Val and test never influence training weights.",
   "weights": {
     "complaint_category": {
-      "app_and_account": 0.727,
-      "balance_and_data": 0.682,
-      "billing_and_charges": 0.671,
-      "branch_and_staff": 1.124,
-      "cancellation_request": 2.426,
-      "network_and_connectivity": 0.539,
-      "no_reply_or_long_wait": 1.095,
-      "offers_and_packages": 2.603,
-      "other": 1.461,
-      "sim_services": 7.595,
-      "thanks_or_praise": 0.715
+      "app_and_account": 0.711,
+      "balance_and_data": 0.678,
+      "billing_and_charges": 0.673,
+      "branch_and_staff": 1.102,
+      "cancellation_request": 2.444,
+      "network_and_connectivity": 0.544,
+      "no_reply_or_long_wait": 1.094,
+      "offers_and_packages": 2.642,
+      "other": 1.451,
+      "sim_services": 7.386,
+      "thanks_or_praise": 0.734
     },
     "complaint_urgency": {
-      "high": 3.425,
-      "low": 1.08,
-      "medium": 0.561
+      "high": 3.484,
+      "low": 1.094,
+      "medium": 0.556
     },
     "customer_state": {
-      "calm": 0.493,
-      "frustrated": 0.458,
-      "mad": 6.84,
-      "satisfied": 1.563,
-      "unclear": 1019.2
+      "calm": 0.617,
+      "frustrated": 0.567,
+      "mad": 8.677,
+      "satisfied": 1.999
     },
     "churn_risk": {
-      "at_risk": 91.0,
+      "at_risk": 89.375,
       "not_at_risk": 0.503
     }
   },
   "notes": {
-    "customer_state unclear": "1 row(s) only. Weight 1019.2 is not usable. Review the row before training the state head."
+    "customer_state unclear": "0 rows in train (1 row in val, 0 in test). No weight: the model never trains on unclear. Review the val row before the retrain on audited labels.",
+    "evaluation": "Macro-F1 for customer_state is computed over the 4 classes present in train (calm, frustrated, mad, satisfied). Unclear is excluded from the denominator because it has 0 train rows."
   }
 }
