@@ -38,11 +38,12 @@ FIXTURE_TEXT_ANALYSIS: dict = {
 
 FIXTURE_ROUTE_REASON = (
     "Assigned because the complaint category matches the agent approved "
-    "skill and the agent is on shift with capacity. Priority score is null "
-    "because the priority formula is not agreed yet, see contracts section 10."
+    "skill and the agent is on shift with capacity. Priority calculation: "
+    "2 + 0 + 1 = 3; queue_priority=normal."
 )
 
-# Contracts section 9 fixture ticket, verbatim values. This dict is a
+# Contracts section 9 fixture ticket shape with the approved priority policy.
+# This dict is a
 # fixed example: its ids and created_at are fixed here. The pipeline
 # builds a ticket in exactly this shape, with fresh ids and timestamps
 # set per run.
@@ -51,7 +52,7 @@ FIXTURE_TICKET: dict = {
     "voicemail_id": FIXTURE_VOICEMAIL_ID,
     "ticket_status": "completed",
     "assignment_status": "assigned",
-    "priority_score": None,
+    "priority_score": 3.0,
     "route_reason": FIXTURE_ROUTE_REASON,
     "summary": "Customer reports a service problem and requests a callback.",
     "customer_request": "Customer asks for a callback about the service problem.",

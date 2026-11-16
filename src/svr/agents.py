@@ -1,9 +1,9 @@
 """Seeded demo agents (contracts section 3.6).
 
 Fictional demo agents ONLY. No real people, no real names, no real
-availability. Routing uses only the skills listed here and says so in
-``route_reason`` until the skill-to-category mapping and tier policy are
-agreed (contracts section 10).
+availability. The listed skills include the approved Phase 1 demo category
+assignments for offers and SIM services; they are not production mappings or
+a tier policy.
 
 Capacity is concurrent load (issue #6): assigning a run to an agent
 consumes one unit of its capacity, and the unit is released when the run
@@ -26,6 +26,7 @@ SEEDED_AGENTS: list[Agent] = [
         skills=[
             ComplaintCategory.NETWORK_AND_CONNECTIVITY,
             ComplaintCategory.NO_REPLY_OR_LONG_WAIT,
+            ComplaintCategory.SIM_SERVICES,
         ],
         tier="L1",
         capacity=5,
@@ -39,6 +40,7 @@ SEEDED_AGENTS: list[Agent] = [
         skills=[
             ComplaintCategory.BILLING_AND_CHARGES,
             ComplaintCategory.BALANCE_AND_DATA,
+            ComplaintCategory.OFFERS_AND_PACKAGES,
         ],
         tier="L1",
         capacity=5,

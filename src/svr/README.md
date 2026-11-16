@@ -3,9 +3,10 @@
 Owner: Ahmed Gamal Arfa ([@AhmdArFa](https://github.com/AhmdArFa)),
 Systems Integration and Demo Engineer.
 Branch: `team/arafa-systems-demo`.
-Status: pushed. Phase 1 audit fixes for Hazem's issues #2-#9 applied on
-this branch, 86 tests passing, verified live 13 November 2026.
-Last update: 13 November 2026.
+The base branch includes pushed Phase 1 audit fixes for Hazem's issues #2-#9,
+verified live 13 November 2026. This branch includes the Phase 1 demo routing
+integration. Tests: 129 passed, 1 skipped because Gradio is not installed.
+Last update: 16 November 2026.
 Source of truth: **SVR Contracts v1.0** (`arafa-contracts-v1.md` in the
 competition goal files), `schema_version: 1`,
 `label_version: "taxonomy-2026-11-15"`. Role guide: SVR-TEAM-04 Role 6.
@@ -83,7 +84,7 @@ first stage to last, with per-stage status and `stage_timing_ms` plus
 | STT | `stages/stt.py` | Mock: fixed fixture transcript |
 | Text analysis | `stages/classification.py` | Mock: fixed fixture fields |
 | Voice evidence | `stages/voice.py` | Skipped, no voice evidence yet |
-| Triage | `stages/triage.py` | Mock: fixture route reason, seeded-agent assignment |
+| Triage | `stages/triage.py` | Ibthal Phase 1 integration: validates evidence, computes the approved score and bucket when inputs are complete, reserves an eligible demo agent, and explains the route |
 | Ticket | `stages/ticket.py` | Assembles the contracts section 3.5 Ticket |
 
 API (`src/svr/api.py`, contracts section 6):
@@ -106,7 +107,7 @@ API (`src/svr/api.py`, contracts section 6):
 
 ## What is mock vs real
 
-MOCK (fixed values, contracts section 9 fixture, no real audio, no real
+MOCK inference (fixed values, contracts section 9 fixture, no real audio, no real
 transcript, no real customer data, no model loaded, no network call):
 
 - STT transcript: `[fixture transcript]`
@@ -115,8 +116,9 @@ transcript, no real customer data, no model loaded, no network call):
 - Triage: assignment to the first seeded demo agent with a matching skill,
   on shift, and with capacity; when there is no eligible match the ticket
   stays `unassigned` and requests human routing review (PRD US-5).
-- `priority_score` and `queue_priority`: null until the priority policy is
-  approved; `customer_state_final`: null; `cached`: false
+- Priority uses the approved urgency, churn-risk, and text-state points; if
+  any scoring input is missing, both priority fields stay null and the ticket
+  requires human review. `customer_state_final`: null; `cached`: false.
 
 REAL (implemented and tested): schema validation with the approved enums,
 null/review rules, input validation, per-stage timing, p95 helper,
@@ -124,19 +126,20 @@ in-memory ticket store with audit events, seeded agents, API, demo display.
 
 ## What Phase 2 swaps in
 
-Same function signatures, mocks replaced one at a time, each tested in
-isolation before moving on (Role 6 Phase 2):
+Same function signatures, mock inference components replaced one at a time,
+each tested in isolation before moving on (Role 6 Phase 2):
 
 - Sira: `stages/stt.py` → Whisper large-v3 transcription; `stages/intake.py`
   → 16 kHz mono WAV normalization, MP3/M4A duration measurement;
   `stages/voice.py` → wav2vec2 XLS-R 300M voice evidence.
 - Lama: `stages/classification.py` → fine-tuned EgyBERT / MARBERTv2 text
   model (single-task first, then multi-task, four heads).
-- Ibthal: `stages/triage.py` → real triage rules and ticket generator,
-  priority formula once agreed.
+- Ibthal: evaluate the integrated `stages/triage.py` on real model outputs;
+  any further priority changes require approval. Ticket assembly remains in
+  `stages/ticket.py`.
 - Aya: evaluation harness plugs into `latency.py` reporting.
 
-## Open decisions, do not guess (contracts section 10)
+## Open decisions and approved policies (contracts section 10)
 
 - **Complaint category.** The approved PRD taxonomy has 11 values:
   `network_and_connectivity`, `billing_and_charges`, `balance_and_data`,
@@ -150,14 +153,18 @@ isolation before moving on (Role 6 Phase 2):
   not force a review on a null mix alone, because the section 9 fixture is
   the approved Phase 1 mock output; once Hazem defines the values, the
   "null mix goes to review" rule is switched on.
-- **Priority formula, ranges, thresholds, weights undefined.** Owner
-  Ibthal, Hazem approves. `priority_score` and `queue_priority` stay null;
-  the proposal to force review for missing priority factors is pending
-  Hazem's approval and is not applied.
-- **Skill-to-category mapping and tier policy undefined.** Routing uses
-  only the seeded agents' listed skills and says so in `route_reason`.
-  Categories without a seeded approved match stay `unassigned` and request
-  human routing review; no mapping is inferred.
+- **Priority policy approved and implemented.** Score is urgency points
+  (high 3, medium 2, low 1) plus churn points (at-risk 2, not-at-risk 0)
+  plus one point for text state `mad` or `frustrated`. Buckets are 1-2
+  `low`, 3-4 `normal`, 5 `high`, and 6 `urgent`. If any scoring input is
+  missing, both priority fields stay null and human review is required;
+  explicit `unclear` contributes 0.
+- **Production skill-to-category mapping and tier policy undefined.** For
+  this Phase 1 demo, `offers_and_packages` routes to `agent-demo-billing`
+  and `sim_services` routes to `agent-demo-network`. Routing uses only the
+  seeded agents' listed skills, shift, and capacity; an ineligible category
+  stays `unassigned` and requests human routing review. No production tier
+  or tie-breaking policy is inferred.
 - **Retry policy undefined for Phase 1.** The mock pipeline has no provider
   call to retry; stage failures go to `needs_review`. Provider-specific or
   controlled retries require the applicable provider contract/approval.

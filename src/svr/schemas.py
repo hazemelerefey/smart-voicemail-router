@@ -73,9 +73,10 @@ class AudioFormat(str, Enum):
 
 
 class QueuePriority(str, Enum):
-    """Bucket form of priority_score. PROVISIONAL: the priority formula
-    and its buckets are OPEN (contracts section 10, owner Ibthal, Hazem
-    approves); these values hold the shape until the policy is agreed."""
+    """Approved queue bucket for the Phase 1 priority formula.
+
+    Triage leaves the bucket null when any required scoring input is missing.
+    """
 
     LOW = "low"
     NORMAL = "normal"
@@ -235,13 +236,13 @@ class VoiceEvidence(BaseModel):
 
 
 class TriageDecision(BaseModel):
-    """Contracts section 3.4, produced by Ibthal (mocked in Phase 1)."""
+    """Contracts section 3.4, produced by Ibthal's Phase 1 triage logic."""
 
     model_config = ConfigDict(extra="forbid")
 
     voicemail_id: str
-    # Priority formula and weights are OPEN (contracts section 10), owned by
-    # Ibthal, approved by Hazem. Until agreed, priority_score stays null.
+    # The approved Phase 1 formula scores urgency, churn risk, and text
+    # customer state. Missing any scoring input leaves both priority fields null.
     priority_score: float | None = None
     queue_priority: QueuePriority | None = None
     assigned_agent_id: str | None = None

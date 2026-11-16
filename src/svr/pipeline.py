@@ -1,6 +1,7 @@
 """SVR Phase 1 pipeline skeleton (Role 6, Arafa).
 
-Mock stages only. No model is loaded, no network call is made, no real
+Inference stages remain mocked. Triage applies Ibthal's integrated Phase 1
+demo-routing logic. No model is loaded, no network call is made, and no real
 audio or transcript is read.
 """
 
@@ -54,8 +55,9 @@ def run_pipeline(
     Runs on upload metadata only (filename, size, duration). Audio bytes
     never enter this function: the endpoint measures them first with
     ``validate_and_measure`` and discards them, and the background task
-    carries only the AudioMeta. All stages are mocks returning the contracts
-    section 9 fixture values. ``classification_override`` lets tests (and
+    carries only the AudioMeta. Inference stages return the contracts section
+    9 fixture values; triage routes those labels through the seeded demo
+    agents. ``classification_override`` lets tests (and
     only tests) feed a different TextAnalysis payload, e.g. a null category,
     to prove the null/review rules. A failed stage never produces a silent
     normal ticket: the run ends as ``needs_review`` with the failed stage
@@ -140,10 +142,10 @@ def run_pipeline(
     stage_status["voice_evidence"] = "skipped" if voice_evidence is None else "ok"
     stage_timing_ms["voice_evidence"] = elapsed()
 
-    # 5. Triage (mock): fixed route reason, seeded-agent assignment.
+    # 5. Triage: Ibthal's Phase 1 routing logic with seeded demo agents.
     with timer.stage("triage") as elapsed:
         try:
-            decision = triage.triage_mock(text, voice_evidence)
+            decision = triage.triage_phase1(text, voice_evidence)
         except Exception as exc:
             stage_timing_ms["triage"] = elapsed()
             return fail(f"Triage failed: {exc}", "triage")

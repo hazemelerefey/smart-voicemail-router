@@ -1,6 +1,7 @@
 """Pipeline tests: end-to-end mock run, null/review rules, latency."""
 
 import pytest
+from pydantic import ValidationError
 
 from conftest import make_wav_bytes
 from svr import fixtures
@@ -27,7 +28,7 @@ def make_meta(
     )
 
 
-def test_end_to_end_mock_pipeline_matches_fixture_shape():
+def test_end_to_end_pipeline_preserves_contract_and_routes():
     result = run_pipeline(make_meta("voicemail-test-001"), "voicemail-test-001")
     ticket = result.ticket
     assert ticket.ticket_status.value == "completed"
@@ -38,16 +39,19 @@ def test_end_to_end_mock_pipeline_matches_fixture_shape():
     assert ticket.churn_risk.value == "not_at_risk"
     assert ticket.customer_state_final is None  # fusion disabled
     assert ticket.voice_state_candidate is None  # voice stage skipped
-    assert ticket.priority_score is None  # formula OPEN
+    assert ticket.priority_score == 3.0
     assert ticket.needs_human_review is False
     assert ticket.cached is False
     assert ticket.schema_version == 1
     assert ticket.label_version == "taxonomy-2026-11-15"
     assert ticket.transcript == fixtures.FIXTURE_TRANSCRIPT
-    assert ticket.route_reason == fixtures.FIXTURE_ROUTE_REASON
+    assert "agent-demo-network" in ticket.route_reason
+    assert "network_and_connectivity" in ticket.route_reason
+    assert "Priority calculation: 2 + 0 + 1 = 3" in ticket.route_reason
+    assert "queue_priority=normal" in ticket.route_reason
     assert result.decision is not None
-    assert result.decision.priority_score is None  # policy remains unapproved
-    assert result.decision.queue_priority is None
+    assert result.decision.priority_score == 3.0
+    assert result.decision.queue_priority.value == "normal"
     assert result.decision.label_version == "taxonomy-2026-11-15"
     assert result.decision.assigned_agent_id == "agent-demo-network"
     assert result.text is not None
@@ -82,31 +86,182 @@ def test_null_category_goes_to_needs_review_not_a_guess():
     assert ticket.ticket_status.value == "needs_review"
     assert ticket.needs_human_review is True
     assert ticket.complaint_category is None
+    assert ticket.priority_score == 3.0
+    assert result.decision is not None
+    assert result.decision.queue_priority.value == "normal"
 
 
-@pytest.mark.parametrize("category", ["offers_and_packages", "sim_services"])
-def test_new_categories_without_approved_skill_mapping_request_human_review(category):
+@pytest.mark.parametrize(
+    ("category", "expected_agent"),
+    [
+        ("offers_and_packages", "agent-demo-billing"),
+        ("sim_services", "agent-demo-network"),
+    ],
+)
+def test_new_categories_route_to_the_approved_demo_agents(category, expected_agent):
     from svr import agents as agents_module
 
     loads_before = {a.id: a.current_load for a in agents_module.list_agents()}
-    result = run_pipeline(
-        make_meta(f"voicemail-{category}"),
-        f"voicemail-{category}",
-        classification_override={"complaint_category": category},
-    )
+    result = None
+    try:
+        result = run_pipeline(
+            make_meta(f"voicemail-{category}"),
+            f"voicemail-{category}",
+            classification_override={"complaint_category": category},
+        )
+        assert result.ticket.complaint_category.value == category
+        assert result.ticket.label_version == "taxonomy-2026-11-15"
+        assert result.ticket.assignment_status.value == "assigned"
+        assert result.ticket.ticket_status.value == "completed"
+        assert result.ticket.needs_human_review is False
+        assert result.decision is not None
+        assert result.decision.assignment_status.value == "assigned"
+        assert result.decision.assigned_agent_id == expected_agent
+        assert result.decision.label_version == "taxonomy-2026-11-15"
+        assert result.decision.priority_score == 3.0
+        assert result.decision.queue_priority.value == "normal"
+        assert category in result.decision.route_reason
+        assert "listed skill matches" in result.decision.route_reason
+        loads_during_run = {
+            a.id: a.current_load for a in agents_module.list_agents()
+        }
+        assert loads_during_run[expected_agent] == loads_before[expected_agent] + 1
+    finally:
+        if result is not None and result.decision is not None:
+            if result.decision.assigned_agent_id is not None:
+                agents_module.release(result.decision.assigned_agent_id)
+    assert {a.id: a.current_load for a in agents_module.list_agents()} == loads_before
 
-    assert result.ticket.complaint_category.value == category
-    assert result.ticket.label_version == "taxonomy-2026-11-15"
-    assert result.ticket.assignment_status.value == "unassigned"
+
+@pytest.mark.parametrize(
+    ("urgency", "urgency_points"),
+    [("high", 3), ("medium", 2), ("low", 1)],
+)
+@pytest.mark.parametrize(
+    ("churn", "churn_points"), [("at_risk", 2), ("not_at_risk", 0)]
+)
+@pytest.mark.parametrize(
+    ("state", "state_points"),
+    [
+        ("calm", 0),
+        ("frustrated", 1),
+        ("mad", 1),
+        ("satisfied", 0),
+        ("unclear", 0),
+    ],
+)
+def test_approved_priority_formula_for_every_complete_signal(
+    urgency, urgency_points, churn, churn_points, state, state_points
+):
+    expected_score = urgency_points + churn_points + state_points
+    expected_bucket = {
+        1: "low",
+        2: "low",
+        3: "normal",
+        4: "normal",
+        5: "high",
+        6: "urgent",
+    }[expected_score]
+    result = run_pipeline(
+        make_meta(f"priority-{urgency}-{churn}-{state}"),
+        f"priority-{urgency}-{churn}-{state}",
+        classification_override={
+            "complaint_urgency": urgency,
+            "churn_risk": churn,
+            "customer_state_text": state,
+        },
+    )
+    assert result.ticket.ticket_status.value == "completed"
+    assert result.ticket.needs_human_review is False
+    assert result.ticket.priority_score == expected_score
+    assert result.decision is not None
+    assert result.decision.priority_score == expected_score
+    assert result.decision.queue_priority.value == expected_bucket
+    assert f"priority_score={expected_score}" in result.decision.contributing_signals
+    assert f"queue_priority={expected_bucket}" in result.decision.contributing_signals
+
+
+@pytest.mark.parametrize(
+    "missing_fields",
+    [
+        ("complaint_urgency",),
+        ("churn_risk",),
+        ("customer_state_text",),
+        ("complaint_urgency", "churn_risk"),
+        ("complaint_urgency", "customer_state_text"),
+        ("churn_risk", "customer_state_text"),
+        ("complaint_urgency", "churn_risk", "customer_state_text"),
+    ],
+)
+def test_missing_priority_input_keeps_priority_null_and_requires_review(
+    missing_fields,
+):
+    missing = [
+        field
+        for field in ("complaint_urgency", "churn_risk", "customer_state_text")
+        if field in missing_fields
+    ]
+    result = run_pipeline(
+        make_meta(f"missing-priority-{len(missing)}"),
+        f"missing-priority-{len(missing)}",
+        classification_override={field: None for field in missing},
+    )
     assert result.ticket.ticket_status.value == "needs_review"
     assert result.ticket.needs_human_review is True
+    assert result.ticket.priority_score is None
     assert result.decision is not None
-    assert result.decision.assignment_status.value == "unassigned"
-    assert result.decision.assigned_agent_id is None
-    assert result.decision.label_version == "taxonomy-2026-11-15"
     assert result.decision.priority_score is None
     assert result.decision.queue_priority is None
-    assert "human routing review" in result.ticket.route_reason.lower()
+    assert result.decision.assigned_agent_id == "agent-demo-network"
+    assert f"priority_missing={','.join(missing)}" in result.decision.contributing_signals
+    assert "Priority inputs missing: " + ", ".join(missing) in result.decision.route_reason
+    assert "approved missing-input policy" in result.decision.route_reason
+
+
+def test_triage_revalidates_mutated_text_before_reserving():
+    from svr import agents as agents_module
+    from svr.schemas import TextAnalysis
+    from svr.stages.triage import triage_phase1
+
+    text = TextAnalysis.model_validate(fixtures.FIXTURE_TEXT_ANALYSIS).model_copy(
+        update={"complaint_category": "not-a-category"}
+    )
+    loads_before = {a.id: a.current_load for a in agents_module.list_agents()}
+    with pytest.warns(UserWarning, match="Pydantic serializer warnings"):
+        with pytest.raises(ValidationError):
+            triage_phase1(text)
+    assert {a.id: a.current_load for a in agents_module.list_agents()} == loads_before
+
+
+def test_triage_rejects_mismatched_voice_before_reserving():
+    from svr import agents as agents_module
+    from svr.schemas import TextAnalysis, VoiceEvidence
+    from svr.stages.triage import triage_phase1
+
+    text = TextAnalysis.model_validate(fixtures.FIXTURE_TEXT_ANALYSIS)
+    voice_evidence = VoiceEvidence(
+        voicemail_id="voicemail-other", model_version="synthetic-voice-0.1"
+    )
+    loads_before = {a.id: a.current_load for a in agents_module.list_agents()}
+    with pytest.raises(ValueError, match="same voicemail"):
+        triage_phase1(text, voice_evidence)
+    assert {a.id: a.current_load for a in agents_module.list_agents()} == loads_before
+
+
+def test_triage_releases_reservation_if_decision_construction_fails(monkeypatch):
+    from svr import agents as agents_module
+    from svr.schemas import TextAnalysis
+    import svr.stages.triage as triage_module
+
+    text = TextAnalysis.model_validate(fixtures.FIXTURE_TEXT_ANALYSIS)
+    loads_before = {a.id: a.current_load for a in agents_module.list_agents()}
+
+    def _boom(*args, **kwargs):
+        raise RuntimeError("forced decision construction failure")
+
+    monkeypatch.setattr(triage_module, "TriageDecision", _boom)
+    with pytest.raises(RuntimeError, match="decision construction failure"):
+        triage_module.triage_phase1(text)
     assert {a.id: a.current_load for a in agents_module.list_agents()} == loads_before
 
 
@@ -292,7 +447,7 @@ def test_voice_failure_goes_to_needs_review(monkeypatch):
 
 
 def test_triage_failure_goes_to_needs_review(monkeypatch):
-    monkeypatch.setattr("svr.stages.triage.triage_mock", _boom)
+    monkeypatch.setattr("svr.stages.triage.triage_phase1", _boom)
     result = run_pipeline(make_meta("voicemail-test-007"), "voicemail-test-007")
     ticket = result.ticket
     assert ticket.ticket_status.value == "needs_review"
@@ -379,7 +534,7 @@ def test_list_agents_returns_deep_copies():
     listed[0].skills.clear()
     stored = agents_module.list_agents()[0]
     assert stored.current_load == 1
-    assert len(stored.skills) == 2
+    assert len(stored.skills) == 3
 
 
 def test_pipeline_run_consumes_and_complete_releases_capacity():

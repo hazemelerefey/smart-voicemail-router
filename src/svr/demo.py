@@ -1,7 +1,8 @@
 """Gradio demo skeleton (Role 6 Phase 1): upload, run, ticket display.
 
 Shows the cached flag, stage timings, route reason and needs_human_review
-for every run. Mock pipeline only: fixed fixture transcript and fields.
+for every run. Inference uses fixture data; triage applies the Phase 1
+explainable routing logic to fictional seeded agents.
 
 Run with ``src/svr/run_demo.sh`` (it unsets the proxy environment variables
 first: this sandbox's ``no_proxy`` contains IPv6 entries that httpx, used
@@ -15,6 +16,7 @@ import json
 import os
 import uuid
 
+from . import agents
 from .pipeline import run_pipeline
 from .schemas import Ticket, TicketDetail
 from .stages.intake import MAX_BYTES, validate_and_measure
@@ -84,19 +86,25 @@ def run_demo(file_path: str | None) -> tuple[str, str]:
     finally:
         del data
     result = run_pipeline(meta, voicemail_id)
-    # The demo serialises the same object the API returns: a TicketDetail
-    # (ticket + evidence, no audit events in the demo), not a bare Ticket.
-    detail = TicketDetail(
-        **result.ticket.model_dump(),
-        audio_evidence=result.audio,
-        text_analysis=result.text,
-        voice_evidence=result.voice_evidence,
-        triage_decision=result.decision,
-        events=[],
-    )
-    return format_ticket_markdown(result.ticket), json.dumps(
-        detail.model_dump(), indent=2
-    )
+    try:
+        # The demo serialises the same object the API returns: a TicketDetail
+        # (ticket + evidence, no audit events in the demo), not a bare Ticket.
+        detail = TicketDetail(
+            **result.ticket.model_dump(),
+            audio_evidence=result.audio,
+            text_analysis=result.text,
+            voice_evidence=result.voice_evidence,
+            triage_decision=result.decision,
+            events=[],
+        )
+        return format_ticket_markdown(result.ticket), json.dumps(
+            detail.model_dump(), indent=2
+        )
+    finally:
+        # Unlike the API path, this synchronous demo has no TicketStore to
+        # release the reservation after completion.
+        if result.decision is not None and result.decision.assigned_agent_id:
+            agents.release(result.decision.assigned_agent_id)
 
 
 def build_demo() -> object:
@@ -104,11 +112,11 @@ def build_demo() -> object:
     this module never fails when Gradio is unavailable."""
     import gradio as gr
 
-    with gr.Blocks(title="SVR Phase 1 Demo (mock)") as demo:
+    with gr.Blocks(title="SVR Phase 1 Demo") as demo:
         gr.Markdown(
-            "# Smart Voicemail Router, Phase 1 Demo (MOCK)\n"
-            "Upload a voicemail clip. The pipeline is a mock: fixed fixture "
-            "transcript and fields, no real model, no real data."
+            "# Smart Voicemail Router, Phase 1 Demo\n"
+            "Upload a voicemail clip. Inference uses fixed fixture values; "
+            "triage routes to fictional demo agents, with no real model or data."
         )
         audio = gr.Audio(type="filepath", label="Voicemail (WAV / MP3 / M4A)")
         run_btn = gr.Button("Run pipeline")

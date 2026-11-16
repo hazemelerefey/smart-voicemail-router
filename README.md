@@ -2,7 +2,7 @@
 
 A local-first competition prototype that turns a single-speaker Egyptian Arabic voicemail, including English telecom terms, into an explainable callback ticket.
 
-> **Project status:** the dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,751 clean training rows. The systems schema and tests use an 11-value complaint-category set; older model-report, annotation, audit, and dataset artifacts have different counts and need alignment by data owners before training or evaluation; see Open decisions. The model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. This branch, `team/arafa-systems-demo`, carries the Role 6 Phase 1 pipeline skeleton with mocks, API, and demo: 86 tests passing, verified live. Project documents and environment guidance live on `master`.
+> **Project status:** the dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,751 clean training rows. The systems schema and tests use an 11-value complaint-category set; older model-report, annotation, audit, and dataset artifacts have different counts and need alignment by data owners before training or evaluation; see Open decisions. The model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. This branch, `team/arafa-systems-demo`, has mock inference, the API, demo, and the Phase 1 demo routing integration. Tests: 129 passed, 1 skipped because Gradio is not installed. Project documents and environment guidance live on `master`.
 
 ## What it does
 
@@ -16,7 +16,7 @@ voicemail
   -> STT (mock in Phase 1; Whisper large-v3 in Phase 2)
   -> text classification (mock in Phase 1; EgyBERT / MARBERTv2 in Phase 2)
   -> voice evidence (skipped in Phase 1; wav2vec2 XLS-R 300M in Phase 2)
-  -> triage and routing (mock in Phase 1)
+  -> triage and routing (Ibthal Phase 1 logic, seeded demo agents)
   -> ticket
 ```
 
@@ -28,7 +28,7 @@ The core fields are deliberately distinct:
 - **Complaint urgency** describes how time-sensitive or impact-heavy the issue is. High, medium, low.
 - **Customer state** describes the customer's interaction state under definitions agreed by the team. Calm, frustrated, mad, satisfied, unclear.
 - **Churn risk** is a separate flag, set only on explicit leave-the-provider words.
-- **Queue priority** is a separate system decision based on approved signals. Its weights are not fixed until the team agrees the policy.
+- **Queue priority** uses the approved urgency, churn-risk, and text-state points. Any missing scoring input leaves the score and bucket null and requires human review.
 
 Unclear or unsupported outputs stay reviewable rather than being guessed. A null label is a correct output; a guessed label is a defect.
 
@@ -58,7 +58,7 @@ No recordings or transcripts are committed on this branch. The `.gitignore` excl
 │   └── svr-model-selection-report.md   # EgyBERT + MARBERTv2, XLS-R 300M, 14 papers
 ├── src/
 │   └── svr/                     # Role 6 Phase 1 pipeline skeleton, API, demo
-└── tests/                        # API, pipeline, schema, and store tests (86 passing)
+└── tests/                        # API, pipeline, schema, and store tests (129 passed, 1 skipped)
 ```
 
 Project documents (PRD, architecture, team allocation, roles guide) and environment setup (CPU, GPU, Colab) live on [`master`](https://github.com/hazemelerefey/smart-voicemail-router/tree/master). The dataset and model work live on the `local-env` and team role branches.
@@ -76,10 +76,10 @@ python3 -m venv .venv
 .venv/bin/pip install -r src/svr/requirements.txt
 bash src/svr/run_api.sh        # API at http://127.0.0.1:8000, HTML demo at /
 bash src/svr/run_demo.sh       # Gradio demo at http://127.0.0.1:7860
-.venv/bin/python -m pytest tests/ -q   # 86 tests
+.venv/bin/python -m pytest tests/ -q   # 129 passed, 1 skipped
 ```
 
-Phase 1 persists no audio: uploads are validated and measured, then the bytes are discarded, and the pipeline runs on metadata only. Phase 2 swaps the mocks for real components as they land (Sira audio pipeline, Lama text model, Ibthal ticket generator), one at a time, each tested in isolation. Phase 3 integrates everything, measures p95 latency, and runs the demo five consecutive times cleanly.
+Phase 1 persists no audio: uploads are validated and measured, then the bytes are discarded, and the pipeline runs on metadata only. Inference stages still use mocks; Ibthal's explainable demo routing is integrated. Phase 2 swaps in real audio and text components, each tested in isolation, and refines routing as further policy is approved. Phase 3 measures p95 latency and runs the demo five consecutive times cleanly.
 
 ## Team
 
@@ -102,12 +102,15 @@ SVR Voicemail Corpus: 6,522 voicemails, 12.6 hours, 6,024 transcripts (Whisper l
 
 Key sources on this branch: [`research/svr-model-selection-report.md`](research/svr-model-selection-report.md), [`preparation/taxonomy_proposal.md`](preparation/taxonomy_proposal.md), [`preparation/labeling_config.xml`](preparation/labeling_config.xml), [`eda/eda_summary.json`](eda/eda_summary.json), [`preprocessing/preprocessing_summary.json`](preprocessing/preprocessing_summary.json).
 
-## Open decisions, do not guess
+## Open decisions and approved policies, do not guess
 
 - **Complaint category.** The approved PRD list has 11 values: `network_and_connectivity`, `billing_and_charges`, `balance_and_data`, `app_and_account`, `branch_and_staff`, `no_reply_or_long_wait`, `cancellation_request`, `thanks_or_praise`, `other`, `offers_and_packages`, and `sim_services`. The systems schema follows this list. Older annotation and dataset artifacts still include `greeting_only` or other class counts and need alignment by the data owners before training or evaluation.
-- **Priority formula, ranges, thresholds, weights.** Undefined. Owner Ibthal, Hazem approves.
+- **Priority policy, approved and implemented.** Score is urgency points (high 3, medium 2, low 1) plus churn points (at-risk 2, not-at-risk 0) plus one point for text state `mad` or `frustrated`. Buckets are 1-2 `low`, 3-4 `normal`, 5 `high`, and 6 `urgent`. If any scoring input is missing, both priority fields stay null and human review is required; explicit `unclear` contributes 0.
 - **`language_mix` values.** Undefined. Producers send null.
-- **Skill-to-category mapping and tier policy.** Undefined.
+- **Production skill-to-category mapping and tier policy.** For the Phase 1
+  demo only, `offers_and_packages` maps to `agent-demo-billing` and
+  `sim_services` maps to `agent-demo-network`; production mapping and tier
+  policy remain undefined.
 - **Fusion rules for customer state.** Undefined. The field stays null until agreed.
 - **Dataset rights, consent, retention, processing locations.** Hazem.
 - **Competition deadline, judging criteria, demo format.** Hazem.

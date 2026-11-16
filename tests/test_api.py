@@ -45,10 +45,10 @@ def test_submit_wav_returns_202_and_ticket_completes():
     assert ticket["processing_ms"] > 0
     assert ticket["processing_ms"] < 10_000
     assert ticket["transcript"] == "[fixture transcript]"
-    assert "Assigned because" in ticket["route_reason"]
+    assert "Fictional seeded demo routing assigns agent-demo-network" in ticket["route_reason"]
     # The full contract, not just the headline fields.
     assert ticket["assignment_status"] == "assigned"
-    assert ticket["priority_score"] is None
+    assert ticket["priority_score"] == 3.0
     assert ticket["summary"]
     assert ticket["customer_request"]
     assert ticket["suggested_script"]
@@ -73,6 +73,8 @@ def test_submit_wav_returns_202_and_ticket_completes():
     decision = ticket["triage_decision"]
     assert decision["assigned_agent_id"] == "agent-demo-network"
     assert decision["assignment_status"] == "assigned"
+    assert decision["priority_score"] == 3.0
+    assert decision["queue_priority"] == "normal"
     assert decision["route_reason"] == ticket["route_reason"]
     events = [e["event"] for e in ticket["events"]]
     assert events == ["submitted", "completed"]
@@ -255,7 +257,16 @@ def test_agents_are_seeded_demo_only():
     agents = resp.json()
     assert len(agents) == 3
     assert all("Demo Agent" in a["name"] for a in agents)
-    assert agents[0]["skills"] == ["network_and_connectivity", "no_reply_or_long_wait"]
+    assert agents[0]["skills"] == [
+        "network_and_connectivity",
+        "no_reply_or_long_wait",
+        "sim_services",
+    ]
+    assert agents[1]["skills"] == [
+        "billing_and_charges",
+        "balance_and_data",
+        "offers_and_packages",
+    ]
     assert all(a["on_shift"] for a in agents)
 
 
@@ -342,7 +353,7 @@ def test_patch_invalid_status_transition_400(monkeypatch):
     def _boom(*args, **kwargs):
         raise ValueError("forced triage failure for the test")
 
-    monkeypatch.setattr(triage_module, "triage_mock", _boom)
+    monkeypatch.setattr(triage_module, "triage_phase1", _boom)
     resp = client.post(
         "/api/voicemails",
         files={"file": ("test.wav", make_wav_bytes(), "audio/wav")},
@@ -513,7 +524,7 @@ def test_websocket_receives_completed_ticket_update():
         assert msg["ticket_id"] == ticket_id
         assert msg["ticket"]["ticket_status"] == "completed"
         assert msg["ticket"]["complaint_category"] == "network_and_connectivity"
-        assert "Assigned because" in msg["ticket"]["route_reason"]
+        assert "Fictional seeded demo routing assigns agent-demo-network" in msg["ticket"]["route_reason"]
         assert msg["ticket"]["stage_status"]["voice_evidence"] == "skipped"
         assert msg["ticket"]["processing_ms"] > 0
         assert msg["ticket"]["transcript"] == "[fixture transcript]"
@@ -593,12 +604,14 @@ def test_demo_run_rejects_oversize_file(tmp_path):
 
 
 def test_demo_run_accepts_wav_file(tmp_path):
-    """The Gradio demo runs the mock pipeline on a WAV file and returns
+    """The Gradio demo runs the pipeline on a WAV file and returns
     the ticket markdown plus the ticket JSON."""
     import json
 
+    from svr import agents as agents_module
     from svr.demo import run_demo
 
+    loads_before = {a.id: a.current_load for a in agents_module.list_agents()}
     wav = tmp_path / "test.wav"
     wav.write_bytes(make_wav_bytes())
     message, raw = run_demo(str(wav))
@@ -614,6 +627,7 @@ def test_demo_run_accepts_wav_file(tmp_path):
         data["triage_decision"]["assigned_agent_id"] == "agent-demo-network"
     )
     assert data["events"] == []
+    assert {a.id: a.current_load for a in agents_module.list_agents()} == loads_before
 
 
 def test_gradio_demo_builds():
