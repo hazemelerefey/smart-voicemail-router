@@ -1,6 +1,6 @@
 """TF-IDF + logistic regression baseline (Phase 1, Aya's deliverable).
 
-Permanent location (confirmed by Hazem): infra/tfidf_baseline.py (kept inside infra/ so it can be
+Permanent location: infra/tfidf_baseline.py (kept inside infra/ so it can be
 imported and tested alongside the evaluation harness and run record modules).
 
 All model and vectorizer settings come from Hazem's reference notebook
