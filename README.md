@@ -2,7 +2,7 @@
 
 A local-first competition prototype that turns a single-speaker Egyptian Arabic voicemail, including English telecom terms, into an explainable callback ticket.
 
-> **Project status:** the dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,751 clean training rows. The taxonomy is approved and the model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. The category count is still to be confirmed by Hazem (9 in the model report, 10 approved, 11 in the audit app, 12 in the dataset tables); see Open decisions. This branch, `team/arafa-systems-demo`, carries the Role 6 Phase 1 pipeline skeleton with mocks, API, and demo: 86 tests passing, verified live. Project documents and environment guidance live on `master`.
+> **Project status:** the dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,751 clean training rows. The systems schema and tests use an 11-value complaint-category set; older model-report, annotation, audit, and dataset artifacts have different counts and need alignment by data owners before training or evaluation; see Open decisions. The model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. This branch, `team/arafa-systems-demo`, carries the Role 6 Phase 1 pipeline skeleton with mocks, API, and demo: 86 tests passing, verified live. Project documents and environment guidance live on `master`.
 
 ## What it does
 
@@ -24,7 +24,7 @@ Latency target: p95 under 10 seconds for clips up to 60 seconds, measured separa
 
 The core fields are deliberately distinct:
 
-- **Complaint category** describes the kind of issue. 10 values are approved.
+- **Complaint category** describes the kind of issue. The current systems schema contains 11 values; legacy artifacts still need data-owner alignment (see Open decisions).
 - **Complaint urgency** describes how time-sensitive or impact-heavy the issue is. High, medium, low.
 - **Customer state** describes the customer's interaction state under definitions agreed by the team. Calm, frustrated, mad, satisfied, unclear.
 - **Churn risk** is a separate flag, set only on explicit leave-the-provider words.
