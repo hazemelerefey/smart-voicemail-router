@@ -2,7 +2,7 @@
 
 A local-first competition prototype that turns a single-speaker Egyptian Arabic voicemail, including English telecom terms, into an explainable callback ticket.
 
-> **Project status:** the dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,751 clean training rows. The systems schema and tests use an 11-value complaint-category set; older model-report, annotation, audit, and dataset artifacts have different counts and need alignment by data owners before training or evaluation; see Open decisions. The model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. This branch, `team/arafa-systems-demo`, has mock inference, the API, demo, and the Phase 1 demo routing integration. Tests: 129 passed, 1 skipped because Gradio is not installed. Project documents and environment guidance live on `master`.
+> **Project status:** the dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,096 clean training rows (train 3,575, validation 1,003, test 518, seed 42). The systems schema and tests use an 11-value complaint-category set; older model-report, annotation, audit, and dataset artifacts have different counts and need alignment by data owners before training or evaluation; see Open decisions. The model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. This branch, `team/arafa-systems-demo`, has mock inference, the API, demo, and the Phase 1 demo routing integration. Tests: 130 passed. Project documents and environment guidance live on `master`.
 
 ## What it does
 
@@ -58,7 +58,7 @@ No recordings or transcripts are committed on this branch. The `.gitignore` excl
 │   └── svr-model-selection-report.md   # EgyBERT + MARBERTv2, XLS-R 300M, 14 papers
 ├── src/
 │   └── svr/                     # Role 6 Phase 1 pipeline skeleton, API, demo
-└── tests/                        # API, pipeline, schema, and store tests (129 passed, 1 skipped)
+└── tests/                        # API, pipeline, schema, and store tests (130 passed)
 ```
 
 Project documents (PRD, architecture, team allocation, roles guide) and environment setup (CPU, GPU, Colab) live on [`master`](https://github.com/hazemelerefey/smart-voicemail-router/tree/master). The dataset and model work live on the `local-env` and team role branches.
@@ -76,7 +76,7 @@ python3 -m venv .venv
 .venv/bin/pip install -r src/svr/requirements.txt
 bash src/svr/run_api.sh        # API at http://127.0.0.1:8000, HTML demo at /
 bash src/svr/run_demo.sh       # Gradio demo at http://127.0.0.1:7860
-.venv/bin/python -m pytest tests/ -q   # 129 passed, 1 skipped
+.venv/bin/python -m pytest tests/ -q   # 130 passed
 ```
 
 Phase 1 persists no audio: uploads are validated and measured, then the bytes are discarded, and the pipeline runs on metadata only. Inference stages still use mocks; Ibthal's explainable demo routing is integrated. Phase 2 swaps in real audio and text components, each tested in isolation, and refines routing as further policy is approved. Phase 3 measures p95 latency and runs the demo five consecutive times cleanly.
@@ -98,7 +98,7 @@ Work happens on the role branches. Accepted work is integrated by the Training L
 
 ## Dataset
 
-SVR Voicemail Corpus: 6,522 voicemails, 12.6 hours, 6,024 transcripts (Whisper large-v3, WER 0.29 vs turbo 0.35 on a 20-row eval). Clean training rows: 5,751, split train 4,031, validation 1,136, test 584, stratified, seed 42, whole duplicate-text groups kept together. Labels come from a TF-IDF model and are being audited by the team in the shared audit app; agreement on the current labels is category 0.404, urgency 0.632, state 0.537, churn 0.995.
+SVR Voicemail Corpus: 6,522 voicemails, 12.6 hours, 6,024 transcripts (Whisper large-v3, WER 0.29 vs turbo 0.35 on a 20-row eval). Clean training rows: 5,096, split train 3,575, validation 1,003, test 518, stratified, seed 42, whole duplicate-text groups kept together (the 655 worst transcripts with Whisper logprob below -0.30 were excluded from the clean set). Labels come from a TF-IDF model and are being audited by the team in the shared audit app; agreement on the current labels is category 0.404, urgency 0.632, state 0.537, churn 0.995.
 
 Key sources on this branch: [`research/svr-model-selection-report.md`](research/svr-model-selection-report.md), [`preparation/taxonomy_proposal.md`](preparation/taxonomy_proposal.md), [`preparation/labeling_config.xml`](preparation/labeling_config.xml), [`eda/eda_summary.json`](eda/eda_summary.json), [`preprocessing/preprocessing_summary.json`](preprocessing/preprocessing_summary.json).
 
