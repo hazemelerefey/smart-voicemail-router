@@ -3,9 +3,9 @@
 ## Roles and Workflow Guide
 
 **Document ID:** SVR-TEAM-04  
-**Version:** 1.0  
-**Updated:** 12 November 2026  
-**Companion document:** SVR-TEAM-03 Team Allocation v1.3 (the roles and phases in brief)
+**Version:** 1.1  
+**Updated:** 17 November 2026  
+**Companion document:** SVR-TEAM-03 Team Allocation v1.4 (the roles and phases in brief)
 
 ## What this document is
 
@@ -18,9 +18,9 @@ The project turns a single-speaker Egyptian Arabic customer voicemail into an ex
 The system has four steps, in order:
 
 1. **Audio in.** A voicemail arrives. It is checked, normalized to 16 kHz mono WAV, and transcribed with Whisper large-v3.
-2. **Understand.** A model reads the transcript and predicts four fields: complaint category, complaint urgency, customer state, and churn risk. An audio model can add evidence from the voice itself.
+2. **Understand.** A model reads the transcript and predicts four fields: complaint category, complaint urgency, customer state, and churn risk. The text is the only signal: the audio was tested and carries no emotion information.
 
-   **Data note:** the voicemails are simulated. They were recorded by people for data collection, not by real customers, and the emotions in them are acted. Even a human annotator cannot reliably judge the emotion (mad, calm, and the rest) from the voice alone. For that reason the transcription and the words are the main signal: the category, the urgency, and the customer state are all judged from the words. The audio emotion model is an experiment. It must prove it adds signal over the text alone, and if it does not, it is dropped.
+   **Data note:** the voicemails are simulated. They were recorded by people for data collection, not by real customers, and the emotions in them are acted. Even a human annotator cannot reliably judge the emotion (mad, calm, and the rest) from the voice alone. For that reason the transcription and the words are the main signal: the category, the urgency, and the customer state are all judged from the words. The audio emotion model was an experiment, and it is now closed. Sira tested it in Phase 1: the recordings are all one tone, the emotion labels come from the words not the voice, and no audio model can classify them (Emotion2Vec silhouette -0.10, 4-class accuracy about 37 percent, binary accuracy about 50 percent, which is chance). The audio adds no signal over the text alone, so the audio model is dropped and customer state comes from text only.
 
 3. **Decide.** Triage logic turns the four fields into a queue priority and an explainable callback ticket.
 4. **Deliver.** The ticket goes to the agent with the reason, and the whole run is measured for accuracy and latency.
@@ -30,7 +30,7 @@ The dataset is the SVR Voicemail Corpus: 6,522 voicemails, 5,096 clean training 
 The work runs in four phases:
 
 - **Phase 1: Foundations.** Every role builds its own piece on fixtures and mocks. No one waits for anyone.
-- **Phase 2: Core models.** The text classifier and the audio model are trained and validated. The winner is picked by validation mean macro-F1.
+- **Phase 2: Core models.** The text classifiers are trained and validated: EgyBERT and MARBERTv2 (Lama) and CAMeLBERT-mix (Sira). The winner is picked by validation mean macro-F1.
 - **Phase 3: Evaluation and integration.** The test set is evaluated once. The triage logic is finalized on real model outputs. The full pipeline is integrated and the demo is built.
 - **Phase 4: Retrain on audited labels.** After the audit finishes, the labels are corrected and the training notebooks are rerun. No architecture or hyperparameter changes.
 
@@ -127,7 +127,7 @@ You own the whole training effort and the final model. You are the person who ma
 
 **Phase 1.** Set up the training pipeline. Confirm the clean training tables load correctly and the splits match the audio folders. Write the training notebook skeleton that every role will use: data loading, the shared configuration, the seed handling, and the output format for results. Review each member's Phase 1 work as it lands.
 
-**Phase 2.** Coordinate the model work. Lama runs the text fine-tuning, Sira runs the audio model, Aya runs the evaluation. You review the validation results and confirm the winner by the rule in the model selection report: highest validation mean macro-F1, and if EgyBERT and MARBERTv2 are within one standard deviation, pick MARBERTv2. Record the decision and the numbers behind it.
+**Phase 2.** Coordinate the model work. Lama runs the text fine-tuning (EgyBERT and MARBERTv2), Sira runs the text fine-tuning (CAMeLBERT-mix), Aya runs the evaluation. You review the validation results and confirm the winner by the rule in the model selection report: highest validation mean macro-F1, and if EgyBERT and MARBERTv2 are within one standard deviation, pick MARBERTv2. Record the decision and the numbers behind it.
 
 **Phase 3.** Oversee the final test evaluation. Confirm the test set is evaluated exactly once, on the frozen 518-row test set, with no re-splitting and no tuning on the test set. Review the error analysis. Confirm the integrated pipeline runs end to end.
 
@@ -136,7 +136,7 @@ You own the whole training effort and the final model. You are the person who ma
 ### What you need from others
 
 - Aya's evaluation results, to pick the winner and to confirm the final metrics.
-- Lama's and Sira's trained models and their validation results.
+- Lama's and Sira's trained text models and their validation results.
 - Ibthal's triage logic, to confirm the ticket works with the real model outputs.
 - Arafa's integrated pipeline, to confirm the system runs end to end.
 - The team's audit edits, exported from the audit page, to run Phase 4.
@@ -152,57 +152,58 @@ You own the whole training effort and the final model. You are the person who ma
 
 The training notebooks run end to end without errors. The final model is trained on the corrected labels, evaluated once on the frozen test set, and the metrics are recorded with the dataset version, the model configuration, and the hardware. Every merge is recorded. Nothing is claimed that was not measured.
 
-## Role 2: Sira, Audio and Speech Engineer
+## Role 2: Sira, Text Classification Engineer
 
 **Branch:** team/sira-audio-speech
 
-**Extra packages:** torch, transformers, librosa, soundfile
+**Extra packages:** torch, transformers, datasets
 
 ### What this role means
 
-You own everything that comes from the voice itself: the audio, the transcription, and the audio model. Your job is to prove what the audio can tell us beyond the transcript, and to build the model that extracts it.
+You own a text classifier: the CAMeLBERT-mix model that reads a transcript and predicts the four fields. You run it in parallel with Lama (who runs EgyBERT and MARBERTv2), using the same protocol, so the team can compare three models and pick the winner by validation mean macro-F1.
+
+Your Phase 1 work was the audio investigation, and it is done. You verified the audio files, ran Emotion2Vec and other models, and proved the audio carries no emotion signal: the recordings are all one tone, the emotion labels come from the words not the voice, and no audio model can classify them. The audio emotion model is closed. That negative result is your Phase 1 deliverable, and it is documented.
 
 ### What you own
 
-- The audio pipeline: intake checks, normalization to 16 kHz mono WAV, and quality measurement.
-- The transcription: Whisper large-v3, its configuration, and the validation that its output is good enough to train on.
-- The direct audio classification model: wav2vec2 XLS-R 300M, and the Egyptian checkpoint.
-- The audio features that feed the multi-task model, if fusion is used.
+- The text classifier: CAMeLBERT-mix fine-tuning, single-task first, then multi-task.
+- The fine-tuning configuration: hyperparameters, seeds, and class weights.
+- The validation results for your model.
+- The audio investigation record from Phase 1: the finding that the audio carries no emotion signal, with the numbers behind it.
 
 ### What you deliver
 
-- The audio pipeline, with intake checks and normalization, verified on the full dataset.
-- The STT validation: a short report showing Whisper large-v3 transcription quality on a sample, with the configuration used.
-- The trained audio model, with validation metrics per field.
-- The audio features, in a documented format, if Lama uses them for fusion.
+- The fine-tuned CAMeLBERT-mix model, with configuration and validation metrics per field.
+- The multi-task model, with the shared encoder and four heads.
+- The fine-tuning results: validation mean macro-F1 per field, mean and standard deviation across 5 seeds.
+- The Phase 1 audio finding, documented with the evidence (embedding geometry audit, silhouette scores, accuracy numbers).
 
 ### Your work, step by step
 
-**Phase 1.** Verify the audio. Confirm the 5,096 training audio files are 16 kHz mono WAV and match the training tables. Build the intake check that rejects bad audio and records why. Run Whisper large-v3 on a sample and record the transcription quality and the configuration. Build the XLS-R baseline: load facebook/wav2vec2-xls-r-300m, freeze the encoder, train a simple classifier head on the training split, and record the validation metrics. This baseline tells the team what the audio alone can do.
+**Phase 1.** Done. You verified the audio: the 5,096 training audio files are 16 kHz mono WAV and match the training tables. You built the intake check and ran Whisper large-v3 on a sample. You tested the audio emotion model with Emotion2Vec and other models and proved it adds no signal: the recordings are all one tone, the labels come from the words not the voice, and no model can classify the emotions from audio (silhouette -0.10, 4-class accuracy about 37 percent, binary accuracy about 50 percent, which is chance). The audio model is closed and customer state comes from text only.
 
-**Phase 2.** Train the audio model. Start from the Egyptian checkpoint IbrahimAmin/egyptian-arabic-wav2vec2-xlsr-53 if it loads and validates. Keep the encoder frozen first, then partially fine-tune the top 2 to 4 layers. Record validation metrics per field with the same 5 seeds the text model uses, so the results are comparable. Test audio-text fusion only if the audio baseline shows real signal: if the audio model adds nothing over text alone, say so plainly and do not force fusion. If fusion helps, deliver the audio features to Lama in the documented format.
+**Phase 2.** Run the single-task fine-tuning with CAMeLBERT-mix. Train one model per field, 5 seeds each (42, 1337, 2023, 7, 99). Use the hyperparameters from the model selection report: learning rate 2e-5, sweep 1e-5, 2e-5, 3e-5; effective batch 16; epochs 3, max 5, early stopping with patience 2 on validation mean macro-F1; warmup ratio 0.1; weight decay 0.01, set explicitly; AdamW; dropout 0.1; gradient clipping max norm 1.0; mixed precision on. Apply the class weights from the dataset, with the churn weight capped at 10 to 20. Record validation mean macro-F1 per field, mean and standard deviation across seeds. Use Aya's training infrastructure: the experiment tracking, the configuration format, the seed handling, the run record format, and the prediction file format. The TF-IDF baseline to beat (validation macro-F1 on the corrected text): complaint_category 0.7605, complaint_urgency 0.6902, customer_state 0.7000, churn_risk 0.8629, combined mean 0.7534. Then build the multi-task model: one shared encoder, four heads, Kendall uncertainty weighting, the saved per-class weights inside each head. Train it the same way and record the same metrics. Compare single-task against multi-task on validation and record which is better per field.
 
-**Phase 3.** Support the evaluation. Give Aya the final audio model and its configuration so she can evaluate it on the test set. Help with the error analysis where the audio explains a mistake the text model made.
+**Phase 3.** Hand over the winner if your model wins. Give Aya the winning model and its exact configuration so she can evaluate it once on the test set. Do not tune anything on the test set. Help with the error analysis where the model confuses two categories.
 
-**Phase 4.** No new audio work unless the audit corrections change the audio set. If the corrected labels change any audio row, re-run the affected validation and record the change.
+**Phase 4.** After the audit corrections, rerun the winning configuration on the cleaned dataset if your model is the winner. No architecture or hyperparameter changes. Record the new validation and test results.
 
 ### What you need from others
 
 - The dataset and the training tables, from Hazem, verified.
-- The transcription and the confidence metadata, which are already in the dataset.
-- Lama's text model results, to compare audio against text and to decide on fusion.
-- Aya's evaluation harness, to run your validation the same way everyone else does.
+- The training infrastructure from Aya, early in Phase 1: experiment tracking, configuration format, and seed handling.
+- The class weights, which are already in the dataset.
+- Lama's text model results, to compare your model against hers on the same validation metric.
 
 ### What others need from you
 
-- The audio pipeline and the intake checks, so bad audio never reaches training silently.
-- The STT validation, so the team knows the transcripts are trustworthy.
-- The audio model and its validation metrics, so Aya can evaluate it and Lama can decide on fusion.
-- The audio features, in the documented format, if fusion is used.
+- The fine-tuned CAMeLBERT-mix model and its validation metrics, so Aya can evaluate the winner and Hazem can confirm the decision.
+- The exact configuration of your model, so Aya can reproduce the test evaluation and Hazem can rerun it in Phase 4.
+- The Phase 1 audio finding, documented, so the team does not revisit the audio model.
 
 ### How you know you are done
 
-The audio pipeline verifies all 5,096 training files. The STT validation is recorded. The audio model has validation metrics per field with 5 seeds. The fusion decision is recorded with evidence, whether the answer is yes or no.
+Phase 1 is done: the audio is verified and the audio finding is documented with evidence. In Phase 2, the CAMeLBERT-mix model is fine-tuned on all four fields with 5 seeds. Validation mean macro-F1 per field is recorded with mean and standard deviation. The multi-task model is trained and compared. The winning configuration is documented and reproducible.
 
 ## Role 3: Lama, Text Classification Engineer
 
@@ -243,7 +244,6 @@ You own the core model: the text classifier that reads a transcript and predicts
 - The dataset and the training tables, from Hazem, verified.
 - The training infrastructure from Aya, early in Phase 1: experiment tracking, configuration format, and seed handling.
 - The class weights, which are already in the dataset.
-- Sira's audio features, only if fusion is used in Phase 2.
 
 ### What others need from you
 
@@ -287,7 +287,7 @@ You own the machinery that makes the training trustworthy: the infrastructure ev
 
 **Phase 2.** Support the fine-tuning. Help Lama and Sira run their experiments on the infrastructure. Run the hyperparameter sweep for the text model with Lama: learning rate 1e-5, 2e-5, 3e-5, and record the validation result for each. Run the validation for every model and record the metrics the same way every time. Do not let anyone report a result without a run record.
 
-**Phase 3.** Run the final test evaluation. Take the winning model from Lama and the audio model from Sira. Evaluate each exactly once on the frozen 518-row test set. Record the per-field metrics, the sample counts, and the failures. Then run the error analysis: where does the model fail, what do the failures have in common, and what would fix them. Write the evaluation report with the actual numbers, the configuration, the hardware, and the limitations. State plainly what the data cannot support.
+**Phase 3.** Run the final test evaluation. Take the winning text model (from Lama or Sira). Evaluate it exactly once on the frozen 518-row test set. Record the per-field metrics, the sample counts, and the failures. Then run the error analysis: where does the model fail, what do the failures have in common, and what would fix them. Write the evaluation report with the actual numbers, the configuration, the hardware, and the limitations. State plainly what the data cannot support.
 
 **Phase 4.** After the audit corrections, re-evaluate the retrained model on the test set, once, the same way. Record the new results alongside the old ones so the change is visible.
 
@@ -392,7 +392,7 @@ You own the finished system: the pipeline that runs end to end, and the demo tha
 
 **Phase 1.** Build the skeleton. Define the pipeline stages: intake, STT, classification, triage, ticket. Build each stage as a separate module with a clear input and output. Build the skeleton with mocks first: the STT stage returns a fixed transcript, the classification stage returns fixed fields, the triage stage returns a fixed ticket. Confirm the data flows from the first stage to the last. Build the demo skeleton: an upload, a run, and a ticket display. Keep the API and data contracts stable so the other roles can build against them.
 
-**Phase 2.** Replace the mocks with real components as they land. When Sira's audio pipeline is ready, plug it in. When Lama's text model is ready, plug it in. When Ibthal's ticket generator is ready, plug it in. Test each replacement in isolation before moving on. Record which components are real and which are still mocks, so the team always knows the state of the pipeline.
+**Phase 2.** Replace the mocks with real components as they land. When Lama's and Sira's text models are ready, plug them in. When Ibthal's ticket generator is ready, plug it in. Test each replacement in isolation before moving on. Record which components are real and which are still mocks, so the team always knows the state of the pipeline.
 
 **Phase 3.** Integrate and measure. With all real components in place, run the full pipeline on the validation set and confirm the tickets are correct. Measure the latency: run the pipeline on clips up to 60 seconds and record the p95 latency, separately for CPU and GPU if both are used. The target is p95 under 10 seconds. If the latency is over target, find the slowest stage and report it to the owner of that stage. Build the final demo: upload, browser recording, live queue, ticket evidence, and callback brief. Run the demo five consecutive times cleanly. Write the run instructions so anyone on the team can reproduce it.
 
@@ -400,7 +400,7 @@ You own the finished system: the pipeline that runs end to end, and the demo tha
 
 ### What you need from others
 
-- The audio pipeline from Sira, to plug into the intake stage.
+- The text model from Sira, to plug into the classification stage.
 - The text model from Lama, to plug into the classification stage.
 - The ticket generator from Ibthal, to plug into the triage stage.
 - The evaluation harness from Aya, to measure latency the same way everything else is measured.
@@ -424,10 +424,10 @@ The phases are designed so that no one waits in Phase 1, and the waiting in late
 
 | Phase | Hazem | Sira | Lama | Aya | Ibthal | Arafa |
 |---|---|---|---|---|---|---|
-| **Phase 1: Foundations** | Training pipeline skeleton, shared config | Audio pipeline, STT validation, XLS-R baseline | Single-task setup, smoke test, adopt Aya's infra | Training infra, eval harness, TF-IDF baseline | Triage rules table, ticket format, generator on fixtures | Pipeline skeleton on mocks, demo skeleton, API contracts |
-| **Phase 2: Core models** | Coordinate, review validation, confirm winner | Audio model, fusion test | Single-task fine-tuning, multi-task model | Hyperparameter sweep, validation, run records | Test rules on validation outputs | Replace mocks with real components as they land |
-| **Phase 3: Evaluation and integration** | Oversee test evaluation, review error analysis | Support evaluation, audio error analysis | Hand over winner, support error analysis | Final test evaluation once, error analysis, report | Finalize triage on real outputs, routing agreement | Full integration, latency measurement, final demo |
-| **Phase 4: Retrain** | Apply audit corrections, rerun training | Re-run validation if audio rows changed | Rerun winning config on cleaned data | Re-evaluate retrained model, record change | Re-run routing evaluation on corrected data | Update demo with retrained model, re-measure latency |
+| **Phase 1: Foundations** | Training pipeline skeleton, shared config | Audio investigation (Done): audio carries no emotion signal, audio model closed | Single-task setup, smoke test, adopt Aya's infra | Training infra, eval harness, TF-IDF baseline | Triage rules table, ticket format, generator on fixtures | Pipeline skeleton on mocks, demo skeleton, API contracts |
+| **Phase 2: Core models** | Coordinate, review validation, confirm winner | CAMeLBERT-mix single-task fine-tuning | Single-task fine-tuning, multi-task model | Hyperparameter sweep, validation, run records | Test rules on validation outputs | Replace mocks with real components as they land |
+| **Phase 3: Evaluation and integration** | Oversee test evaluation, review error analysis | Hand over model if winner, support error analysis | Hand over winner, support error analysis | Final test evaluation once, error analysis, report | Finalize triage on real outputs, routing agreement | Full integration, latency measurement, final demo |
+| **Phase 4: Retrain** | Apply audit corrections, rerun training | Rerun winning config on cleaned data if her model wins | Rerun winning config on cleaned data | Re-evaluate retrained model, record change | Re-run routing evaluation on corrected data | Update demo with retrained model, re-measure latency |
 
 The label audit runs every day in parallel with all four phases. Every member audits labels on the live audit page daily. The audit does not block training.
 
@@ -451,9 +451,9 @@ Arafa builds the pipeline skeleton and the demo skeleton in Phase 1 using mocks.
 
 Aya builds the evaluation harness in Phase 1 on fixtures with mock predictions. No model is needed for that. Aya runs the TF-IDF baseline in Phase 1, which needs no neural model. Aya evaluates the real models in Phase 3, when Lama and Sira hand them over. That is the natural order: the harness is built first, then the real models are measured with it. Aya does not wait in Phase 1 or Phase 2.
 
-### Waiting point 5: Fusion waits for Sira's audio features
+### Waiting point 5: Fusion is closed
 
-If audio-text fusion is pursued in Phase 2, Lama needs Sira's audio features. Sira delivers the features in Phase 1 and Phase 2. Lama's multi-task model starts text-only and adds the audio features when they are ready. Fusion is optional and decided by evidence: if the audio baseline shows no real signal over text alone, there is no fusion and no waiting. No one is blocked by fusion.
+Audio-text fusion is closed. Sira's Phase 1 investigation proved the audio carries no emotion signal: the recordings are all one tone, the emotion labels come from the words not the voice, and no audio model can classify them. There are no audio features to fuse and no waiting. Lama's multi-task model is text-only. No one is blocked by fusion.
 
 ### Waiting point 6: Phase 4 waits for the audit
 
@@ -481,7 +481,7 @@ These rules apply to everyone, in every phase.
 
 The project is done when all of the following are true:
 
-1. The text model and the audio model are trained, validated, and evaluated once on the frozen test set, with the metrics recorded.
+1. The text models are trained and validated, and the winner is evaluated once on the frozen test set, with the metrics recorded.
 2. The triage logic produces a correct ticket for every test prediction, with routing agreement measured.
 3. The pipeline runs end to end with all real components, and the demo runs cleanly five consecutive times.
 4. The latency report shows p95 under 10 seconds for clips up to 60 seconds, with the hardware recorded.
