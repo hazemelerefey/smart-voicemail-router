@@ -1,116 +1,46 @@
 # Smart Voicemail Router
 
-A local-first competition prototype that turns a single-speaker Egyptian Arabic voicemail, including English telecom terms, into an explainable callback ticket.
+Ready branch. This branch has everything a member needs to clone and start working.
 
-> **Project status:** the dataset is finished: the SVR Voicemail Corpus, 6,522 Egyptian Arabic customer voicemails, with 5,096 clean training rows (train 3,575, validation 1,003, test 518, seed 42). The systems schema and tests use an 11-value complaint-category set; older model-report, annotation, audit, and dataset artifacts have different counts and need alignment by data owners before training or evaluation; see Open decisions. The model selection is settled (EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription). The labels are being audited by the team. This branch, `team/arafa-systems-demo`, has mock inference, the API, demo, and the Phase 1 demo routing integration. Tests: 130 passed. Project documents and environment guidance live on `master`.
+## What is on this branch
 
-## What it does
+- The dataset: SVR Voicemail Corpus, 6,522 voicemails, 5,096 clean training rows, split train 3,575 / validation 1,003 / test 518, seed 42.
+- The 655 worst transcripts (Whisper logprob below -0.30) were excluded from the clean set.
+- The clean training tables in `final/`.
+- The preparation notebooks in `notebooks/`.
+- The training skeleton in `notebooks/training/`.
+- The latest docs in `docs/`.
+- The Phase 1 guides in `docs/project/`.
+- The model selection report in `research/`.
+- Per-member requirements in `requirements/`.
+- `MEMBER.md`.
 
-A voicemail comes in, and the pipeline produces a transcript, a callback brief, separate complaint and customer context fields, an explainable queue decision, and an agent-routing reason. Audio-derived customer-state evidence is conditional on validation. The prototype is not a production telecom system and does not make automatic callbacks.
+Arafa's pipeline skeleton is NOT on this branch. It stays on his local machine until he fixes the audit issues, then he pushes it and members pull it.
 
-Pipeline, in order:
-
-```text
-voicemail
-  -> intake (validate WAV / MP3 / M4A, 25 MB, 60 s max)
-  -> STT (mock in Phase 1; Whisper large-v3 in Phase 2)
-  -> text classification (mock in Phase 1; EgyBERT / MARBERTv2 in Phase 2)
-  -> voice evidence (skipped in Phase 1; wav2vec2 XLS-R 300M in Phase 2)
-  -> triage and routing (Ibthal Phase 1 logic, seeded demo agents)
-  -> ticket
-```
-
-Latency target: p95 under 10 seconds for clips up to 60 seconds, measured separately by CPU, GPU, or approved provider configuration, with hardware recorded.
-
-The core fields are deliberately distinct:
-
-- **Complaint category** describes the kind of issue. The current systems schema contains 11 values; legacy artifacts still need data-owner alignment (see Open decisions).
-- **Complaint urgency** describes how time-sensitive or impact-heavy the issue is. High, medium, low.
-- **Customer state** describes the customer's interaction state under definitions agreed by the team. Calm, frustrated, mad, satisfied, unclear.
-- **Churn risk** is a separate flag, set only on explicit leave-the-provider words.
-- **Queue priority** uses the approved urgency, churn-risk, and text-state points. Any missing scoring input leaves the score and bucket null and requires human review.
-
-Unclear or unsupported outputs stay reviewable rather than being guessed. A null label is a correct output; a guessed label is a defect.
-
-## Data boundary
-
-The design keeps raw voice local by default. A transcript approval does not authorize audio transfer. Any permitted external text experiment requires prior, durable approval for the exact provider, purpose, and payload, with local identifier masking first. Dataset source, rights, consent, retention, and allowed processing locations still need to be confirmed before any data is used.
-
-No recordings or transcripts are committed on this branch. The `.gitignore` excludes dataset directories at any depth and common dataset export formats by default. Ignore rules are a safeguard, not permission to use or share data. Never force-add private recordings or transcripts. Only reviewed, approved derived summaries may be considered for a later commit, after the team confirms that the specific content and processing are permitted.
-
-## Repository structure, this branch
-
-```text
-.
-├── .gitignore
-├── README.md
-├── GATES.md
-├── docs/
-│   └── superpowers/plans/        # 2026-11-10 plans: dataset preparation, EDA, preprocessing
-├── eda/                          # Audio and speech EDA, summary, figures, tests
-├── notebooks/
-│   ├── data-analysis/
-│   ├── data-labeling/
-│   └── data-preprocessing/
-├── preparation/                  # Taxonomy, Label Studio config, labeling, readiness
-├── preprocessing/                # Audio standardization, transcript cleaning, splits
-├── research/
-│   └── svr-model-selection-report.md   # EgyBERT + MARBERTv2, XLS-R 300M, 14 papers
-├── src/
-│   └── svr/                     # Role 6 Phase 1 pipeline skeleton, API, demo
-└── tests/                        # API, pipeline, schema, and store tests (130 passed)
-```
-
-Project documents (PRD, architecture, team allocation, roles guide) and environment setup (CPU, GPU, Colab) live on [`master`](https://github.com/hazemelerefey/smart-voicemail-router/tree/master). The dataset and model work live on the `local-env` and team role branches.
-
-## Role 6, this branch
-
-Owner: Ahmed Gamal Arfa ([@AhmdArFa](https://github.com/AhmdArFa)), Systems Integration and Demo Engineer.
-
-`src/svr/` is the end-to-end pipeline skeleton with mocks, built on SVR Contracts v1.0 (`schema_version: 1`, `label_version: "taxonomy-2026-11-15"`). Full detail, including what is mock vs real, the API, and the open decisions, is in [`src/svr/README.md`](src/svr/README.md).
-
-Quick start, Python 3.11 or newer (developed on 3.12.3), from the repo root:
-
-```bash
-python3 -m venv .venv
-.venv/bin/pip install -r src/svr/requirements.txt
-bash src/svr/run_api.sh        # API at http://127.0.0.1:8000, HTML demo at /
-bash src/svr/run_demo.sh       # Gradio demo at http://127.0.0.1:7860
-.venv/bin/python -m pytest tests/ -q   # 130 passed
-```
-
-Phase 1 persists no audio: uploads are validated and measured, then the bytes are discarded, and the pipeline runs on metadata only. Inference stages still use mocks; Ibthal's explainable demo routing is integrated. Phase 2 swaps in real audio and text components, each tested in isolation, and refines routing as further policy is approved. Phase 3 measures p95 latency and runs the demo five consecutive times cleanly.
+This branch was renamed from local-env. It is the data branch: the dataset lives on this branch.
 
 ## Team
 
-Six individual roles, Team Allocation v1.3, approved by Hazem, 12 November 2026. Kickoff 11 November 2026.
-
 | Member | Role | Branch |
-|---|---|---|
-| Hazem Elerefy | Training Lead | `team/hazem-training-lead` |
-| Sira (Esraa Al-azzawy) | Audio and Speech | `team/sira-audio-speech` |
-| Lama Hisham | Text Classification | `team/lama-text-classification` |
-| Aya | ML Infrastructure and Evaluation | `team/aya-ml-infrastructure-evaluation` |
-| Ibthal Ahmed | Triage and Routing | `team/ibthal-triage-routing` |
-| Ahmed Gamal Arfa | Systems Integration and Demo | `team/arafa-systems-demo` |
+| --- | --- | --- |
+| Hazem Elerefy | Training Lead | team/hazem-training-lead |
+| Sira | Text Classification | team/sira-audio-speech |
+| Lama | Text Classification | team/lama-text-classification |
+| Aya | ML Infrastructure and Evaluation | team/aya-ml-infrastructure-evaluation |
+| Ibthal | Triage and Routing | team/ibthal-triage-routing |
+| Arafa | Systems Integration and Demo | team/arafa-systems-demo |
 
-Work happens on the role branches. Accepted work is integrated by the Training Lead. Competition deadline is not yet announced.
+## How to start
 
-## Dataset
+1. Clone this branch from VS Code: `git clone -b smart-voicemail-router https://github.com/hazemelerefey/smart-voicemail-router.git`
+2. Edit `MEMBER.md` to your own name. Do not commit that change.
+3. Create a Python 3.11 virtual environment and install base plus your member requirements file.
+4. Verify the counts: train 3,575 / validation 1,003 / test 518.
+5. Read `docs/project/roles-and-workflow.md` and start your role's Phase 1 work.
 
-SVR Voicemail Corpus: 6,522 voicemails, 12.6 hours, 6,024 transcripts (Whisper large-v3, WER 0.29 vs turbo 0.35 on a 20-row eval). Clean training rows: 5,096, split train 3,575, validation 1,003, test 518, stratified, seed 42, whole duplicate-text groups kept together (the 655 worst transcripts with Whisper logprob below -0.30 were excluded from the clean set). Labels come from a TF-IDF model and are being audited by the team in the shared audit app; agreement on the current labels is category 0.404, urgency 0.632, state 0.537, churn 0.995.
+The worktree folder for role branches is still `svr-data`: `git worktree add ../svr-data smart-voicemail-router`.
 
-Key sources on this branch: [`research/svr-model-selection-report.md`](research/svr-model-selection-report.md), [`preparation/taxonomy_proposal.md`](preparation/taxonomy_proposal.md), [`preparation/labeling_config.xml`](preparation/labeling_config.xml), [`eda/eda_summary.json`](eda/eda_summary.json), [`preprocessing/preprocessing_summary.json`](preprocessing/preprocessing_summary.json).
+## Notes
 
-## Open decisions and approved policies, do not guess
-
-- **Complaint category.** The approved PRD list has 11 values: `network_and_connectivity`, `billing_and_charges`, `balance_and_data`, `app_and_account`, `branch_and_staff`, `no_reply_or_long_wait`, `cancellation_request`, `thanks_or_praise`, `other`, `offers_and_packages`, and `sim_services`. The systems schema follows this list. Older annotation and dataset artifacts still include `greeting_only` or other class counts and need alignment by the data owners before training or evaluation.
-- **Priority policy, approved and implemented.** Score is urgency points (high 3, medium 2, low 1) plus churn points (at-risk 2, not-at-risk 0) plus one point for text state `mad` or `frustrated`. Buckets are 1-2 `low`, 3-4 `normal`, 5 `high`, and 6 `urgent`. If any scoring input is missing, both priority fields stay null and human review is required; explicit `unclear` contributes 0.
-- **`language_mix` values.** Undefined. Producers send null.
-- **Production skill-to-category mapping and tier policy.** For the Phase 1
-  demo only, `offers_and_packages` maps to `agent-demo-billing` and
-  `sim_services` maps to `agent-demo-network`; production mapping and tier
-  policy remain undefined.
-- **Fusion rules for customer state.** Undefined. The field stays null until agreed.
-- **Dataset rights, consent, retention, processing locations.** Hazem.
-- **Competition deadline, judging criteria, demo format.** Hazem.
+- The taxonomy category count is not settled (9 vs 10 vs 11 vs 12). Hazem confirms the approved list. Do not change any label value.
+- Arafa's pipeline skeleton is NOT on this branch. It stays on his local machine while he fixes the audit issues (GitHub issues #1-#9). When the fixes are done he pushes it, and members pull it.
