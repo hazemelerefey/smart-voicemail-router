@@ -3,9 +3,9 @@
 ## دليل الأدوار وسير العمل
 
 **رقم المستند:** SVR-TEAM-04  
-**الإصدار:** 1.0  
-**آخر تحديث:** 12 نوفمبر 2026  
-**المستند المرافق:** SVR-TEAM-03 Team Allocation v1.3 (الأدوار والمراحل باختصار)
+**الإصدار:** 1.1  
+**آخر تحديث:** 17 نوفمبر 2026  
+**المستند المرافق:** SVR-TEAM-03 Team Allocation v1.4 (الأدوار والمراحل باختصار)
 
 ## الدليل ده عن إيه
 
@@ -18,9 +18,9 @@
 النظام بيمشي في أربع خطوات بالترتيب:
 
 1. **الصوت بيدخل.** رسالة صوتية بتوصل. بنفحصها، ونوحّدها لملف WAV بتردد 16 كيلوهرتز وقناة واحدة، وبعدين نحوّلها لنص باستخدام Whisper large-v3.
-2. **الفهم.** model بيقرأ النص وبيتوقع أربع حاجات: فئة الشكوى، ودرجة الاستعجال، وحالة العميل، واحتمال فقدان العميل. وaudio model ممكن يضيف دليل من الصوت نفسه.
+2. **الفهم.** model بيقرأ النص وبيتوقع أربع حاجات: فئة الشكوى، ودرجة الاستعجال، وحالة العميل، واحتمال فقدان العميل. والنص هو الـ signal الوحيد: الصوت اتختبر ومفيهوش أي معلومات عن المشاعر.
 
-   **ملحوظة عن البيانات:** الرسائل الصوتية دي تمثيلية. الناس سجلوها عشان نجمع البيانات، مش عملاء حقيقيين، والمشاعر اللي فيها متصطنعة. حتى الإنسان نفسه مش بيقدر يحدد الـ emotion (زي mad أو calm أو غيرها) من الصوت لوحده بشكل موثوق. عشان كده الـ transcription والكلمات هما الـ main signal: الـ category والـ urgency والـ customer state كلهم بيتحددوا من الكلمات. الـ audio emotion model دي تجربة، ولازم يثبت إنه بيضيف signal فوق الـ text لوحده، ولو مضافش حاجة بنستغنى عنه.
+   **ملحوظة عن البيانات:** الرسائل الصوتية دي تمثيلية. الناس سجلوها عشان نجمع البيانات، مش عملاء حقيقيين، والمشاعر اللي فيها متصطنعة. حتى الإنسان نفسه مش بيقدر يحدد الـ emotion (زي mad أو calm أو غيرها) من الصوت لوحده بشكل موثوق. عشان كده الـ transcription والكلمات هما الـ main signal: الـ category والـ urgency والـ customer state كلهم بيتحددوا من الكلمات. الـ audio emotion model كان تجربة، واتقفل دلوقتي. سيرا اختبرته في المرحلة 1: التسجيلات كلها بنبرة واحدة، والـ labels جاية من الكلمات مش من الصوت، ومفيش audio model قادر يصنّف المشاعر (Emotion2Vec silhouette -0.10، وaccuracy على 4 فئات حوالي 37 في المية، وaccuracy ثنائي حوالي 50 في المية، وده الـ chance). الصوت مبيضيفش أي signal فوق الـ text لوحده، فالـ audio model اتوقف وcustomer state بييجي من الـ text بس.
 
 3. **القرار.** منطق الفرز بيحوّل الحقول الأربعة لqueue priority وcallback ticket مفسّرة.
 4. **التسليم.** الticket بتروح للموظف مع السبب، والتشغيل كله بيتقاس من ناحية accuracy and speed.
@@ -30,7 +30,7 @@ dataset هي SVR Voicemail Corpus: عدد ⁦6,522⁩ رسالة صوتية، و
 الشغل ماشي في أربع مراحل:
 
 - **المرحلة 1: الأساسيات.** كل دور بيبني الجزء بتاعه على fixtures وmocks. محدش بيستنى حد.
-- **المرحلة 2: core models.** text classifier وaudio model بيتدربوا وبيتعمل لهم validation. والفائز بيتحدد بمتوسط macro-F1 على validation set.
+- **المرحلة 2: core models.** text classifiers بيتدربوا وبيتعمل لهم validation: EgyBERT وMARBERTv2 (لمى) وCAMeLBERT-mix (سيرا). والفائز بيتحدد بمتوسط macro-F1 على validation set.
 - **المرحلة 3: evaluation والربط.** test set بتتقيّم مرة واحدة. ومنطق الفرز بيخلص على مخرجات real models. وpipeline الكامل بيتربط وdemo بيتبني.
 - **المرحلة 4: retrain على الـ labels المراجعة.** بعد ما المراجعة تخلص، الـ labels بتتصحح وtraining notebooks بتتشغل من تاني. مفيش تغيير في architecture ولا في hyperparameters.
 
@@ -127,7 +127,7 @@ source .venv/bin/activate
 
 **المرحلة 1.** جهّز training pipeline. وتأكد إن training tables النظيفة بتتحمل صح وإن splits مطابقة لمجلدات الصوت. واكتب هيكل training notebook اللي كل دور هيستخدمه: تحميل البيانات، وshared config، ومعالجة seed، وصيغة مخرجات النتائج. وراجع شغل كل عضو في المرحلة 1 وهو واصل.
 
-**المرحلة 2.** نسّق شغل models. لمى بتشغّل fine-tuning للنص، وسيرا بتشغّل audio model، وآية بتشغّل evaluation. وراجع validation results وأكّد الفائز حسب القاعدة في تقرير model selection: أعلى متوسط macro-F1 on validation، ولو الفرق بين EgyBERT وMARBERTv2 ضمن one standard deviation، اختار MARBERTv2. وسجّل القرار والأرقام اللي وراه.
+**المرحلة 2.** نسّق شغل models. لمى بتشغّل fine-tuning للنص (EgyBERT وMARBERTv2)، وسيرا بتشغّل fine-tuning للنص (CAMeLBERT-mix)، وآية بتشغّل evaluation. وراجع validation results وأكّد الفائز حسب القاعدة في تقرير model selection: أعلى متوسط macro-F1 on validation، ولو الفرق بين EgyBERT وMARBERTv2 ضمن one standard deviation، اختار MARBERTv2. وسجّل القرار والأرقام اللي وراه.
 
 **المرحلة 3.** أشرف على final test evaluation. وتأكد إن test set بتتقيّم مرة واحدة بالظبط، على frozen test set اللي فيها 518 صف، من غير re-split ومن غير ضبط على test set. وراجع error analysis. وتأكد إن integrated pipeline شغال من الأول للآخر.
 
@@ -136,7 +136,7 @@ source .venv/bin/activate
 ### محتاج إيه من غيرك
 
 - نتائج evaluation آية، عشان تختار الفائز وتأكد metrics النهائية.
-- Lama's model وسيرا المدرّبين وvalidation results بتاعتهم.
+- text models بتاعة لمى وسيرا المدرّبة وvalidation results بتاعتهم.
 - منطق فرز ابتهال، عشان تتأكد إن الticket شغالة مع مخرجات real models.
 - integrated pipeline من عرفة، عشان تتأكد إن النظام شغال من الأول للآخر.
 - تعديلات المراجعة من الفريق، مصدرة من صفحة المراجعة، عشان تشغّل المرحلة 4.
@@ -152,57 +152,58 @@ source .venv/bin/activate
 
 training notebooks بتشتغل من الأول للآخر من غير أخطاء. وfinal trained model على الـ labels المصححة، ومتقيّم مرة واحدة على frozen test set، وmetrics متسجلة مع إصدار dataset وconfig model والجهاز. وكل fusion متسجل. ومفيش ادعاء متقاسش.
 
-## الدور 2: سيرا، Audio and Speech Engineer
+## الدور 2: سيرا، Text Classification Engineer
 
 **الفرع:** team/sira-audio-speech
 
-**الحزم الزيادة:** torch وtransformers وlibrosa وsoundfile
+**الحزم الزيادة:** torch وtransformers وdatasets
 
 ### الدور ده يعني إيه
 
-إنت صاحبة كل اللي جاي من الصوت نفسه: الصوت، والنص المحوّل، وaudio model. ومهمتك تثبتي الصوت ممكن يقولنا إيه زيادة عن النص، وتبني model اللي بيستخرج ده.
+إنت صاحبة text classifier: model CAMeLBERT-mix اللي بيقرأ نص وبيتوقع الحقول الأربعة. وبتشغّليه بالتوازي مع لمى (اللي بتشغّل EgyBERT وMARBERTv2)، بنفس البروتوكول، عشان الفريق يقارن بين 3 models ويختار الفائز بمتوسط macro-F1 على validation.
+
+وشغل المرحلة 1 بتاعك كان التحقيق في الصوت، وخلص. انت اتأكدت من ملفات الصوت، وشغّلت Emotion2Vec وmodels تانية، وأثبتت إن الصوت مفيهوش أي signal للمشاعر: التسجيلات كلها بنبرة واحدة، والـ labels جاية من الكلمات مش من الصوت، ومفيش audio model قادر يصنّف المشاعر. والـ audio emotion model اتقفل. والنتيجة السلبية دي هي مخرجات المرحلة 1 بتاعتك، وموثقة.
 
 ### إنت مسؤولة عن إيه
 
-- audio pipeline: فحوصات الاستقبال، والتوحيد لـ WAV بتردد 16 كيلوهرتز وقناة واحدة، وقياس الجودة.
-- transcription: Whisper large-v3، وconfigه، و validation إن مخرجاته كويسة كفاية للتدريب عليها.
-- direct audio classification model: wav2vec2 XLS-R 300M، وEgyptian checkpoint.
-- audio features اللي بتغذي multi-task model، لو استخدمنا fusion.
+- text classifier: fine-tuning لـ CAMeLBERT-mix، single-task الأول، وبعدين multi-task.
+- إعداد fine-tuning: hyperparameters، وseeds، وclass weights.
+- validation results بتاعة model بتاعك.
+- سجل التحقيق في الصوت من المرحلة 1: النتيجة اللي بتقول إن الصوت مفيهوش signal للمشاعر، بالأرقام اللي وراها.
 
 ### هتسلّمي إيه
 
-- audio pipeline، مع فحوصات الاستقبال والتوحيد، متحقق منه على dataset كلها.
-- STT validation: تقرير قصير بيوضح جودة Whisper transcription large-v3 على عينة، مع config المستخدمة.
-- trained audio model، مع validation metrics لكل حقل.
-- audio features، بصيغة موثقة، لو لمى استخدمتها للfusion.
+- model CAMeLBERT-mix المضبوط، مع config وvalidation metrics لكل حقل.
+- multi-task model، بshared encoder والـ four heads.
+- نتائج fine-tuning: متوسط macro-F1 on validation لكل حقل، mean وstandard deviation عبر 5 seeds.
+- نتيجة التحقيق في الصوت من المرحلة 1، موثقة بالأدلة (embedding geometry audit وsilhouette scores وأرقام accuracy).
 
 ### شغلك خطوة بخطوة
 
-**المرحلة 1.** اتأكدي من الصوت. وتأكدي إن training audio files اللي عددها ⁦5,096⁩ هي WAV بتردد 16 كيلوهرتز وقناة واحدة ومطابقة لtraining tables. وابني فحص الاستقبال اللي بيرفض الصوت الوحش وبيسجل السبب. وشغّلي Whisper large-v3 على عينة وسجّلي transcription quality وconfig. وابني XLS-R baseline: حمّلي facebook/wav2vec2-xls-r-300m، وجمّدي encoder، ودرّبي رأس تصنيف بسيط على train split، وسجّلي validation metrics. وbaseline ده بيقول للفريق الصوت لوحده يقدر يعمل إيه.
+**المرحلة 1.** خلصت. انت اتأكدت من الصوت: الـ ⁦5,096⁩ training audio files هي WAV بتردد 16 كيلوهرتز وقناة واحدة ومطابقة لtraining tables. وبنيت فحص الاستقبال وشغّلت Whisper large-v3 على عينة. واختبرت audio emotion model بـ Emotion2Vec وmodels تانية وأثبتت إنه مبيضيفش signal: التسجيلات كلها بنبرة واحدة، والـ labels جاية من الكلمات مش من الصوت، ومفيش model قادر يصنّف المشاعر من الصوت (silhouette -0.10، وaccuracy على 4 فئات حوالي 37 في المية، وaccuracy ثنائي حوالي 50 في المية، وده الـ chance). والـ audio model اتقفل وcustomer state بييجي من الـ text بس.
 
-**المرحلة 2.** درّبي audio model. ابدئي من Egyptian checkpoint IbrahimAmin/egyptian-arabic-wav2vec2-xlsr-53 لو اتحمّلت واتحقق منها. وخلّي encoder مجمد الأول، وبعدين اضبطي جزئيا الطبقات العليا من 2 لـ 4 طبقات. وسجّلي validation metrics لكل حقل ب5 seeds نفسها اللي بيستخدمها text model، عشان النتائج تتقارن. واختبري fusion الصوت مع النص بس لو audio baseline أظهر إشارة حقيقية: فلو audio model مضافش حاجة فوق النص لوحده، قولي ده بوضوح ومتفرضيش fusion. ولو fusion ساعد، سلّمي audio features للمى بالصيغة الموثقة.
+**المرحلة 2.** شغّلي single-task fine-tuning بـ CAMeLBERT-mix. ودرّبي one model لكل حقل، ب5 seeds (42 و1337 و2023 و7 و99). واستخدمي hyperparameters من تقرير model selection: learning rate 2e-5، مع التجربة على 1e-5 و2e-5 و3e-5؛ وeffective batch size 16؛ وepochs 3، بحد أقصى 5، مع early stopping بصبر 2 على متوسط macro-F1 للvalidation؛ وwarmup ratio 0.1؛ وweight decay 0.01، مع ضبطه صراحة؛ وAdamW؛ وdropout بمقدار 0.1؛ وgradient clipping بحد أقصى 1.0؛ وmixed precision مفعّلة. وطبّقي class weights من dataset، مع تحديد وزن churn بحد أقصى بين 10 و20. وسجّلي متوسط macro-F1 on validation لكل حقل، mean وstandard deviation عبر seeds. واستخدمي training infrastructure من آية: experiment tracking، وconfig format، وseed handling، وrun record format، وprediction file format. والـ TF-IDF baseline اللي لازم تتفوقي عليه (validation macro-F1 على الـ text المصحح): complaint_category 0.7605، وcomplaint_urgency 0.6902، وcustomer_state 0.7000، وchurn_risk 0.8629، والمتوسط 0.7534. وبعدين ابني multi-task model: shared encoder واحد، وأربع رؤوس، مع uncertainty weighting Kendall، وclass weights المحفوظة جوه كل رأس. ودرّبيه بنفس الطريقة وسجّلي نفس metrics. وقارني single-task بmulti-task on validation وسجّلي مين أحسن لكل حقل.
 
-**المرحلة 3.** ادعمي evaluation. وادي آية audio final model وconfigه عشان تقدر تقيّمه على test set. وساعدي في error analysis في الأماكن اللي الصوت فيها بيفسر غلطة عملها text model.
+**المرحلة 3.** سلّمي الفائز لو model بتاعك هو الفائز. وادي آية winning model وexact config عشان تقدر تقيّمه مرة واحدة على test set. ومتضبطيش أي حاجة على test set. وساعدي في error analysis في الأماكن اللي model فيها بيخلط بين فئتين.
 
-**المرحلة 4.** مفيش شغل صوتي جديد إلا لو تصحيحات المراجعة غيّرت مجموعة الصوت. ولو الـ labels المصححة غيّرت أي صف صوتي، rerun affected validation وسجّلي التغيير.
+**المرحلة 4.** بعد تصحيحات المراجعة، rerun winning setup على dataset المنظفة لو model بتاعك هو الفائز. ومفيش تغيير في architecture ولا في hyperparameters. وسجّلي validation results والاختبار الجديدة.
 
 ### محتاجة إيه من غيرك
 
 - dataset وtraining tables، من حازم، متحقق منها.
-- transcription وبيانات الثقة الوصفية، وهي موجودة أصلا في dataset.
-- نتائج Lama's text model، عشان تقارني الصوت بالنص وتقرري fusion.
-- مجموعة evaluation آية، عشان تشغّلي validation بنفس الطريقة اللي الكل بيستخدمها.
+- training infrastructure من آية، بدري في المرحلة 1: experiment tracking، وconfig format، وseed handling.
+- class weights، وهي موجودة أصلا في dataset.
+- نتائج Lama's text model، عشان تقارني model بتاعك بيها على نفس validation metric.
 
 ### غيرك محتاج منك إيه
 
-- audio pipeline وفحوصات الاستقبال، عشان الصوت الوحش ميوصلش للتدريب من غير ما حد ياخد باله.
-- STT validation، عشان الفريق يعرف إن النصوص موثوقة.
-- audio model وvalidation metrics بتاعته، عشان آية تقدر تقيّمه ولمى تقرر fusion.
-- audio features، بالصيغة الموثقة، لو استخدمنا fusion.
+- model CAMeLBERT-mix المضبوط وvalidation metrics بتاعته، عشان آية تقدر تقيّم الفائز وحازم يأكد القرار.
+- exact config بتاع model بتاعك، عشان آية تقدر تعيد إنتاج test evaluation وحازم يعيد تشغيله في المرحلة 4.
+- نتيجة التحقيق في الصوت من المرحلة 1، موثقة، عشان الفريق ميرجعش لـ audio model تاني.
 
 ### تعرفي إزاي إنك خلصتي
 
-audio pipeline بيتحقق من كل training files اللي عددها ⁦5,096⁩. وSTT validation متسجل. وaudio model عنده metrics validation لكل حقل ب5 seeds. وقرار fusion متسجل بالأدلة، سواء كانت الإجابة آه أو لأ.
+المرحلة 1 خلصت: الصوت متحقق منه ونتيجة التحقيق موثقة بالأدلة. وفي المرحلة 2، model CAMeLBERT-mix مضبوط على الحقول الأربعة ب5 seeds. ومتوسط macro-F1 on validation لكل حقل متسجل mean وstandard deviation. وmulti-task model متدرّب ومتقارن. وconfig الفائز موثقة وقابلة لإعادة الإنتاج.
 
 ## الدور 3: لمى، Text Classification Engineer
 
@@ -243,7 +244,6 @@ audio pipeline بيتحقق من كل training files اللي عددها ⁦5,09
 - dataset وtraining tables، من حازم، متحقق منها.
 - training infrastructure من آية، بدري في المرحلة 1: experiment tracking، وconfig format، وseed handling.
 - class weights، وهي موجودة أصلا في dataset.
-- audio features من سيرا، بس لو استخدمنا fusion في المرحلة 2.
 
 ### غيرك محتاج منك إيه
 
@@ -287,7 +287,7 @@ modelين مضبوطين على الحقول الأربعة ب5 seeds. ومتو�
 
 **المرحلة 2.** ادعمي fine-tuning. وساعدي لمى وسيرا يشغّلوا تجاربهم على infrastructure. وشغّلي hyperparameter sweep للtext model مع لمى: learning rate 1e-5 و2e-5 و3e-5، وسجّلي validation result لكل واحد. وشغّلي validation لكل model وسجّلي metrics بنفس الطريقة كل مرة. ومتخليش حد يبلغ عن نتيجة من غير سجل تشغيل.
 
-**المرحلة 3.** شغّلي final test evaluation. وخدي winning model من لمى وaudio model من سيرا. وقيّمي كل واحد مرة واحدة بالظبط على frozen test set اللي فيها 518 صف. وسجّلي metrics كل حقل، وعدد العينات، والإخفاقات. وبعدين شغّلي error analysis: model بيفشل فين، وإيه المشترك بين الإخفاقات، وإيه اللي هيصلحها. واكتبي تقرير evaluation بالأرقام الفعلية، وconfig، والجهاز، والقيود. وقولي بوضوح إيه اللي البيانات متقدرش تدعمه.
+**المرحلة 3.** شغّلي final test evaluation. وخدي winning text model (من لمى أو سيرا). وقيّميه مرة واحدة بالظبط على frozen test set اللي فيها 518 صف. وسجّلي metrics كل حقل، وعدد العينات، والإخفاقات. وبعدين شغّلي error analysis: model بيفشل فين، وإيه المشترك بين الإخفاقات، وإيه اللي هيصلحها. واكتبي تقرير evaluation بالأرقام الفعلية، وconfig، والجهاز، والقيود. وقولي بوضوح إيه اللي البيانات متقدرش تدعمه.
 
 **المرحلة 4.** بعد تصحيحات المراجعة، re-evaluate retrained model على test set، مرة واحدة، بنفس الطريقة. وسجّلي النتائج الجديدة جنب القديمة عشان التغيير يكون واضح.
 
@@ -392,7 +392,7 @@ infrastructure موثقة ولمى وسيرا بيستخدموها. وTF-IDF bas
 
 **المرحلة 1.** ابني الهيكل. وحدّد pipeline stages: الاستقبال، وtranscription، و classification، والفرز، والticket. وابني كل مرحلة كوحدة منفصلة بمدخل ومخرج واضحين. وابني الهيكل بmocks الأول: مرحلة transcription بترجع نص ثابت، وclassification stage بترجع حقول ثابتة، ومرحلة الفرز بترجع ticket ثابتة. وتأكد إن البيانات بتتدفق من المرحلة الأولى للأخيرة. وابني demo skeleton: رفع، وتشغيل، وعرض ticket. وحافظ على استقرار عقود واجهة البرمجة API والبيانات عشان الأدوار التانية تقدر تبني عليها.
 
-**المرحلة 2.** استبدل mocks بالمكونات الحقيقية لما توصل. ولما audio pipeline من سيرا يكون جاهز، اربطه. ولما text model من لمى يكون جاهز، اربطه. ولما ticket generator من ابتهال يكون جاهز، اربطه. واختبر كل استبدال لوحده قبل ما تكمل. وسجّل إيه من المكونات حقيقي وإيه لسه وهمي، عشان الفريق يعرف دايما pipeline state.
+**المرحلة 2.** استبدل mocks بالمكونات الحقيقية لما توصل. ولما text models بتاعة لمى وسيرا تكون جاهزة، اربطها. ولما ticket generator من ابتهال يكون جاهز، اربطه. واختبر كل استبدال لوحده قبل ما تكمل. وسجّل إيه من المكونات حقيقي وإيه لسه وهمي، عشان الفريق يعرف دايما pipeline state.
 
 **المرحلة 3.** اربط وقيس. ومع وجود كل المكونات الحقيقية، شغّل pipeline الكامل على validation set وتأكد إن tickets صح. وقيس latency: شغّل pipeline على مقاطع لحد 60 ثانية وسجّل p95 latency، بشكل منفصل لـ CPU وGPU لو الاتنين مستخدمين. والهدف هو p95 أقل من 10 ثواني. ولو latency فوق الهدف، دوّر على أبطأ مرحلة وبلّغ صاحب المرحلة دي. وابني final demo: الرفع، والتسجيل من المتصفح، وقائمة الانتظار الحية، وأدلة الticket، وموجز الرد. وشغّل demo خمس مرات ورا بعض بشكل نظيف. واكتب تعليمات التشغيل عشان أي عضو في الفريق يقدر يعيد إنتاجه.
 
@@ -400,7 +400,7 @@ infrastructure موثقة ولمى وسيرا بيستخدموها. وTF-IDF bas
 
 ### محتاج إيه من غيرك
 
-- audio pipeline من سيرا، عشان تربطه في مرحلة الاستقبال.
+- text model من سيرا، عشان تربطه في classification stage.
 - text model من لمى، عشان تربطه في classification stage.
 - ticket generator من ابتهال، عشان تربطه في مرحلة الفرز.
 - مجموعة evaluation آية، عشان تقيس latency بنفس الطريقة اللي بيتقاس بيها كل حاجة تانية.
@@ -424,10 +424,10 @@ pipeline شغال من الأول للآخر بكل المكونات الحقي�
 
 | المرحلة | حازم | سيرا | لمى | آية | ابتهال | عرفة |
 |---|---|---|---|---|---|---|
-| **المرحلة 1: الأساسيات** | هيكل training pipeline، وshared config | audio pipeline، وSTT validation، وbaseline XLS-R | single-task fine-tuning setup، وsmoke test، واعتماد Aya's infrastructure | training infrastructure، وevaluation harness، وTF-IDF baseline | جدول قواعد الفرز، وticket format، والمولّد على fixtures | pipeline skeleton على mocks، وdemo skeleton، وعقود API |
-| **المرحلة 2: core models** | التنسيق، وvalidation review، وتأكيد الفائز | audio model، وfusion test | single-task fine-tuning، وmulti-task model | hyperparameter sweep، وvalidation، وrun records | اختبار القواعد على مخرجات validation | استبدال mocks بالمكونات الحقيقية لما توصل |
-| **المرحلة 3: evaluation والربط** | الإشراف على test evaluation، ومراجعة error analysis | دعم evaluation، وaudio error analysis | تسليم الفائز، ودعم error analysis | final test evaluation مرة واحدة، وerror analysis، والتقرير | الانتهاء من الفرز على المخرجات الحقيقية، واتفاق التوجيه | الربط الكامل، وقياس latency، وfinal demo |
-| **المرحلة 4: retrain** | تطبيق تصحيحات المراجعة، وrerun training | إعادة تشغيل validation لو اتغيرت صفوف صوتية | إعادة تشغيل winning setup على البيانات المنظفة | إعادة evaluation retrained model، وتسجيل التغيير | إعادة تشغيل evaluation التوجيه على البيانات المصححة | تحديث demo بretrained model، وإعادة قياس latency |
+| **المرحلة 1: الأساسيات** | هيكل training pipeline، وshared config | التحقيق في الصوت (خلص): الصوت مفيهوش signal للمشاعر، والـ audio model اتقفل | single-task fine-tuning setup، وsmoke test، واعتماد Aya's infrastructure | training infrastructure، وevaluation harness، وTF-IDF baseline | جدول قواعد الفرز، وticket format، والمولّد على fixtures | pipeline skeleton على mocks، وdemo skeleton، وعقود API |
+| **المرحلة 2: core models** | التنسيق، وvalidation review، وتأكيد الفائز | CAMeLBERT-mix single-task fine-tuning | single-task fine-tuning، وmulti-task model | hyperparameter sweep، وvalidation، وrun records | اختبار القواعد على مخرجات validation | استبدال mocks بالمكونات الحقيقية لما توصل |
+| **المرحلة 3: evaluation والربط** | الإشراف على test evaluation، ومراجعة error analysis | تسليم model لو هو الفائز، ودعم error analysis | تسليم الفائز، ودعم error analysis | final test evaluation مرة واحدة، وerror analysis، والتقرير | الانتهاء من الفرز على المخرجات الحقيقية، واتفاق التوجيه | الربط الكامل، وقياس latency، وfinal demo |
+| **المرحلة 4: retrain** | تطبيق تصحيحات المراجعة، وrerun training | rerun winning setup على البيانات المنظفة لو model بتاعها هو الفائز | إعادة تشغيل winning setup على البيانات المنظفة | إعادة evaluation retrained model، وتسجيل التغيير | إعادة تشغيل evaluation التوجيه على البيانات المصححة | تحديث demo بretrained model، وإعادة قياس latency |
 
 مراجعة الـ labels شغالة كل يوم بالتوازي مع المراحل الأربعة كلها. وكل عضو بيراجع الـ labels على صفحة المراجعة الحية يوميا. والمراجعة مبتعطلش التدريب.
 
@@ -451,9 +451,9 @@ fine-tuning الكامل بتاع لمى بيشتغل على Aya's infrastructur
 
 آية بتبني evaluation harness في المرحلة 1 على fixtures بmock predictions. ومش محتاجة أي model عشان ده. وبتشغّل آية TF-IDF baseline في المرحلة 1، وده مش محتاج neural model. وبتقيّم آية real models في المرحلة 3، لما لمى وسيرا يسلّموها. وده الترتيب الطبيعي: evaluation harness بتتبني الأول، وبعدين real models بتتقاس بيها. وآية مبتستناش في المرحلة 1 ولا في المرحلة 2.
 
-### نقطة الانتظار 5: fusion بيستنى audio features من سيرا
+### نقطة الانتظار 5: fusion اتقفل
 
-لو اتسعى لfusion الصوت مع النص في المرحلة 2، فلمى بتحتاج audio features من سيرا. وسيرا بتسلّم audio features في المرحلة 1 والمرحلة 2. وmulti-task model بتاع لمى بيبدأ بالنص بس وبيضيف audio features لما تجهز. وfusion اختياري وبيقرره الدليل: فلو audio baseline مأظهرش إشارة حقيقية فوق النص لوحده، فمفيش fusion ومفيش انتظار. ومحدش بيتعطل بسبب fusion.
+fusion الصوت مع النص اتقفل. التحقيق اللي سيرا عملته في المرحلة 1 أثبت إن الصوت مفيهوش أي signal للمشاعر: التسجيلات كلها بنبرة واحدة، والـ labels جاية من الكلمات مش من الصوت، ومفيش audio model قادر يصنّف المشاعر. فمفيش audio features تتدمج ومفيش انتظار. وmulti-task model بتاع لمى بالنص بس. ومحدش بيتعطل بسبب fusion.
 
 ### نقطة الانتظار 6: المرحلة 4 بتستنى المراجعة
 
@@ -481,7 +481,7 @@ retrain مبتقدرش تبدأ لحد ما المراجعة تخلص، بعد �
 
 المشروع بيكون خلصان لما كل النقط اللي تحت دي تتحقق:
 
-1. text model وaudio trained modelين ومتحقق منهم ومتقيّمين مرة واحدة على frozen test set، مع تسجيل metrics.
+1. text models متدربة ومتحقق منها، والفائز متقيّم مرة واحدة على frozen test set، مع تسجيل metrics.
 2. منطق الفرز بينتج ticket صح لكل توقع اختبار، مع قياس اتفاق التوجيه.
 3. pipeline شغال من الأول للآخر بكل المكونات الحقيقية، وdemo شغال بشكل نظيف خمس مرات ورا بعض.
 4. latency report بيوضح p95 أقل من 10 ثواني للمقاطع لحد 60 ثانية، مع تسجيل الجهاز.
