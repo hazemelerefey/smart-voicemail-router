@@ -3,7 +3,7 @@
 ## Team Allocation and Delivery Plan
 
 **Document ID:** SVR-TEAM-03  
-**Version:** 1.4  
+**Version:** 1.5  
 **Updated:** 17 November 2026  
 **Formal project kickoff:** 11 November 2026  
 **Competition deadline:** Unknown; plan uses relative, gated phases
@@ -12,15 +12,14 @@
 
 ## 1. How this allocation was chosen
 
-The dataset is finished: the SVR Voicemail Corpus, 5,096 clean training rows, corrected stratified split, class weights, and a model selection report that picks EgyBERT, MARBERTv2, and CAMeLBERT-mix for text, and Whisper large-v3 for transcription. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal. The work that remains follows the system boundaries in SVR-ARCH-02: training, text classification, training infrastructure and evaluation, triage and routing, and system integration and demo. Each role owns one of those boundaries end to end, and text classification has two engineers (Lama and Sira) running different models in parallel. The team audits the labels in parallel, every day, while training proceeds.
+The dataset is finished: the SVR Voicemail Corpus, 5,096 clean training rows, corrected stratified split, class weights, and a model selection report that picks EgyBERT and MARBERTv2 for text, and Whisper large-v3 for transcription. CAMeLBERT-mix, the third candidate, is dropped; the project uses exactly two text models. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal. The work that remains follows the system boundaries in SVR-ARCH-02: training, text classification, training infrastructure and evaluation, triage and routing, and system integration and demo. Each role owns one of those boundaries end to end, and text classification is run by Hazem (EgyBERT, as a sub-role under Training Lead) and Sira (MARBERTv2) in parallel. The team audits the labels in parallel, every day, while training proceeds.
 
 ## 2. Role allocation
 
 | Member | Role | Owns | Delivers |
 |---|---|---|---|
-| **Hazem** | **Training Lead** | The end-to-end training pipeline and the final model. The dataset and the audit corrections. Reviews and merges all work. The retrain on audited labels. | Training notebooks, the final model, the retrained model after the audit. Branch: team/hazem-training-lead |
-| **Sira** | **Text Classification Engineer** | The text classifier: CAMeLBERT-mix fine-tuning, single-task first, then multi-task, in parallel with Lama. Phase 1 audio investigation done: the audio carries no emotion signal, the audio model is closed. | The CAMeLBERT-mix text classifier and the fine-tuning results. Branch: team/sira-audio-speech |
-| **Lama** | **Text Classification Engineer** | The text classifier: EgyBERT and MARBERTv2 fine-tuning, single-task first, then multi-task. The multi-task setup, one shared encoder with four heads. | The text classifier and the fine-tuning results. Branch: team/lama-text-classification |
+| **Hazem** | **Training Lead** | The end-to-end training pipeline and the final model. The dataset and the audit corrections. Reviews and merges all work. The retrain on audited labels. Also, as a sub-role, the EgyBERT text classifier: single-task fine-tuning of EgyBERT, in parallel with Sira's MARBERTv2. | Training notebooks, the final model, the retrained model after the audit, and the fine-tuned EgyBERT model with its validation metrics. Branch: team/hazem-training-lead |
+| **Sira** | **Text Classification Engineer** | The text classifier: MARBERTv2 fine-tuning, single-task first, then multi-task, in parallel with Hazem (EgyBERT). Phase 1 audio investigation done: the audio carries no emotion signal, the audio model is closed. | The MARBERTv2 text classifier and the fine-tuning results. Branch: team/sira-audio-speech |
 | **Aya** | **ML Infrastructure and Evaluation Engineer** | The training infrastructure: experiment tracking, hyperparameter sweeps, reproducibility with seeds and configs. The TF-IDF baseline. The evaluation harness, the metrics, and the error analysis. | The baselines, the evaluation reports, and the error analysis. Branch: team/aya-ml-infrastructure-evaluation |
 | **Ibthal** | **Triage and Routing Engineer** | The queue priority logic, how the four fields map to callback priority. The callback ticket generation, the explainable ticket. The routing agreement evaluation. | The triage logic, the ticket format, and the routing evaluation. Branch: team/ibthal-triage-routing |
 | **Arafa** | **Systems Integration and Demo Engineer** | The end-to-end integration: voicemail to STT to classification to triage to ticket. The latency testing, p95 under 10 seconds. The demo and the API, and the competition deliverables. | The integrated pipeline, the demo, and the latency report. Branch: team/arafa-systems-demo |
@@ -37,9 +36,8 @@ What remains open on the data side: the team audit of the labels, and the rights
 
 | Producer | Contract delivered | Consumer | Boundary rule |
 |---|---|---|---|
-| Sira | Text classification results: CAMeLBERT-mix predictions for the four fields, with probabilities, in Aya's prediction file format. The audio evidence (transcript and STT confidence metadata) was verified in Phase 1 and is already in the dataset. | Lama; Ibthal; Arafa | Predictions come from text only. Audio does not decide any field. Raw recordings stay within the approved data boundary. |
-| Lama | Structured text analysis with summary, approved complaint category, complaint urgency, customer-state-from-text, customer request, optional churn risk, review flag, and schema/label version. | Ibthal; Arafa | Enum values come only from the agreed data specification; unknown/unclear values remain reviewable. |
-| Aya | Evaluation results with per-field metrics, latency, sample counts, failures, and error analysis, tied to a run ID, config, and dataset version. | Hazem; Lama; Sira; Arafa | The test set is evaluated once, after validation is frozen. No re-splitting after results exist. |
+| Sira | Text classification results: MARBERTv2 predictions for the four fields, with probabilities, in Aya's prediction file format. The audio evidence (transcript and STT confidence metadata) was verified in Phase 1 and is already in the dataset. | Hazem; Ibthal; Arafa | Predictions come from text only. Audio does not decide any field. Raw recordings stay within the approved data boundary. |
+| Aya | Evaluation results with per-field metrics, latency, sample counts, failures, and error analysis, tied to a run ID, config, and dataset version. | Hazem; Sira; Arafa | The test set is evaluated once, after validation is frozen. No re-splitting after results exist. |
 | Ibthal | Explainable triage decision with priority, assignment/unassigned status, route reason, contributing rule/config version, and evaluation result. | Arafa; team review | Decision logic consumes separate inputs; no emotion/urgency conflation and no hidden hard-filter bypass. |
 | Arafa | Integrated pipeline with a reproducible local run, demo, and latency report. | Team review; competition | The demo runs cleanly under declared conditions; no unmeasured claim is presented. |
 
@@ -51,8 +49,8 @@ The competition deadline and weekly time availability are unknown, so the plan u
 
 | Phase | Main work | Exit gate |
 |---|---|---|
-| **Phase 1: Foundations** | Hazem sets up the training pipeline. Sira completes the audio investigation (Done): the audio carries no emotion signal, the audio model is closed. Lama sets up single-task fine-tuning. Aya builds the training infrastructure, the TF-IDF baseline, and the evaluation harness. Ibthal writes the triage rules and the ticket format. Arafa builds the end-to-end pipeline skeleton and the demo skeleton. The label audit runs daily in parallel. | Each role demonstrates its inputs and outputs on fixtures; the training pipeline runs end to end on the clean training set. |
-| **Phase 2: Core models** | Lama runs single-task fine-tuning for EgyBERT and MARBERTv2 in parallel, then the multi-task model. Sira runs single-task fine-tuning for CAMeLBERT-mix in parallel. Aya runs hyperparameter tuning and validation, and picks the winner by validation mean macro-F1, with the tie-break rule from the model selection report. | Validation metrics exist for every field; the winning text model is named (from EgyBERT, MARBERTv2, CAMeLBERT-mix). |
+| **Phase 1: Foundations** | Hazem sets up the training pipeline. Sira completes the audio investigation (Done): the audio carries no emotion signal, the audio model is closed. Aya builds the training infrastructure, the TF-IDF baseline, and the evaluation harness. Ibthal writes the triage rules and the ticket format. Arafa builds the end-to-end pipeline skeleton and the demo skeleton. The label audit runs daily in parallel. | Each role demonstrates its inputs and outputs on fixtures; the training pipeline runs end to end on the clean training set. |
+| **Phase 2: Core models** | Hazem runs single-task fine-tuning for EgyBERT and Sira runs single-task fine-tuning for MARBERTv2 in parallel, then each builds the multi-task model. Aya runs hyperparameter tuning and validation. Hazem picks the winner by validation mean macro-F1, with the tie-break rule from the model selection report. | Validation metrics exist for every field; the winning text model is named (from EgyBERT, MARBERTv2). |
 | **Phase 3: Evaluation and integration** | Aya runs the final test evaluation once on the frozen 518-row test set, then the error analysis. Ibthal finalizes the triage logic against the real model outputs. Arafa integrates the full pipeline and measures latency. | One reproducible end-to-end run with real metrics; the demo runs cleanly under declared conditions. |
 | **Phase 4: Retrain on audited labels** | After the audit finishes, Hazem applies the corrections to the dataset. The team reruns the training notebooks on the cleaned dataset. Aya re-evaluates. No architecture or hyperparameter changes. | Final dataset with corrected labels; final model retrained and re-evaluated; competition deliverables complete. |
 
@@ -63,7 +61,7 @@ The phases follow their exit gates rather than calendar estimates. Revisit their
 - Each member provides a weekly update and pushes validated progress to their own role branch. Smaller, reviewable pushes are welcome; no fixed weekly hour quota is assumed.
 - Hold one weekly integration/decision meeting. Each member reports completed deliverables, evidence/tests, experiment changes/results, blockers, and the next dependency.
 - Hazem validates pushes and merges accepted work to `develop`. `develop` is the integration line. Hazem merges the final validated result to `master` when the project is ready.
-- Branches: team/hazem-training-lead, team/sira-audio-speech, team/lama-text-classification, team/aya-ml-infrastructure-evaluation, team/ibthal-triage-routing, team/arafa-systems-demo. The old pair branches team/audio-speech, team/complaint-analysis, and team/routing-evaluation are deleted.
+- Branches: team/hazem-training-lead, team/sira-audio-speech, team/aya-ml-infrastructure-evaluation, team/ibthal-triage-routing, team/arafa-systems-demo. The old pair branches team/audio-speech, team/complaint-analysis, and team/routing-evaluation are deleted.
 - Keep merge decisions traceable: each accepted change should state its purpose, tests/evaluation run, and any contract or dataset impact.
 
 ### Operating environments
