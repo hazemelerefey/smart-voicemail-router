@@ -1,0 +1,3 @@
+# mlflow is optional. Install it only if you use experiment tracking.
+pytest==8.3.4
+mlflow==3.4.0
