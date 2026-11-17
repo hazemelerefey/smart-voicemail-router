@@ -3,16 +3,16 @@
 ## Architecture and Diagrams
 
 **Document ID:** SVR-ARCH-02  
-**Version:** 1.3  
+**Version:** 1.4  
 **Status:** Taxonomy agreed, models selected, labels under audit  
-**Updated:** 12 November 2026  
+**Updated:** 17 November 2026  
 **Formal project kickoff:** 11 November 2026
 
 > **Architecture position:** A local-first competition prototype with provider boundaries. On-premises delivery and production telecom readiness remain future work.
 
 ### Revision notes
 
-Version 1.3 aligns the architecture with the PRD v1.3 and the six individual roles. It keeps complaint category, complaint urgency, customer state, voice evidence, and queue priority separate. Raw voice stays local by default; external text processing requires prior approval. The model selection is settled: Whisper large-v3 for transcription, EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio.
+Version 1.4 aligns the architecture with the PRD v1.4 and the six individual roles. It keeps complaint category, complaint urgency, customer state, voice evidence, and queue priority separate. Raw voice stays local by default; external text processing requires prior approval. The model selection is settled: Whisper large-v3 for transcription, EgyBERT, MARBERTv2, and CAMeLBERT-mix for text. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal.
 
 ---
 
@@ -132,7 +132,7 @@ If no agent meets the hard filters, leave the ticket unassigned, state why, and 
 
 ### Provider interfaces
 
-Keep interfaces for speech-to-text, text analysis, acoustic/voice analysis, and storage. Local implementations are the default path where practical. The external text adapter must reject every call unless it has a valid, matching pre-transfer approval record; it accepts masked text only and cannot transmit raw audio. Other external providers are not enabled by this approval record. The selected models are Whisper large-v3 for transcription, EgyBERT and MARBERTv2 for text classification, and wav2vec2 XLS-R 300M for direct audio classification, with the Egyptian checkpoint IbrahimAmin/egyptian-arabic-wav2vec2-xlsr-53. Check current model cards, licenses, APIs, and quotas at implementation time rather than hard-coding names into business logic.
+Keep interfaces for speech-to-text, text analysis, acoustic/voice analysis, and storage. Local implementations are the default path where practical. The external text adapter must reject every call unless it has a valid, matching pre-transfer approval record; it accepts masked text only and cannot transmit raw audio. Other external providers are not enabled by this approval record. The selected models are Whisper large-v3 for transcription, and EgyBERT, MARBERTv2, and CAMeLBERT-mix for text classification. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal. Check current model cards, licenses, APIs, and quotas at implementation time rather than hard-coding names into business logic.
 
 No model is assumed to be language-independent or accurate on Egyptian Arabic phone audio. Compare candidates on the team's own approved data and report the limits.
 
@@ -173,7 +173,7 @@ The shared EDA is done; the team uses one dataset snapshot and shared schemas. A
 | Audio | ffmpeg plus Python audio libraries are candidates. | License/installation, supported formats, audio quality and CPU/GPU needs. |
 | STT | Whisper large-v3, local-first provider adapter. | Egyptian Arabic/code-switching accuracy, rights, latency, hardware and competition rules. |
 | Text model | EgyBERT and MARBERTv2 fine-tuned in parallel, behind an interface. | Structured-output reliability, cost/quota, latency and language performance. |
-| Voice model | wav2vec2 XLS-R 300M for direct audio classification, Egyptian checkpoint IbrahimAmin/egyptian-arabic-wav2vec2-xlsr-53; acoustic features first; pretrained voice-state model only if evidence supports it. | License, label fit, phone-quality performance, bias and confidence calibration. |
+| Voice model | Closed in Phase 1: the audio carries no emotion signal, so there is no audio model. Customer state comes from text only. | License, label fit, phone-quality performance, bias and confidence calibration. |
 | Dashboard | A projector-readable browser dashboard is required for the final demo. | Stack is open; Arafa owns the dashboard and demo. English UI with Arabic content is a working possibility, not a final language decision. |
 | Packaging | Reproducible local run instructions are needed. | Arafa owns deployment. Docker/hosting are deferred until core proof. |
 

@@ -2,12 +2,6 @@
 
 Ready branch. This branch has everything a member needs to clone and start working.
 
-## Data Annotation App
-
-[![Open the SVR Data Annotation app](https://img.shields.io/badge/SVR_Data_Annotation-Open_the_app-FF8A4C?style=for-the-badge)](https://svr-data-annotation.vercel.app)
-
-The team audits labels and corrects transcripts here: 5,196 samples. Transcripts are corrected, the original Whisper text is kept as a reference.
-
 ## What is on this branch
 
 - The dataset: SVR Voicemail Corpus, 6,522 voicemails, 5,096 clean training rows, split train 3,575 / validation 1,003 / test 518, seed 42.
@@ -30,7 +24,7 @@ This branch was renamed from local-env. It is the data branch: the dataset lives
 | Member | Role | Branch |
 | --- | --- | --- |
 | Hazem Elerefy | Training Lead | team/hazem-training-lead |
-| Sira | Audio and Speech | team/sira-audio-speech |
+| Sira | Text Classification | team/sira-audio-speech |
 | Lama | Text Classification | team/lama-text-classification |
 | Aya | ML Infrastructure and Evaluation | team/aya-ml-infrastructure-evaluation |
 | Ibthal | Triage and Routing | team/ibthal-triage-routing |

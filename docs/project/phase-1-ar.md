@@ -2,9 +2,9 @@
 
 **Document ID:** SVR-PHASE-01
 
-**Version:** 1.0
+**Version:** 1.1
 
-**Updated:** 12 November 2026
+**Updated:** 17 November 2026
 
 ## إيه هي المرحلة الأولى
 
@@ -191,33 +191,35 @@ pip install pandas numpy scikit-learn
 
 الـ training notebooks بتشتغل من أولها لآخرها من غير أخطاء. والـ skeleton والـ configuration المشتركة موجودين وكل دور بيستخدمهم.
 
-## الدور 2: سيرا، Audio and Speech Engineer
+## الدور 2: سيرا، Text Classification Engineer (المرحلة 1 خلصت)
 
 **Branch:** team/sira-audio-speech
 
 **الأمر:** `git checkout team/sira-audio-speech`
 
-**Extra packages:** torch, transformers, librosa, soundfile
+**Extra packages:** torch, transformers, datasets
 
-**الأمر:** `pip install torch transformers librosa soundfile`
+**الأمر:** `pip install torch transformers datasets`
 
 ### الدور ده يعني إيه
 
-انت صاحبة كل حاجة بتيجي من الصوت نفسه: الـ audio والـ transcription والـ audio model. شغلك إنك تثبتي الصوت بيقول إيه زيادة عن الـ transcript، وتبني الـ model اللي بيستخرج ده.
+دور سيرا في المرحلة 1 كان التحقيق في الصوت، وخلص. هي اتأكدت من ملفات الصوت، وشغّلت Emotion2Vec وmodels تانية، وأثبتت إن الصوت مفيهوش أي signal للمشاعر: التسجيلات كلها بنبرة واحدة، والـ labels جاية من الكلمات مش من الصوت، ومفيش audio model قادر يصنّف المشاعر. والـ audio emotion model اتقفل. والنتيجة السلبية دي هي مخرجات المرحلة 1 بتاعتها، وموثقة.
 
-### شغلك في المرحلة الأولى
+ودورها الجديد في المرحلة 2 هو Text Classification: single-task fine-tuning بـ CAMeLBERT-mix، بالتوازي مع لمى (EgyBERT وMARBERTv2)، بنفس البروتوكول.
 
-اتأكدي من الـ audio. اتأكدي إن ملفات التدريب الـ ⁦5,096⁩ كلها 16 kHz mono WAV ومطابقة لجداول التدريب. ابني الـ intake check اللي بيرفض الـ audio البايظ وبيسجل ليه اترفض. شغّلي Whisper large-v3 على عينة وسجلي جودة الـ transcription والـ configuration المستخدمة. ابني الـ XLS-R baseline: حمّلي facebook/wav2vec2-xls-r-300m، جمّدي الـ encoder، درّبي classifier head بسيط على الـ training split، وسجلي الـ validation metrics. الـ baseline ده بيقول للفريق الصوت لوحده يقدر يعمل إيه.
+### شغلك في المرحلة الأولى (خلص)
+
+اتأكدي من الـ audio. اتأكدي إن ملفات التدريب الـ ⁦5,096⁩ كلها 16 kHz mono WAV ومطابقة لجداول التدريب. ابني الـ intake check اللي بيرفض الـ audio البايظ وبيسجل ليه اترفض. شغّلي Whisper large-v3 على عينة وسجلي جودة الـ transcription والـ configuration المستخدمة. واختبري الـ audio emotion model بـ Emotion2Vec وmodels تانية: النتيجة إن الصوت مفيهوش signal للمشاعر (silhouette -0.10، وaccuracy على 4 فئات حوالي 37 في المية، وaccuracy ثنائي حوالي 50 في المية، وده الـ chance). والـ audio model اتقفل وcustomer state بييجي من الـ text بس.
 
 ### اللي غيرك محتاجه منك
 
 - الـ audio pipeline والـ intake checks، عشان الـ audio البايظ ميوصلش للتدريب من غير ما حد ياخد باله.
 - الـ STT validation، عشان الفريق يعرف إن الـ transcripts موثوق فيها.
-- الـ audio model والـ validation metrics بتاعته، عشان آية تقيّمه ولمى تقرر في الـ fusion.
+- نتيجة التحقيق في الصوت، موثقة بالأدلة، عشان الفريق ميرجعش لـ audio model تاني.
 
 ### تعرفي إزاي إنك خلصتي
 
-الـ audio pipeline بيأكد على كل ملفات التدريب الـ ⁦5,096⁩. الـ STT validation متسجلة. الـ XLS-R baseline ليه validation metrics.
+الـ audio pipeline بيأكد على كل ملفات التدريب الـ ⁦5,096⁩. الـ STT validation متسجلة. والتحقيق في الصوت خلص وموثق: الصوت مفيهوش signal للمشاعر، والـ audio model اتقفل. ودورك في المرحلة 2 هو CAMeLBERT-mix text classification.
 
 ## الدور 3: لمى، Text Classification Engineer
 
@@ -340,7 +342,7 @@ pip install pandas numpy scikit-learn
 | الدور | شغل المرحلة الأولى |
 |---|---|
 | حازم | Training pipeline skeleton والـ shared config |
-| سيرا | Audio pipeline و STT validation والـ XLS-R baseline |
+| سيرا | التحقيق في الصوت (خلص): الصوت مفيهوش signal للمشاعر، والـ audio model اتقفل |
 | لمى | Single-task setup و smoke test، وتعتمد infrastructure آية |
 | آية | Training infra و eval harness والـ TF-IDF baseline |
 | ابتهال | Triage rules table وصيغة التذكرة والمولّد على fixtures |
@@ -354,7 +356,7 @@ pip install pandas numpy scikit-learn
 - **ابتهال في waiting على مخرجات حقيقية عشان تثبت الـ triage.** هي بتكتب القواعد وصيغة التذكرة في المرحلة الأولى على مخرجات وهمية. مفيش model محتاجاه لكده. هي بتثبت القواعد في المرحلة الثالثة على تنبؤات الـ test الحقيقية.
 - **عرفة في waiting على components حقيقية عشان يركّبها.** هو بيبني الهيكل والـ demo في المرحلة الأولى بـ mocks. مفيش component محتاجه لكده. هو بيبدّل الـ mocks بالمكونات الحقيقية أول ما توصل في المرحلة الثانية والثالثة.
 - **آية في waiting على models عشان تقيّمها.** هي بتبني الـ evaluation harness في المرحلة الأولى على fixtures. وهي بتشغل الـ TF-IDF baseline في المرحلة الأولى، وده مش محتاج أي neural model. هي بتقيّم الـ models الحقيقية في المرحلة الثالثة.
-- **الـ fusion في waiting على audio features سيرا.** لو الـ fusion هيتعمل في المرحلة الثانية، لمى بتحتاج الـ audio features بتاعة سيرا. الـ fusion اختياري وبيتقرر بالأدلة: لو الـ audio baseline مبيضيفش حاجة حقيقية فوق الـ text لوحده، مفيش fusion ومفيش waiting. محدش بيتعطل بسبب الـ fusion.
+- **الـ fusion اتقفل.** التحقيق اللي سيرا عملته أثبت إن الصوت مفيهوش أي signal للمشاعر، فمفيش audio features تتدمج ومفيش fusion ومفيش waiting. ومحدش بيتعطل بسبب الـ fusion.
 
 ## قاعدة الـ waiting
 
@@ -369,7 +371,7 @@ pip install pandas numpy scikit-learn
 المرحلة الأولى خلصت لما:
 
 1. الـ training pipeline skeleton والـ shared config موجودين، وكل دور بيستخدمهم.
-2. سيرا أكدت على الـ ⁦5,096⁩ ملف صوتي، والـ XLS-R baseline متسجل.
+2. سيرا أكدت على الـ ⁦5,096⁩ ملف صوتي، والتحقيق في الصوت خلص وموثق: الصوت مفيهوش signal للمشاعر، والـ audio model اتقفل.
 3. لمى جهزت الـ single-task setup، والـ smoke test عدّى.
 4. آية سلمت الـ training infrastructure والـ TF-IDF baseline متسجل.
 5. ابتهال كتبت جدول قواعد الـ triage وصيغة التذكرة، والمولّد بيشتغل على fixtures.

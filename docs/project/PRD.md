@@ -3,9 +3,9 @@
 ## Product Requirements Document
 
 **Document ID:** SVR-PRD-01  
-**Version:** 1.3  
+**Version:** 1.4  
 **Status:** Dataset and taxonomy finished; model selection settled; labels under audit  
-**Updated:** 12 November 2026  
+**Updated:** 17 November 2026  
 **Formal project kickoff:** 11 November 2026  
 **Competition deadline:** Not yet known
 
@@ -210,7 +210,7 @@ Report only metrics appropriate to the agreed labels and reference data:
 
 - The competition prototype receives a single customer speaker, not a live multi-party call; diarization is out of scope.
 - Official project kickoff is 11 November 2026. The competition deadline and weekly time capacity are unknown, so the plan uses relative phases and exit gates rather than invented dates or durations.
-- The team works in six individual roles: Hazem, Training Lead; Sira, Audio and Speech Engineer; Lama, Text Classification Engineer; Aya, ML Infrastructure and Evaluation Engineer; Ibthal, Triage and Routing Engineer; Arafa, Systems Integration and Demo Engineer. Role assignments are in the Team Allocation Plan; they are based on architecture boundaries, not on unprovided skill profiles.
+- The team works in six individual roles: Hazem, Training Lead; Sira, Text Classification Engineer; Lama, Text Classification Engineer; Aya, ML Infrastructure and Evaluation Engineer; Ibthal, Triage and Routing Engineer; Arafa, Systems Integration and Demo Engineer. Role assignments are in the Team Allocation Plan; they are based on architecture boundaries, not on unprovided skill profiles.
 - Team members have a mix of CPU/GPU computers; free cloud plans and Colab may be available but are optional. Do not make them a required dependency.
 - External API use and dataset rights still require confirmation against competition rules and actual dataset terms.
 - On-premises delivery is a possible future commercial direction after validation, not a current product promise.
@@ -234,7 +234,7 @@ Report only metrics appropriate to the agreed labels and reference data:
 2. The split freeze (the corrected v2 split is the working split; freezing it is Hazem's decision).
 3. Whether external providers are allowed by the competition and the dataset terms; exact approved providers and budget/quota.
 4. Retention/deletion period and who can access local recordings.
-5. Which hardware meets the data, language, and latency constraints after benchmark. The model selection is settled: EgyBERT and MARBERTv2 for text, wav2vec2 XLS-R 300M for audio, Whisper large-v3 for transcription.
+5. Which hardware meets the data, language, and latency constraints after benchmark. The model selection is settled: EgyBERT, MARBERTv2, and CAMeLBERT-mix for text, Whisper large-v3 for transcription. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal.
 6. Final dashboard language and competition demo format/judging criteria.
 7. Competition deadline and any changes needed to phase priority once known.
 8. The Python baseline and the training hardware.
