@@ -1,0 +1,1 @@
+# Base only, no extra packages. Triage logic and ticket format need nothing beyond base.
