@@ -3,7 +3,7 @@
 ## Architecture and Diagrams
 
 **Document ID:** SVR-ARCH-02  
-**Version:** 1.4  
+**Version:** 1.5  
 **Status:** Taxonomy agreed, models selected, labels under audit  
 **Updated:** 17 November 2026  
 **Formal project kickoff:** 11 November 2026
@@ -12,7 +12,7 @@
 
 ### Revision notes
 
-Version 1.4 aligns the architecture with the PRD v1.4 and the six individual roles. It keeps complaint category, complaint urgency, customer state, voice evidence, and queue priority separate. Raw voice stays local by default; external text processing requires prior approval. The model selection is settled: Whisper large-v3 for transcription, EgyBERT, MARBERTv2, and CAMeLBERT-mix for text. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal.
+Version 1.5 aligns the architecture with the PRD v1.5 and the five individual roles. It keeps complaint category, complaint urgency, customer state, voice evidence, and queue priority separate. Raw voice stays local by default; external text processing requires prior approval. The model selection is settled: Whisper large-v3 for transcription, EgyBERT and MARBERTv2 for text. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal.
 
 ---
 
@@ -132,7 +132,7 @@ If no agent meets the hard filters, leave the ticket unassigned, state why, and 
 
 ### Provider interfaces
 
-Keep interfaces for speech-to-text, text analysis, acoustic/voice analysis, and storage. Local implementations are the default path where practical. The external text adapter must reject every call unless it has a valid, matching pre-transfer approval record; it accepts masked text only and cannot transmit raw audio. Other external providers are not enabled by this approval record. The selected models are Whisper large-v3 for transcription, and EgyBERT, MARBERTv2, and CAMeLBERT-mix for text classification. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal. Check current model cards, licenses, APIs, and quotas at implementation time rather than hard-coding names into business logic.
+Keep interfaces for speech-to-text, text analysis, acoustic/voice analysis, and storage. Local implementations are the default path where practical. The external text adapter must reject every call unless it has a valid, matching pre-transfer approval record; it accepts masked text only and cannot transmit raw audio. Other external providers are not enabled by this approval record. The selected models are Whisper large-v3 for transcription, and EgyBERT and MARBERTv2 for text classification. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal. Check current model cards, licenses, APIs, and quotas at implementation time rather than hard-coding names into business logic.
 
 No model is assumed to be language-independent or accurate on Egyptian Arabic phone audio. Compare candidates on the team's own approved data and report the limits.
 
@@ -155,7 +155,7 @@ The final demo needs a browser dashboard. Arafa owns Systems Integration and Dem
 | Role | Owns the first implementation of | Provides to the next stage |
 |---|---|---|
 | Sira, Audio and Speech Engineer | Local audio validation/preprocessing, STT adapter/benchmark, transcript quality/language-mix metadata, acoustic features, optional voice-state candidate. | `AudioAnalysis`: local audio references, transcript + confidence/language metadata, audio-quality/acoustic evidence; no final queue decision. |
-| Lama, Text Classification Engineer | Transcript normalization/glossary/identifier masking, structured text analysis, summary, complaint category/urgency/customer-state fields, customer request/script. | Versioned `TextAnalysis` object with agreed labels and review/confidence fields. |
+| Hazem, Training Lead (EgyBERT) and Sira, Text Classification Engineer (MARBERTv2) | Transcript normalization/glossary/identifier masking, structured text analysis, summary, complaint category/urgency/customer-state fields, customer request/script. | Versioned `TextAnalysis` object with agreed labels and review/confidence fields. |
 | Ibthal, Triage and Routing Engineer | Versioned fusion/priority/routing rules, agent/skill data model, no-match behavior. | `TriageDecision`: priority, assignment/unassigned state, reason, contributing evidence/rule version. |
 | Aya, ML Infrastructure and Evaluation Engineer | Training infrastructure, evaluation/integration runner, run records, pure tests. | Evaluation results and run records. |
 | Hazem, Training Lead | Training pipeline, model selection and fine-tuning coordination, final test evaluation oversight. | Trained models and the training configuration. |
