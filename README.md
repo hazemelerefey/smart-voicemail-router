@@ -24,7 +24,7 @@ This branch was renamed from local-env. It is the data branch: the dataset lives
 | Member | Role | Branch |
 | --- | --- | --- |
 | Hazem Elerefy | Training Lead | team/hazem-training-lead |
-| Sira | Audio and Speech | team/sira-audio-speech |
+| Sira | Text Classification | team/sira-audio-speech |
 | Lama | Text Classification | team/lama-text-classification |
 | Aya | ML Infrastructure and Evaluation | team/aya-ml-infrastructure-evaluation |
 | Ibthal | Triage and Routing | team/ibthal-triage-routing |
