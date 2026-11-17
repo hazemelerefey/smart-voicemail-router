@@ -3,7 +3,7 @@
 ## Architecture and Diagrams
 
 **Document ID:** SVR-ARCH-02  
-**Version:** 1.5  
+**Version:** 1.6  
 **Status:** Taxonomy agreed, models selected, labels under audit  
 **Updated:** 17 November 2026  
 **Formal project kickoff:** 11 November 2026
@@ -13,6 +13,8 @@
 ### Revision notes
 
 Version 1.5 aligns the architecture with the PRD v1.5 and the five individual roles. It keeps complaint category, complaint urgency, customer state, voice evidence, and queue priority separate. Raw voice stays local by default; external text processing requires prior approval. The model selection is settled: Whisper large-v3 for transcription, EgyBERT and MARBERTv2 for text. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal.
+
+Version 1.6 moves the AudioAnalysis module from Sira (Audio and Speech Engineer, role closed) to Hazem (Training Lead) and removes the voice-state candidate from the acoustic path and the module. It also documents Sira's Phase 1 audio experiment with its results (Section 9), so the trial and its negative result stay on record.
 
 ---
 
@@ -44,7 +46,7 @@ The editable source is in [`architecture-overview.mmd`](architecture-overview.mm
 | 3. Local storage | Keep original and working copy inside the approved local data boundary. | Local paths and retention metadata; do not upload raw voice to notebooks or services by default. |
 | 4. Preprocessing | Normalize sample rate/channel as agreed, trim silence if safe, and measure clipping/noise/duration. | Clean audio plus quality metadata. Keep the original unchanged until retention rules allow deletion. |
 | 5. Speech path | Run STT locally by default; record language mix and uncertainty. | Raw transcript remains local; normalized transcript is generated separately. |
-| 6. Acoustic path | Calculate measurable features and, only if validated, a voice-state candidate. | Feature values and confidence/quality. Voice evidence is optional and not a definitive emotion. |
+| 6. Acoustic path | Calculate measurable features. | Feature values and confidence/quality. |
 | 7. Text analysis | Normalize telecom terms and identifiers locally; analyze the transcript. | Summary, complaint category, complaint urgency, and `customer_state_text`; enum values are the agreed taxonomy. |
 | 8. Fusion and decision | Combine only agreed fields, compute queue priority, and select an eligible agent. | Ticket fields, evidence, route reason, or human-review/unassigned status. `customer_state_final` is optional and requires an approved policy. |
 | 9. Persistence and events | Save tickets, agent data, assignments, processing events, transfer approvals, and audit history. | Local prototype database; processing status (`completed`/`needs_review`) and assignment status (`assigned`/`unassigned`) are inspectable. |
@@ -154,7 +156,7 @@ The final demo needs a browser dashboard. Arafa owns Systems Integration and Dem
 
 | Role | Owns the first implementation of | Provides to the next stage |
 |---|---|---|
-| Sira, Audio and Speech Engineer | Local audio validation/preprocessing, STT adapter/benchmark, transcript quality/language-mix metadata, acoustic features, optional voice-state candidate. | `AudioAnalysis`: local audio references, transcript + confidence/language metadata, audio-quality/acoustic evidence; no final queue decision. |
+| Hazem, Training Lead | Local audio validation/preprocessing, STT adapter/benchmark, transcript quality/language-mix metadata, acoustic features. | `AudioAnalysis`: local audio references, transcript + confidence/language metadata, audio-quality/acoustic evidence; no final queue decision. |
 | Hazem, Training Lead (EgyBERT) and Sira, Text Classification Engineer (MARBERTv2) | Transcript normalization/glossary/identifier masking, structured text analysis, summary, complaint category/urgency/customer-state fields, customer request/script. | Versioned `TextAnalysis` object with agreed labels and review/confidence fields. |
 | Ibthal, Triage and Routing Engineer | Versioned fusion/priority/routing rules, agent/skill data model, no-match behavior. | `TriageDecision`: priority, assignment/unassigned state, reason, contributing evidence/rule version. |
 | Aya, ML Infrastructure and Evaluation Engineer | Training infrastructure, evaluation/integration runner, run records, pure tests. | Evaluation results and run records. |
@@ -173,9 +175,17 @@ The shared EDA is done; the team uses one dataset snapshot and shared schemas. A
 | Audio | ffmpeg plus Python audio libraries are candidates. | License/installation, supported formats, audio quality and CPU/GPU needs. |
 | STT | Whisper large-v3, local-first provider adapter. | Egyptian Arabic/code-switching accuracy, rights, latency, hardware and competition rules. |
 | Text model | EgyBERT and MARBERTv2 fine-tuned in parallel, behind an interface. | Structured-output reliability, cost/quota, latency and language performance. |
-| Voice model | Closed in Phase 1: the audio carries no emotion signal, so there is no audio model. Customer state comes from text only. | License, label fit, phone-quality performance, bias and confidence calibration. |
+| Voice model | Closed in Phase 1: the audio carries no emotion signal, so there is no audio model. Customer state comes from text only. | Closed. Nothing to validate. |
 | Dashboard | A projector-readable browser dashboard is required for the final demo. | Stack is open; Arafa owns the dashboard and demo. English UI with Arabic content is a working possibility, not a final language decision. |
 | Packaging | Reproducible local run instructions are needed. | Arafa owns deployment. Docker/hosting are deferred until core proof. |
+
+### Closed experiment: audio emotion (Phase 1)
+
+Sira tested whether the voicemail audio carries emotion signal beyond the words. She ran Emotion2Vec embeddings and other models on the 5,096 voicemails, in 4 classes (calm, frustrated, mad, satisfied) and in binary (frustrated plus mad against calm plus satisfied), with an embedding geometry audit (centroid cosine, PCA, silhouette).
+
+Results: silhouette -0.10 (no clusters); raw centroid cosine about 0.99; PCA shows all four emotions mixed in one cloud; 4-class accuracy about 37 percent, below the about 40 percent calm majority baseline; binary accuracy about 50 percent, which is chance. The recordings are all one tone; the labels come from the words, not the voice.
+
+Conclusion: the audio carries no emotion signal. The audio emotion model is closed and customer state comes from text only. The full record is in the roles guide (Role 2, Phase 1) and the Phase 1 status table.
 
 ## 10. Future commercial path: on-premises
 
