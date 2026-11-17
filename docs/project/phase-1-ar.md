@@ -2,7 +2,7 @@
 
 **Document ID:** SVR-PHASE-01
 
-**Version:** 1.1
+**Version:** 1.2
 
 **Updated:** 17 November 2026
 
@@ -106,7 +106,6 @@ cd svr
 
 - حازم: `git checkout team/hazem-training-lead`
 - سيرا: `git checkout team/sira-audio-speech`
-- لمى: `git checkout team/lama-text-classification`
 - آية: `git checkout team/aya-ml-infrastructure-evaluation`
 - ابتهال: `git checkout team/ibthal-triage-routing`
 - عرفة: `git checkout team/arafa-systems-demo`
@@ -136,7 +135,7 @@ source .venv/bin/activate
 pip install pandas numpy scikit-learn
 ```
 
-وبعدين نزّل الـ packages الزيادة اللي دورك محتاجها. كل قسم دور تحت بيقول الأمر الدقيق لدوره. اتأكد إن التنزيل اشتغل باستيراد الـ package الأساسي لدورك، مثلا `python -c "import transformers"` للّمى وسيرا.
+وبعدين نزّل الـ packages الزيادة اللي دورك محتاجها. كل قسم دور تحت بيقول الأمر الدقيق لدوره. اتأكد إن التنزيل اشتغل باستيراد الـ package الأساسي لدورك، مثلا `python -c "import transformers"` لحازم وسيرا.
 
 ### الخطوة 10: اتأكد من الـ data
 
@@ -177,6 +176,8 @@ pip install pandas numpy scikit-learn
 
 انت صاحب مجهود التدريب كله والـ model النهائي. انت الشخص اللي بيأكد إن الـ dataset والـ models والتقييم كلهم ماشيين مع بعض، وإن النتيجة النهائية حقيقية. انت بتراجع شغل كل عضو وبتدمجه. مفيش حاجة بتوصل لـ `develop` أو `master` من غير مراجعتك.
 
+وفي المرحلة 2 عندك دور فرعي: Text Classification بـ EgyBERT، بالتوازي مع سيرا (MARBERTv2)، بنفس البروتوكول.
+
 ### شغلك في المرحلة الأولى
 
 جهّز الـ training pipeline. اتأكد إن جداول التدريب النضيفة بتتحمل صح وإن الـ splits مطابقة لفولدرات الـ audio. اكتب الـ training notebook skeleton اللي كل دور هيستخدمه: تحميل الـ data، والـ configuration المشتركة، والتعامل مع الـ seeds، وصيغة المخرجات للنتايج. راجع شغل المرحلة الأولى لكل عضو أول ما يوصل.
@@ -205,7 +206,7 @@ pip install pandas numpy scikit-learn
 
 دور سيرا في المرحلة 1 كان التحقيق في الصوت، وخلص. هي اتأكدت من ملفات الصوت، وشغّلت Emotion2Vec وmodels تانية، وأثبتت إن الصوت مفيهوش أي signal للمشاعر: التسجيلات كلها بنبرة واحدة، والـ labels جاية من الكلمات مش من الصوت، ومفيش audio model قادر يصنّف المشاعر. والـ audio emotion model اتقفل. والنتيجة السلبية دي هي مخرجات المرحلة 1 بتاعتها، وموثقة.
 
-ودورها الجديد في المرحلة 2 هو Text Classification: single-task fine-tuning بـ CAMeLBERT-mix، بالتوازي مع لمى (EgyBERT وMARBERTv2)، بنفس البروتوكول.
+ودورها الجديد في المرحلة 2 هو Text Classification: single-task fine-tuning بـ MARBERTv2، بالتوازي مع حازم (EgyBERT)، بنفس البروتوكول.
 
 ### شغلك في المرحلة الأولى (خلص)
 
@@ -219,39 +220,11 @@ pip install pandas numpy scikit-learn
 
 ### تعرفي إزاي إنك خلصتي
 
-الـ audio pipeline بيأكد على كل ملفات التدريب الـ ⁦5,096⁩. الـ STT validation متسجلة. والتحقيق في الصوت خلص وموثق: الصوت مفيهوش signal للمشاعر، والـ audio model اتقفل. ودورك في المرحلة 2 هو CAMeLBERT-mix text classification.
+الـ audio pipeline بيأكد على كل ملفات التدريب الـ ⁦5,096⁩. الـ STT validation متسجلة. والتحقيق في الصوت خلص وموثق: الصوت مفيهوش signal للمشاعر، والـ audio model اتقفل. ودورك في المرحلة 2 هو MARBERTv2 text classification.
 
 ## الدور 3: لمى، Text Classification Engineer
 
-**Branch:** team/lama-text-classification
-
-**الأمر:** `git checkout team/lama-text-classification`
-
-**Extra packages:** torch, transformers, datasets
-
-**الأمر:** `pip install torch transformers datasets`
-
-### الدور ده يعني إيه
-
-انت صاحبة الـ model الأساسي: الـ text classifier اللي بيقرا الـ transcript وبيتنبأ بالأربع حقول. ده الـ model اللي النظام كله معتمد عليه. شغلك إنك تدربيه كويس، وتثبتيه بالـ validation، وتسلمي model جاهز للتقييم والتكامل.
-
-### شغلك في المرحلة الأولى
-
-جهّزي الـ single-task fine-tuning. حمّلي جداول التدريب النضيفة. حمّلي الـ tokenizer بتاع EgyBERT وبتاع MARBERTv2. اتأكدي إن max sequence length 128 بيغطي الـ data: أطول transcript هو 72 كلمة، حوالي 93 token، فـ 128 أكتر من كفاية. ابني الـ training script اللي بيعمل fine-tune لـ model واحد على field واحد. شغّلي smoke test قصير على جزء صغير عشان تتأكدي إن الـ pipeline بيشتغل من أوله لآخره. اعتمدي الـ training infrastructure بتاعة آية أول ما توصل: الـ experiment tracking والـ configuration format والتعامل مع الـ seeds. متشغّليش fine-tuning كامل على setup مختلف.
-
-### نقطة الـ waiting الوحيدة
-
-الـ fine-tuning الكامل بتاعك بيشتغل على الـ infrastructure بتاعة آية: الـ experiment tracking والـ configuration format والتعامل مع الـ seeds. آية بتسلم الـ infrastructure بدري في المرحلة الأولى، قبل الـ baseline. انت مش بتقعدي في waiting: انت بتبني الـ single-task setup وتحميل الـ data والـ tokenizer وتحميل الـ model في المرحلة الأولى، وبتشغلي smoke test على جزء صغير بـ configuration بسيطة. أول ما الـ infrastructure بتاعة آية توصل، بتعتمديها وبتشغلي الـ fine-tuning الكامل. ولو الـ infrastructure بتاعة آية اتأخرت، بتقولي لل training leader على طول عشان الخطة تتظبط.
-
-### اللي غيرك محتاجه منك
-
-- الـ models المدربة والـ validation metrics بتاعتها، عشان آية تقيّم الـ winner model وحازم يأكد القرار.
-- ترشيح الـ winner model بالأرقام اللي وراه.
-- الـ configuration الدقيقة للـ winner model، عشان آية تقدر تعيد تقييم الـ test وحازم يقدر يعيد تشغيله في المرحلة الرابعة.
-
-### تعرفي إزاي إنك خلصتي
-
-الـ single-task setup جاهز، والـ tokenizer متحمل، والـ smoke test عدّى. وانت جاهزة تعتمدي الـ infrastructure بتاعة آية أول ما توصل.
+لمى خرجت من الفريق في 17 نوفمبر 2026 قبل ما تبدأ شغلها. وشغل Text Classification بتاعها اتقسم بين حازم (EgyBERT) وسيرا (MARBERTv2). والقسم ده متساب عشان ترقيم الأدوار يفضل زي ما هو. والفرع بتاعها، team/lama-text-classification، مش بيستخدم تاني.
 
 ## الدور 4: آية، ML Infrastructure and Evaluation Engineer
 
@@ -273,14 +246,14 @@ pip install pandas numpy scikit-learn
 
 ### اللي غيرك محتاجه منك
 
-- الـ training infrastructure، بدري في المرحلة الأولى، عشان لمى وسيرا يشتغلوا على نفس الـ setup.
+- الـ training infrastructure، بدري في المرحلة الأولى، عشان حازم وسيرا يشتغلوا على نفس الـ setup.
 - الـ evaluation harness، عشان كل الناس تقيس بنفس الطريقة.
 - الـ TF-IDF baseline، عشان كل model يبقى ليه مرجع يتفوق عليه.
 - الـ run records، عشان كل تجربة تبقى قابلة للتتبع.
 
 ### تعرفي إزاي إنك خلصتي
 
-الـ infrastructure متوثقة وبتستخدمها لمى وسيرا. الـ TF-IDF baseline متسجل. الـ evaluation harness بيشتغل على fixtures وعلى models حقيقية. كل تجربة ليها run record.
+الـ infrastructure متوثقة وبتستخدمها حازم وسيرا. الـ TF-IDF baseline متسجل. الـ evaluation harness بيشتغل على fixtures وعلى models حقيقية. كل تجربة ليها run record.
 
 ## الدور 5: ابتهال، Triage and Routing Engineer
 
@@ -343,7 +316,6 @@ pip install pandas numpy scikit-learn
 |---|---|
 | حازم | Training pipeline skeleton والـ shared config |
 | سيرا | التحقيق في الصوت (خلص): الصوت مفيهوش signal للمشاعر، والـ audio model اتقفل |
-| لمى | Single-task setup و smoke test، وتعتمد infrastructure آية |
 | آية | Training infra و eval harness والـ TF-IDF baseline |
 | ابتهال | Triage rules table وصيغة التذكرة والمولّد على fixtures |
 | عرفة | Pipeline skeleton على mocks وهيكل الـ demo وعقود الـ API |
@@ -352,7 +324,7 @@ pip install pandas numpy scikit-learn
 
 المراحل متصممة عشان مفيش waiting في المرحلة الأولى، والـ waiting في المراحل اللي بعدها هو الترتيب الطبيعي للشغل، مش تعطيل.
 
-- **لمى في waiting على infrastructure آية.** الـ fine-tuning الكامل بتاع لمى بيشتغل على الـ infrastructure بتاعة آية. آية بتسلمها بدري في المرحلة الأولى. لمى مش بتقعد في waiting: هي بتبني الـ setup والـ smoke test الأول، وبعدين بتعتمد الـ infrastructure أول ما توصل. ولو اتأخرت، بتقول لل training leader على طول.
+- **حازم وسيرا في waiting على infrastructure آية.** الـ fine-tuning الكامل بتاعهم بيشتغل على الـ infrastructure بتاعة آية. آية بتسلمها بدري في المرحلة الأولى. هم مش بيقعدوا في waiting: هم بيبنوا الـ setup والـ smoke test الأول، وبعدين بيعتمدوا الـ infrastructure أول ما توصل. ولو اتأخرت، سيرا بتقول لحازم على طول.
 - **ابتهال في waiting على مخرجات حقيقية عشان تثبت الـ triage.** هي بتكتب القواعد وصيغة التذكرة في المرحلة الأولى على مخرجات وهمية. مفيش model محتاجاه لكده. هي بتثبت القواعد في المرحلة الثالثة على تنبؤات الـ test الحقيقية.
 - **عرفة في waiting على components حقيقية عشان يركّبها.** هو بيبني الهيكل والـ demo في المرحلة الأولى بـ mocks. مفيش component محتاجه لكده. هو بيبدّل الـ mocks بالمكونات الحقيقية أول ما توصل في المرحلة الثانية والثالثة.
 - **آية في waiting على models عشان تقيّمها.** هي بتبني الـ evaluation harness في المرحلة الأولى على fixtures. وهي بتشغل الـ TF-IDF baseline في المرحلة الأولى، وده مش محتاج أي neural model. هي بتقيّم الـ models الحقيقية في المرحلة الثالثة.
@@ -372,11 +344,10 @@ pip install pandas numpy scikit-learn
 
 1. الـ training pipeline skeleton والـ shared config موجودين، وكل دور بيستخدمهم.
 2. سيرا أكدت على الـ ⁦5,096⁩ ملف صوتي، والتحقيق في الصوت خلص وموثق: الصوت مفيهوش signal للمشاعر، والـ audio model اتقفل.
-3. لمى جهزت الـ single-task setup، والـ smoke test عدّى.
-4. آية سلمت الـ training infrastructure والـ TF-IDF baseline متسجل.
-5. ابتهال كتبت جدول قواعد الـ triage وصيغة التذكرة، والمولّد بيشتغل على fixtures.
-6. عرفة بنى هيكل الـ pipeline على mocks، وهيكل الـ demo جاهز، وعقود الـ API ثابتة.
-7. حازم راجع ودمج شغل المرحلة الأولى لكل عضو في `develop`.
+3. آية سلمت الـ training infrastructure والـ TF-IDF baseline متسجل.
+4. ابتهال كتبت جدول قواعد الـ triage وصيغة التذكرة، والمولّد بيشتغل على fixtures.
+5. عرفة بنى هيكل الـ pipeline على mocks، وهيكل الـ demo جاهز، وعقود الـ API ثابتة.
+6. حازم راجع ودمج شغل المرحلة الأولى لكل عضو في `develop`.
 
 ## قواعد الشغل
 

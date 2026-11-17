@@ -3,9 +3,9 @@
 ## Roles and Workflow Guide
 
 **Document ID:** SVR-TEAM-04  
-**Version:** 1.1  
+**Version:** 1.2  
 **Updated:** 17 November 2026  
-**Companion document:** SVR-TEAM-03 Team Allocation v1.4 (the roles and phases in brief)
+**Companion document:** SVR-TEAM-03 Team Allocation v1.5 (the roles and phases in brief)
 
 ## What this document is
 
@@ -30,7 +30,7 @@ The dataset is the SVR Voicemail Corpus: 6,522 voicemails, 5,096 clean training 
 The work runs in four phases:
 
 - **Phase 1: Foundations.** Every role builds its own piece on fixtures and mocks. No one waits for anyone.
-- **Phase 2: Core models.** The text classifiers are trained and validated: EgyBERT and MARBERTv2 (Lama) and CAMeLBERT-mix (Sira). The winner is picked by validation mean macro-F1.
+- **Phase 2: Core models.** The text classifiers are trained and validated: EgyBERT (Hazem) and MARBERTv2 (Sira). The winner is picked by validation mean macro-F1, with the tie-break in the model selection report. CAMeLBERT-mix, the third candidate, is dropped; the project uses exactly two text models.
 - **Phase 3: Evaluation and integration.** The test set is evaluated once. The triage logic is finalized on real model outputs. The full pipeline is integrated and the demo is built.
 - **Phase 4: Retrain on audited labels.** After the audit finishes, the labels are corrected and the training notebooks are rerun. No architecture or hyperparameter changes.
 
@@ -83,7 +83,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Install the packages your role needs. The base packages for everyone are pandas, numpy, and scikit-learn. Each role section below lists the extra packages for that role. Confirm the install works by importing the main package for your role, for example `python -c "import transformers"` for Lama and Sira.
+Install the packages your role needs. The base packages for everyone are pandas, numpy, and scikit-learn. Each role section below lists the extra packages for that role. Confirm the install works by importing the main package for your role, for example `python -c "import transformers"` for Hazem and Sira.
 
 ### Step 6: Verify the data
 
@@ -113,12 +113,14 @@ You own the whole training effort and the final model. You are the person who ma
 - The end-to-end training pipeline, from the clean training tables to the trained model.
 - The dataset, including applying the audit corrections when the audit finishes.
 - The model selection report and the training decisions that follow from it.
-- Review and merge of all six role branches.
+- The EgyBERT text classifier, as a sub-role under this role: single-task fine-tuning of EgyBERT (faisalq/EgyBERT), in parallel with Sira's MARBERTv2, using the same protocol.
+- Review and merge of all five role branches.
 - The retrain on audited labels in Phase 4.
 
 ### What you deliver
 
 - The training notebooks, executed, with outputs saved, on your branch.
+- The fine-tuned EgyBERT model, with configuration and validation metrics per field, and the multi-task model.
 - The final trained model and its configuration, with the exact dataset version, seed, and hyperparameters recorded.
 - The retrained model after the audit, with the corrections applied and the re-evaluation results.
 - A merge record for every accepted change: what it was, what tests or evaluation ran, and what it changed.
@@ -127,7 +129,7 @@ You own the whole training effort and the final model. You are the person who ma
 
 **Phase 1.** Set up the training pipeline. Confirm the clean training tables load correctly and the splits match the audio folders. Write the training notebook skeleton that every role will use: data loading, the shared configuration, the seed handling, and the output format for results. Review each member's Phase 1 work as it lands.
 
-**Phase 2.** Coordinate the model work. Lama runs the text fine-tuning (EgyBERT and MARBERTv2), Sira runs the text fine-tuning (CAMeLBERT-mix), Aya runs the evaluation. You review the validation results and confirm the winner by the rule in the model selection report: highest validation mean macro-F1, and if EgyBERT and MARBERTv2 are within one standard deviation, pick MARBERTv2. Record the decision and the numbers behind it.
+**Phase 2.** Run the single-task fine-tuning with EgyBERT (faisalq/EgyBERT), in parallel with Sira's MARBERTv2 run, using the same protocol. Set up single-task fine-tuning first: load the EgyBERT tokenizer, confirm max sequence length 128 covers the data, build the training script, run a short smoke test, and adopt Aya's training infrastructure. Then train one model per field, 5 seeds each (42, 1337, 2023, 7, 99), with the hyperparameters from the model selection report: learning rate 2e-5, sweep 1e-5, 2e-5, 3e-5; effective batch 16; epochs 3, max 5, early stopping with patience 2 on validation mean macro-F1; warmup ratio 0.1; weight decay 0.01, set explicitly; AdamW; dropout 0.1; gradient clipping max norm 1.0; mixed precision on. Apply the class weights from the dataset, with the churn weight capped at 10 to 20. Record validation mean macro-F1 per field, mean and standard deviation across seeds. The TF-IDF baseline to beat (validation macro-F1 on the corrected text): complaint_category 0.7605, complaint_urgency 0.6902, customer_state 0.7000, churn_risk 0.8629, combined mean 0.7534. Then build the multi-task model: one shared encoder, four heads, Kendall uncertainty weighting, the saved per-class weights inside each head. Train it the same way and record the same metrics. Compare single-task against multi-task on validation and record which is better per field. You also review Sira's validation results and confirm the winner by the rule in the model selection report: highest validation mean macro-F1, and if EgyBERT and MARBERTv2 are within one standard deviation, pick MARBERTv2. Record the decision and the numbers behind it.
 
 **Phase 3.** Oversee the final test evaluation. Confirm the test set is evaluated exactly once, on the frozen 518-row test set, with no re-splitting and no tuning on the test set. Review the error analysis. Confirm the integrated pipeline runs end to end.
 
@@ -136,7 +138,7 @@ You own the whole training effort and the final model. You are the person who ma
 ### What you need from others
 
 - Aya's evaluation results, to pick the winner and to confirm the final metrics.
-- Lama's and Sira's trained text models and their validation results.
+- Sira's trained MARBERTv2 model and its validation results.
 - Ibthal's triage logic, to confirm the ticket works with the real model outputs.
 - Arafa's integrated pipeline, to confirm the system runs end to end.
 - The team's audit edits, exported from the audit page, to run Phase 4.
@@ -145,12 +147,13 @@ You own the whole training effort and the final model. You are the person who ma
 
 - The training pipeline skeleton and the shared configuration, early in Phase 1, so no one builds on a different setup.
 - The dataset, verified and stable, so no one trains on wrong data.
+- Your fine-tuned EgyBERT model and its validation metrics, so Aya can evaluate the winner and Sira can compare against it on the same validation metric.
 - Reviews and merges, promptly, so no one's work sits unmerged.
 - The final decisions on the winner, the split freeze, and the rights and consent questions.
 
 ### How you know you are done
 
-The training notebooks run end to end without errors. The final model is trained on the corrected labels, evaluated once on the frozen test set, and the metrics are recorded with the dataset version, the model configuration, and the hardware. Every merge is recorded. Nothing is claimed that was not measured.
+The training notebooks run end to end without errors. The EgyBERT model is fine-tuned on all four fields with 5 seeds, and its validation mean macro-F1 per field is recorded with mean and standard deviation. The final model is trained on the corrected labels, evaluated once on the frozen test set, and the metrics are recorded with the dataset version, the model configuration, and the hardware. Every merge is recorded. Nothing is claimed that was not measured.
 
 ## Role 2: Sira, Text Classification Engineer
 
@@ -160,20 +163,20 @@ The training notebooks run end to end without errors. The final model is trained
 
 ### What this role means
 
-You own a text classifier: the CAMeLBERT-mix model that reads a transcript and predicts the four fields. You run it in parallel with Lama (who runs EgyBERT and MARBERTv2), using the same protocol, so the team can compare three models and pick the winner by validation mean macro-F1.
+You own a text classifier: the MARBERTv2 model that reads a transcript and predicts the four fields. You run it in parallel with Hazem (who runs EgyBERT), using the same protocol, so the team can compare two models and pick the winner by validation mean macro-F1.
 
 Your Phase 1 work was the audio investigation, and it is done. You verified the audio files, ran Emotion2Vec and other models, and proved the audio carries no emotion signal: the recordings are all one tone, the emotion labels come from the words not the voice, and no audio model can classify them. The audio emotion model is closed. That negative result is your Phase 1 deliverable, and it is documented.
 
 ### What you own
 
-- The text classifier: CAMeLBERT-mix fine-tuning, single-task first, then multi-task.
+- The text classifier: MARBERTv2 fine-tuning, single-task first, then multi-task.
 - The fine-tuning configuration: hyperparameters, seeds, and class weights.
 - The validation results for your model.
 - The audio investigation record from Phase 1: the finding that the audio carries no emotion signal, with the numbers behind it.
 
 ### What you deliver
 
-- The fine-tuned CAMeLBERT-mix model, with configuration and validation metrics per field.
+- The fine-tuned MARBERTv2 model, with configuration and validation metrics per field.
 - The multi-task model, with the shared encoder and four heads.
 - The fine-tuning results: validation mean macro-F1 per field, mean and standard deviation across 5 seeds.
 - The Phase 1 audio finding, documented with the evidence (embedding geometry audit, silhouette scores, accuracy numbers).
@@ -182,7 +185,7 @@ Your Phase 1 work was the audio investigation, and it is done. You verified the 
 
 **Phase 1.** Done. You verified the audio: the 5,096 training audio files are 16 kHz mono WAV and match the training tables. You built the intake check and ran Whisper large-v3 on a sample. You tested the audio emotion model with Emotion2Vec and other models and proved it adds no signal: the recordings are all one tone, the labels come from the words not the voice, and no model can classify the emotions from audio (silhouette -0.10, 4-class accuracy about 37 percent, binary accuracy about 50 percent, which is chance). The audio model is closed and customer state comes from text only.
 
-**Phase 2.** Run the single-task fine-tuning with CAMeLBERT-mix. Train one model per field, 5 seeds each (42, 1337, 2023, 7, 99). Use the hyperparameters from the model selection report: learning rate 2e-5, sweep 1e-5, 2e-5, 3e-5; effective batch 16; epochs 3, max 5, early stopping with patience 2 on validation mean macro-F1; warmup ratio 0.1; weight decay 0.01, set explicitly; AdamW; dropout 0.1; gradient clipping max norm 1.0; mixed precision on. Apply the class weights from the dataset, with the churn weight capped at 10 to 20. Record validation mean macro-F1 per field, mean and standard deviation across seeds. Use Aya's training infrastructure: the experiment tracking, the configuration format, the seed handling, the run record format, and the prediction file format. The TF-IDF baseline to beat (validation macro-F1 on the corrected text): complaint_category 0.7605, complaint_urgency 0.6902, customer_state 0.7000, churn_risk 0.8629, combined mean 0.7534. Then build the multi-task model: one shared encoder, four heads, Kendall uncertainty weighting, the saved per-class weights inside each head. Train it the same way and record the same metrics. Compare single-task against multi-task on validation and record which is better per field.
+**Phase 2.** Run the single-task fine-tuning with MARBERTv2 (UBC-NLP/MARBERTv2). Set up single-task fine-tuning first: load the MARBERTv2 tokenizer, confirm max sequence length 128 covers the data, build the training script, run a short smoke test, and adopt Aya's training infrastructure. Then train one model per field, 5 seeds each (42, 1337, 2023, 7, 99). Use the hyperparameters from the model selection report: learning rate 2e-5, sweep 1e-5, 2e-5, 3e-5; effective batch 16; epochs 3, max 5, early stopping with patience 2 on validation mean macro-F1; warmup ratio 0.1; weight decay 0.01, set explicitly; AdamW; dropout 0.1; gradient clipping max norm 1.0; mixed precision on. Apply the class weights from the dataset, with the churn weight capped at 10 to 20. Record validation mean macro-F1 per field, mean and standard deviation across seeds. Use Aya's training infrastructure: the experiment tracking, the configuration format, the seed handling, the run record format, and the prediction file format. The TF-IDF baseline to beat (validation macro-F1 on the corrected text): complaint_category 0.7605, complaint_urgency 0.6902, customer_state 0.7000, churn_risk 0.8629, combined mean 0.7534. Then build the multi-task model: one shared encoder, four heads, Kendall uncertainty weighting, the saved per-class weights inside each head. Train it the same way and record the same metrics. Compare single-task against multi-task on validation and record which is better per field.
 
 **Phase 3.** Hand over the winner if your model wins. Give Aya the winning model and its exact configuration so she can evaluate it once on the test set. Do not tune anything on the test set. Help with the error analysis where the model confuses two categories.
 
@@ -193,67 +196,21 @@ Your Phase 1 work was the audio investigation, and it is done. You verified the 
 - The dataset and the training tables, from Hazem, verified.
 - The training infrastructure from Aya, early in Phase 1: experiment tracking, configuration format, and seed handling.
 - The class weights, which are already in the dataset.
-- Lama's text model results, to compare your model against hers on the same validation metric.
+- Hazem's EgyBERT results, to compare your model against his on the same validation metric.
 
 ### What others need from you
 
-- The fine-tuned CAMeLBERT-mix model and its validation metrics, so Aya can evaluate the winner and Hazem can confirm the decision.
+- The fine-tuned MARBERTv2 model and its validation metrics, so Aya can evaluate the winner and Hazem can confirm the decision.
 - The exact configuration of your model, so Aya can reproduce the test evaluation and Hazem can rerun it in Phase 4.
 - The Phase 1 audio finding, documented, so the team does not revisit the audio model.
 
 ### How you know you are done
 
-Phase 1 is done: the audio is verified and the audio finding is documented with evidence. In Phase 2, the CAMeLBERT-mix model is fine-tuned on all four fields with 5 seeds. Validation mean macro-F1 per field is recorded with mean and standard deviation. The multi-task model is trained and compared. The winning configuration is documented and reproducible.
+Phase 1 is done: the audio is verified and the audio finding is documented with evidence. In Phase 2, the MARBERTv2 model is fine-tuned on all four fields with 5 seeds. Validation mean macro-F1 per field is recorded with mean and standard deviation. The multi-task model is trained and compared. The winning configuration is documented and reproducible.
 
 ## Role 3: Lama, Text Classification Engineer
 
-**Branch:** team/lama-text-classification
-
-**Extra packages:** torch, transformers, datasets
-
-### What this role means
-
-You own the core model: the text classifier that reads a transcript and predicts the four fields. This is the model the whole system depends on. Your job is to train it well, prove it with validation, and hand over a model that is ready to evaluate and integrate.
-
-### What you own
-
-- The text classifier: EgyBERT and MARBERTv2 fine-tuning.
-- The multi-task setup: one shared encoder with four heads, one per field.
-- The fine-tuning configuration: hyperparameters, seeds, and class weights.
-- The validation results that decide the winner.
-
-### What you deliver
-
-- The fine-tuned text models, with configuration and validation metrics per field.
-- The multi-task model, with the shared encoder and four heads.
-- The fine-tuning results: validation mean macro-F1 per field, mean and standard deviation across 5 seeds, for both EgyBERT and MARBERTv2.
-- The winner recommendation, with the numbers behind it, following the tie-break rule.
-
-### Your work, step by step
-
-**Phase 1.** Set up single-task fine-tuning. Load the clean training tables. Load the tokenizer for EgyBERT and for MARBERTv2. Confirm max sequence length 128 covers the data: the longest transcript is 72 words, about 93 tokens, so 128 is more than enough. Build the training script that fine-tunes one model on one field. Run a short smoke test on a small subset to confirm the pipeline works end to end. Adopt Aya's training infrastructure as soon as it lands: the experiment tracking, the configuration format, and the seed handling. Do not run full fine-tuning on a different setup.
-
-**Phase 2.** Run the single-task fine-tuning. Train EgyBERT and MARBERTv2 in parallel, one model per field, 5 seeds each (42, 1337, 2023, 7, 99). Use the hyperparameters from the model selection report: learning rate 2e-5, sweep 1e-5, 2e-5, 3e-5; effective batch 16; epochs 3, max 5, early stopping with patience 2 on validation mean macro-F1; warmup ratio 0.1; weight decay 0.01, set explicitly; AdamW; dropout 0.1; gradient clipping max norm 1.0; mixed precision on. Apply the class weights from the dataset, with the churn weight capped at 10 to 20. Record validation mean macro-F1 per field, mean and standard deviation across seeds, for both models. Then build the multi-task model: one shared encoder, four heads, Kendall uncertainty weighting, the saved per-class weights inside each head. Train it the same way and record the same metrics. Compare single-task against multi-task on validation and record which is better per field.
-
-**Phase 3.** Hand over the winner. Give Aya the winning model and its exact configuration so she can evaluate it once on the test set. Do not tune anything on the test set. Help with the error analysis where the model confuses two categories.
-
-**Phase 4.** After the audit corrections, rerun the winning configuration on the cleaned dataset. No architecture or hyperparameter changes. Record the new validation and test results.
-
-### What you need from others
-
-- The dataset and the training tables, from Hazem, verified.
-- The training infrastructure from Aya, early in Phase 1: experiment tracking, configuration format, and seed handling.
-- The class weights, which are already in the dataset.
-
-### What others need from you
-
-- The fine-tuned models and their validation metrics, so Aya can evaluate the winner and Hazem can confirm the decision.
-- The winner recommendation with the numbers behind it.
-- The exact configuration of the winning model, so Aya can reproduce the test evaluation and Hazem can rerun it in Phase 4.
-
-### How you know you are done
-
-Both models are fine-tuned on all four fields with 5 seeds. Validation mean macro-F1 per field is recorded with mean and standard deviation. The multi-task model is trained and compared. The winner is named with the numbers behind it, following the tie-break rule. The winning configuration is documented and reproducible.
+Lama left the team on 17 November 2026 before starting her work. Her text classification work is split between Hazem (EgyBERT) and Sira (MARBERTv2). This section is kept so the role numbering stays intact. Her branch, team/lama-text-classification, is no longer used.
 
 ## Role 4: Aya, ML Infrastructure and Evaluation Engineer
 
@@ -285,22 +242,22 @@ You own the machinery that makes the training trustworthy: the infrastructure ev
 
 **Phase 1.** Build the infrastructure first, before anyone runs full training. Define the configuration format: model, hyperparameters, seed, dataset version, and split. Define the seed handling: 5 seeds (42, 1337, 2023, 7, 99), every experiment runs all 5 and reports mean and standard deviation. Define the run record format: run ID, hypothesis, single changed factor, held-constant conditions, measures, and artifacts. Build the evaluation harness: it takes a trained model and a split, runs it, and reports per-field macro-F1, accuracy, and the confusion matrix, in a fixed output format. Build it on fixtures first, with mock predictions, so it works before any real model exists. Then run the TF-IDF baseline: TF-IDF features plus logistic regression, one model per field, on the training split, evaluated on the validation split. Record the validation metrics. This baseline is the reference the neural models must beat.
 
-**Phase 2.** Support the fine-tuning. Help Lama and Sira run their experiments on the infrastructure. Run the hyperparameter sweep for the text model with Lama: learning rate 1e-5, 2e-5, 3e-5, and record the validation result for each. Run the validation for every model and record the metrics the same way every time. Do not let anyone report a result without a run record.
+**Phase 2.** Support the fine-tuning. Help Hazem and Sira run their experiments on the infrastructure. Run the hyperparameter sweep for the text model with Hazem: learning rate 1e-5, 2e-5, 3e-5, and record the validation result for each. Run the validation for every model and record the metrics the same way every time. Do not let anyone report a result without a run record.
 
-**Phase 3.** Run the final test evaluation. Take the winning text model (from Lama or Sira). Evaluate it exactly once on the frozen 518-row test set. Record the per-field metrics, the sample counts, and the failures. Then run the error analysis: where does the model fail, what do the failures have in common, and what would fix them. Write the evaluation report with the actual numbers, the configuration, the hardware, and the limitations. State plainly what the data cannot support.
+**Phase 3.** Run the final test evaluation. Take the winning text model (from Hazem or Sira). Evaluate it exactly once on the frozen 518-row test set. Record the per-field metrics, the sample counts, and the failures. Then run the error analysis: where does the model fail, what do the failures have in common, and what would fix them. Write the evaluation report with the actual numbers, the configuration, the hardware, and the limitations. State plainly what the data cannot support.
 
 **Phase 4.** After the audit corrections, re-evaluate the retrained model on the test set, once, the same way. Record the new results alongside the old ones so the change is visible.
 
 ### What you need from others
 
 - The dataset and the training tables, from Hazem, verified.
-- The trained models from Lama and Sira, with their exact configurations, to evaluate them.
+- The trained models from Hazem and Sira, with their exact configurations, to evaluate them.
 - The triage logic from Ibthal, to evaluate routing agreement.
 - The integrated pipeline from Arafa, to measure end-to-end latency.
 
 ### What others need from you
 
-- The training infrastructure, early in Phase 1, so Lama and Sira run on the same setup.
+- The training infrastructure, early in Phase 1, so Hazem and Sira run on the same setup.
 - The evaluation harness, so everyone measures the same way.
 - The TF-IDF baseline, so every model has a reference to beat.
 - The evaluation reports, so Hazem can confirm the winner and the team can see the real numbers.
@@ -308,7 +265,7 @@ You own the machinery that makes the training trustworthy: the infrastructure ev
 
 ### How you know you are done
 
-The infrastructure is documented and in use by Lama and Sira. The TF-IDF baseline is recorded. The evaluation harness runs on fixtures and on real models. The final test evaluation is recorded with the exact configuration and hardware. The error analysis is written. Every experiment has a run record.
+The infrastructure is documented and in use by Hazem and Sira. The TF-IDF baseline is recorded. The evaluation harness runs on fixtures and on real models. The final test evaluation is recorded with the exact configuration and hardware. The error analysis is written. Every experiment has a run record.
 
 ## Role 5: Ibthal, Triage and Routing Engineer
 
@@ -338,7 +295,7 @@ You own the decision: how the four model outputs become a queue priority and a c
 
 **Phase 1.** Write the triage rules. Start from the field definitions: complaint category has 11 values, complaint urgency has 3, customer state has 5, churn risk has 2. Define the priority: high urgency goes first, at-risk churn goes first, and the combination of the two goes first of all. Write the rules as a table, every combination of urgency and churn risk mapped to a priority, so there is no ambiguity. Define the ticket format: customer reference, the four fields, the priority, the route reason in plain words, the suggested opening line, and the contributing rule version. Build the ticket generator on fixtures: feed it mock model outputs and confirm the ticket it produces matches the rules table.
 
-**Phase 2.** Test the rules against the validation outputs. Take Lama's validation predictions and run them through the ticket generator. Check that the priorities look right and that no ticket is missing a reason. Record the cases where the rules produce a surprising priority and adjust the rules if the definitions support it. Do not change the field definitions; only the mapping from fields to priority.
+**Phase 2.** Test the rules against the validation outputs. Take the validation predictions from Hazem and Sira and run them through the ticket generator. Check that the priorities look right and that no ticket is missing a reason. Record the cases where the rules produce a surprising priority and adjust the rules if the definitions support it. Do not change the field definitions; only the mapping from fields to priority.
 
 **Phase 3.** Finalize on the real model outputs. Take the final test predictions from Aya and run them through the ticket generator. Measure routing agreement against the human-reviewed ideal: the target is 80 percent. Record the agreement and the disagreements, and what each disagreement was. Hand the ticket generator to Arafa for integration.
 
@@ -347,7 +304,7 @@ You own the decision: how the four model outputs become a queue priority and a c
 ### What you need from others
 
 - The field definitions and the taxonomy, from Hazem, already agreed.
-- The model outputs, from Lama and Sira, first as validation predictions in Phase 2, then as test predictions in Phase 3.
+- The model outputs, from Hazem and Sira, first as validation predictions in Phase 2, then as test predictions in Phase 3.
 - The routing agreement target and the human-reviewed ideal, from the team.
 - Aya's evaluation harness, to measure routing agreement the same way everything else is measured.
 
@@ -392,7 +349,7 @@ You own the finished system: the pipeline that runs end to end, and the demo tha
 
 **Phase 1.** Build the skeleton. Define the pipeline stages: intake, STT, classification, triage, ticket. Build each stage as a separate module with a clear input and output. Build the skeleton with mocks first: the STT stage returns a fixed transcript, the classification stage returns fixed fields, the triage stage returns a fixed ticket. Confirm the data flows from the first stage to the last. Build the demo skeleton: an upload, a run, and a ticket display. Keep the API and data contracts stable so the other roles can build against them.
 
-**Phase 2.** Replace the mocks with real components as they land. When Lama's and Sira's text models are ready, plug them in. When Ibthal's ticket generator is ready, plug it in. Test each replacement in isolation before moving on. Record which components are real and which are still mocks, so the team always knows the state of the pipeline.
+**Phase 2.** Replace the mocks with real components as they land. When Hazem's and Sira's text models are ready, plug them in. When Ibthal's ticket generator is ready, plug it in. Test each replacement in isolation before moving on. Record which components are real and which are still mocks, so the team always knows the state of the pipeline.
 
 **Phase 3.** Integrate and measure. With all real components in place, run the full pipeline on the validation set and confirm the tickets are correct. Measure the latency: run the pipeline on clips up to 60 seconds and record the p95 latency, separately for CPU and GPU if both are used. The target is p95 under 10 seconds. If the latency is over target, find the slowest stage and report it to the owner of that stage. Build the final demo: upload, browser recording, live queue, ticket evidence, and callback brief. Run the demo five consecutive times cleanly. Write the run instructions so anyone on the team can reproduce it.
 
@@ -400,8 +357,8 @@ You own the finished system: the pipeline that runs end to end, and the demo tha
 
 ### What you need from others
 
-- The text model from Sira, to plug into the classification stage.
-- The text model from Lama, to plug into the classification stage.
+- The text model from Hazem (EgyBERT), to plug into the classification stage.
+- The text model from Sira (MARBERTv2), to plug into the classification stage.
 - The ticket generator from Ibthal, to plug into the triage stage.
 - The evaluation harness from Aya, to measure latency the same way everything else is measured.
 - The API and data contracts, agreed with the team, so the components fit together.
@@ -422,12 +379,12 @@ The pipeline runs end to end with all real components. The demo runs cleanly fiv
 
 The phases are designed so that no one waits in Phase 1, and the waiting in later phases is the natural order of the work, not a stall. The table below shows who does what in each phase.
 
-| Phase | Hazem | Sira | Lama | Aya | Ibthal | Arafa |
-|---|---|---|---|---|---|---|
-| **Phase 1: Foundations** | Training pipeline skeleton, shared config | Audio investigation (Done): audio carries no emotion signal, audio model closed | Single-task setup, smoke test, adopt Aya's infra | Training infra, eval harness, TF-IDF baseline | Triage rules table, ticket format, generator on fixtures | Pipeline skeleton on mocks, demo skeleton, API contracts |
-| **Phase 2: Core models** | Coordinate, review validation, confirm winner | CAMeLBERT-mix single-task fine-tuning | Single-task fine-tuning, multi-task model | Hyperparameter sweep, validation, run records | Test rules on validation outputs | Replace mocks with real components as they land |
-| **Phase 3: Evaluation and integration** | Oversee test evaluation, review error analysis | Hand over model if winner, support error analysis | Hand over winner, support error analysis | Final test evaluation once, error analysis, report | Finalize triage on real outputs, routing agreement | Full integration, latency measurement, final demo |
-| **Phase 4: Retrain** | Apply audit corrections, rerun training | Rerun winning config on cleaned data if her model wins | Rerun winning config on cleaned data | Re-evaluate retrained model, record change | Re-run routing evaluation on corrected data | Update demo with retrained model, re-measure latency |
+| Phase | Hazem | Sira | Aya | Ibthal | Arafa |
+|---|---|---|---|---|---|
+| **Phase 1: Foundations** | Training pipeline skeleton, shared config | Audio investigation (Done): audio carries no emotion signal, audio model closed | Training infra, eval harness, TF-IDF baseline | Triage rules table, ticket format, generator on fixtures | Pipeline skeleton on mocks, demo skeleton, API contracts |
+| **Phase 2: Core models** | EgyBERT single-task fine-tuning, review validation, confirm winner | MARBERTv2 single-task fine-tuning | Hyperparameter sweep, validation, run records | Test rules on validation outputs | Replace mocks with real components as they land |
+| **Phase 3: Evaluation and integration** | Oversee test evaluation, review error analysis | Hand over model if winner, support error analysis | Final test evaluation once, error analysis, report | Finalize triage on real outputs, routing agreement | Full integration, latency measurement, final demo |
+| **Phase 4: Retrain** | Apply audit corrections, rerun training | Rerun winning config on cleaned data if her model wins | Re-evaluate retrained model, record change | Re-run routing evaluation on corrected data | Update demo with retrained model, re-measure latency |
 
 The label audit runs every day in parallel with all four phases. Every member audits labels on the live audit page daily. The audit does not block training.
 
@@ -435,13 +392,13 @@ The label audit runs every day in parallel with all four phases. Every member au
 
 This section lists every place where one member needs another member's output, and what to do about it. Read it before you start a phase so you know what you are waiting for and what you can do meanwhile.
 
-### Waiting point 1: Lama waits for Aya's training infrastructure
+### Waiting point 1: Hazem and Sira wait for Aya's training infrastructure
 
-Lama's full fine-tuning runs on Aya's infrastructure: experiment tracking, configuration format, and seed handling. Aya delivers the infrastructure early in Phase 1, before the baseline. Lama does not sit idle: Lama builds the single-task setup, the data loading, the tokenizer, and the model loading in Phase 1, and runs a smoke test on a small subset with a minimal configuration. As soon as Aya's infrastructure lands, Lama adopts it and runs the full fine-tuning. If Aya's infrastructure is late, Lama tells Hazem immediately so the plan can adjust.
+Hazem's and Sira's full fine-tuning runs on Aya's infrastructure: experiment tracking, configuration format, and seed handling. Aya delivers the infrastructure early in Phase 1, before the baseline. Hazem and Sira do not sit idle: they build the single-task setup, the data loading, the tokenizer, and the model loading in Phase 1, and run a smoke test on a small subset with a minimal configuration. As soon as Aya's infrastructure lands, they adopt it and run the full fine-tuning. If Aya's infrastructure is late, Sira tells Hazem immediately so the plan can adjust.
 
 ### Waiting point 2: Ibthal waits for real model outputs to finalize triage
 
-Ibthal writes the triage rules and the ticket format in Phase 1 using the field definitions and mock model outputs. No model is needed for that. Ibthal finalizes the rules in Phase 3 against Lama's and Sira's real test predictions. That is the natural order: the rules are written first, then checked against reality. Ibthal does not wait in Phase 1 or Phase 2.
+Ibthal writes the triage rules and the ticket format in Phase 1 using the field definitions and mock model outputs. No model is needed for that. Ibthal finalizes the rules in Phase 3 against Hazem's and Sira's real test predictions. That is the natural order: the rules are written first, then checked against reality. Ibthal does not wait in Phase 1 or Phase 2.
 
 ### Waiting point 3: Arafa waits for real components to integrate
 
@@ -449,11 +406,11 @@ Arafa builds the pipeline skeleton and the demo skeleton in Phase 1 using mocks.
 
 ### Waiting point 4: Aya waits for models to evaluate
 
-Aya builds the evaluation harness in Phase 1 on fixtures with mock predictions. No model is needed for that. Aya runs the TF-IDF baseline in Phase 1, which needs no neural model. Aya evaluates the real models in Phase 3, when Lama and Sira hand them over. That is the natural order: the harness is built first, then the real models are measured with it. Aya does not wait in Phase 1 or Phase 2.
+Aya builds the evaluation harness in Phase 1 on fixtures with mock predictions. No model is needed for that. Aya runs the TF-IDF baseline in Phase 1, which needs no neural model. Aya evaluates the real models in Phase 3, when Hazem and Sira hand them over. That is the natural order: the harness is built first, then the real models are measured with it. Aya does not wait in Phase 1 or Phase 2.
 
 ### Waiting point 5: Fusion is closed
 
-Audio-text fusion is closed. Sira's Phase 1 investigation proved the audio carries no emotion signal: the recordings are all one tone, the emotion labels come from the words not the voice, and no audio model can classify them. There are no audio features to fuse and no waiting. Lama's multi-task model is text-only. No one is blocked by fusion.
+Audio-text fusion is closed. Sira's Phase 1 investigation proved the audio carries no emotion signal: the recordings are all one tone, the emotion labels come from the words not the voice, and no audio model can classify them. There are no audio features to fuse and no waiting. The multi-task models are text-only. No one is blocked by fusion.
 
 ### Waiting point 6: Phase 4 waits for the audit
 
