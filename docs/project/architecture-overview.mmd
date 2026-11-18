@@ -1,0 +1,39 @@
+flowchart TB
+    U[Upload or browser recording] --> V{Valid type, size ≤25 MB and duration ≤60 s?}
+    V -->|No| RJ[Reject input with clear error]
+    V -->|Yes| Q[Create ticket as queued / processing within 2 s]
+    Q --> L[Store original audio locally]
+    L --> P[Local preprocessing and quality checks]
+
+    subgraph SIGNALS[Parallel local evidence paths]
+        direction LR
+        P --> S[Local speech-to-text]
+        S --> N[Normalize transcript and mask identifiers]
+        N --> T[Text analysis: category, complaint urgency, customer_state_text, summary]
+        P --> A[Optional acoustic features and voice-state evidence]
+    end
+
+    N -. masked text only .-> G{Valid approval for this exact transfer?}
+    AP[Approval ledger: scope, approver, provider/model, payload, purpose, retention] --> G
+    G -->|No| B[External adapter blocks call; local path or review]
+    G -->|Yes| X[External text-only provider]
+    X -. structured result .-> T
+
+    T --> J{Text schema and confidence valid?}
+    J -->|No / unclear| H[needs_review with reason]
+    J -->|Yes| F[Fusion; optional customer_state_final; urgency stays separate]
+    A -->|if valid| F
+    P -. audio-quality failure .-> H
+    S -. provider failure .-> H
+    A -. invalid or uncertain .-> H
+
+    F --> M{Eligible agent available?}
+    M -->|No| UN[Unassigned + supervisor review]
+    M -->|Yes| AS[Assigned with route reason]
+
+    H --> D[Local ticket store: completed / needs_review; assignment: assigned / unassigned]
+    UN --> D
+    AS --> D
+    D --> W[Dashboard: queue, evidence and callback brief]
+    D --> E[Evaluation runner]
+    R[Agreed test split + run records] --> E
