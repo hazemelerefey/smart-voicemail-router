@@ -3,9 +3,9 @@
 ## Product Requirements Document
 
 **Document ID:** SVR-PRD-01  
-**Version:** 1.5  
+**Version:** 1.6  
 **Status:** Dataset and taxonomy finished; model selection settled; labels under audit  
-**Updated:** 17 November 2026  
+**Updated:** 18 November 2026  
 **Formal project kickoff:** 11 November 2026  
 **Competition deadline:** Not yet known
 
@@ -13,7 +13,7 @@
 
 ### Revision notes
 
-Version 1.5 records the team change of 17 November 2026: Lama left the team before starting her work; text classification is now two models, EgyBERT (Hazem) and MARBERTv2 (Sira); CAMeLBERT-mix is dropped. Version 1.3 records the finished dataset (SVR Voicemail Corpus, 6,522 voicemails, 5,096 clean training rows), the agreed taxonomy, the settled model selection, and the individual roles that replace the old pair workstreams. The Team Allocation Plan uses relative, gated phases because the competition deadline and weekly capacity are unknown.
+Version 1.6 records the team change of 18 November 2026: Hazem returns to Training Lead only; Sira takes EgyBERT; Arafa takes MARBERTv2 as a sub-role under Systems Integration and Demo; Sira continues with the winner model. Version 1.5 records the team change of 17 November 2026: Lama left the team before starting her work; text classification is now two models, EgyBERT (Hazem) and MARBERTv2 (Sira); CAMeLBERT-mix is dropped. Version 1.3 records the finished dataset (SVR Voicemail Corpus, 6,522 voicemails, 5,096 clean training rows), the agreed taxonomy, the settled model selection, and the individual roles that replace the old pair workstreams. The Team Allocation Plan uses relative, gated phases because the competition deadline and weekly capacity are unknown.
 
 ---
 
@@ -210,7 +210,7 @@ Report only metrics appropriate to the agreed labels and reference data:
 
 - The competition prototype receives a single customer speaker, not a live multi-party call; diarization is out of scope.
 - Official project kickoff is 11 November 2026. The competition deadline and weekly time capacity are unknown, so the plan uses relative phases and exit gates rather than invented dates or durations.
-- The team works in five individual roles: Hazem, Training Lead (also the EgyBERT text classifier, as a sub-role); Sira, Text Classification Engineer (MARBERTv2); Aya, ML Infrastructure and Evaluation Engineer; Ibthal, Triage and Routing Engineer; Arafa, Systems Integration and Demo Engineer. Role assignments are in the Team Allocation Plan; they are based on architecture boundaries, not on unprovided skill profiles.
+- The team works in five individual roles: Hazem, Training Lead; Sira, Text Classification Engineer (EgyBERT); Aya, ML Infrastructure and Evaluation Engineer; Ibthal, Triage and Routing Engineer; Arafa, Systems Integration and Demo Engineer (also the MARBERTv2 text classifier, as a sub-role). Role assignments are in the Team Allocation Plan; they are based on architecture boundaries, not on unprovided skill profiles.
 - Team members have a mix of CPU/GPU computers; free cloud plans and Colab may be available but are optional. Do not make them a required dependency.
 - External API use and dataset rights still require confirmation against competition rules and actual dataset terms.
 - On-premises delivery is a possible future commercial direction after validation, not a current product promise.
