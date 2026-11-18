@@ -3,7 +3,7 @@
 ## Architecture and Diagrams
 
 **Document ID:** SVR-ARCH-02  
-**Version:** 1.7  
+**Version:** 1.8  
 **Status:** Taxonomy agreed, models selected, labels under audit  
 **Updated:** 18 November 2026  
 **Formal project kickoff:** 11 November 2026
@@ -15,6 +15,8 @@
 Version 1.5 aligns the architecture with the PRD v1.5 and the five individual roles. It keeps complaint category, complaint urgency, customer state, voice evidence, and queue priority separate. Raw voice stays local by default; external text processing requires prior approval. The model selection is settled: Whisper large-v3 for transcription, EgyBERT and MARBERTv2 for text. The audio model (wav2vec2 XLS-R 300M) was tested in Phase 1 and closed: the audio carries no emotion signal.
 
 Version 1.7 records the team change of 18 November 2026: Hazem returns to Training Lead only; Sira takes EgyBERT; Arafa takes MARBERTv2 as a sub-role under Systems Integration and Demo; Sira continues with the winner model.
+
+Version 1.8 records the model swap of 18 November 2026: Sira returns to MARBERTv2, Arafa takes EgyBERT as a sub-role; Hazem stays Training Lead only.
 
 Version 1.6 moves the AudioAnalysis module from Sira (Audio and Speech Engineer, role closed) to Hazem (Training Lead) and removes the voice-state candidate from the acoustic path and the module. It also documents Sira's Phase 1 audio experiment with its results (Section 9), so the trial and its negative result stay on record.
 
@@ -159,7 +161,7 @@ The final demo needs a browser dashboard. Arafa owns Systems Integration and Dem
 | Role | Owns the first implementation of | Provides to the next stage |
 |---|---|---|
 | Hazem, Training Lead | Local audio validation/preprocessing, STT adapter/benchmark, transcript quality/language-mix metadata, acoustic features. | `AudioAnalysis`: local audio references, transcript + confidence/language metadata, audio-quality/acoustic evidence; no final queue decision. |
-| Sira, Text Classification Engineer (EgyBERT) and Arafa, Systems Integration and Demo Engineer (MARBERTv2, sub-role) | Transcript normalization/glossary/identifier masking, structured text analysis, summary, complaint category/urgency/customer-state fields, customer request/script. | Versioned `TextAnalysis` object with agreed labels and review/confidence fields. |
+| Sira, Text Classification Engineer (MARBERTv2) and Arafa, Systems Integration and Demo Engineer (EgyBERT, sub-role) | Transcript normalization/glossary/identifier masking, structured text analysis, summary, complaint category/urgency/customer-state fields, customer request/script. | Versioned `TextAnalysis` object with agreed labels and review/confidence fields. |
 | Ibthal, Triage and Routing Engineer | Versioned fusion/priority/routing rules, agent/skill data model, no-match behavior. | `TriageDecision`: priority, assignment/unassigned state, reason, contributing evidence/rule version. |
 | Aya, ML Infrastructure and Evaluation Engineer | Training infrastructure, evaluation/integration runner, run records, pure tests. | Evaluation results and run records. |
 | Hazem, Training Lead | Training pipeline, model selection and fine-tuning coordination, final test evaluation oversight. | Trained models and the training configuration. |
