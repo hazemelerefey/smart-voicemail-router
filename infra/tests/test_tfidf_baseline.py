@@ -1,4 +1,5 @@
 import csv
+import hashlib
 import json
 
 import pytest
@@ -170,8 +171,12 @@ def _make_synthetic_dataset(root_dir, include_unclear=False):
     return root_dir
 
 
-def test_settings_in_config_match_hazems_notebook():
-    cfg = build_baseline_config("v2")
+def test_settings_in_config_match_reference_notebook():
+    cfg = build_baseline_config(
+        "v2",
+        data_sha256_train="abc123train",
+        data_sha256_val="def456val",
+    )
     assert cfg.model == MODEL_NAME
     assert cfg.dataset_version == "v2"
     assert cfg.split == "train"
@@ -202,6 +207,8 @@ def test_settings_in_config_match_hazems_notebook():
         "effective regularization is L2: l1_ratio=0; the penalty parameter "
         "is deprecated since scikit-learn 1.8 and removed in 1.10"
     )
+    assert hp["data_sha256_train"] == "abc123train"
+    assert hp["data_sha256_val"] == "def456val"
     assert "penalty" not in hp and not any("penalty" in k for k in hp)
 
 
@@ -326,6 +333,19 @@ def test_no_transcript_text_in_stdout_or_written_files(tmp_path, capsys):
 
     rec = load_run_record(result["record_path"])
     assert rec["run_id"] == DEFAULT_RUN_ID
+    expected_train_sha = hashlib.sha256(
+        (data_dir / "final" / "clean_training_train.csv").read_bytes()
+    ).hexdigest()
+    expected_val_sha = hashlib.sha256(
+        (data_dir / "final" / "clean_training_val.csv").read_bytes()
+    ).hexdigest()
+    rec_hp = rec["config"]["other_hyperparameters"]
+    assert rec_hp["data_sha256_train"] == expected_train_sha
+    assert rec_hp["data_sha256_val"] == expected_val_sha
+    assert not (data_dir / "final" / "clean_training_test.csv").exists()
+
+    with pytest.raises(FileExistsError):
+        run_tfidf_baseline(data_dir, runs_dir)
 
 
 def test_unclear_row_in_val_is_excluded_from_customer_state_only(tmp_path):

@@ -1,14 +1,14 @@
-"""TF-IDF + logistic regression baseline (Phase 1, Aya's deliverable).
+"""TF-IDF + logistic regression baseline (Phase 1 deliverable).
 
 Permanent location: infra/tfidf_baseline.py (kept inside infra/ so it can be
 imported and tested alongside the evaluation harness and run record modules).
 
-All model and vectorizer settings come from Hazem's reference notebook
-(phase-1-examples/aya_infrastructure_and_baseline.ipynb) and are stored in
-ExperimentConfig.other_hyperparameters so nothing is hard-coded outside the
-config. This module never reads or scores the test split, and never prints,
-logs, or writes any transcript text to disk.
+All model and vectorizer settings come from the reference TF-IDF notebook in
+the repo and are stored in ExperimentConfig.other_hyperparameters so nothing
+is hard-coded outside the config. This module never reads or scores the test
+split, and never prints, logs, or writes any transcript text to disk.
 """
+import hashlib
 import json
 from pathlib import Path
 
@@ -33,13 +33,13 @@ DEFAULT_RUN_ID = "tfidf-001"
 MODEL_NAME = "tfidf-logreg"
 
 DEFAULT_HYPOTHESIS = (
-    "Reference baseline with the settings of Hazem's notebook, run on the "
-    "updated data (3575 train, 1003 val), customer_state scored on 4 classes; "
-    "these numbers replace the old reference computed on the old data."
+    "Reference baseline with the settings of the reference TF-IDF notebook "
+    "in the repo, run on the corrected text_norm (3575 train, 1003 val), "
+    "customer_state scored on 4 classes."
 )
 
 CUSTOMER_STATE_EXCLUSION_REASON = (
-    "Hazem's decision: customer_state is scored on 4 classes; the unclear rows "
+    "customer_state is scored on 4 classes: the unclear rows "
     "(no rows in train) are left out of customer_state only and still count in "
     "the other fields."
 )
@@ -51,7 +51,7 @@ CUSTOMER_STATE_EXCLUSIONS = {
     }
 }
 
-# Reference validation macro-F1 numbers from Hazem's notebook on the old dataset
+# Reference validation macro-F1 numbers from the reference notebook on the old dataset
 # (4,031 train, 1,136 val, customer_state scored on 5 classes with unclear = 0).
 OLD_REFERENCE_MACRO_F1 = {
     "complaint_category": 0.7261,
@@ -71,6 +71,13 @@ def _refuse_test_split(split):
         raise BaselineError("the TF-IDF baseline never reads or scores the test split")
     if split not in ("train", "val"):
         raise BaselineError(f"split must be 'train' or 'val', got {split!r}")
+
+
+def _file_sha256(csv_path):
+    path = Path(csv_path)
+    if not path.is_file():
+        raise BaselineError(f"split CSV not found: {path}")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def load_classes_by_field(class_weights_path):
@@ -94,10 +101,12 @@ def load_classes_by_field(class_weights_path):
     return classes_by_field
 
 
-def build_baseline_config(dataset_version):
-    """Build the ExperimentConfig with Hazem's exact settings plus sklearn defaults.
+def build_baseline_config(
+    dataset_version, *, data_sha256_train=None, data_sha256_val=None
+):
+    """Build the ExperimentConfig with the reference notebook settings plus sklearn defaults.
 
-    Settings explicitly set in Hazem's notebook:
+    Settings explicitly set in the reference notebook:
     - tfidf_text_column = 'text_norm'
     - tfidf_max_features = 5000
     - tfidf_ngram_range = [1, 2]
@@ -108,7 +117,7 @@ def build_baseline_config(dataset_version):
     The remaining keys starting with tfidf_default_ and logreg_default_ are
     the defaults of the installed scikit-learn version, read at run time from
     TfidfVectorizer().get_params() and LogisticRegression().get_params() (they
-    are not written in Hazem's notebook).
+    are not written in the reference notebook).
     """
     tfidf_defaults = TfidfVectorizer().get_params()
     logreg_defaults = LogisticRegression().get_params()
@@ -120,7 +129,7 @@ def build_baseline_config(dataset_version):
         "tfidf_fit_scope": "once_on_train_for_all_fields",
         "logreg_class_weight": "balanced",
         "logreg_max_iter": 1000,
-        # Installed scikit-learn defaults (not written in Hazem's notebook):
+        # Installed scikit-learn defaults (not written in the reference notebook):
         "sklearn_version": sklearn.__version__,
         "tfidf_default_min_df": tfidf_defaults["min_df"],
         "tfidf_default_max_df": tfidf_defaults["max_df"],
@@ -135,6 +144,8 @@ def build_baseline_config(dataset_version):
             "effective regularization is L2: l1_ratio=0; the penalty parameter "
             "is deprecated since scikit-learn 1.8 and removed in 1.10"
         ),
+        "data_sha256_train": data_sha256_train,
+        "data_sha256_val": data_sha256_val,
     }
     return ExperimentConfig(
         model=MODEL_NAME,
@@ -147,7 +158,7 @@ def build_baseline_config(dataset_version):
 def load_split_table(csv_path, expected_split, text_column, fields):
     """Read audio_file, split, text_column, and label columns into memory only.
 
-    Uses dtype=str and keep_default_na=False, which is equivalent to Hazem's
+    Uses dtype=str and keep_default_na=False, which is equivalent to
     fillna('') because the training skeleton verifies there are no empty
     text_norm rows. Refuses the test split.
 
@@ -202,7 +213,7 @@ def fit_and_predict_probabilities(
     - Reads all hyperparameters from config.other_hyperparameters.
     - Fits TfidfVectorizer ONCE on the train texts only; val texts are only transformed.
     - Passes random_state=seed explicitly to LogisticRegression (per infra/seeds.py).
-      Note: Hazem's notebook does not pass random_state; with the default lbfgs
+      Note: the reference notebook does not pass random_state; with the default lbfgs
       solver, random_state has no effect on the fitted weights.
     - Maps predict_proba columns to class names using the class list order after
       checking that clf.classes_ equals the field's class list.
@@ -243,7 +254,7 @@ def fit_and_predict_probabilities(
                 f"field {field!r}: train has labels outside the class list: {unlisted_in_train}"
             )
 
-        # Hazem's notebook does not pass random_state. We pass random_state=seed
+        # The reference notebook does not pass random_state. We pass random_state=seed
         # per infra/seeds.py; with the default lbfgs solver it has no effect.
         clf = LogisticRegression(
             class_weight=class_weight,
@@ -299,23 +310,34 @@ def run_tfidf_baseline(
 
     data_dir = Path(data_dir)
     runs_dir = Path(runs_dir)
+    exp_dir = runs_dir / f"exp_{run_id}"
+    if exp_dir.exists():
+        raise FileExistsError(
+            f"{exp_dir} already exists; existing run folders are not overwritten"
+        )
 
     shared_config = load_shared_config(
         data_dir / "notebooks" / "training" / "shared_config.json"
     )
     classes_by_field = load_classes_by_field(data_dir / "final" / "class_weights.json")
-    config = build_baseline_config(shared_config["dataset_version"])
+    train_csv_path = data_dir / "final" / "clean_training_train.csv"
+    val_csv_path = data_dir / "final" / "clean_training_val.csv"
+    config = build_baseline_config(
+        shared_config["dataset_version"],
+        data_sha256_train=_file_sha256(train_csv_path),
+        data_sha256_val=_file_sha256(val_csv_path),
+    )
     text_column = config.other_hyperparameters["tfidf_text_column"]
     fields = list(classes_by_field.keys())
 
     train_texts_by_audio, train_label_rows = load_split_table(
-        data_dir / "final" / "clean_training_train.csv",
+        train_csv_path,
         "train",
         text_column,
         fields,
     )
     val_texts_by_audio, val_label_rows = load_split_table(
-        data_dir / "final" / "clean_training_val.csv",
+        val_csv_path,
         "val",
         text_column,
         fields,
