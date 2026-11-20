@@ -11,6 +11,7 @@ from infra.harness import (
 )
 from infra.metrics import seed_metrics
 from infra.mock_predictions import make_mock_predictions
+from infra.once_guard import claim_test_evaluation
 from infra.run_record import build_run_record, make_seed_result
 from infra.seeds import run_over_seeds
 
@@ -179,14 +180,61 @@ def test_a_prediction_on_an_excluded_row_must_still_be_a_real_class():
         evaluate(preds)
 
 
-def test_the_same_names_in_two_splits_are_scored_separately():
+def test_the_same_names_in_two_splits_are_scored_separately(tmp_path):
     val_truth = [{"audio_file": "calm_0001.wav", "field_x": "a", "field_y": "p"}]
     test_truth = [{"audio_file": "calm_0001.wav", "field_x": "b", "field_y": "q"}]
+    claim = claim_test_evaluation(
+        tmp_path / "test_evaluations.json",
+        model="mock",
+        dataset_version="v2",
+        run_id="001",
+        uses=1,
+    )
     val = evaluate_predictions("val", val_truth, make_mock_predictions(val_truth, CLASSES), CLASSES)
-    test = evaluate_predictions("test", test_truth, make_mock_predictions(test_truth, CLASSES), CLASSES)
+    test = evaluate_predictions(
+        "test", test_truth, make_mock_predictions(test_truth, CLASSES), CLASSES, test_claim=claim
+    )
     assert val["split"] == "val" and test["split"] == "test"
     assert val["n"] == 1 and test["n"] == 1
     assert val["exceptions"] == []
+
+
+def test_test_split_requires_valid_claim_consumes_uses_and_val_refuses_claim(tmp_path):
+    truth = [{"audio_file": "r1.wav", "field_x": "a", "field_y": "p"}]
+    preds = make_mock_predictions(truth, CLASSES)
+
+    # Split "test" without a claim is refused.
+    with pytest.raises(HarnessError, match="test-once guard"):
+        evaluate_predictions("test", truth, preds, CLASSES)
+
+    # Split "test" with a valid claim scores and consumes one use.
+    claim = claim_test_evaluation(
+        tmp_path / "test_evaluations.json",
+        model="mock-model",
+        dataset_version="v2",
+        run_id="t01",
+        uses=2,
+    )
+    assert claim.remaining == 2
+    evaluate_predictions("test", truth, preds, CLASSES, test_claim=claim)
+    assert claim.remaining == 1
+    evaluate_predictions("test", truth, preds, CLASSES, test_claim=claim)
+    assert claim.remaining == 0 and claim.consumed
+
+    # After all uses are gone, split "test" is refused.
+    with pytest.raises(HarnessError, match="no uses left"):
+        evaluate_predictions("test", truth, preds, CLASSES, test_claim=claim)
+
+    # Split "val" with a claim is refused.
+    fresh_claim = claim_test_evaluation(
+        tmp_path / "test_evaluations.json",
+        model="other-model",
+        dataset_version="v2",
+        run_id="t02",
+        uses=1,
+    )
+    with pytest.raises(HarnessError, match="test_claim must be None"):
+        evaluate_predictions("val", truth, preds, CLASSES, test_claim=fresh_claim)
 
 
 def test_bad_exclusions_are_rejected():

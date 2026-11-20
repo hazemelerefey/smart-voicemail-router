@@ -22,6 +22,7 @@ It does not decide which split may be scored, or how many times: the rule that t
 test split is evaluated exactly once is a separate guard.
 """
 from infra.metrics import MetricsError, combine_macro_f1, evaluate_field
+from infra.once_guard import EvaluationClaim, GuardError
 from infra.run_record import EVALUATED_SPLITS
 
 SCHEMA_VERSION = 2
@@ -84,9 +85,21 @@ def evaluate_predictions(
     classes_by_field,
     exclusions_by_field=None,
     label_status=DEFAULT_LABEL_STATUS,
+    test_claim=None,
 ):
     if split not in EVALUATED_SPLITS:
         raise HarnessError(f"split must be one of {EVALUATED_SPLITS}, got {split!r}")
+    if split == "test":
+        if not isinstance(test_claim, EvaluationClaim):
+            raise HarnessError(
+                "the test split can only be scored with a claim from the test-once guard"
+            )
+        try:
+            test_claim.consume()
+        except GuardError as exc:
+            raise HarnessError(str(exc)) from exc
+    elif test_claim is not None:
+        raise HarnessError("test_claim must be None when scoring the 'val' split")
     if not isinstance(classes_by_field, dict) or not classes_by_field:
         raise HarnessError("classes_by_field must be a non-empty dict of field -> class list")
     exclusions = _check_exclusions(exclusions_by_field, classes_by_field)
