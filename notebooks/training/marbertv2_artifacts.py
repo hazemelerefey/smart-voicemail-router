@@ -1,4 +1,4 @@
-﻿"""Phase 2 artifact assembly using Aya's validation infrastructure."""
+"""Phase 2 artifact assembly using Aya's validation infrastructure."""
 import hashlib
 import json
 import re
@@ -184,7 +184,17 @@ def combine_seed(data, runs_dir, folder, run_id, seed, config):
 
 
 def finalize(data, runs_dir, folder, run_id, config, reference_run_id):
-    seeds = data.shared["experiment_seeds"]
+    is_single_seed_sweep = (
+        config.model == "UBC-NLP/MARBERTv2"
+        and (
+            config.learning_rate in (1e-5, 3e-5)
+            or (
+                config.learning_rate == 2e-5
+                and "seed42-rebuild" in run_id
+            )
+        )
+    )
+    seeds = [42] if is_single_seed_sweep else data.shared["experiment_seeds"]
     ready = [seed for seed in seeds if all(
         (task_dir(folder, seed, field) / "result.json").is_file() for field in FIELDS)]
     results = [combine_seed(data, runs_dir, folder, run_id, seed, config) for seed in ready]
@@ -218,7 +228,16 @@ def finalize(data, runs_dir, folder, run_id, config, reference_run_id):
     record = build_run_record(run_id, "MARBERTv2 improves validation Macro-F1 over the corrected-text TF-IDF baseline",
         config, data.shared, per_seed, "val", artifacts, ", ".join(devices), results[0][2]["exceptions"],
         reference_config=reference, changed_factor="learning_rate" if reference else None,
-        reference_run_id=reference_run_id, ddof=1)
+        reference_run_id=reference_run_id,
+        ddof=0 if is_single_seed_sweep else 1)
+    # A single seed cannot estimate between-seed variability.
+    # Preserve the aggregate schema, but mark SD as unavailable.
+    if is_single_seed_sweep:
+        for metric in record["aggregate"].values():
+            if metric["n"] != 1:
+                raise ValueError("Expected exactly one seed")
+            metric["std"] = None
+
     summary = validation_summary(record, results)
     summary_path = folder / "validation_summary.md"
     if summary_path.exists():
@@ -245,21 +264,27 @@ def validation_summary(record, results):
     lines = [
         f"# MARBERTv2 validation results for {record['run_id']}", "",
         f"Learning rate {record['config']['learning_rate']:g}, epoch budget {record['config']['epochs']}.",
-        "Sample standard deviation uses ddof=1. Delta compares the mean with corrected-text TF-IDF.",
+        (
+            "Single-seed evaluation: between-seed SD is unavailable. "
+            "Delta compares seed 42 with corrected-text TF-IDF."
+            if len(record["per_seed"]) == 1 else
+            "Sample standard deviation uses ddof=1. Delta compares the mean with corrected-text TF-IDF."
+        ),
         "Customer state excludes the single unclear row. The other fields score all 1,003 rows.", "",
         "| Field | " + " | ".join(str(row["seed"]) for row in record["per_seed"])
         + " | Mean | Sample SD | TF-IDF | Delta | Beats baseline |",
-        "|---|" + "---:|" * 9 + "---|",
+        "|---|" + "---:|" * (len(record["per_seed"]) + 5),
     ]
     for field, baseline in BASELINE.items():
         metric = f"{field}_macro_f1"
         agg = record["aggregate"][metric]
         values = " | ".join(f"{row['metrics'][metric]:.4f}" for row in record["per_seed"])
-        lines.append(f"| {field} | {values} | {agg['mean']:.4f} | {agg['std']:.4f} | "
+        std_text = "N/A" if len(record["per_seed"]) == 1 else f"{agg['std']:.4f}"
+        lines.append(f"| {field} | {values} | {agg['mean']:.4f} | {std_text} | "
                      f"{baseline:.4f} | {agg['mean'] - baseline:+.4f} | "
                      f"{'Yes' if agg['mean'] > baseline else 'No'} |")
     lines += ["", "## Error analysis", "",
-              "Confusion counts below sum five predictions per validation example. Class support is per seed. "
+              "Confusion counts below sum the predictions from all evaluated seeds. Class support is per seed. "
               "Per-class scores are means across seeds.", ""]
     for field in FIELDS:
         reports = [result[2]["fields"][field] for result in results]
@@ -272,7 +297,10 @@ def validation_summary(record, results):
             lines.append(f"| {label} | " + " | ".join(map(str, row)) + " |")
         lines += ["", "| Class | Precision | Recall | F1 | Support |", "|---|---:|---:|---:|---:|"]
         for label in labels:
-            means = [summarize([rep["per_class"][label][key] for rep in reports])["mean"]
+            means = [summarize(
+                    [rep["per_class"][label][key] for rep in reports],
+                    ddof=0 if len(reports) == 1 else 1
+                )["mean"]
                      for key in ("precision", "recall", "f1")]
             lines.append(f"| {label} | " + " | ".join(f"{v:.4f}" for v in means)
                          + f" | {reports[0]['per_class'][label]['support']} |")
