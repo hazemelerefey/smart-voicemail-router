@@ -1,0 +1,194 @@
+{
+  "schema_version": 2,
+  "run_id": "marbertv2-lr3e5-seed42-20261120",
+  "hypothesis": "MARBERTv2 improves validation Macro-F1 over the corrected-text TF-IDF baseline",
+  "changed_factor": "learning_rate",
+  "held_constant": {
+    "model": "UBC-NLP/MARBERTv2",
+    "dataset_version": "v2",
+    "split": "train",
+    "batch_size": 16,
+    "epochs": 3,
+    "other_hyperparameters.model_revision": "a2a02c120b294eec3f1298e4cb5a8b111c7e3de8",
+    "other_hyperparameters.max_seq_len": 128,
+    "other_hyperparameters.optimizer": "AdamW",
+    "other_hyperparameters.scheduler": "linear",
+    "other_hyperparameters.warmup_ratio": 0.1,
+    "other_hyperparameters.weight_decay": 0.01,
+    "other_hyperparameters.dropout": 0.1,
+    "other_hyperparameters.gradient_clip_norm": 1.0,
+    "other_hyperparameters.early_stopping_patience": 2,
+    "other_hyperparameters.precision": "fp16_amp",
+    "other_hyperparameters.churn_weight_cap": 20,
+    "other_hyperparameters.weights_blob": "6a1c1e069fdfd7341e699b4658c20220a9576438",
+    "other_hyperparameters.train_blob": "2e9a58d5c988f2253a12c0d46e3f43a2b55be0c7",
+    "other_hyperparameters.validation_blob": "b1adfcc118a766a44bdc1fbe60f372829b2dc720",
+    "other_hyperparameters.input_column": "text_norm",
+    "other_hyperparameters.tasks": [
+      "complaint_category",
+      "complaint_urgency",
+      "customer_state",
+      "churn_risk"
+    ],
+    "other_hyperparameters.architecture": "single_task"
+  },
+  "reference_run_id": "marbertv2-lr2e5-seed42-rebuild-20261120",
+  "config": {
+    "model": "UBC-NLP/MARBERTv2",
+    "dataset_version": "v2",
+    "split": "train",
+    "learning_rate": 3e-05,
+    "batch_size": 16,
+    "epochs": 3,
+    "other_hyperparameters": {
+      "model_revision": "a2a02c120b294eec3f1298e4cb5a8b111c7e3de8",
+      "max_seq_len": 128,
+      "optimizer": "AdamW",
+      "scheduler": "linear",
+      "warmup_ratio": 0.1,
+      "weight_decay": 0.01,
+      "dropout": 0.1,
+      "gradient_clip_norm": 1.0,
+      "early_stopping_patience": 2,
+      "precision": "fp16_amp",
+      "churn_weight_cap": 20,
+      "weights_blob": "6a1c1e069fdfd7341e699b4658c20220a9576438",
+      "train_blob": "2e9a58d5c988f2253a12c0d46e3f43a2b55be0c7",
+      "validation_blob": "b1adfcc118a766a44bdc1fbe60f372829b2dc720",
+      "input_column": "text_norm",
+      "tasks": [
+        "complaint_category",
+        "complaint_urgency",
+        "customer_state",
+        "churn_risk"
+      ],
+      "architecture": "single_task"
+    }
+  },
+  "dataset": {
+    "version": "v2",
+    "rows": {
+      "train": 3575,
+      "val": 1003,
+      "test": 518
+    }
+  },
+  "evaluated_split": "val",
+  "exceptions": [
+    {
+      "field": "customer_state",
+      "excluded_labels": [
+        "unclear"
+      ],
+      "rows_excluded": 1,
+      "n_scored": 1002,
+      "n_total_rows": 1003,
+      "reason": "unclear has 0 train rows and 1 validation row. Excluded from customer_state scoring only by Hazem's decision."
+    }
+  ],
+  "per_seed": [
+    {
+      "run_id": "marbertv2-lr3e5-seed42-20261120",
+      "model": "UBC-NLP/MARBERTv2",
+      "split": "val",
+      "seed": 42,
+      "metrics": {
+        "complaint_category_macro_f1": 0.792368997730243,
+        "complaint_category_accuracy": 0.8115653040877367,
+        "complaint_urgency_macro_f1": 0.7142436178605808,
+        "complaint_urgency_accuracy": 0.773678963110668,
+        "customer_state_macro_f1": 0.7416415006233944,
+        "customer_state_accuracy": 0.7215568862275449,
+        "churn_risk_macro_f1": 0.8628844839371155,
+        "churn_risk_accuracy": 0.9970089730807578,
+        "combined_macro_f1": 0.7777846500378334
+      }
+    }
+  ],
+  "aggregate": {
+    "churn_risk_accuracy": {
+      "mean": 0.9970089730807578,
+      "std": null,
+      "ddof": 0,
+      "n": 1
+    },
+    "churn_risk_macro_f1": {
+      "mean": 0.8628844839371155,
+      "std": null,
+      "ddof": 0,
+      "n": 1
+    },
+    "combined_macro_f1": {
+      "mean": 0.7777846500378334,
+      "std": null,
+      "ddof": 0,
+      "n": 1
+    },
+    "complaint_category_accuracy": {
+      "mean": 0.8115653040877367,
+      "std": null,
+      "ddof": 0,
+      "n": 1
+    },
+    "complaint_category_macro_f1": {
+      "mean": 0.792368997730243,
+      "std": null,
+      "ddof": 0,
+      "n": 1
+    },
+    "complaint_urgency_accuracy": {
+      "mean": 0.773678963110668,
+      "std": null,
+      "ddof": 0,
+      "n": 1
+    },
+    "complaint_urgency_macro_f1": {
+      "mean": 0.7142436178605808,
+      "std": null,
+      "ddof": 0,
+      "n": 1
+    },
+    "customer_state_accuracy": {
+      "mean": 0.7215568862275449,
+      "std": null,
+      "ddof": 0,
+      "n": 1
+    },
+    "customer_state_macro_f1": {
+      "mean": 0.7416415006233944,
+      "std": null,
+      "ddof": 0,
+      "n": 1
+    }
+  },
+  "artifacts": {
+    "predictions": [
+      "runs/exp_marbertv2-lr3e5-seed42-20261120/predictions_val_seed42.json"
+    ],
+    "metrics": [
+      "runs/exp_marbertv2-lr3e5-seed42-20261120/metrics_val_seed42.json"
+    ],
+    "checkpoints": [
+      "runs/exp_marbertv2-lr3e5-seed42-20261120/checkpoints/seed_42/complaint_category/epoch_03",
+      "runs/exp_marbertv2-lr3e5-seed42-20261120/checkpoints/seed_42/complaint_urgency/epoch_03",
+      "runs/exp_marbertv2-lr3e5-seed42-20261120/checkpoints/seed_42/customer_state/epoch_03",
+      "runs/exp_marbertv2-lr3e5-seed42-20261120/checkpoints/seed_42/churn_risk/epoch_02"
+    ],
+    "summary": [
+      "runs/exp_marbertv2-lr3e5-seed42-20261120/validation_summary.md"
+    ]
+  },
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "device": "Tesla T4",
+    "packages": {
+      "numpy": "2.4.6",
+      "pandas": "2.2.3",
+      "scikit-learn": "1.6.1",
+      "torch": "2.14.1+cu130",
+      "transformers": "5.22.1"
+    }
+  },
+  "created_utc": "2026-11-20T21:57:49+00:00"
+}
