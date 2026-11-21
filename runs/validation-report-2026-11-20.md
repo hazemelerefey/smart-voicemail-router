@@ -54,7 +54,38 @@ This report gives which run is ahead by the rule and the numbers behind it. The 
 - The run marbertv2-lr2e5-clean-20261119 was trained with a different pipeline. It is listed for reference and is not used in the rule comparisons.
 - These are validation results only. The test split has not been evaluated.
 
+## Churn risk: extra metrics (validation)
+
+churn_risk has 7 `at_risk` rows among the 1,003 validation rows (0.70 percent), so one row is worth 1/7 of the recall. The metrics below were computed with `infra/churn_metrics.py` and `infra/churn_run_report.py` on the same prediction files as the main table, one value per seed, then mean ± std over the 5 seeds (ddof = 1).
+
+- **Average precision** is the area under the precision-recall curve. Its chance level is the share of `at_risk` rows: 0.0070.
+- **Balanced accuracy** is the mean of the recall of the two classes.
+- **Tuned threshold:** the probability threshold with the highest macro-F1 of the two classes on the validation rows (candidates: the middles between neighbouring probabilities, and 0.5; a tie goes to the one closest to 0.5). **It is tuned on the same rows it is scored on, so the tuned numbers are optimistic.** The values at the default threshold 0.5 are given next to them. At 0.5, the macro-F1 equals the churn_risk value of the main table for every run.
+
+| Run | Average precision | Balanced accuracy (tuned / at 0.5) | macro-F1 (tuned / at 0.5) | `at_risk` found out of 7, per seed (42, 1337, 2023, 7, 99) |
+|---|---|---|---|---|
+| EgyBERT 3e-5 (001) | 0.7945 ± 0.0518 | 0.8714 ± 0.0319 / 0.8571 ± 0.0000 | 0.9252 ± 0.0202 / 0.9162 ± 0.0000 | 5, 5, 5, 6, 5 |
+| fair-marbertv2-lr2e5 | 0.7792 ± 0.0758 | 0.8854 ± 0.0392 / 0.8570 ± 0.0874 | 0.9156 ± 0.0380 / 0.9041 ± 0.0616 | 5, 6, 6, 5, 5 |
+| tfidf-002 (baseline) | 0.6921 ± 0.0000 | 0.7857 / 0.7857 | 0.8629 / 0.8629 | 4, 4, 4, 4, 4 |
+| marbertv2-lr2e5-clean-20261119 | 0.6256 ± 0.2592 | 0.7997 ± 0.1276 / 0.7713 ± 0.1277 | 0.8392 ± 0.1231 / 0.8277 ± 0.1238 | 5, 5, 1, 5, 5 |
+| fair-egybert-lr2e5 | 0.1186 ± 0.0696 | 0.5703 ± 0.0022 / 0.5143 ± 0.0319 | 0.6063 ± 0.0312 / 0.5233 ± 0.0560 | 1, 1, 1, 1, 1 |
+
+### Reading the numbers
+
+- The large gap between the two EgyBERT runs is the churn field. At 2e-5 the model finds 1 of the 7 `at_risk` rows in every seed and its average precision (0.12) is far below the other runs, though still above the chance level (0.007). At 3e-5 it finds 5 or 6 of 7 (average precision 0.79). On churn_risk alone, EgyBERT at 3e-5 is not behind MARBERTv2 at 2e-5 (0.7945 against 0.7792, and the difference is smaller than the seed standard deviations).
+- Threshold tuning changes the macro-F1 by at most 0.0125 for the two best runs, which is smaller than their seed standard deviations. The baseline does not change at all.
+- The tuned threshold is not stable: for the same run it moves between seeds (for example 0.0007 to 0.5 for fair-marbertv2-lr2e5). A threshold chosen on 7 rows should not be treated as an operating point.
+- At the tuned threshold the models sometimes add false alarms (for example 2 for one seed of fair-marbertv2-lr2e5 and 10 for one seed of fair-egybert-lr2e5).
+
+### What the data cannot support
+
+- With 7 positive rows, one row changes the recall by 0.14. Differences between runs smaller than that are not evidence.
+- The tuned numbers use the validation rows twice (to choose the threshold and to score it). They say how well a threshold could work, not how well it will work on new data.
+- **Not done:** the churn result pooled over validation and test with raw counts (for example "6 of 8"), which the project metrics list asks for. It needs the test predictions of the final model, which are scored once in the final evaluation. The 5-fold stratified cross-validation estimate was also not computed: it needs retraining and cannot be made from prediction files.
+
 ## Open items
 
 - Final test evaluation of the winning model: once, after the winner is confirmed. Not started.
 - Learning-rate sweep on MARBERTv2: not covered by this report.
+- Churn risk pooled over validation and test, with the validation threshold: after the final test evaluation.
+- 5-fold stratified cross-validation for churn_risk: not planned unless the team asks for it.
