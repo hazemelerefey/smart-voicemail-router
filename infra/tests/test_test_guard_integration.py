@@ -298,3 +298,153 @@ def test_evaluate_run_still_refuses_test_split(tmp_path):
             device="cpu",
             evaluated_split="test",
         )
+
+
+def test_evaluate_test_run_with_preclaimed_claim_skips_reclaim_and_validates_claim_and_folder(
+    tmp_path,
+):
+    from infra.once_guard import claim_test_evaluation
+
+    # 1. Valid pre-claim with existing exp_<run_id> holding the 5 test prediction files
+    d1, c1, p1, shared1, test_csv1 = _make_synthetic_test_setup(
+        tmp_path / "ok", run_id="marbert-test-001", model="MARBERTv2"
+    )
+    runs1 = tmp_path / "runs_ok"
+    exp1 = runs1 / "exp_marbert-test-001"
+    exp1.mkdir(parents=True)
+    for f in p1.glob("predictions_test_seed*.json"):
+        (exp1 / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
+
+    claim1 = claim_test_evaluation(
+        runs1 / "test_evaluations.json",
+        model="UBC-NLP/MARBERTv2",
+        dataset_version=shared1["dataset_version"],
+        run_id="marbert-test-001",
+        uses=5,
+        test_csv_path=test_csv1,
+    )
+    res1 = evaluate_test_run(
+        data_dir=d1,
+        runs_dir=runs1,
+        run_id="marbert-test-001",
+        config_path=c1,
+        predictions_dir=exp1,
+        hypothesis="Pre-claimed evaluation must not claim again.",
+        device="cpu",
+        claim=claim1,
+    )
+    assert claim1.consumed is True
+    assert len(read_log(runs1 / "test_evaluations.json")["entries"]) == 1
+    assert (exp1 / "run_record.json").is_file()
+    assert res1["summary"]["evaluated_split"] == "test"
+
+    # 2. Claim for another run_id -> refused
+    d2, c2, p2, shared2, test_csv2 = _make_synthetic_test_setup(
+        tmp_path / "wrong_id", run_id="marbert-test-001", model="MARBERTv2"
+    )
+    runs2 = tmp_path / "runs_wrong_id"
+    claim_wrong_id = claim_test_evaluation(
+        runs2 / "test_evaluations.json",
+        model="MARBERTv2",
+        dataset_version=shared2["dataset_version"],
+        run_id="different-run-id",
+        uses=5,
+        test_csv_path=test_csv2,
+    )
+    with pytest.raises(EvaluateRunError, match="claim run_id"):
+        evaluate_test_run(
+            data_dir=d2,
+            runs_dir=runs2,
+            run_id="marbert-test-001",
+            config_path=c2,
+            predictions_dir=p2,
+            hypothesis="Wrong run_id claim.",
+            device="cpu",
+            claim=claim_wrong_id,
+        )
+
+    # 3. Used claim -> refused
+    d3, c3, p3, shared3, test_csv3 = _make_synthetic_test_setup(
+        tmp_path / "used", run_id="marbert-test-001", model="MARBERTv2"
+    )
+    runs3 = tmp_path / "runs_used"
+    claim_used = claim_test_evaluation(
+        runs3 / "test_evaluations.json",
+        model="MARBERTv2",
+        dataset_version=shared3["dataset_version"],
+        run_id="marbert-test-001",
+        uses=5,
+        test_csv_path=test_csv3,
+    )
+    claim_used.consume()
+    with pytest.raises(EvaluateRunError, match="unused"):
+        evaluate_test_run(
+            data_dir=d3,
+            runs_dir=runs3,
+            run_id="marbert-test-001",
+            config_path=c3,
+            predictions_dir=p3,
+            hypothesis="Used claim.",
+            device="cpu",
+            claim=claim_used,
+        )
+
+    # 4. Existing run folder holding extra files -> refused
+    d4, c4, p4, shared4, test_csv4 = _make_synthetic_test_setup(
+        tmp_path / "extra", run_id="marbert-test-001", model="MARBERTv2"
+    )
+    runs4 = tmp_path / "runs_extra"
+    exp4 = runs4 / "exp_marbert-test-001"
+    exp4.mkdir(parents=True)
+    for f in p4.glob("predictions_test_seed*.json"):
+        (exp4 / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
+    (exp4 / "extra.txt").write_text("unexpected", encoding="utf-8")
+    claim4 = claim_test_evaluation(
+        runs4 / "test_evaluations.json",
+        model="MARBERTv2",
+        dataset_version=shared4["dataset_version"],
+        run_id="marbert-test-001",
+        uses=5,
+        test_csv_path=test_csv4,
+    )
+    with pytest.raises(EvaluateRunError, match="must contain exactly"):
+        evaluate_test_run(
+            data_dir=d4,
+            runs_dir=runs4,
+            run_id="marbert-test-001",
+            config_path=c4,
+            predictions_dir=exp4,
+            hypothesis="Extra file in run folder.",
+            device="cpu",
+            claim=claim4,
+        )
+
+    # 5. run_record.json already present -> refused
+    d5, c5, p5, shared5, test_csv5 = _make_synthetic_test_setup(
+        tmp_path / "rec_exists", run_id="marbert-test-001", model="MARBERTv2"
+    )
+    runs5 = tmp_path / "runs_rec_exists"
+    exp5 = runs5 / "exp_marbert-test-001"
+    exp5.mkdir(parents=True)
+    for f in p5.glob("predictions_test_seed*.json"):
+        (exp5 / f.name).write_text(f.read_text(encoding="utf-8"), encoding="utf-8")
+    (exp5 / "run_record.json").write_text("{}", encoding="utf-8")
+    claim5 = claim_test_evaluation(
+        runs5 / "test_evaluations.json",
+        model="MARBERTv2",
+        dataset_version=shared5["dataset_version"],
+        run_id="marbert-test-001",
+        uses=5,
+        test_csv_path=test_csv5,
+    )
+    with pytest.raises(FileExistsError, match="already exists"):
+        evaluate_test_run(
+            data_dir=d5,
+            runs_dir=runs5,
+            run_id="marbert-test-001",
+            config_path=c5,
+            predictions_dir=exp5,
+            hypothesis="Existing run_record.json.",
+            device="cpu",
+            claim=claim5,
+        )

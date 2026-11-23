@@ -339,6 +339,7 @@ def evaluate_test_run(
     reference_config_path=None,
     changed_factor=None,
     reference_run_id=None,
+    claim=None,
 ):
     """Score the 5-seed test predictions once per (model, dataset_version) via the test-once guard.
 
@@ -346,6 +347,12 @@ def evaluate_test_run(
     test prediction file names and headers BEFORE claiming the test evaluation
     and BEFORE reading any test labels. Never overwrites an existing run folder
     or run record. Never loads transcript text columns.
+
+    When `claim` is supplied, it must be an unused EvaluationClaim matching
+    `run_id`, normalized `config.model`, `dataset_version`, and the number of
+    seeds; `evaluate_test_run` then skips calling `claim_test_evaluation` and
+    allows `runs_dir/exp_<run_id>` to already exist provided it holds only the
+    five `predictions_test_seed<seed>.json` files and no `run_record.json`.
     """
     _check_run_id(run_id)
 
@@ -355,10 +362,22 @@ def evaluate_test_run(
 
     exp_dir = runs_dir / f"exp_{run_id}"
     rec_file = record_path(runs_dir, run_id)
-    if exp_dir.exists() or rec_file.exists():
-        raise FileExistsError(
-            f"{exp_dir} already exists; existing run folders are not overwritten"
-        )
+    if claim is None:
+        if exp_dir.exists() or rec_file.exists():
+            raise FileExistsError(
+                f"{exp_dir} already exists; existing run folders are not overwritten"
+            )
+    else:
+        from infra.once_guard import EvaluationClaim, normalize_model_name
+
+        if not isinstance(claim, EvaluationClaim):
+            raise EvaluateRunError(
+                "claim must be an EvaluationClaim from the test-once guard"
+            )
+        if rec_file.exists():
+            raise FileExistsError(
+                f"{rec_file} already exists; existing run records are not overwritten"
+            )
 
     if not predictions_dir.is_dir():
         raise EvaluateRunError(f"predictions_dir not found: {predictions_dir}")
@@ -380,6 +399,48 @@ def evaluate_test_run(
         if reference_config_path is not None
         else None
     )
+
+    expected_seeds = list(shared_config["experiment_seeds"])
+    expected_filenames = {
+        f"predictions_test_seed{seed}.json" for seed in expected_seeds
+    }
+
+    if claim is not None:
+        if claim.run_id != run_id:
+            raise EvaluateRunError(
+                f"claim run_id {claim.run_id!r} does not match run_id {run_id!r}"
+            )
+        model_key = normalize_model_name(config.model)
+        if claim.model_key != model_key:
+            raise EvaluateRunError(
+                f"claim model_key {claim.model_key!r} does not match model "
+                f"{config.model!r} (normalized {model_key!r})"
+            )
+        if claim.dataset_version != shared_config["dataset_version"]:
+            raise EvaluateRunError(
+                f"claim dataset_version {claim.dataset_version!r} does not match "
+                f"{shared_config['dataset_version']!r}"
+            )
+        if claim.uses != len(expected_seeds) or claim.remaining != claim.uses:
+            raise EvaluateRunError(
+                f"claim must be unused with remaining == uses == {len(expected_seeds)}, "
+                f"got remaining={claim.remaining}, uses={claim.uses}"
+            )
+        if exp_dir.exists():
+            if not exp_dir.is_dir():
+                raise EvaluateRunError(f"{exp_dir} exists and is not a directory")
+            dir_entries = list(exp_dir.iterdir())
+            non_files = [p.name for p in dir_entries if not p.is_file()]
+            if non_files:
+                raise EvaluateRunError(
+                    f"{exp_dir} must contain only test prediction files, found non-files: {sorted(non_files)}"
+                )
+            entry_names = {p.name for p in dir_entries}
+            if entry_names != expected_filenames:
+                raise EvaluateRunError(
+                    f"{exp_dir} must contain exactly {sorted(expected_filenames)}, "
+                    f"got {sorted(entry_names)}"
+                )
 
     test_csv_path = data_dir / "final" / "clean_training_test.csv"
     test_sha256 = _file_sha256(test_csv_path)
@@ -410,10 +471,6 @@ def evaluate_test_run(
             reference_config, EVAL_TEST_HASH_KEY, test_sha256
         )
 
-    expected_seeds = list(shared_config["experiment_seeds"])
-    expected_filenames = {
-        f"predictions_test_seed{seed}.json" for seed in expected_seeds
-    }
     present_pred_files = {
         p.name for p in predictions_dir.glob("predictions_*.json") if p.is_file()
     }
@@ -460,15 +517,16 @@ def evaluate_test_run(
         loaded_by_seed.append((seed, pred_file, loaded))
 
     # Claim the test evaluation AFTER all pre-checks and BEFORE reading test labels.
-    claim = claim_test_evaluation(
-        runs_dir / "test_evaluations.json",
-        model=config.model,
-        dataset_version=shared_config["dataset_version"],
-        run_id=run_id,
-        uses=len(expected_seeds),
-        test_csv_path=test_csv_path,
-        checkpoint_sha256=checkpoint_sha256,
-    )
+    if claim is None:
+        claim = claim_test_evaluation(
+            runs_dir / "test_evaluations.json",
+            model=config.model,
+            dataset_version=shared_config["dataset_version"],
+            run_id=run_id,
+            uses=len(expected_seeds),
+            test_csv_path=test_csv_path,
+            checkpoint_sha256=checkpoint_sha256,
+        )
 
     truth_rows = load_truth_table(test_csv_path, "test", fields)
     if len(truth_rows) != shared_config["test_rows"]:
