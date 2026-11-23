@@ -80,12 +80,12 @@ def run_demo(file_path: str | None) -> tuple[str, str]:
         return f"Upload rejected: {exc}", ""
     voicemail_id = f"voicemail-{uuid.uuid4().hex[:12]}"
     try:
-        meta = validate_and_measure(data, filename, voicemail_id)
+        meta = validate_and_measure(data, filename, voicemail_id, audio_path_local=file_path)
     except ValueError as exc:
         return f"Upload rejected: {exc}", ""
     finally:
         del data
-    result = run_pipeline(meta, voicemail_id)
+    result = run_pipeline(meta, voicemail_id, use_real_stt=True, use_real_classification=True)
     try:
         # The demo serialises the same object the API returns: a TicketDetail
         # (ticket + evidence, no audit events in the demo), not a bare Ticket.

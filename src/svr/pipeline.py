@@ -49,6 +49,10 @@ def run_pipeline(
     *,
     classification_override: dict | None = None,
     now: Callable[[], str] = utcnow_iso,
+    stt_fn: Callable[[AudioMeta], AudioEvidence] | None = None,
+    classification_fn: Callable[[AudioEvidence], TextAnalysis] | None = None,
+    use_real_stt: bool = False,
+    use_real_classification: bool = False,
 ) -> PipelineResult:
     """Run intake -> STT -> text analysis -> voice evidence -> triage -> ticket.
 
@@ -104,20 +108,30 @@ def run_pipeline(
     stage_status["intake"] = "ok"
     stage_timing_ms["intake"] = elapsed()
 
-    # 2. STT (mock): fixed fixture transcript.
+    # 2. STT: run real transcription or mock.
     with timer.stage("stt") as elapsed:
         try:
-            audio = stt.transcribe_mock(audio_meta)
+            if stt_fn is not None:
+                audio = stt_fn(audio_meta)
+            elif use_real_stt or stt.has_active_model():
+                audio = stt.transcribe(audio_meta)
+            else:
+                audio = stt.transcribe_mock(audio_meta)
         except ValueError as exc:
             stage_timing_ms["stt"] = elapsed()
             return fail(f"STT failed: {exc}", "stt")
     stage_status["stt"] = "ok"
     stage_timing_ms["stt"] = elapsed()
 
-    # 3. Text analysis (mock): fixed fixture fields.
+    # 3. Text analysis: run real classifier or mock.
     with timer.stage("text_analysis") as elapsed:
         try:
-            text = classification.classify_mock(audio, override=classification_override)
+            if classification_fn is not None:
+                text = classification_fn(audio)
+            elif use_real_classification or classification.has_active_model():
+                text = classification.classify(audio, override=classification_override)
+            else:
+                text = classification.classify_mock(audio, override=classification_override)
         except ValueError as exc:
             # Out-of-enum label: rejected by schema validation, ticket goes
             # to human review, never stored as a valid label (section 4.2).

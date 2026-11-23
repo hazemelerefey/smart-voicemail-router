@@ -34,6 +34,7 @@ class AudioMeta:
     duration_checked: bool
     sample_rate_hz: int | None = None
     channels: int | None = None
+    audio_path_local: str | None = None
 
     def __post_init__(self) -> None:
         # voicemail_id shape (issue #9): a non-empty id must be a plain
@@ -80,6 +81,7 @@ def validate_metadata(
     voicemail_id: str = "",
     sample_rate_hz: int | None = None,
     channels: int | None = None,
+    audio_path_local: str | None = None,
 ) -> AudioMeta:
     """Validate upload metadata only. No audio bytes are read here: the
     endpoint measures them first (validate_and_measure) and the pipeline
@@ -106,6 +108,7 @@ def validate_metadata(
         duration_checked=duration_checked,
         sample_rate_hz=sample_rate_hz,
         channels=channels,
+        audio_path_local=audio_path_local,
     )
 
 
@@ -126,7 +129,12 @@ def _check_container_magic(data: bytes, ext: str) -> None:
         raise ValueError("file is not a valid M4A file (no ftyp box)")
 
 
-def validate_and_measure(file_bytes: bytes, filename: str, voicemail_id: str) -> AudioMeta:
+def validate_and_measure(
+    file_bytes: bytes,
+    filename: str,
+    voicemail_id: str,
+    audio_path_local: str | None = None,
+) -> AudioMeta:
     """Validate format, size and duration. Raises ValueError with the reason.
 
     The only place audio bytes are read: the endpoint calls this, then
@@ -136,7 +144,7 @@ def validate_and_measure(file_bytes: bytes, filename: str, voicemail_id: str) ->
     duration stays unmeasured, see below.
     """
     # Format, size and empty first (duration not measured yet).
-    validate_metadata(filename, len(file_bytes), None, False, voicemail_id)
+    validate_metadata(filename, len(file_bytes), None, False, voicemail_id, audio_path_local=audio_path_local)
     ext = _extension(filename)
     if ext in (".mp3", ".m4a"):
         _check_container_magic(file_bytes, ext)
@@ -161,4 +169,5 @@ def validate_and_measure(file_bytes: bytes, filename: str, voicemail_id: str) ->
         voicemail_id,
         sample_rate_hz,
         channels,
+        audio_path_local=audio_path_local,
     )
