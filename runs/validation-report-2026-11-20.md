@@ -83,6 +83,29 @@ churn_risk has 7 `at_risk` rows among the 1,003 validation rows (0.70 percent), 
 - The tuned numbers use the validation rows twice (to choose the threshold and to score it). They say how well a threshold could work, not how well it will work on new data.
 - **Not done:** the churn result pooled over validation and test with raw counts (for example "6 of 8"), which the project metrics list asks for. It needs the test predictions of the final model, which are scored once in the final evaluation. The 5-fold stratified cross-validation estimate was also not computed: it needs retraining and cannot be made from prediction files.
 
+## MARBERTv2 learning-rate sweep (seed 42) and the model chosen for the test
+
+Three learning rates were trained with one seed (42) each and scored with the project harness from the submitted prediction files. These are single-seed numbers with no standard deviation, so they are for choosing a learning rate and not final results.
+
+| Learning rate | complaint_category | complaint_urgency | customer_state | churn_risk | Combined |
+|---|---|---|---|---|---|
+| 3e-5 | 0.7924 | 0.7142 | 0.7416 | 0.8629 | 0.7778 |
+| 2e-5 | 0.7922 | 0.7172 | 0.7558 | 0.7990 | 0.7661 |
+| 1e-5 | 0.7549 | 0.7132 | 0.7377 | 0.4982 | 0.6760 |
+
+- 1e-5 is clearly behind, mostly on churn_risk (it finds none of the 7 `at_risk` rows).
+- The gap between 3e-5 and 2e-5 in the combined score (0.0117) comes from churn_risk alone: 4 of 7 `at_risk` rows found against 3 of 7. On the other three fields 2e-5 is ahead (mean 0.7551 against 0.7494).
+- The same learning rate and seed, trained three times, gave combined scores of 0.7657, 0.7636 and 0.7661: retraining does not reproduce a result exactly. For this reason the test uses the saved checkpoints.
+
+**Model chosen for the test:** MARBERTv2 at 2e-5, evaluated on the five seeds of the run marbertv2-lr2e5-clean-20261119 (the only 5-seed run whose checkpoints are saved). Its validation scores are lower than those of the fair re-run of the same learning rate (whose checkpoints are not saved):
+
+| Run | Combined (mean ± std, 5 seeds) | churn_risk | `at_risk` found out of 7 per seed |
+|---|---|---|---|
+| marbertv2-lr2e5-clean-20261119 (tested) | 0.7708 ± 0.0336 | 0.8277 ± 0.1238 | 5, 5, 1, 5, 5 |
+| fair-marbertv2-lr2e5 (checkpoints not saved) | 0.7907 ± 0.0160 | 0.9041 ± 0.0616 | 5, 6, 6, 5, 5 |
+
+Against EgyBERT at 3e-5 (0.7828 ± 0.0051) the tested run is within the larger standard deviation, so the rule's tie goes to the preferred model.
+
 ## Open items
 
 - Final test evaluation of the winning model: once, after the winner is confirmed. Not started.
