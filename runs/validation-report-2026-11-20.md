@@ -52,7 +52,7 @@ This report gives which run is ahead by the rule and the numbers behind it. The 
 - The labels are model-generated and under audit. These numbers will change after the audit and the retrain.
 - The training environments are as reported by the people who ran them. We scored their predictions and did not retrain.
 - The run marbertv2-lr2e5-clean-20261119 was trained with a different pipeline. It is listed for reference and is not used in the rule comparisons.
-- These are validation results only. The test split has not been evaluated.
+- These are validation results only. The final test evaluation of marbertv2-lr2e5-clean-20261119 was run once on 2026-11-24 and is reported separately in `test-evaluation-report-2026-11-24.md`. The numbers in this report were not changed after it.
 
 ## Churn risk: extra metrics (validation)
 
@@ -81,7 +81,7 @@ churn_risk has 7 `at_risk` rows among the 1,003 validation rows (0.70 percent), 
 
 - With 7 positive rows, one row changes the recall by 0.14. Differences between runs smaller than that are not evidence.
 - The tuned numbers use the validation rows twice (to choose the threshold and to score it). They say how well a threshold could work, not how well it will work on new data.
-- **Not done:** the churn result pooled over validation and test with raw counts (for example "6 of 8"), which the project metrics list asks for. It needs the test predictions of the final model, which are scored once in the final evaluation. The 5-fold stratified cross-validation estimate was also not computed: it needs retraining and cannot be made from prediction files.
+- **Done after this report:** the churn result pooled over validation and test (8 `at_risk` rows of 1,521, with the threshold tuned on the validation rows) is in `test-evaluation-report-2026-11-24.md`. **Not done:** the 5-fold stratified cross-validation estimate: it needs retraining and cannot be made from prediction files.
 
 ## MARBERTv2 learning-rate sweep (seed 42) and the model chosen for the test
 
@@ -108,7 +108,8 @@ Against EgyBERT at 3e-5 (0.7828 ± 0.0051) the tested run is within the larger s
 
 ## Open items
 
-- Final test evaluation of the winning model: once, after the winner is confirmed. Not started.
-- Learning-rate sweep on MARBERTv2: not covered by this report.
-- Churn risk pooled over validation and test, with the validation threshold: after the final test evaluation.
+- Final test evaluation of the model chosen for the test (marbertv2-lr2e5-clean-20261119): done once on 2026-11-24. See `test-evaluation-report-2026-11-24.md`.
+- Churn risk pooled over validation and test, with the validation threshold: done. See the same report.
+- Learning-rate sweep on MARBERTv2: done with one seed (42), see the sweep section above. The other learning rates were not run with five seeds.
 - 5-fold stratified cross-validation for churn_risk: not planned unless the team asks for it.
+- Retraining and re-evaluation on the corrected labels: after the label audit (Phase 4).
