@@ -1,0 +1,43 @@
+# SVR Prometheus Alert Rules (PRD AI10, NFR4, NFR5, NFR20)
+groups:
+  - name: svr_ai_and_sla_alerts
+    rules:
+      - alert: SVRHumanReviewRateHigh
+        expr: (sum(increase(svr_human_review_tickets_total[24h])) / clamp_min(sum(increase(svr_pipeline_runs_total[24h])), 1)) > 0.20
+        for: 24h
+        labels:
+          severity: warning
+          prd_ref: AI10
+        annotations:
+          summary: "SVR human review rate exceeded 20% for 24 hours"
+          description: "Human review rate has remained above 0.20 (current: {{ $value | humanizePercentage }}) for 24 hours. Review confidence threshold, audio quality, and model health."
+
+      - alert: SVRPipelineLatencyP95High
+        expr: histogram_quantile(0.95, sum by (le) (rate(svr_pipeline_duration_seconds_bucket[15m]))) > 10
+        for: 24h
+        labels:
+          severity: warning
+          prd_ref: AI10_NFR5
+        annotations:
+          summary: "SVR pipeline p95 end-to-end latency exceeded 10 seconds for 24 hours"
+          description: "p95 voicemail-to-ticket latency is {{ $value | humanizeDuration }} (> 10s budget). Check GPU allocation and worker replica count."
+
+      - alert: SVRApiLatencyP95High
+        expr: histogram_quantile(0.95, sum by (le) (rate(svr_http_request_duration_seconds_bucket[5m]))) > 2
+        for: 15m
+        labels:
+          severity: warning
+          prd_ref: NFR4
+        annotations:
+          summary: "SVR API p95 response latency exceeded 2 seconds"
+          description: "Standard API p95 response latency is {{ $value | humanizeDuration }} (> 2s NFR4 target)."
+
+      - alert: SVRBackendDown
+        expr: up{job="svr-backend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          prd_ref: NFR12
+        annotations:
+          summary: "SVR backend API target is unreachable"
+          description: "Prometheus cannot scrape backend:8000/api/metrics for over 2 minutes."

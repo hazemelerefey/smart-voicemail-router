@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: SVR Dashboards
+    orgId: 1
+    folder: SVR Telecom Care
+    type: file
+    disableDeletion: false
+    editable: true
+    updateIntervalSeconds: 30
+    options:
+      path: /var/lib/grafana/dashboards
