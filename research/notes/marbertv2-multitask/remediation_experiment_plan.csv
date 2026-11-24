@@ -1,7 +1,0 @@
-experiment,change,type,primary_metric,constraint
-E01,Audit training minority-class counts,DATA_AUDIT,Class support and label consistency,No training or test-set changes
-E02,Independent churn-label adjudication,ANNOTATION_AUDIT,Inter-annotator agreement,Review without revealing model predictions
-E03,Churn class-balancing strategy,CONTROLLED_TRAINING,"At-risk recall, precision, F1, PR-AUC","Fixed splits, five seeds, and all other hyperparameters"
-E04,Validation-only churn threshold selection,DECISION_RULE,At-risk recall with predefined false-positive constraint,No test-set tuning; report validation selection optimism
-E05,Targeted billing-context augmentation,CONTROLLED_TRAINING,At-risk recall by complaint category,Training-only additions; preserve held-out validation and test sets
-E06,Original-versus-ASR text ablation,INPUT_ABLATION,Macro F1 and per-class recall,Confirm baseline text pipeline first; hold other factors fixed
