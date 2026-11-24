@@ -1,0 +1,182 @@
+[
+  {
+    "seed": 42,
+    "field": "complaint_category",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7921568190023112,
+    "recovered_f1": 0.7921568190023113,
+    "difference": 1.1102230246251565e-16,
+    "passed": true
+  },
+  {
+    "seed": 42,
+    "field": "complaint_urgency",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7167513211090096,
+    "recovered_f1": 0.7167513211090096,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 42,
+    "field": "customer_state",
+    "evaluated_rows": 1002,
+    "original_f1": 0.7550189583132032,
+    "recovered_f1": 0.7550189583132032,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 42,
+    "field": "churn_risk",
+    "evaluated_rows": 1003,
+    "original_f1": 0.798997995991984,
+    "recovered_f1": 0.798997995991984,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 1337,
+    "field": "complaint_category",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7841806338280201,
+    "recovered_f1": 0.7841806338280201,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 1337,
+    "field": "complaint_urgency",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7289351102709939,
+    "recovered_f1": 0.7289351102709939,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 1337,
+    "field": "customer_state",
+    "evaluated_rows": 1002,
+    "original_f1": 0.7432411629351812,
+    "recovered_f1": 0.7432411629351812,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 1337,
+    "field": "churn_risk",
+    "evaluated_rows": 1003,
+    "original_f1": 0.916165162153126,
+    "recovered_f1": 0.916165162153126,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 2023,
+    "field": "complaint_category",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7786137068008412,
+    "recovered_f1": 0.7786137068008412,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 2023,
+    "field": "complaint_urgency",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7114975845410628,
+    "recovered_f1": 0.7114975845410628,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 2023,
+    "field": "customer_state",
+    "evaluated_rows": 1002,
+    "original_f1": 0.7438300116531966,
+    "recovered_f1": 0.7438300116531966,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 2023,
+    "field": "churn_risk",
+    "evaluated_rows": 1003,
+    "original_f1": 0.6234984984984985,
+    "recovered_f1": 0.6234984984984985,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 7,
+    "field": "complaint_category",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7903037718113404,
+    "recovered_f1": 0.7903037718113404,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 7,
+    "field": "complaint_urgency",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7286405817249054,
+    "recovered_f1": 0.7286405817249054,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 7,
+    "field": "customer_state",
+    "evaluated_rows": 1002,
+    "original_f1": 0.7427082611909099,
+    "recovered_f1": 0.7427082611909099,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 7,
+    "field": "churn_risk",
+    "evaluated_rows": 1003,
+    "original_f1": 0.8838627503956153,
+    "recovered_f1": 0.8838627503956155,
+    "difference": 1.1102230246251565e-16,
+    "passed": true
+  },
+  {
+    "seed": 99,
+    "field": "complaint_category",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7909121968314357,
+    "recovered_f1": 0.7909121968314357,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 99,
+    "field": "complaint_urgency",
+    "evaluated_rows": 1003,
+    "original_f1": 0.7196213089487159,
+    "recovered_f1": 0.7196213089487157,
+    "difference": 2.220446049250313e-16,
+    "passed": true
+  },
+  {
+    "seed": 99,
+    "field": "customer_state",
+    "evaluated_rows": 1002,
+    "original_f1": 0.7505303418505833,
+    "recovered_f1": 0.7505303418505833,
+    "difference": 0.0,
+    "passed": true
+  },
+  {
+    "seed": 99,
+    "field": "churn_risk",
+    "evaluated_rows": 1003,
+    "original_f1": 0.916165162153126,
+    "recovered_f1": 0.916165162153126,
+    "difference": 0.0,
+    "passed": true
+  }
+]

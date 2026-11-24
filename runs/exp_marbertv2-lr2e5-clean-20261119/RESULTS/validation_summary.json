@@ -1,0 +1,62 @@
+{
+  "run_id": "marbertv2-lr2e5-clean-20261119",
+  "model": "UBC-NLP/MARBERTv2",
+  "architecture": "single_task",
+  "dataset_version": "v2",
+  "split": "validation",
+  "learning_rate": 2e-05,
+  "seeds": [
+    42,
+    1337,
+    2023,
+    7,
+    99
+  ],
+  "tasks": [
+    "complaint_category",
+    "complaint_urgency",
+    "customer_state",
+    "churn_risk"
+  ],
+  "validation_rows": 1003,
+  "customer_state_evaluated_rows": 1002,
+  "combined_mean_macro_f1": 0.7707815670002031,
+  "combined_sample_std": 0.03356006818453777,
+  "best_seed": 99,
+  "best_seed_macro_f1": 0.7943072524459652,
+  "task_statistics": {
+    "complaint_category": {
+      "mean": 0.7872334256547897,
+      "std": 0.005718812726525762,
+      "min": 0.7786137068008412,
+      "max": 0.7921568190023112,
+      "count": 5
+    },
+    "complaint_urgency": {
+      "mean": 0.7210891813189375,
+      "std": 0.007608427210295185,
+      "min": 0.7114975845410628,
+      "max": 0.7289351102709939,
+      "count": 5
+    },
+    "customer_state": {
+      "mean": 0.7470657471886148,
+      "std": 0.005462190420311972,
+      "min": 0.7427082611909099,
+      "max": 0.7550189583132032,
+      "count": 5
+    },
+    "churn_risk": {
+      "mean": 0.82773791383847,
+      "std": 0.12382293348144975,
+      "min": 0.6234984984984985,
+      "max": 0.916165162153126,
+      "count": 5
+    }
+  },
+  "reproducibility_passed": 20,
+  "reproducibility_total": 20,
+  "maximum_absolute_difference": 2.220446049250313e-16,
+  "retraining_performed": false,
+  "final_test_used": false
+}

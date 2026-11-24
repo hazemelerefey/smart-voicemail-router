@@ -1,0 +1,48 @@
+{
+  "run_id": "marbertv2-lr2e5-clean-20261119",
+  "scope": "RESULTS directory only",
+  "algorithm": "SHA256",
+  "created_at": "2026-11-24T15:07:20.999309+00:00",
+  "files": [
+    {
+      "file": "README.md",
+      "size_bytes": 2111,
+      "sha256": "6f1f659cca662b78e389aef63f2f99f180998d8d442ef1c6d0d108246e7437d5"
+    },
+    {
+      "file": "reproducibility_audit.json",
+      "size_bytes": 4179,
+      "sha256": "ee75d6dc163d18c3cb37d3c9d0fb660e2cdb02ca1d928a34c885f8cdf4a3d143"
+    },
+    {
+      "file": "validation_model_comparison.csv",
+      "size_bytes": 575,
+      "sha256": "701dd7c994b09e72a15db99102a4ec60c696c0302f849d1b75929c26231de08d"
+    },
+    {
+      "file": "validation_model_comparison.png",
+      "size_bytes": 134998,
+      "sha256": "e4c6793198bc3d93a30537a66bc8c6a1c722b2236f53b4b1b3ac3ce0dbdefa97"
+    },
+    {
+      "file": "validation_per_task_per_seed.csv",
+      "size_bytes": 1546,
+      "sha256": "4492c77293ce221eb23d8b294f392c56f5779b430ea0803c4097320906f3dcd4"
+    },
+    {
+      "file": "validation_summary.json",
+      "size_bytes": 1522,
+      "sha256": "35484e884eb5256f9ca28d9d4b3359ed14ae973627448d3d25efaa45c10e4e73"
+    },
+    {
+      "file": "validation_task_stability.png",
+      "size_bytes": 145536,
+      "sha256": "388b7e9ca4111b95e030731476e7246877c2c42f589c1f0903a1e850fb27d7d5"
+    },
+    {
+      "file": "validation_task_summary.csv",
+      "size_bytes": 408,
+      "sha256": "03ce4780f3e986846709fc83a88839940724d12edd17c910ea7293a9a6c52344"
+    }
+  ]
+}
