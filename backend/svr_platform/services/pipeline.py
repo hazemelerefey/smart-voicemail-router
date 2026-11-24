@@ -184,6 +184,9 @@ def run_voicemail_pipeline(
         db.commit()
         _emit("ticket_update")
         return ticket
+    finally:
+        if getattr(stt_service, "low_memory_mode", False) and hasattr(stt_service, "unload"):
+            stt_service.unload()
 
     stt_ms = round((time.perf_counter() - t_stt) * 1000.0, 2)
     stage_timing_ms["transcribe"] = stt_ms

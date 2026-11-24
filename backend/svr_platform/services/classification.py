@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import csv
+import gc
 import hashlib
 import json
 import logging
 import math
+import os
 import threading
 import time
 from dataclasses import dataclass, field
@@ -272,6 +274,7 @@ class MARBERTv2ClassifierService:
         max_retries: int = 3,
         retry_backoff_s: float = 0.25,
         allow_validated_artifact_fallback: bool = True,
+        low_memory_mode: bool | None = None,
         predictor_override: Callable[[str], dict[str, dict]] | None = None,
     ) -> None:
         self.models_dir = Path(models_dir)
@@ -281,35 +284,60 @@ class MARBERTv2ClassifierService:
         self.max_retries = max_retries
         self.retry_backoff_s = retry_backoff_s
         self.allow_validated_artifact_fallback = allow_validated_artifact_fallback
+        self._low_memory_override = low_memory_mode
         self._predictor_override = predictor_override
         self._lock = threading.Lock()
         self._models: dict[str, object] | None = None
+        self._ckpt_dirs: dict[str, Path] | None = None
         self._tokenizer = None
         self._device = "cpu"
         self._loaded_model_version: str | None = None
         self._validated_index = ValidatedPredictionsIndex(self.repo_root, seed=seed)
 
+    def _is_low_memory(self, device: str) -> bool:
+        if self._low_memory_override is not None:
+            return bool(self._low_memory_override)
+        env_flag = os.environ.get("SVR_LOW_MEMORY_MODE", "").strip().lower()
+        if env_flag in ("1", "true", "yes"):
+            return True
+        if env_flag in ("0", "false", "no"):
+            return False
+        return device == "cpu"
+
     def has_local_checkpoints(self) -> bool:
         return discover_single_task_checkpoints(self.models_dir, seed=self.seed) is not None
 
-    def _load_checkpoints(self) -> None:
-        if self._models is not None:
-            return
+    def _ensure_tokenizer_and_metadata(self) -> dict[str, Path]:
+        if self._tokenizer is not None and self._ckpt_dirs is not None and self._loaded_model_version is not None:
+            return self._ckpt_dirs
         with self._lock:
-            if self._models is not None:
-                return
+            if self._tokenizer is not None and self._ckpt_dirs is not None and self._loaded_model_version is not None:
+                return self._ckpt_dirs
             ckpt_dirs = discover_single_task_checkpoints(self.models_dir, seed=self.seed)
             if ckpt_dirs is None:
                 raise RuntimeError(
                     f"MARBERTv2 single-task checkpoints not found under {self.models_dir}"
                 )
             import torch
-            from transformers import AutoModelForSequenceClassification, AutoTokenizer
+            from transformers import AutoTokenizer
 
             self._device = "cuda" if torch.cuda.is_available() else "cpu"
             first_dir = ckpt_dirs[CLASSIFICATION_FIELDS[0]]
             tok_dir = first_dir if (first_dir / "tokenizer_config.json").is_file() else self.base_model_id
             self._tokenizer = AutoTokenizer.from_pretrained(str(tok_dir))
+            fp = compute_checkpoint_fingerprint(ckpt_dirs)
+            self._loaded_model_version = f"{self.base_model_id}:single-task-lr2e5-sha{fp}"
+            self._ckpt_dirs = ckpt_dirs
+            return ckpt_dirs
+
+    def _load_checkpoints(self) -> None:
+        if self._models is not None:
+            return
+        ckpt_dirs = self._ensure_tokenizer_and_metadata()
+        with self._lock:
+            if self._models is not None:
+                return
+            from transformers import AutoModelForSequenceClassification
 
             loaded: dict[str, object] = {}
             for field_name in CLASSIFICATION_FIELDS:
@@ -318,16 +346,31 @@ class MARBERTv2ClassifierService:
                 model.eval()
                 loaded[field_name] = model
 
-            fp = compute_checkpoint_fingerprint(ckpt_dirs)
-            self._loaded_model_version = f"{self.base_model_id}:single-task-lr2e5-sha{fp}"
             self._models = loaded
             logger.info("Loaded 4 single-task MARBERTv2 checkpoints (%s) on %s", self._loaded_model_version, self._device)
 
-    def _predict_with_checkpoints(self, text_norm: str) -> tuple[dict[str, dict], str]:
-        self._load_checkpoints()
+    @staticmethod
+    def _score_single_model(model: object, enc: dict, field_name: str) -> dict:
         import torch
 
-        assert self._tokenizer is not None and self._models is not None
+        with torch.no_grad():
+            logits = model(**enc).logits[0]
+            probs_tensor = torch.softmax(logits.float(), dim=-1).cpu().tolist()
+        id2label = getattr(model.config, "id2label", None) or {}
+        classes = TRAINED_CLASSES_BY_FIELD[field_name]
+        if id2label and set(str(v) for v in id2label.values()) == set(classes):
+            prob_map = {str(id2label[i]): float(probs_tensor[i]) for i in range(len(probs_tensor))}
+        else:
+            prob_map = {classes[i]: float(probs_tensor[i]) for i in range(len(classes))}
+        total = sum(prob_map.values())
+        if total > 0:
+            prob_map = {k: v / total for k, v in prob_map.items()}
+        best_label = max(classes, key=lambda c: prob_map[c])
+        return {"label": best_label, "probabilities": prob_map}
+
+    def _predict_with_checkpoints(self, text_norm: str) -> tuple[dict[str, dict], str]:
+        ckpt_dirs = self._ensure_tokenizer_and_metadata()
+        assert self._tokenizer is not None
         enc = self._tokenizer(
             text_norm,
             truncation=True,
@@ -338,22 +381,25 @@ class MARBERTv2ClassifierService:
         enc = {k: v.to(self._device) for k, v in enc.items()}
 
         outputs: dict[str, dict] = {}
-        with torch.no_grad():
-            for field_name in CLASSIFICATION_FIELDS:
-                model = self._models[field_name]
-                logits = model(**enc).logits[0]
-                probs_tensor = torch.softmax(logits.float(), dim=-1).cpu().tolist()
-                id2label = getattr(model.config, "id2label", None) or {}
-                classes = TRAINED_CLASSES_BY_FIELD[field_name]
-                if id2label and set(str(v) for v in id2label.values()) == set(classes):
-                    prob_map = {str(id2label[i]): float(probs_tensor[i]) for i in range(len(probs_tensor))}
-                else:
-                    prob_map = {classes[i]: float(probs_tensor[i]) for i in range(len(classes))}
-                total = sum(prob_map.values())
-                if total > 0:
-                    prob_map = {k: v / total for k, v in prob_map.items()}
-                best_label = max(classes, key=lambda c: prob_map[c])
-                outputs[field_name] = {"label": best_label, "probabilities": prob_map}
+        if self._is_low_memory(self._device):
+            from transformers import AutoModelForSequenceClassification
+
+            with self._lock:
+                for field_name in CLASSIFICATION_FIELDS:
+                    model = AutoModelForSequenceClassification.from_pretrained(str(ckpt_dirs[field_name]))
+                    try:
+                        model.to(self._device)
+                        model.eval()
+                        outputs[field_name] = self._score_single_model(model, enc, field_name)
+                    finally:
+                        del model
+                        gc.collect()
+            return outputs, self._loaded_model_version or f"{self.base_model_id}:single-task-lr2e5"
+
+        self._load_checkpoints()
+        assert self._models is not None
+        for field_name in CLASSIFICATION_FIELDS:
+            outputs[field_name] = self._score_single_model(self._models[field_name], enc, field_name)
         return outputs, self._loaded_model_version or f"{self.base_model_id}:single-task-lr2e5"
 
     def classify(

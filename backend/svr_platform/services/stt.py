@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import gc
 import logging
+import os
 import tempfile
 import threading
 import time
@@ -69,6 +71,7 @@ class WhisperSTTService:
         ffmpeg_bin: str = "ffmpeg",
         max_retries: int = 3,
         retry_backoff_s: float = 0.5,
+        low_memory_mode: bool | None = None,
         transcriber_override: Callable[[bytes, str], dict] | None = None,
     ) -> None:
         self.model_id = model_id
@@ -81,9 +84,27 @@ class WhisperSTTService:
         self.ffmpeg_bin = ffmpeg_bin
         self.max_retries = max_retries
         self.retry_backoff_s = retry_backoff_s
+        if low_memory_mode is None:
+            env_flag = os.environ.get("SVR_LOW_MEMORY_MODE", "").strip().lower()
+            if env_flag in ("1", "true", "yes"):
+                self.low_memory_mode = True
+            elif env_flag in ("0", "false", "no"):
+                self.low_memory_mode = False
+            else:
+                self.low_memory_mode = self.device == "cpu"
+        else:
+            self.low_memory_mode = bool(low_memory_mode)
         self._transcriber_override = transcriber_override
         self._model = None
         self._lock = threading.Lock()
+
+    def unload(self) -> None:
+        """Release the resident Whisper model to reclaim RAM on low-memory CPU hosts."""
+        with self._lock:
+            if self._model is not None:
+                self._model = None
+                gc.collect()
+                logger.info("Unloaded local Whisper model=%s to reclaim host memory.", self.model_id)
 
     def _get_model(self):
         if self._model is not None:
