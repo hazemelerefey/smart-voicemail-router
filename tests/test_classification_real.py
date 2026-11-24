@@ -1,7 +1,7 @@
 """Tests for real and extensible classification stage."""
 
 import pytest
-from src.svr.schemas import (
+from svr.schemas import (
     AudioEvidence,
     ChurnRisk,
     ComplaintCategory,
@@ -9,9 +9,9 @@ from src.svr.schemas import (
     CustomerState,
     TextAnalysis,
 )
-from src.svr.stages import classification
-from src.svr.stages.intake import AudioMeta
-from src.svr.pipeline import run_pipeline
+from svr.stages import classification
+from svr.stages.intake import AudioMeta
+from svr.pipeline import run_pipeline
 
 
 @pytest.fixture

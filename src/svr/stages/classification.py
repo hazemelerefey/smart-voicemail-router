@@ -54,6 +54,8 @@ def _get_predictions_lookup() -> dict[str, dict[str, Any]]:
 
     lookup: dict[str, dict[str, Any]] = {}
     candidate_paths = [
+        Path("runs/exp_marbertv2-lr2e5-clean-20261119/predictions_val_seed42.json"),
+        Path("../runs/exp_marbertv2-lr2e5-clean-20261119/predictions_val_seed42.json"),
         Path("runs/exp_001/predictions_val_seed42.json"),
         Path("../runs/exp_001/predictions_val_seed42.json"),
     ]
