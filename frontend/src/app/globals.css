@@ -1,52 +1,125 @@
-/* SVR Operator Design System - Semantic Light/Dark Tokens (WCAG 2.2 AA) */
+/* SVR Operator Design System - Apple Precision Editorial Tokens (nexu-io/open-design/apple) */
 /* Zero gradients, zero glassmorphism, zero pulsing dots, zero em/en dashes */
 
 :root,
 [data-theme="light"] {
+  /* Surfaces (3 levels: white canvas, Pale Apple Gray, near-white warm stop) */
   --bg: #ffffff;
-  --surface: #f7f9fc;
-  --surface-hover: #eef2f7;
-  --ink: #0b0f19;
-  --muted: #4b5563;
-  --faint: #5b6472;
-  --line: #d8dee8;
-  --line-strong: #b8c2d1;
-  --accent: #1d4ed8;
-  --accent-hover: #1e40af;
-  --accent-ink: #ffffff;
-  --urgent: #b91c1c;
-  --urgent-bg: #fef2f2;
-  --high: #9a3412;
-  --high-bg: #fff7ed;
-  --ok: #166534;
+  --surface: #f5f5f7;
+  --surface-warm: #fbfbfd;
+  --surface-hover: #ebebef;
+
+  /* Foreground ramp (4 levels: Near-Black Ink -> Utility Dark -> Secondary -> Mid Border) */
+  --fg: #1d1d1f;
+  --fg-2: #424245;
+  --muted: #6e6e73;
+  --meta: #86868b;
+
+  /* Borders (2 levels: Soft Border Gray & light inner separator) */
+  --border: #d2d2d7;
+  --border-soft: #e8e8ed;
+
+  /* Accent (Apple Action Blue) */
+  --accent: #0071e3;
+  --accent-on: #ffffff;
+  --accent-hover: #0077ed;
+  --accent-active: #0066cc;
+
+  /* Semantic status tokens */
+  --success: #16a34a;
+  --warn: #eab308;
+  --danger: #dc2626;
+  --ok: #15803d;
   --ok-bg: #f0fdf4;
-  --info: #1d4ed8;
-  --info-bg: #eff6ff;
-  --radius: 2px;
+  --high: #a16207;
+  --high-bg: #fefce8;
+  --urgent: #c81e1e;
+  --urgent-bg: #fef2f2;
+  --info: #0066cc;
+  --info-bg: #f0f7ff;
+
+  /* Compatibility aliases */
+  --ink: var(--fg);
+  --faint: var(--muted);
+  --line: var(--border-soft);
+  --line-strong: var(--border);
+  --accent-ink: var(--accent-on);
+
+  /* Typography */
+  --font-display: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, "Noto Sans Arabic", Arial, sans-serif;
+  --font-body: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, "Noto Sans Arabic", Arial, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 15px;
+  --text-lg: 21px;
+  --text-xl: 28px;
+  --leading-body: 1.47;
+  --leading-tight: 1.1;
+  --tracking-display: -0.015em;
+
+  /* Purposeful radius tiers */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 980px;
+  --radius: var(--radius-md);
+
+  /* Elevation (3 levels) */
+  --elev-flat: none;
+  --elev-ring: 0 0 0 1px var(--border);
+  --elev-raised: 0 12px 32px rgba(0, 0, 0, 0.08);
+  --backdrop: rgba(29, 29, 31, 0.48);
+
+  /* Focus halo & Apple deceleration motion */
+  --focus-ring: 0 0 0 4px color-mix(in oklab, var(--accent), transparent 65%);
+  --motion-fast: 150ms;
+  --motion-base: 220ms;
+  --ease-standard: cubic-bezier(0.28, 0, 0.22, 1);
+
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --bg: #0d1117;
-  --surface: #141923;
-  --surface-hover: #1c2433;
-  --ink: #f0f3f8;
-  --muted: #a6b0c0;
-  --faint: #929eb0;
-  --line: #283244;
-  --line-strong: #3b4963;
-  --accent: #60a5fa;
-  --accent-hover: #93c5fd;
-  --accent-ink: #09101d;
-  --urgent: #f87171;
-  --urgent-bg: #2a1417;
-  --high: #fbbf24;
-  --high-bg: #281e0f;
-  --ok: #4ade80;
-  --ok-bg: #102619;
-  --info: #60a5fa;
-  --info-bg: #122138;
-  --radius: 2px;
+  --bg: #000000;
+  --surface: #1d1d1f;
+  --surface-warm: #141416;
+  --surface-hover: #2c2c2e;
+
+  --fg: #f5f5f7;
+  --fg-2: #d2d2d7;
+  --muted: #a1a1a6;
+  --meta: #86868b;
+
+  --border: #38383a;
+  --border-soft: #2c2c2e;
+
+  --accent: #2997ff;
+  --accent-on: #ffffff;
+  --accent-hover: #47a6ff;
+  --accent-active: #0071e3;
+
+  --success: #30d158;
+  --warn: #ffd60a;
+  --danger: #ff453a;
+  --ok: #30d158;
+  --ok-bg: #0f2918;
+  --high: #ffd60a;
+  --high-bg: #2a230b;
+  --urgent: #ff453a;
+  --urgent-bg: #2c1517;
+  --info: #2997ff;
+  --info-bg: #0d223a;
+
+  --ink: var(--fg);
+  --faint: var(--muted);
+  --line: var(--border-soft);
+  --line-strong: var(--border);
+  --accent-ink: var(--accent-on);
+
+  --elev-raised: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --backdrop: rgba(0, 0, 0, 0.68);
   color-scheme: dark;
 }
 
@@ -62,21 +135,26 @@ html {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans Arabic", Tahoma, Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
   color: var(--ink);
   background-color: var(--bg);
 }
 
 a {
+  color: var(--accent-active);
+  text-decoration: none;
+}
+
+[data-theme="dark"] a {
   color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 a:hover {
-  color: var(--accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 button,
@@ -85,14 +163,15 @@ input,
 select,
 textarea,
 summary {
-  transition-property: color, background-color, border-color, opacity;
-  transition-duration: 150ms;
-  transition-timing-function: ease-out;
+  transition-property: color, background-color, border-color, box-shadow, opacity;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--ease-standard);
 }
 
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+  box-shadow: var(--focus-ring);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -105,25 +184,29 @@ summary {
 }
 
 h1 {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0 0 4px;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin: 0 0 6px;
+  letter-spacing: var(--tracking-display);
+  line-height: 1.14;
 }
 
 h2 {
-  font-size: 15px;
-  font-weight: 700;
-  margin: 0 0 10px;
-  line-height: 1.35;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  letter-spacing: -0.012em;
+  line-height: 1.25;
 }
 
 h3 {
-  font-size: 13px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
   margin: 0 0 8px;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 p {
@@ -131,14 +214,14 @@ p {
 }
 
 .sub {
-  font-size: 13px;
+  font-size: var(--text-sm);
   color: var(--muted);
-  margin: 0 0 14px;
+  margin: 0 0 16px;
 }
 
 .mono {
-  font-family: ui-monospace, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
 }
 
 .num {
@@ -236,12 +319,12 @@ p {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding-inline: 16px;
+  padding-inline: 20px;
   min-block-size: 56px;
   min-inline-size: 0;
   max-inline-size: 100%;
-  border-block-end: 1px solid var(--line);
-  background-color: var(--bg);
+  border-block-end: 1px solid var(--border-soft);
+  background-color: var(--surface-warm);
 }
 
 .brand-link {
@@ -424,7 +507,7 @@ p {
 .mobile-drawer-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(11, 15, 25, 0.55);
+  background-color: var(--backdrop);
   z-index: 400;
   display: flex;
 }
@@ -444,7 +527,7 @@ p {
 .main-content {
   grid-area: main;
   min-inline-size: 0;
-  padding: 20px 24px 48px;
+  padding: 28px 36px 56px;
   background-color: var(--bg);
 }
 
@@ -538,17 +621,17 @@ textarea:focus {
   cursor: pointer;
 }
 
-/* Buttons (48px touch target, 1 primary CTA per screen) */
+/* Buttons (48px touch target, 1 primary capsule CTA per screen) */
 .btn {
   appearance: none;
   font: inherit;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: 500;
   background-color: var(--bg);
   color: var(--ink);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 0 18px;
   min-block-size: 48px;
   cursor: pointer;
   text-decoration: none;
@@ -560,20 +643,29 @@ textarea:focus {
 }
 
 .btn:hover:not(:disabled) {
-  background-color: var(--surface-hover);
+  background-color: var(--surface);
   color: var(--ink);
+  text-decoration: none;
 }
 
 .btn.primary {
   background-color: var(--accent);
   color: var(--accent-ink);
   border-color: var(--accent);
+  font-weight: 600;
+  padding: 0 22px;
 }
 
 .btn.primary:hover:not(:disabled) {
   background-color: var(--accent-hover);
   border-color: var(--accent-hover);
   color: var(--accent-ink);
+  text-decoration: none;
+}
+
+.btn.primary:active:not(:disabled) {
+  background-color: var(--accent-active);
+  border-color: var(--accent-active);
 }
 
 .btn.ghost {
@@ -602,20 +694,20 @@ textarea:focus {
   cursor: not-allowed;
 }
 
-/* Cards & Panels */
+/* Cards & Panels (Apple 18px radius + soft surface rhythm) */
 .card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  margin-block-end: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin-block-end: 18px;
   background-color: var(--bg);
 }
 
 .card-surface {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 16px 18px;
-  margin-block-end: 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  margin-block-end: 18px;
   background-color: var(--surface);
 }
 
@@ -671,31 +763,33 @@ textarea:focus {
 .kpi-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin-block-end: 16px;
+  gap: 14px;
+  margin-block-end: 20px;
 }
 
 .kpi-box {
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 12px 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
   background-color: var(--surface);
 }
 
 .kpi-label {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted);
 }
 
 .kpi-value {
-  font-size: 22px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
   font-variant-numeric: tabular-nums;
   margin-block-start: 4px;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .kpi-sub {
@@ -1025,8 +1119,8 @@ textarea:focus {
 /* Tables */
 .table-wrap {
   overflow-x: auto;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
 }
 
 table.data {
@@ -1099,7 +1193,7 @@ details.panel .panel-body {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(11, 15, 25, 0.62);
+  background-color: var(--backdrop);
   z-index: 500;
   display: grid;
   place-items: center;
@@ -1111,9 +1205,10 @@ details.panel .panel-body {
   max-block-size: 90dvb;
   overflow-y: auto;
   background-color: var(--bg);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-raised);
+  padding: 24px;
 }
 
 .modal-actions {
@@ -1128,7 +1223,7 @@ details.panel .panel-body {
 .drawer-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(11, 15, 25, 0.55);
+  background-color: var(--backdrop);
   z-index: 450;
   display: flex;
   justify-content: flex-end;
@@ -1138,8 +1233,9 @@ details.panel .panel-body {
   inline-size: min(480px, 100vw);
   block-size: 100%;
   background-color: var(--bg);
-  border-inline-start: 1px solid var(--line);
-  padding: 20px;
+  border-inline-start: 1px solid var(--border);
+  box-shadow: var(--elev-raised);
+  padding: 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -1151,16 +1247,17 @@ details.panel .panel-body {
   min-block-size: 100dvb;
   display: grid;
   place-items: center;
-  padding: 20px;
+  padding: 24px;
   background-color: var(--surface);
 }
 
 .auth-card {
   inline-size: min(440px, 100%);
   background-color: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elev-raised);
+  padding: 28px;
 }
 
 .auth-form {
