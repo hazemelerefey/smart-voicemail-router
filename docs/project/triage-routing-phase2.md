@@ -52,11 +52,18 @@ I scan the full submitted rows array for duplicate composite keys before validat
 
 Run All and the existing synthetic entry points cannot open real data. The separate `run_authorized_validation()` entry point rejects missing or incorrect authorization before touching any artifact.
 
-## Proposed category-to-script mapping
+## Approved category-to-script mapping
 
-All 11 Egyptian Arabic templates in `PROPOSED_SUGGESTED_SCRIPTS` are drafts pending Hazem's approval for customer-facing use. The adapter uses `suggest_script(category)` for valid predicted categories. The lookup accepts the official enum or its exact wire value. A null category requires a nonblank upstream script and Human Review. Unsupported categories fail validation.
+Hazem approved all 11 Egyptian Arabic templates in `APPROVED_SUGGESTED_SCRIPTS` for Phase 2 customer-facing use. The adapter uses `suggest_script(category)` for valid predicted categories. The lookup accepts the official enum or its exact wire value. A null category requires a nonblank upstream script and Human Review. Unsupported categories fail validation.
 
-Nine templates preserve the supplied wording. The prior revisions for the two entries below were unavailable in the local backup and the editor snapshot. These proposed replacements avoid assuming a branch visit, direct staff interaction, a contact channel, or an unresolved earlier request.
+Approval record
+
+- Approved by **Hazem (team leader)**
+- Approval date **2026-11-24**
+- Scope **All 11 existing Phase 2 Suggested Script Templates**
+- Exact wording and category mappings unchanged.
+
+The approved branch/staff and wait templates retain the generalized wording below.
 
 - `BRANCH_AND_STAFF`
 
@@ -205,7 +212,7 @@ The loader uses six exact allowlisted paths beneath `C:\Users\RC\svr-data`. It r
 
 Stop on authorization failure, an unsafe path, a hash or Git identity mismatch, an invalid manifest, a fatal seed header or envelope error, a reconciliation invariant failure, or an Agent State mismatch. The loader returns no partial official report on a fatal failure. A recoverable row rejection stays in the ledger and processing continues. Capacity cleanup runs in the existing per-ticket `finally` path. If state restoration fails, discard partial results, end the isolated process, and investigate before retrying. The loader has no persistent routing writes to roll back.
 
-Customer-facing script approval remains pending. The Final Test Set stays outside this workflow.
+The Final Test Set stays outside this workflow.
 
 ## Known integration risks
 
