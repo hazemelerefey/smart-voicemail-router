@@ -12,12 +12,25 @@ credentials.*
 # Local Python environments and caches
 .venv/
 venv/
+backend/.venv/
+.cache/
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .ipynb_checkpoints/
+
+# Frontend build and dependencies
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Local runtime storage and databases
+storage/
+*.db
+*.sqlite
+*.sqlite3
 
 # Model artifacts and weights
 models/
