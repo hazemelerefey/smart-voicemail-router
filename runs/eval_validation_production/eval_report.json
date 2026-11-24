@@ -1,0 +1,965 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-11-24T21:04:49+00:00",
+  "eval_run_id": "08a8409c-9738-4398-9a2c-18b1427a8581",
+  "guard_claim_id": null,
+  "split": "validation",
+  "infra_split": "val",
+  "dataset_version": "v2",
+  "dataset_sha256": "50df253ad6506b70a262b512eff1f79562f2cd65d58143127899025ad707cb18",
+  "n_rows": 1003,
+  "model_version": "UBC-NLP/MARBERTv2:single-task-lr2e5-shaa92e68685217",
+  "confidence_threshold": 0.5,
+  "checkpoint_provenance": {
+    "models_dir": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task",
+    "seed": 42,
+    "has_local_checkpoints": true,
+    "combined_sha256": "0ea433c589f414572f4adf5c28c570bab84f8ffebc1871c979c84721f00f5adb",
+    "files": {
+      "complaint_category": {
+        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_42\\complaint_category\\epoch_02\\model.safetensors",
+        "sha256": "f94ed9b5b41afa19e81c708aeb7d6f45e61e329922adea4346c50d440a302007"
+      },
+      "complaint_urgency": {
+        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_42\\complaint_urgency\\epoch_02\\model.safetensors",
+        "sha256": "17701f7beeb2ffeed81309142b82fefdca0a5127b161b81619000d591ee0970f"
+      },
+      "customer_state": {
+        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_42\\customer_state\\epoch_03\\model.safetensors",
+        "sha256": "ad363d75189feb55877353ea62637b87759d679c97f30fe9b4c7fb7788e7c511"
+      },
+      "churn_risk": {
+        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_42\\churn_risk\\epoch_03\\model.safetensors",
+        "sha256": "47fd0d571139772142dc1b2b15bf3c54003b35418676dd0abcaefcfc05e3d3c0"
+      }
+    }
+  },
+  "ai9_gates": {
+    "all_passed": false,
+    "checks": {
+      "complaint_category": {
+        "actual": 0.792157,
+        "threshold": 0.75,
+        "passed": true
+      },
+      "complaint_urgency": {
+        "actual": 0.716751,
+        "threshold": 0.7,
+        "passed": true
+      },
+      "customer_state": {
+        "actual": 0.755019,
+        "threshold": 0.7,
+        "passed": true
+      },
+      "churn_risk": {
+        "actual": 0.798998,
+        "threshold": 0.8,
+        "passed": false
+      },
+      "combined": {
+        "actual": 0.765731,
+        "threshold": 0.75,
+        "passed": true
+      },
+      "routing_agreement": {
+        "actual": 0.887338,
+        "threshold": 0.8,
+        "passed": true
+      }
+    }
+  },
+  "classification": {
+    "schema_version": 2,
+    "split": "val",
+    "n": 1003,
+    "label_status": "The labels come from a model and are still being audited by the team. They are not human-verified until the audit approves them.",
+    "fields": {
+      "complaint_category": {
+        "n": 1003,
+        "classes": [
+          "network_and_connectivity",
+          "billing_and_charges",
+          "balance_and_data",
+          "app_and_account",
+          "branch_and_staff",
+          "no_reply_or_long_wait",
+          "cancellation_request",
+          "thanks_or_praise",
+          "other",
+          "offers_and_packages",
+          "sim_services"
+        ],
+        "classes_without_support": [],
+        "accuracy": 0.810568295114656,
+        "macro": {
+          "precision": 0.7957202774234253,
+          "recall": 0.7978378546127453,
+          "f1": 0.7921568190023112
+        },
+        "per_class": {
+          "network_and_connectivity": {
+            "precision": 0.9276315789473685,
+            "recall": 0.815028901734104,
+            "f1": 0.8676923076923077,
+            "support": 173
+          },
+          "billing_and_charges": {
+            "precision": 0.7345679012345679,
+            "recall": 0.8561151079136691,
+            "f1": 0.7906976744186047,
+            "support": 139
+          },
+          "balance_and_data": {
+            "precision": 0.7909090909090909,
+            "recall": 0.6744186046511628,
+            "f1": 0.7280334728033473,
+            "support": 129
+          },
+          "app_and_account": {
+            "precision": 0.8412698412698413,
+            "recall": 0.8833333333333333,
+            "f1": 0.8617886178861788,
+            "support": 120
+          },
+          "branch_and_staff": {
+            "precision": 0.7303370786516854,
+            "recall": 0.8333333333333334,
+            "f1": 0.7784431137724552,
+            "support": 78
+          },
+          "no_reply_or_long_wait": {
+            "precision": 0.8533333333333334,
+            "recall": 0.7529411764705882,
+            "f1": 0.7999999999999999,
+            "support": 85
+          },
+          "cancellation_request": {
+            "precision": 0.7441860465116279,
+            "recall": 0.8,
+            "f1": 0.7710843373493975,
+            "support": 40
+          },
+          "thanks_or_praise": {
+            "precision": 0.9772727272727273,
+            "recall": 0.9772727272727273,
+            "f1": 0.9772727272727273,
+            "support": 132
+          },
+          "other": {
+            "precision": 0.5789473684210527,
+            "recall": 0.532258064516129,
+            "f1": 0.5546218487394958,
+            "support": 62
+          },
+          "offers_and_packages": {
+            "precision": 0.574468085106383,
+            "recall": 0.8181818181818182,
+            "f1": 0.675,
+            "support": 33
+          },
+          "sim_services": {
+            "precision": 1.0,
+            "recall": 0.8333333333333334,
+            "f1": 0.9090909090909091,
+            "support": 12
+          }
+        },
+        "confusion_matrix": {
+          "rows_are": "true",
+          "columns_are": "predicted",
+          "labels": [
+            "network_and_connectivity",
+            "billing_and_charges",
+            "balance_and_data",
+            "app_and_account",
+            "branch_and_staff",
+            "no_reply_or_long_wait",
+            "cancellation_request",
+            "thanks_or_praise",
+            "other",
+            "offers_and_packages",
+            "sim_services"
+          ],
+          "counts": [
+            [
+              141,
+              4,
+              6,
+              5,
+              6,
+              5,
+              0,
+              0,
+              4,
+              2,
+              0
+            ],
+            [
+              2,
+              119,
+              8,
+              0,
+              1,
+              1,
+              4,
+              0,
+              2,
+              2,
+              0
+            ],
+            [
+              1,
+              22,
+              87,
+              5,
+              0,
+              0,
+              1,
+              1,
+              4,
+              8,
+              0
+            ],
+            [
+              0,
+              4,
+              2,
+              106,
+              2,
+              0,
+              1,
+              1,
+              3,
+              1,
+              0
+            ],
+            [
+              1,
+              6,
+              0,
+              0,
+              65,
+              3,
+              0,
+              0,
+              2,
+              1,
+              0
+            ],
+            [
+              2,
+              0,
+              4,
+              2,
+              9,
+              64,
+              1,
+              0,
+              3,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              1,
+              0,
+              0,
+              1,
+              32,
+              0,
+              4,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              0,
+              2,
+              0,
+              0,
+              0,
+              129,
+              0,
+              0,
+              0
+            ],
+            [
+              2,
+              5,
+              2,
+              4,
+              6,
+              1,
+              3,
+              0,
+              33,
+              6,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              2,
+              0,
+              0,
+              1,
+              1,
+              2,
+              27,
+              0
+            ],
+            [
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              10
+            ]
+          ]
+        },
+        "n_excluded": 0
+      },
+      "complaint_urgency": {
+        "n": 1003,
+        "classes": [
+          "high",
+          "medium",
+          "low"
+        ],
+        "classes_without_support": [],
+        "accuracy": 0.7726819541375872,
+        "macro": {
+          "precision": 0.7045485251858681,
+          "recall": 0.7418814569499501,
+          "f1": 0.7167513211090096
+        },
+        "per_class": {
+          "high": {
+            "precision": 0.4533333333333333,
+            "recall": 0.6538461538461539,
+            "f1": 0.5354330708661418,
+            "support": 104
+          },
+          "medium": {
+            "precision": 0.8258527827648114,
+            "recall": 0.7876712328767124,
+            "f1": 0.8063102541630149,
+            "support": 584
+          },
+          "low": {
+            "precision": 0.8344594594594594,
+            "recall": 0.7841269841269841,
+            "f1": 0.8085106382978723,
+            "support": 315
+          }
+        },
+        "confusion_matrix": {
+          "rows_are": "true",
+          "columns_are": "predicted",
+          "labels": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "counts": [
+            [
+              68,
+              36,
+              0
+            ],
+            [
+              75,
+              460,
+              49
+            ],
+            [
+              7,
+              61,
+              247
+            ]
+          ]
+        },
+        "n_excluded": 0
+      },
+      "customer_state": {
+        "n": 1002,
+        "classes": [
+          "calm",
+          "frustrated",
+          "mad",
+          "satisfied"
+        ],
+        "classes_without_support": [],
+        "accuracy": 0.7355289421157685,
+        "macro": {
+          "precision": 0.7315503232498866,
+          "recall": 0.7912550952382119,
+          "f1": 0.7550189583132032
+        },
+        "per_class": {
+          "calm": {
+            "precision": 0.7057291666666666,
+            "recall": 0.6724565756823822,
+            "f1": 0.6886912325285897,
+            "support": 403
+          },
+          "frustrated": {
+            "precision": 0.7081447963800905,
+            "recall": 0.7146118721461188,
+            "f1": 0.7113636363636364,
+            "support": 438
+          },
+          "mad": {
+            "precision": 0.5348837209302325,
+            "recall": 0.7931034482758621,
+            "f1": 0.6388888888888888,
+            "support": 29
+          },
+          "satisfied": {
+            "precision": 0.9774436090225563,
+            "recall": 0.9848484848484849,
+            "f1": 0.981132075471698,
+            "support": 132
+          }
+        },
+        "confusion_matrix": {
+          "rows_are": "true",
+          "columns_are": "predicted",
+          "labels": [
+            "calm",
+            "frustrated",
+            "mad",
+            "satisfied"
+          ],
+          "counts": [
+            [
+              271,
+              123,
+              6,
+              3
+            ],
+            [
+              111,
+              313,
+              14,
+              0
+            ],
+            [
+              0,
+              6,
+              23,
+              0
+            ],
+            [
+              2,
+              0,
+              0,
+              130
+            ]
+          ]
+        },
+        "n_excluded": 1
+      },
+      "churn_risk": {
+        "n": 1003,
+        "classes": [
+          "at_risk",
+          "not_at_risk"
+        ],
+        "classes_without_support": [],
+        "accuracy": 0.996011964107677,
+        "macro": {
+          "precision": 0.998,
+          "recall": 0.7142857142857143,
+          "f1": 0.798997995991984
+        },
+        "per_class": {
+          "at_risk": {
+            "precision": 1.0,
+            "recall": 0.42857142857142855,
+            "f1": 0.6,
+            "support": 7
+          },
+          "not_at_risk": {
+            "precision": 0.996,
+            "recall": 1.0,
+            "f1": 0.9979959919839679,
+            "support": 996
+          }
+        },
+        "confusion_matrix": {
+          "rows_are": "true",
+          "columns_are": "predicted",
+          "labels": [
+            "at_risk",
+            "not_at_risk"
+          ],
+          "counts": [
+            [
+              3,
+              4
+            ],
+            [
+              0,
+              996
+            ]
+          ]
+        },
+        "n_excluded": 0
+      }
+    },
+    "exceptions": [
+      {
+        "field": "customer_state",
+        "excluded_labels": [
+          "unclear"
+        ],
+        "rows_excluded": 1,
+        "n_scored": 1002,
+        "n_total_rows": 1003,
+        "reason": "unclear has 0 rows in train (1 in val, 0 in test), so the model never trains on it; excluded from customer_state macro-F1 only (Hazem's decision)."
+      }
+    ],
+    "combined_macro_f1": {
+      "label": "unweighted mean of the per-field macro-F1 values",
+      "mean": 0.765731273604127,
+      "values": {
+        "complaint_category": 0.7921568190023112,
+        "complaint_urgency": 0.7167513211090096,
+        "customer_state": 0.7550189583132032,
+        "churn_risk": 0.798997995991984
+      }
+    }
+  },
+  "per_field_macro_f1": {
+    "complaint_category": 0.792157,
+    "complaint_urgency": 0.716751,
+    "customer_state": 0.755019,
+    "churn_risk": 0.798998
+  },
+  "combined_macro_f1": 0.765731,
+  "churn_at_risk_analysis": {
+    "true_at_risk_count": 7,
+    "predicted_at_risk_count": 3,
+    "true_positives": 3,
+    "false_positives": 0,
+    "false_negatives": 4,
+    "at_risk_precision": 1.0,
+    "at_risk_recall": 0.428571,
+    "at_risk_f1": 0.6,
+    "fragility_warning": "Churn macro-F1 depends on only 7 at_risk rows in validation; one row shifts the score materially. Inspect per-seed churn values alongside the mean."
+  },
+  "sira_reference_val_f1": {
+    "complaint_category": 0.7872,
+    "complaint_urgency": 0.7211,
+    "customer_state": 0.7471,
+    "churn_risk": 0.8277,
+    "combined": 0.7708
+  },
+  "fair_rerun_5seed": {
+    "source_path": "runs/exp_fair-marbertv2-lr2e5/run_record.json",
+    "run_id": "fair-marbertv2-lr2e5",
+    "evaluated_split": "val",
+    "per_seed": [
+      {
+        "seed": 42,
+        "complaint_category_macro_f1": 0.783485,
+        "complaint_urgency_macro_f1": 0.730488,
+        "customer_state_macro_f1": 0.741516,
+        "churn_risk_macro_f1": 0.798998,
+        "combined_macro_f1": 0.763622
+      },
+      {
+        "seed": 1337,
+        "complaint_category_macro_f1": 0.798704,
+        "complaint_urgency_macro_f1": 0.721192,
+        "customer_state_macro_f1": 0.742766,
+        "churn_risk_macro_f1": 0.961288,
+        "combined_macro_f1": 0.805988
+      },
+      {
+        "seed": 2023,
+        "complaint_category_macro_f1": 0.781531,
+        "complaint_urgency_macro_f1": 0.713282,
+        "customer_state_macro_f1": 0.746627,
+        "churn_risk_macro_f1": 0.928069,
+        "combined_macro_f1": 0.792377
+      },
+      {
+        "seed": 7,
+        "complaint_category_macro_f1": 0.792275,
+        "complaint_urgency_macro_f1": 0.729398,
+        "customer_state_macro_f1": 0.74433,
+        "churn_risk_macro_f1": 0.916165,
+        "combined_macro_f1": 0.795542
+      },
+      {
+        "seed": 99,
+        "complaint_category_macro_f1": 0.79141,
+        "complaint_urgency_macro_f1": 0.730697,
+        "customer_state_macro_f1": 0.745869,
+        "churn_risk_macro_f1": 0.916165,
+        "combined_macro_f1": 0.796035
+      }
+    ],
+    "aggregate": {
+      "churn_risk_macro_f1": {
+        "mean": 0.9041370648605482,
+        "std": 0.0616086712172557,
+        "ddof": 1,
+        "n": 5
+      },
+      "complaint_category_macro_f1": {
+        "mean": 0.7894809237965456,
+        "std": 0.006995627770531321,
+        "ddof": 1,
+        "n": 5
+      },
+      "complaint_urgency_macro_f1": {
+        "mean": 0.7250112709367609,
+        "std": 0.007644240693490645,
+        "ddof": 1,
+        "n": 5
+      },
+      "customer_state_macro_f1": {
+        "mean": 0.7442215645306297,
+        "std": 0.0021182332793042895,
+        "ddof": 1,
+        "n": 5
+      }
+    },
+    "combined_mean": 0.790713,
+    "combined_std": 0.015982
+  },
+  "routing_agreement": {
+    "total_rows": 1003,
+    "agreed_rows": 890,
+    "disagreed_rows": 113,
+    "unmapped_predictions": 0,
+    "routing_agreement": 0.887338,
+    "routing_agreement_pct": 88.73,
+    "exact_category_match_rate": 0.810568,
+    "exact_category_match_pct": 81.06,
+    "threshold": 0.8,
+    "meets_ai9_threshold": true,
+    "skill_mapping": {
+      "network_and_connectivity": "Network",
+      "no_reply_or_long_wait": "Network",
+      "sim_services": "Network",
+      "billing_and_charges": "Billing",
+      "balance_and_data": "Billing",
+      "offers_and_packages": "Billing",
+      "app_and_account": "General",
+      "branch_and_staff": "General",
+      "cancellation_request": "General",
+      "thanks_or_praise": "General",
+      "other": "General"
+    },
+    "per_skill": {
+      "Network": {
+        "ideal_agent": "Network Care Specialist",
+        "support": 270,
+        "predicted": 237,
+        "agreed": 224,
+        "precision": 0.945148,
+        "recall": 0.82963,
+        "f1": 0.883629
+      },
+      "Billing": {
+        "ideal_agent": "Billing & Bundles Specialist",
+        "support": 301,
+        "predicted": 319,
+        "agreed": 273,
+        "precision": 0.855799,
+        "recall": 0.906977,
+        "f1": 0.880645
+      },
+      "General": {
+        "ideal_agent": "Subscriber Care Specialist",
+        "support": 432,
+        "predicted": 447,
+        "agreed": 393,
+        "precision": 0.879195,
+        "recall": 0.909722,
+        "f1": 0.894198
+      }
+    },
+    "confusion_matrix": {
+      "rows_are": "true_skill",
+      "columns_are": "predicted_skill",
+      "labels": [
+        "Network",
+        "Billing",
+        "General"
+      ],
+      "counts": [
+        [
+          224,
+          16,
+          30
+        ],
+        [
+          4,
+          273,
+          24
+        ],
+        [
+          9,
+          30,
+          393
+        ]
+      ]
+    }
+  },
+  "priority_agreement": {
+    "scored_rows": 1002,
+    "excluded_unclear_rows": 1,
+    "bucket_agreement": 0.768463,
+    "bucket_agreement_pct": 76.85,
+    "exact_score_agreement": 0.627745,
+    "exact_score_agreement_pct": 62.77
+  },
+  "operational_metrics": {
+    "confidence_threshold": 0.5,
+    "human_review_count": 131,
+    "human_review_rate": 0.130608,
+    "human_review_rate_pct": 13.06,
+    "meets_ai10_review_rate_target": true,
+    "prob_sum_violations": 0,
+    "confidence_distribution": {
+      "min": 0.246,
+      "p10": 0.4803,
+      "p50": 0.6772,
+      "p90": 0.8789,
+      "mean": 0.6683
+    }
+  },
+  "stt_sample": {
+    "model": "openai/whisper-large-v3",
+    "sample_size": 10,
+    "v1_schema_valid_count": 10,
+    "v1_columns": [
+      "file",
+      "model",
+      "text",
+      "text_norm",
+      "min_avg_logprob",
+      "max_no_speech_prob",
+      "needs_review",
+      "review_reasons",
+      "dup_text_size",
+      "error"
+    ],
+    "error_count": 0,
+    "needs_review_count": 0,
+    "latency_ms": {
+      "n": 10,
+      "min": 14378.83,
+      "p50": 15317.2,
+      "p95": 19020.71,
+      "max": 19615.59,
+      "mean": 15910.0
+    },
+    "files": [
+      {
+        "audio_file": "frustrated_0001.wav",
+        "duration_seconds": 8.0,
+        "latency_ms": 15781.2,
+        "min_avg_logprob": -0.0341,
+        "max_no_speech_prob": 0.0129,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      },
+      {
+        "audio_file": "mad_0003.wav",
+        "duration_seconds": 11.112,
+        "latency_ms": 18293.63,
+        "min_avg_logprob": -0.1186,
+        "max_no_speech_prob": 0.012,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      },
+      {
+        "audio_file": "frustrated_0109.wav",
+        "duration_seconds": 6.784,
+        "latency_ms": 15246.55,
+        "min_avg_logprob": -0.2015,
+        "max_no_speech_prob": 0.0203,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      },
+      {
+        "audio_file": "frustrated_0500.wav",
+        "duration_seconds": 9.748,
+        "latency_ms": 19615.59,
+        "min_avg_logprob": -0.2231,
+        "max_no_speech_prob": 0.0275,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      },
+      {
+        "audio_file": "calm_0136.wav",
+        "duration_seconds": 9.102,
+        "latency_ms": 16988.63,
+        "min_avg_logprob": -0.1188,
+        "max_no_speech_prob": 0.0157,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      },
+      {
+        "audio_file": "frustrated_0264.wav",
+        "duration_seconds": 6.933,
+        "latency_ms": 14378.83,
+        "min_avg_logprob": -0.0974,
+        "max_no_speech_prob": 0.0776,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      },
+      {
+        "audio_file": "satisfied_0058.wav",
+        "duration_seconds": 5.845,
+        "latency_ms": 14487.05,
+        "min_avg_logprob": -0.0438,
+        "max_no_speech_prob": 0.0132,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      },
+      {
+        "audio_file": "frustrated_0122.wav",
+        "duration_seconds": 5.013,
+        "latency_ms": 14510.7,
+        "min_avg_logprob": -0.1548,
+        "max_no_speech_prob": 0.106,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      },
+      {
+        "audio_file": "frustrated_0403.wav",
+        "duration_seconds": 5.818,
+        "latency_ms": 14409.93,
+        "min_avg_logprob": -0.2097,
+        "max_no_speech_prob": 0.0175,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      },
+      {
+        "audio_file": "frustrated_0485.wav",
+        "duration_seconds": 8.29,
+        "latency_ms": 15387.85,
+        "min_avg_logprob": -0.1177,
+        "max_no_speech_prob": 0.0624,
+        "needs_review": false,
+        "review_reasons": "",
+        "v1_columns_valid": true,
+        "error": ""
+      }
+    ]
+  },
+  "latency_ms": {
+    "transcribe": {
+      "n": 10,
+      "min": 14378.83,
+      "p50": 15317.2,
+      "p95": 19020.71,
+      "max": 19615.59,
+      "mean": 15910.0
+    },
+    "classify": {
+      "n": 30,
+      "min": 215.81,
+      "p50": 286.13,
+      "p95": 381.69,
+      "max": 649.18,
+      "mean": 298.53
+    },
+    "priority": {
+      "n": 30,
+      "min": 0.02,
+      "p50": 0.02,
+      "p95": 0.03,
+      "max": 0.03,
+      "mean": 0.02
+    },
+    "route": {
+      "n": 30,
+      "min": 1.03,
+      "p50": 1.29,
+      "p95": 1.45,
+      "max": 3.35,
+      "mean": 1.3
+    },
+    "brief": {
+      "n": 30,
+      "min": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "max": 0.0,
+      "mean": 0.0
+    },
+    "end_to_end": {
+      "n": 10,
+      "min": 14646.9,
+      "p50": 15614.76,
+      "p95": 19359.02,
+      "max": 19953.06,
+      "mean": 16244.48
+    },
+    "full_split_classification_seconds": 277.27,
+    "full_split_batch_size": 32
+  },
+  "hardware": {
+    "platform": "Windows-10-10.0.26300-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 140 Stepping 1, GenuineIntel",
+    "cpu_count": 8,
+    "python_version": "3.11.9",
+    "classifier_device": "cpu",
+    "stt_device": "cpu",
+    "stt_compute_type": "int8",
+    "cuda_available": false,
+    "cuda_device_name": null,
+    "packages": {
+      "torch": "2.15.0+cpu",
+      "transformers": "5.24.1",
+      "faster-whisper": "1.2.1",
+      "scikit-learn": "1.9.1",
+      "numpy": "2.4.6",
+      "pandas": "3.1.1"
+    },
+    "prd_p95_target_ms": 10000.0,
+    "meets_prd_p95_target": false,
+    "hardware_note": "Measured on local CPU hardware; PRD <= 10s p95 latency target assumes a production GPU server (PRD L8/R3)."
+  },
+  "artifacts": {
+    "eval_report_json": "E:\\migration\\Projects\\SVR\\runs\\eval_validation_production\\eval_report.json",
+    "eval_summary_md": "E:\\migration\\Projects\\SVR\\runs\\eval_validation_production\\eval_summary.md"
+  }
+}
