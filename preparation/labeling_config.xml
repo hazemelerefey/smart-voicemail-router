@@ -1,0 +1,35 @@
+<View>
+  <Header value="Listen to the voicemail, read the transcript, then label all four fields."/>
+  <Audio name="audio" value="$audio"/>
+  <Text name="transcript" value="$text"/>
+  <Text name="file_id" value="$file_id"/>
+  <Choices name="complaint_category" toName="audio" choice="single" required="true">
+    <Choice value="network_and_connectivity"/>
+    <Choice value="billing_and_charges"/>
+    <Choice value="balance_and_data"/>
+    <Choice value="app_and_account"/>
+    <Choice value="branch_and_staff"/>
+    <Choice value="no_reply_or_long_wait"/>
+    <Choice value="cancellation_request"/>
+    <Choice value="thanks_or_praise"/>
+    <Choice value="greeting_only"/>
+    <Choice value="other"/>
+  </Choices>
+  <Choices name="complaint_urgency" toName="audio" choice="single" required="true">
+    <Choice value="high"/>
+    <Choice value="medium"/>
+    <Choice value="low"/>
+  </Choices>
+  <Choices name="customer_state" toName="audio" choice="single" required="true">
+    <Choice value="calm"/>
+    <Choice value="frustrated"/>
+    <Choice value="mad"/>
+    <Choice value="satisfied"/>
+    <Choice value="unclear"/>
+  </Choices>
+  <Choices name="churn_risk" toName="audio" choice="single" required="true">
+    <Choice value="at_risk"/>
+    <Choice value="not_at_risk"/>
+  </Choices>
+  <TextArea name="notes" toName="audio" rows="2" placeholder="Required when category is other. Short note only."/>
+</View>

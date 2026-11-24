@@ -1,0 +1,472 @@
+{
+  "schema_version": 2,
+  "split": "val",
+  "n": 1003,
+  "label_status": "The labels come from a model and are still being audited by the team. They are not human-verified until the audit approves them.",
+  "fields": {
+    "complaint_category": {
+      "n": 1003,
+      "classes": [
+        "app_and_account",
+        "balance_and_data",
+        "billing_and_charges",
+        "branch_and_staff",
+        "cancellation_request",
+        "network_and_connectivity",
+        "no_reply_or_long_wait",
+        "offers_and_packages",
+        "other",
+        "sim_services",
+        "thanks_or_praise"
+      ],
+      "classes_without_support": [],
+      "accuracy": 0.7976071784646062,
+      "macro": {
+        "precision": 0.7716341377979332,
+        "recall": 0.7834568331681797,
+        "f1": 0.7721147609001382
+      },
+      "per_class": {
+        "app_and_account": {
+          "precision": 0.8492063492063492,
+          "recall": 0.8916666666666667,
+          "f1": 0.8699186991869918,
+          "support": 120
+        },
+        "balance_and_data": {
+          "precision": 0.7355371900826446,
+          "recall": 0.689922480620155,
+          "f1": 0.7120000000000001,
+          "support": 129
+        },
+        "billing_and_charges": {
+          "precision": 0.7551020408163265,
+          "recall": 0.7985611510791367,
+          "f1": 0.7762237762237761,
+          "support": 139
+        },
+        "branch_and_staff": {
+          "precision": 0.7733333333333333,
+          "recall": 0.7435897435897436,
+          "f1": 0.7581699346405228,
+          "support": 78
+        },
+        "cancellation_request": {
+          "precision": 0.7333333333333333,
+          "recall": 0.825,
+          "f1": 0.776470588235294,
+          "support": 40
+        },
+        "network_and_connectivity": {
+          "precision": 0.9251700680272109,
+          "recall": 0.7861271676300579,
+          "f1": 0.8499999999999999,
+          "support": 173
+        },
+        "no_reply_or_long_wait": {
+          "precision": 0.7446808510638298,
+          "recall": 0.8235294117647058,
+          "f1": 0.782122905027933,
+          "support": 85
+        },
+        "offers_and_packages": {
+          "precision": 0.5283018867924528,
+          "recall": 0.8484848484848485,
+          "f1": 0.6511627906976744,
+          "support": 33
+        },
+        "other": {
+          "precision": 0.5660377358490566,
+          "recall": 0.4838709677419355,
+          "f1": 0.5217391304347827,
+          "support": 62
+        },
+        "sim_services": {
+          "precision": 0.9,
+          "recall": 0.75,
+          "f1": 0.8181818181818182,
+          "support": 12
+        },
+        "thanks_or_praise": {
+          "precision": 0.9772727272727273,
+          "recall": 0.9772727272727273,
+          "f1": 0.9772727272727273,
+          "support": 132
+        }
+      },
+      "confusion_matrix": {
+        "rows_are": "true",
+        "columns_are": "predicted",
+        "labels": [
+          "app_and_account",
+          "balance_and_data",
+          "billing_and_charges",
+          "branch_and_staff",
+          "cancellation_request",
+          "network_and_connectivity",
+          "no_reply_or_long_wait",
+          "offers_and_packages",
+          "other",
+          "sim_services",
+          "thanks_or_praise"
+        ],
+        "counts": [
+          [
+            107,
+            2,
+            4,
+            3,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          [
+            5,
+            89,
+            19,
+            0,
+            1,
+            0,
+            0,
+            11,
+            3,
+            0,
+            1
+          ],
+          [
+            0,
+            15,
+            111,
+            2,
+            4,
+            1,
+            1,
+            2,
+            3,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            5,
+            58,
+            0,
+            1,
+            10,
+            1,
+            3,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            1,
+            0,
+            33,
+            0,
+            1,
+            0,
+            3,
+            0,
+            0
+          ],
+          [
+            5,
+            6,
+            4,
+            4,
+            1,
+            136,
+            10,
+            2,
+            5,
+            0,
+            0
+          ],
+          [
+            1,
+            3,
+            0,
+            3,
+            1,
+            4,
+            70,
+            0,
+            3,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            28,
+            1,
+            1,
+            1
+          ],
+          [
+            5,
+            4,
+            3,
+            5,
+            3,
+            1,
+            2,
+            9,
+            30,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3,
+            0,
+            0,
+            0,
+            9,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            129
+          ]
+        ]
+      },
+      "n_excluded": 0
+    },
+    "complaint_urgency": {
+      "n": 1003,
+      "classes": [
+        "high",
+        "low",
+        "medium"
+      ],
+      "classes_without_support": [],
+      "accuracy": 0.7617148554336989,
+      "macro": {
+        "precision": 0.7057400979204385,
+        "recall": 0.7748280005129319,
+        "f1": 0.7181906329828603
+      },
+      "per_class": {
+        "high": {
+          "precision": 0.42,
+          "recall": 0.8076923076923077,
+          "f1": 0.5526315789473685,
+          "support": 104
+        },
+        "low": {
+          "precision": 0.8546099290780141,
+          "recall": 0.765079365079365,
+          "f1": 0.8073701842546063,
+          "support": 315
+        },
+        "medium": {
+          "precision": 0.8426103646833013,
+          "recall": 0.7517123287671232,
+          "f1": 0.7945701357466063,
+          "support": 584
+        }
+      },
+      "confusion_matrix": {
+        "rows_are": "true",
+        "columns_are": "predicted",
+        "labels": [
+          "high",
+          "low",
+          "medium"
+        ],
+        "counts": [
+          [
+            84,
+            0,
+            20
+          ],
+          [
+            12,
+            241,
+            62
+          ],
+          [
+            104,
+            41,
+            439
+          ]
+        ]
+      },
+      "n_excluded": 0
+    },
+    "customer_state": {
+      "n": 1002,
+      "classes": [
+        "calm",
+        "frustrated",
+        "mad",
+        "satisfied"
+      ],
+      "classes_without_support": [],
+      "accuracy": 0.7145708582834331,
+      "macro": {
+        "precision": 0.7048832711473388,
+        "recall": 0.7789217958965167,
+        "f1": 0.7314493149435347
+      },
+      "per_class": {
+        "calm": {
+          "precision": 0.6821705426356589,
+          "recall": 0.6550868486352357,
+          "f1": 0.6683544303797468,
+          "support": 403
+        },
+        "frustrated": {
+          "precision": 0.6905311778290993,
+          "recall": 0.682648401826484,
+          "f1": 0.6865671641791044,
+          "support": 438
+        },
+        "mad": {
+          "precision": 0.46938775510204084,
+          "recall": 0.7931034482758621,
+          "f1": 0.5897435897435898,
+          "support": 29
+        },
+        "satisfied": {
+          "precision": 0.9774436090225563,
+          "recall": 0.9848484848484849,
+          "f1": 0.981132075471698,
+          "support": 132
+        }
+      },
+      "confusion_matrix": {
+        "rows_are": "true",
+        "columns_are": "predicted",
+        "labels": [
+          "calm",
+          "frustrated",
+          "mad",
+          "satisfied"
+        ],
+        "counts": [
+          [
+            264,
+            128,
+            8,
+            3
+          ],
+          [
+            121,
+            299,
+            18,
+            0
+          ],
+          [
+            0,
+            6,
+            23,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            130
+          ]
+        ]
+      },
+      "n_excluded": 1
+    },
+    "churn_risk": {
+      "n": 1003,
+      "classes": [
+        "at_risk",
+        "not_at_risk"
+      ],
+      "classes_without_support": [],
+      "accuracy": 0.9970089730807578,
+      "macro": {
+        "precision": 0.9984984984984985,
+        "recall": 0.7857142857142857,
+        "f1": 0.8628844839371155
+      },
+      "per_class": {
+        "at_risk": {
+          "precision": 1.0,
+          "recall": 0.5714285714285714,
+          "f1": 0.7272727272727273,
+          "support": 7
+        },
+        "not_at_risk": {
+          "precision": 0.996996996996997,
+          "recall": 1.0,
+          "f1": 0.9984962406015038,
+          "support": 996
+        }
+      },
+      "confusion_matrix": {
+        "rows_are": "true",
+        "columns_are": "predicted",
+        "labels": [
+          "at_risk",
+          "not_at_risk"
+        ],
+        "counts": [
+          [
+            4,
+            3
+          ],
+          [
+            0,
+            996
+          ]
+        ]
+      },
+      "n_excluded": 0
+    }
+  },
+  "exceptions": [
+    {
+      "field": "customer_state",
+      "excluded_labels": [
+        "unclear"
+      ],
+      "rows_excluded": 1,
+      "n_scored": 1002,
+      "n_total_rows": 1003,
+      "reason": "unclear has no train rows and is excluded from customer_state scoring only"
+    }
+  ],
+  "combined_macro_f1": {
+    "label": "unweighted mean of the per-field macro-F1 values",
+    "mean": 0.7711597981909122,
+    "values": {
+      "complaint_category": 0.7721147609001382,
+      "complaint_urgency": 0.7181906329828603,
+      "customer_state": 0.7314493149435347,
+      "churn_risk": 0.8628844839371155
+    }
+  }
+}

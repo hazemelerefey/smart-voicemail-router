@@ -1,0 +1,150 @@
+{
+  "run_id": "marbertv2-multitask-kendall-lr2e5-confirmation-v1",
+  "evaluation_split": "validation",
+  "summary": {
+    "evaluations": 20055,
+    "errors": 3701,
+    "unique_task_sample_errors": 992,
+    "persistent_errors": 510
+  },
+  "task_statistics": [
+    {
+      "task": "churn_risk",
+      "evaluations": 5015,
+      "correct": 4995,
+      "errors": 20,
+      "error_rate": 0.003988035892323031,
+      "persistent_errors": 3
+    },
+    {
+      "task": "complaint_category",
+      "evaluations": 5015,
+      "correct": 3999,
+      "errors": 1016,
+      "error_rate": 0.20259222333000998,
+      "persistent_errors": 147
+    },
+    {
+      "task": "complaint_urgency",
+      "evaluations": 5015,
+      "correct": 3809,
+      "errors": 1206,
+      "error_rate": 0.24047856430707876,
+      "persistent_errors": 171
+    },
+    {
+      "task": "customer_state",
+      "evaluations": 5010,
+      "correct": 3551,
+      "errors": 1459,
+      "error_rate": 0.29121756487025946,
+      "persistent_errors": 189
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H01",
+      "issue": "Minority-class imbalance in churn detection",
+      "evidence": "Only 7 at-risk validation samples versus 996 not-at-risk samples.",
+      "hypothesis": "Limited minority-class representation may reduce sensitivity to churn indicators.",
+      "verification": "Inspect training class counts, compare per-class learning behavior, and evaluate controlled class-balancing interventions.",
+      "remediation": "Consider targeted annotation, minority-class sampling, or loss adjustments. Change one factor at a time.",
+      "priority": "HIGH",
+      "status": "UNVERIFIED_HYPOTHESIS"
+    },
+    {
+      "id": "H02",
+      "issue": "Context-dependent churn detection",
+      "evidence": "Three persistent false negatives occur in billing_and_charges, including explicit switching or cancellation language.",
+      "hypothesis": "The model may under-recognize churn signals when embedded in billing complaints.",
+      "verification": "Audit training examples by churn label and complaint category; compare matched examples with similar churn expressions.",
+      "remediation": "Collect and annotate diverse billing-related churn examples, then run controlled experiments.",
+      "priority": "HIGH",
+      "status": "UNVERIFIED_HYPOTHESIS"
+    },
+    {
+      "id": "H03",
+      "issue": "Potential annotation ambiguity",
+      "evidence": "frustrated_0030.wav is labeled at_risk but does not contain an explicit intention to leave.",
+      "hypothesis": "The annotation policy may include implicit trust-loss indicators, creating a broader definition than explicit cancellation intent.",
+      "verification": "Review original annotation guidelines and obtain blinded independent annotation.",
+      "remediation": "Clarify the operational definition of at_risk and adjudicate ambiguous cases without using model predictions as ground truth.",
+      "priority": "HIGH",
+      "status": "UNVERIFIED_HYPOTHESIS"
+    },
+    {
+      "id": "H04",
+      "issue": "High-urgency false positives",
+      "evidence": "High urgency has mean precision approximately 0.410 and recall approximately 0.781.",
+      "hypothesis": "The classifier may favor recall over precision for high urgency.",
+      "verification": "Inspect confusion pairs, decision margins, training distribution, and label criteria.",
+      "remediation": "Evaluate validation-only threshold or decision-rule adjustments against a predefined precision-recall objective.",
+      "priority": "MEDIUM",
+      "status": "UNVERIFIED_HYPOTHESIS"
+    },
+    {
+      "id": "H05",
+      "issue": "Confusion between emotional states",
+      "evidence": "mad has mean precision approximately 0.383 and recall approximately 0.848.",
+      "hypothesis": "Expressions of frustration may overlap linguistically with anger.",
+      "verification": "Review true/predicted confusion pairs and conduct blinded annotation review.",
+      "remediation": "Refine class definitions and test targeted examples with consistent annotation.",
+      "priority": "MEDIUM",
+      "status": "UNVERIFIED_HYPOTHESIS"
+    },
+    {
+      "id": "H06",
+      "issue": "Potential ASR sensitivity",
+      "evidence": "Some original and Whisper transcripts differ, but the exact model input column has not yet been independently confirmed.",
+      "hypothesis": "Transcription errors could influence predictions for certain complaints.",
+      "verification": "Confirm the tokenization input column and perform a controlled ASR-input ablation.",
+      "remediation": "Improve transcription quality only if a controlled experiment demonstrates benefit.",
+      "priority": "MEDIUM",
+      "status": "UNVERIFIED_HYPOTHESIS"
+    }
+  ],
+  "experiment_plan": [
+    {
+      "experiment": "E01",
+      "change": "Audit training minority-class counts",
+      "type": "DATA_AUDIT",
+      "primary_metric": "Class support and label consistency",
+      "constraint": "No training or test-set changes"
+    },
+    {
+      "experiment": "E02",
+      "change": "Independent churn-label adjudication",
+      "type": "ANNOTATION_AUDIT",
+      "primary_metric": "Inter-annotator agreement",
+      "constraint": "Review without revealing model predictions"
+    },
+    {
+      "experiment": "E03",
+      "change": "Churn class-balancing strategy",
+      "type": "CONTROLLED_TRAINING",
+      "primary_metric": "At-risk recall, precision, F1, PR-AUC",
+      "constraint": "Fixed splits, five seeds, and all other hyperparameters"
+    },
+    {
+      "experiment": "E04",
+      "change": "Validation-only churn threshold selection",
+      "type": "DECISION_RULE",
+      "primary_metric": "At-risk recall with predefined false-positive constraint",
+      "constraint": "No test-set tuning; report validation selection optimism"
+    },
+    {
+      "experiment": "E05",
+      "change": "Targeted billing-context augmentation",
+      "type": "CONTROLLED_TRAINING",
+      "primary_metric": "At-risk recall by complaint category",
+      "constraint": "Training-only additions; preserve held-out validation and test sets"
+    },
+    {
+      "experiment": "E06",
+      "change": "Original-versus-ASR text ablation",
+      "type": "INPUT_ABLATION",
+      "primary_metric": "Macro F1 and per-class recall",
+      "constraint": "Confirm baseline text pipeline first; hold other factors fixed"
+    }
+  ]
+}

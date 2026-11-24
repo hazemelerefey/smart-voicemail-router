@@ -1,0 +1,5 @@
+task,evaluations,correct,errors,error_rate,persistent_errors
+churn_risk,5015,4995,20,0.003988035892323031,3
+complaint_category,5015,3999,1016,0.20259222333000998,147
+complaint_urgency,5015,3809,1206,0.24047856430707876,171
+customer_state,5010,3551,1459,0.29121756487025946,189

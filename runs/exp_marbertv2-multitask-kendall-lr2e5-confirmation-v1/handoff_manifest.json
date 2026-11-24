@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "run_id": "marbertv2-multitask-kendall-lr2e5-confirmation-v1",
+  "config_fingerprint": "55d74f49ed44d55a0ebef67eb57f0c4d755d3f7dd65bc5aa71e8f58f8ae87f3f",
+  "model_name": "UBC-NLP/MARBERTv2",
+  "model_revision": "a2a02c120b294eec3f1298e4cb5a8b111c7e3de8",
+  "learning_rate": 2e-05,
+  "seeds": [
+    42,
+    1337,
+    2023,
+    7,
+    99
+  ],
+  "dataset_version": "v2",
+  "evaluated_split": "val",
+  "input_sha256": {
+    "train": "096b1ab8ee998926abf1aa9253eea33e8bd1a5d8f2d2b72d1b78ad73b04d51b3",
+    "validation": "50df253ad6506b70a262b512eff1f79562f2cd65d58143127899025ad707cb18",
+    "class_weights": "20e7df16b0cbe20dafdb793df1face04918f02d2d6fcaf856b526587ad9f9329"
+  },
+  "inputs": {
+    "train": {
+      "filename": "clean_training_train.csv",
+      "size_bytes": 2131581,
+      "sha256": "096b1ab8ee998926abf1aa9253eea33e8bd1a5d8f2d2b72d1b78ad73b04d51b3"
+    },
+    "validation": {
+      "filename": "clean_training_val.csv",
+      "size_bytes": 607767,
+      "sha256": "50df253ad6506b70a262b512eff1f79562f2cd65d58143127899025ad707cb18"
+    },
+    "class_weights": {
+      "filename": "class_weights.json",
+      "size_bytes": 1318,
+      "sha256": "20e7df16b0cbe20dafdb793df1face04918f02d2d6fcaf856b526587ad9f9329"
+    }
+  },
+  "files": {
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/architecture.json": {
+      "size_bytes": 4337,
+      "sha256": "1012383ad64534e15711e9125ead9016c36b0c957664a51ad6618308bcc5f89c"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/latest.pt": {
+      "size_bytes": 1949838030,
+      "sha256": "94c3f7bb6e0b52a2e5587a5c8dd6655dcc9ba0927de8dcad58bca15add6299c9"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/model.safetensors": {
+      "size_bytes": 651451984,
+      "sha256": "4a23c7cb6f0f87ab4a28b79db06af35c2b3faf0deba59c27b3366b4f97cb30a8"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/tokenizer/tokenizer.json": {
+      "size_bytes": 2691333,
+      "sha256": "f13ff54560936bb480cce6ce2af0fb87b4d67a6083a94cf91e53001998d1131d"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/tokenizer/tokenizer_config.json": {
+      "size_bytes": 431,
+      "sha256": "a65197c074e6f2e024076eed2c93f71b32b67bbbd6fbb91fed27bdab1e3b515b"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/validation_result.json": {
+      "size_bytes": 659625,
+      "sha256": "99e3eba676525159a71ed4bb07f533b8849e8c4af4b220031b959135fd7b4e6f"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/architecture.json": {
+      "size_bytes": 4336,
+      "sha256": "f149b202fce676e9d6f2da76fececa20391d2b240661e1a7cf66a5662e73f954"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/latest.pt": {
+      "size_bytes": 1949838030,
+      "sha256": "7c7743f4592e1c07e01285eba5e7c229ffce08cefe213dc62fda533a99e8dc01"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/model.safetensors": {
+      "size_bytes": 651451984,
+      "sha256": "74aa7f1f8e45c6f9040c6715d48d9af4f99a696dd12c7d2c224939fb6b1e75f9"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/tokenizer/tokenizer.json": {
+      "size_bytes": 2691333,
+      "sha256": "f13ff54560936bb480cce6ce2af0fb87b4d67a6083a94cf91e53001998d1131d"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/tokenizer/tokenizer_config.json": {
+      "size_bytes": 431,
+      "sha256": "a65197c074e6f2e024076eed2c93f71b32b67bbbd6fbb91fed27bdab1e3b515b"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/validation_result.json": {
+      "size_bytes": 660022,
+      "sha256": "a69efc9d0de33c88ede12844a2dd380c509ce640483425d333e648afada25ace"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/architecture.json": {
+      "size_bytes": 4334,
+      "sha256": "93a40cd7960efc14f518125944155c3474745819bcc1441a6faccf0a2ca1714d"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/latest.pt": {
+      "size_bytes": 1949838030,
+      "sha256": "4191b80b2344fa30e14e94d106ba369d12d08e4332d3202405901cb006ddc062"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/model.safetensors": {
+      "size_bytes": 651451984,
+      "sha256": "d528636b66c0811ee0379cb343740f84d3ab0aa5a4df8a94cf10c37318353e61"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/tokenizer/tokenizer.json": {
+      "size_bytes": 2691333,
+      "sha256": "f13ff54560936bb480cce6ce2af0fb87b4d67a6083a94cf91e53001998d1131d"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/tokenizer/tokenizer_config.json": {
+      "size_bytes": 431,
+      "sha256": "a65197c074e6f2e024076eed2c93f71b32b67bbbd6fbb91fed27bdab1e3b515b"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/validation_result.json": {
+      "size_bytes": 660508,
+      "sha256": "2c85644e6062cf70ccd0d8eb66bd045e957571499f364782dce01a4585f16103"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/architecture.json": {
+      "size_bytes": 4334,
+      "sha256": "6d1b38b2dabc90754f71694e52c802e2d95429d5df839655b6e712026104142f"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/latest.pt": {
+      "size_bytes": 1949837966,
+      "sha256": "32428e596a0c0a5189c298bd5db3de46bca9c3a5965b1cdf14b6f1e8c5c80889"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/model.safetensors": {
+      "size_bytes": 651451984,
+      "sha256": "730d6922629975cb06ebf8705536d7a8cc8828e6aa470f1ac294908c4c045bbc"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/tokenizer/tokenizer.json": {
+      "size_bytes": 2691333,
+      "sha256": "f13ff54560936bb480cce6ce2af0fb87b4d67a6083a94cf91e53001998d1131d"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/tokenizer/tokenizer_config.json": {
+      "size_bytes": 431,
+      "sha256": "a65197c074e6f2e024076eed2c93f71b32b67bbbd6fbb91fed27bdab1e3b515b"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/validation_result.json": {
+      "size_bytes": 660584,
+      "sha256": "42bf5b3a635fdaa25ad2550cc1b1425398ab6e42d2e5fdd180daa51561c60ffd"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/architecture.json": {
+      "size_bytes": 4334,
+      "sha256": "7d1f4fbc4e3a85f3515d407dbf95a0e570dba043bf800bd990908c397e4eed65"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/latest.pt": {
+      "size_bytes": 1949837902,
+      "sha256": "c0e4497b1b873d64d704643bee64f3451647311ac5f8341a88264d481a2b5d26"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/model.safetensors": {
+      "size_bytes": 651451984,
+      "sha256": "89f105a768f85bf2eb002f329e5054207f4d71f4937f03929f9edefc34d95876"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/tokenizer/tokenizer.json": {
+      "size_bytes": 2691333,
+      "sha256": "f13ff54560936bb480cce6ce2af0fb87b4d67a6083a94cf91e53001998d1131d"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/tokenizer/tokenizer_config.json": {
+      "size_bytes": 431,
+      "sha256": "a65197c074e6f2e024076eed2c93f71b32b67bbbd6fbb91fed27bdab1e3b515b"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/validation_result.json": {
+      "size_bytes": 660528,
+      "sha256": "5aff124dbf1d38738419f446ac3afd38b6321226b02be031d4c79ccd48b82b75"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/config.json": {
+      "size_bytes": 2169,
+      "sha256": "f3db78cbd0fac2788fb0bfff4e5303326aa272dfaab29e66c54cda55f314439b"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed1337.json": {
+      "size_bytes": 10141,
+      "sha256": "ed95af19ffb9c933ae993afa27995100703ee537751cb6aec2e75c12296b9357"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed2023.json": {
+      "size_bytes": 10173,
+      "sha256": "3801057c40efb037b1dd550fb0d0e934b7cb909d021f2c2ffd6be96a146f07c9"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed42.json": {
+      "size_bytes": 10137,
+      "sha256": "cc6e852acd8abd54a45bbf90d2cdd1d1e3a93a3f0a72088b000c9c8ccea2679c"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed7.json": {
+      "size_bytes": 10146,
+      "sha256": "93724830de794e38cf2834dd0041ab223f98f51544657ed18ccee2ebe8107256"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed99.json": {
+      "size_bytes": 10137,
+      "sha256": "b13553a9d0776fd29e758ec04df9d0b2dd193ac0564ab82c07536808f6ce2b2c"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed1337.json": {
+      "size_bytes": 1025498,
+      "sha256": "85c67de2cf63292fbd30d1ca57a92a1952c5484e388e410170678e7c14f0e859"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed2023.json": {
+      "size_bytes": 1025981,
+      "sha256": "57a3df318ec14bf2ed8f021222b9fa46f2aa73d16537ba8c734cfaa6a6b9d227"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed42.json": {
+      "size_bytes": 1026858,
+      "sha256": "5c2a9dbc2752a3778784835408fa556061575fafaca589cb703955d8ef35fe14"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed7.json": {
+      "size_bytes": 1026250,
+      "sha256": "891aa31c33546b506319aaa85dc7038d08e7b60bea2d222f75a1408beca5c394"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed99.json": {
+      "size_bytes": 1026831,
+      "sha256": "208baca37d7c9b28e6ea05102c38725594bd4fd0d7f70a4171e3a5873e538aaa"
+    },
+    "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/run_record.json": {
+      "size_bytes": 12751,
+      "sha256": "885c583f16c0e3d886d993f826b586acef412affe16132c45467be6739ff2a84"
+    }
+  }
+}

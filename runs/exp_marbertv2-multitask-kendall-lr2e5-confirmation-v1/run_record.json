@@ -1,0 +1,321 @@
+{
+  "schema_version": 2,
+  "run_id": "marbertv2-multitask-kendall-lr2e5-confirmation-v1",
+  "hypothesis": "Measure validation performance of a shared MARBERTv2 encoder with four Kendall-weighted heads",
+  "changed_factor": null,
+  "held_constant": {
+    "model": "UBC-NLP/MARBERTv2",
+    "dataset_version": "v2",
+    "split": "train",
+    "learning_rate": 2e-05,
+    "batch_size": 16,
+    "epochs": 3,
+    "other_hyperparameters.model_revision": "a2a02c120b294eec3f1298e4cb5a8b111c7e3de8",
+    "other_hyperparameters.max_seq_len": 128,
+    "other_hyperparameters.micro_batch_size": 16,
+    "other_hyperparameters.gradient_accumulation_steps": 1,
+    "other_hyperparameters.experiment_seeds": [
+      42,
+      1337,
+      2023,
+      7,
+      99
+    ],
+    "other_hyperparameters.split_seed": 42,
+    "other_hyperparameters.architecture": "shared_encoder_four_heads",
+    "other_hyperparameters.loss": "weighted_cross_entropy_kendall_log_variance",
+    "other_hyperparameters.initial_log_variance": 0.0,
+    "other_hyperparameters.warmup_ratio": 0.1,
+    "other_hyperparameters.weight_decay": 0.01,
+    "other_hyperparameters.dropout": 0.1,
+    "other_hyperparameters.gradient_clip_norm": 1.0,
+    "other_hyperparameters.early_stopping_patience": 2,
+    "other_hyperparameters.precision": "fp32",
+    "other_hyperparameters.training_device": "Tesla T4",
+    "other_hyperparameters.churn_weight_cap": 20.0,
+    "other_hyperparameters.input_column": "text_norm",
+    "other_hyperparameters.tasks": [
+      "complaint_category",
+      "complaint_urgency",
+      "customer_state",
+      "churn_risk"
+    ],
+    "other_hyperparameters.train_sha256": "096b1ab8ee998926abf1aa9253eea33e8bd1a5d8f2d2b72d1b78ad73b04d51b3",
+    "other_hyperparameters.validation_sha256": "50df253ad6506b70a262b512eff1f79562f2cd65d58143127899025ad707cb18",
+    "other_hyperparameters.class_weights_sha256": "20e7df16b0cbe20dafdb793df1face04918f02d2d6fcaf856b526587ad9f9329",
+    "other_hyperparameters.selection": "highest_unweighted_mean_validation_macro_f1_then_earliest_epoch"
+  },
+  "reference_run_id": null,
+  "config": {
+    "model": "UBC-NLP/MARBERTv2",
+    "dataset_version": "v2",
+    "split": "train",
+    "learning_rate": 2e-05,
+    "batch_size": 16,
+    "epochs": 3,
+    "other_hyperparameters": {
+      "model_revision": "a2a02c120b294eec3f1298e4cb5a8b111c7e3de8",
+      "max_seq_len": 128,
+      "micro_batch_size": 16,
+      "gradient_accumulation_steps": 1,
+      "experiment_seeds": [
+        42,
+        1337,
+        2023,
+        7,
+        99
+      ],
+      "split_seed": 42,
+      "architecture": "shared_encoder_four_heads",
+      "loss": "weighted_cross_entropy_kendall_log_variance",
+      "initial_log_variance": 0.0,
+      "warmup_ratio": 0.1,
+      "weight_decay": 0.01,
+      "dropout": 0.1,
+      "gradient_clip_norm": 1.0,
+      "early_stopping_patience": 2,
+      "precision": "fp32",
+      "training_device": "Tesla T4",
+      "churn_weight_cap": 20.0,
+      "input_column": "text_norm",
+      "tasks": [
+        "complaint_category",
+        "complaint_urgency",
+        "customer_state",
+        "churn_risk"
+      ],
+      "train_sha256": "096b1ab8ee998926abf1aa9253eea33e8bd1a5d8f2d2b72d1b78ad73b04d51b3",
+      "validation_sha256": "50df253ad6506b70a262b512eff1f79562f2cd65d58143127899025ad707cb18",
+      "class_weights_sha256": "20e7df16b0cbe20dafdb793df1face04918f02d2d6fcaf856b526587ad9f9329",
+      "selection": "highest_unweighted_mean_validation_macro_f1_then_earliest_epoch"
+    }
+  },
+  "dataset": {
+    "version": "v2",
+    "rows": {
+      "train": 3575,
+      "val": 1003,
+      "test": 518
+    }
+  },
+  "evaluated_split": "val",
+  "exceptions": [
+    {
+      "field": "customer_state",
+      "excluded_labels": [
+        "unclear"
+      ],
+      "rows_excluded": 1,
+      "n_scored": 1002,
+      "n_total_rows": 1003,
+      "reason": "unclear has no train rows and is excluded from customer_state scoring only"
+    }
+  ],
+  "per_seed": [
+    {
+      "run_id": "marbertv2-multitask-kendall-lr2e5-confirmation-v1",
+      "model": "UBC-NLP/MARBERTv2",
+      "split": "val",
+      "seed": 42,
+      "metrics": {
+        "complaint_category_macro_f1": 0.7773056208441872,
+        "complaint_category_accuracy": 0.7976071784646062,
+        "complaint_urgency_macro_f1": 0.712847898902794,
+        "complaint_urgency_accuracy": 0.7587238285144566,
+        "customer_state_macro_f1": 0.7093159509417801,
+        "customer_state_accuracy": 0.7145708582834331,
+        "churn_risk_macro_f1": 0.7714741398951925,
+        "churn_risk_accuracy": 0.9950149551345963,
+        "combined_macro_f1": 0.7427359026459885
+      }
+    },
+    {
+      "run_id": "marbertv2-multitask-kendall-lr2e5-confirmation-v1",
+      "model": "UBC-NLP/MARBERTv2",
+      "split": "val",
+      "seed": 1337,
+      "metrics": {
+        "complaint_category_macro_f1": 0.7619168891026451,
+        "complaint_category_accuracy": 0.7896311066799602,
+        "complaint_urgency_macro_f1": 0.7134141501200038,
+        "complaint_urgency_accuracy": 0.7666999002991027,
+        "customer_state_macro_f1": 0.709148138006918,
+        "customer_state_accuracy": 0.7055888223552894,
+        "churn_risk_macro_f1": 0.8628844839371155,
+        "churn_risk_accuracy": 0.9970089730807578,
+        "combined_macro_f1": 0.7618409152916705
+      }
+    },
+    {
+      "run_id": "marbertv2-multitask-kendall-lr2e5-confirmation-v1",
+      "model": "UBC-NLP/MARBERTv2",
+      "split": "val",
+      "seed": 2023,
+      "metrics": {
+        "complaint_category_macro_f1": 0.7779418483158008,
+        "complaint_category_accuracy": 0.7986041874376869,
+        "complaint_urgency_macro_f1": 0.7193970169734764,
+        "complaint_urgency_accuracy": 0.7617148554336989,
+        "customer_state_macro_f1": 0.7122274603591361,
+        "customer_state_accuracy": 0.7055888223552894,
+        "churn_risk_macro_f1": 0.7714741398951925,
+        "churn_risk_accuracy": 0.9950149551345963,
+        "combined_macro_f1": 0.7452601163859014
+      }
+    },
+    {
+      "run_id": "marbertv2-multitask-kendall-lr2e5-confirmation-v1",
+      "model": "UBC-NLP/MARBERTv2",
+      "split": "val",
+      "seed": 7,
+      "metrics": {
+        "complaint_category_macro_f1": 0.7814845019482992,
+        "complaint_category_accuracy": 0.8035892323030908,
+        "complaint_urgency_macro_f1": 0.7020672483990017,
+        "complaint_urgency_accuracy": 0.748753738783649,
+        "customer_state_macro_f1": 0.7072242977326197,
+        "customer_state_accuracy": 0.7035928143712575,
+        "churn_risk_macro_f1": 0.8323303243062521,
+        "churn_risk_accuracy": 0.996011964107677,
+        "combined_macro_f1": 0.7557765930965432
+      }
+    },
+    {
+      "run_id": "marbertv2-multitask-kendall-lr2e5-confirmation-v1",
+      "model": "UBC-NLP/MARBERTv2",
+      "split": "val",
+      "seed": 99,
+      "metrics": {
+        "complaint_category_macro_f1": 0.7721147609001382,
+        "complaint_category_accuracy": 0.7976071784646062,
+        "complaint_urgency_macro_f1": 0.7181906329828603,
+        "complaint_urgency_accuracy": 0.7617148554336989,
+        "customer_state_macro_f1": 0.7314493149435347,
+        "customer_state_accuracy": 0.7145708582834331,
+        "churn_risk_macro_f1": 0.8628844839371155,
+        "churn_risk_accuracy": 0.9970089730807578,
+        "combined_macro_f1": 0.7711597981909122
+      }
+    }
+  ],
+  "aggregate": {
+    "churn_risk_accuracy": {
+      "mean": 0.9960119641076769,
+      "std": 0.0009970089730807485,
+      "ddof": 1,
+      "n": 5
+    },
+    "churn_risk_macro_f1": {
+      "mean": 0.8202095143941737,
+      "std": 0.04620469007313717,
+      "ddof": 1,
+      "n": 5
+    },
+    "combined_macro_f1": {
+      "mean": 0.7553546651222032,
+      "std": 0.011759940225366148,
+      "ddof": 1,
+      "n": 5
+    },
+    "complaint_category_accuracy": {
+      "mean": 0.79740777666999,
+      "std": 0.005004945323234737,
+      "ddof": 1,
+      "n": 5
+    },
+    "complaint_category_macro_f1": {
+      "mean": 0.7741527242222142,
+      "std": 0.007614495037518433,
+      "ddof": 1,
+      "n": 5
+    },
+    "complaint_urgency_accuracy": {
+      "mean": 0.7595214356929213,
+      "std": 0.0066658084348741025,
+      "ddof": 1,
+      "n": 5
+    },
+    "complaint_urgency_macro_f1": {
+      "mean": 0.7131833894756272,
+      "std": 0.006844999106238975,
+      "ddof": 1,
+      "n": 5
+    },
+    "customer_state_accuracy": {
+      "mean": 0.7087824351297405,
+      "std": 0.005346545004382777,
+      "ddof": 1,
+      "n": 5
+    },
+    "customer_state_macro_f1": {
+      "mean": 0.7138730323967979,
+      "std": 0.009986627390061285,
+      "ddof": 1,
+      "n": 5
+    }
+  },
+  "artifacts": {
+    "predictions": [
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed42.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed1337.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed2023.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed7.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/predictions_val_seed99.json"
+    ],
+    "metrics": [
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed42.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed1337.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed2023.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed7.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/metrics_val_seed99.json"
+    ],
+    "model_safetensors": [
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/model.safetensors",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/model.safetensors",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/model.safetensors",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/model.safetensors",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/model.safetensors"
+    ],
+    "architecture": [
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/architecture.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/architecture.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/architecture.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/architecture.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/architecture.json"
+    ],
+    "tokenizers": [
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/tokenizer",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/tokenizer",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/tokenizer",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/tokenizer",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/tokenizer"
+    ],
+    "optimizer_checkpoints": [
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/latest.pt",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/latest.pt",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/latest.pt",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/latest.pt",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/latest.pt"
+    ],
+    "seed_results": [
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_42/validation_result.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_1337/validation_result.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_2023/validation_result.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_7/validation_result.json",
+      "runs/exp_marbertv2-multitask-kendall-lr2e5-confirmation-v1/checkpoints/seed_99/validation_result.json"
+    ]
+  },
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "device": "Tesla T4",
+    "packages": {
+      "numpy": "2.4.6",
+      "pandas": "2.2.3",
+      "scikit-learn": "1.6.1",
+      "torch": "2.14.1+cu130",
+      "transformers": "5.22.1"
+    }
+  },
+  "created_utc": "2026-11-23T23:44:36+00:00"
+}

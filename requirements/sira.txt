@@ -1,0 +1,6 @@
+# CPU note: on machines without a GPU, install the CPU build of torch instead of the default build. See requirements/README.md.
+torch==2.8.0
+transformers==4.56.2
+librosa==0.11.0
+soundfile==0.13.1
+torchaudio==2.8.0
