@@ -13,6 +13,7 @@ credentials.*
 .venv/
 venv/
 backend/.venv/
+*.egg-info/
 .cache/
 __pycache__/
 *.py[cod]
