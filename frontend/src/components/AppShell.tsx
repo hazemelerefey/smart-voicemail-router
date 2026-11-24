@@ -219,6 +219,7 @@ export function AppShell({ children, allowedRoles, reviewBadgeCount }: AppShellP
         <Link href={homeHref} className="brand-link">
           <SvrBrandMark size={28} />
           <span className="brand-title">{t.appName}</span>
+          <span className="brand-title-compact" aria-hidden="true">SVR</span>
         </Link>
         <span className="brand-org">{t.orgName}</span>
 
@@ -227,17 +228,17 @@ export function AppShell({ children, allowedRoles, reviewBadgeCount }: AppShellP
 
           <button
             type="button"
-            className="btn ghost"
+            className="btn ghost topbar-btn"
             onClick={() => setLocale(locale === "en" ? "ar" : "en")}
             aria-label={locale === "en" ? "Switch to Arabic" : "Switch to English"}
           >
             <IconLanguage size={18} stroke={1.75} aria-hidden="true" />
-            <span>{locale === "en" ? "العربية" : "EN"}</span>
+            <span className="topbar-lang-label">{locale === "en" ? "العربية" : "EN"}</span>
           </button>
 
           <button
             type="button"
-            className="btn ghost"
+            className="btn ghost topbar-btn"
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
             aria-label={
               theme === "light" ? "Switch to dark theme" : "Switch to light theme"
@@ -248,12 +249,19 @@ export function AppShell({ children, allowedRoles, reviewBadgeCount }: AppShellP
             ) : (
               <IconSun size={18} stroke={1.75} aria-hidden="true" />
             )}
-            <span>{theme === "light" ? t.themeDark : t.themeLight}</span>
+            <span className="topbar-btn-label">
+              {theme === "light" ? t.themeDark : t.themeLight}
+            </span>
           </button>
 
-          <button type="button" className="btn" onClick={handleSignOut}>
+          <button
+            type="button"
+            className="btn topbar-btn"
+            onClick={handleSignOut}
+            aria-label={t.signOut}
+          >
             <IconLogout size={17} stroke={1.75} aria-hidden="true" />
-            <span>{t.signOut}</span>
+            <span className="topbar-btn-label">{t.signOut}</span>
           </button>
         </div>
       </header>

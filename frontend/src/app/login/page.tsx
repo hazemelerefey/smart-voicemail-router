@@ -181,7 +181,7 @@ export default function LoginPage() {
               ? "جلسة محمية تنتهي بعد 8 ساعات من عدم النشاط."
               : "HttpOnly session expires after 8 hours of inactivity."}
           </span>
-          <div style={{ display: "flex", gap: 12 }}>
+          <div className="auth-legal">
             <Link href="/privacy">{t.privacy}</Link>
             <Link href="/terms">{t.terms}</Link>
           </div>
