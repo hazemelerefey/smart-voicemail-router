@@ -1,26 +1,26 @@
 # SVR Production Evaluation Summary (validation)
 
-- **Generated UTC:** `2026-11-24T21:04:49+00:00`
+- **Generated UTC:** `2026-11-24T23:16:29+00:00`
 - **Split:** `validation` (`1003` rows, dataset version `v2`)
-- **Model version:** `UBC-NLP/MARBERTv2:single-task-lr2e5-shaa92e68685217`
-- **Checkpoint SHA-256 (combined):** `0ea433c589f414572f4adf5c28c570bab84f8ffebc1871c979c84721f00f5adb`
-- **Database EvalRun ID:** `08a8409c-9738-4398-9a2c-18b1427a8581`
+- **Model version:** `UBC-NLP/MARBERTv2:single-task-lr2e5-sha3ec4889bda76`
+- **Checkpoint SHA-256 (combined):** `7093cbf8d34043878c25f4ed5638969fdd9133e692c5de8cbeada18576fdd002`
+- **Database EvalRun ID:** `d17c758b-619e-4b14-884e-5be3ba9f35f8`
 
 ## 1. Classification Macro-F1 & AI9 Release Gates
 
 | Field | Live Macro-F1 | AI9 Gate | Status | Sira Val Ref | Fair 5-Seed Mean +/- Std | Scored Rows |
 |---|---:|---:|---|---:|---|---:|
-| `complaint_category` | **0.7922** | >= 0.75 | PASS | 0.7872 | 0.7895 +/- 0.0070 | 1003 (excl 0) |
-| `complaint_urgency` | **0.7168** | >= 0.70 | PASS | 0.7211 | 0.7250 +/- 0.0076 | 1003 (excl 0) |
-| `customer_state` | **0.7550** | >= 0.70 | PASS | 0.7471 | 0.7442 +/- 0.0021 | 1002 (excl 1) |
-| `churn_risk` | **0.7990** | >= 0.80 | FAIL | 0.8277 | 0.9041 +/- 0.0616 | 1003 (excl 0) |
-| **Combined (unweighted mean)** | **0.7657** | >= 0.75 | PASS | 0.7708 | 0.7907 +/- 0.0160 | 1003 |
+| `complaint_category` | **0.7903** | >= 0.75 | PASS | 0.7872 | 0.7895 +/- 0.0070 | 1003 (excl 0) |
+| `complaint_urgency` | **0.7196** | >= 0.70 | PASS | 0.7211 | 0.7250 +/- 0.0076 | 1003 (excl 0) |
+| `customer_state` | **0.7505** | >= 0.70 | PASS | 0.7471 | 0.7442 +/- 0.0021 | 1002 (excl 1) |
+| `churn_risk` | **0.9162** | >= 0.80 | PASS | 0.8277 | 0.9041 +/- 0.0616 | 1003 (excl 0) |
+| **Combined (unweighted mean)** | **0.7941** | >= 0.75 | PASS | 0.7708 | 0.7907 +/- 0.0160 | 1003 |
 
 ### Churn Risk Fragility Note (AI9)
 
 - True `at_risk` rows in `validation`: **7** of 1003
-- Predicted `at_risk` rows: **3** (TP: 3, FP: 0, FN: 4)
-- `at_risk` precision: 1.0000, recall: 0.4286, F1: 0.6000
+- Predicted `at_risk` rows: **5** (TP: 5, FP: 0, FN: 2)
+- `at_risk` precision: 1.0000, recall: 0.7143, F1: 0.8333
 - Because validation contains only 7 `at_risk` rows, a single flipped prediction changes churn macro-F1 substantially. Always inspect per-seed churn values below alongside the mean.
 
 ### 5-Seed Breakdown (`runs/exp_fair-marbertv2-lr2e5/run_record.json`)
@@ -35,16 +35,16 @@
 
 ## 2. Routing Agreement (FR20 Telecom Skill Mapping)
 
-- **Routing Agreement:** **88.73%** (890/1003 rows) - AI9 Gate >= 80.00%: **PASS**
-- **Exact 11-Category Match Rate:** 81.06%
-- **Priority Bucket Agreement:** 76.85% (1002 scored, 1 unclear excluded)
-- **Human Review Rate (threshold 0.50):** 13.06% (131/1003, AI10 target <= 20.00%)
+- **Routing Agreement:** **89.33%** (896/1003 rows) - AI9 Gate >= 80.00%: **PASS**
+- **Exact 11-Category Match Rate:** 81.16%
+- **Priority Bucket Agreement:** 75.45% (1002 scored, 1 unclear excluded)
+- **Human Review Rate (threshold 0.50):** 8.37% (84/1003, AI10 target <= 20.00%)
 
 | Telecom Skill | Ideal Agent | Support | Predicted | Agreed | Precision | Recall | F1 |
 |---|---|---:|---:|---:|---:|---:|---:|
-| Network | Network Care Specialist | 270 | 237 | 224 | 0.9451 | 0.8296 | 0.8836 |
+| Network | Network Care Specialist | 270 | 246 | 231 | 0.9390 | 0.8556 | 0.8953 |
 | Billing | Billing & Bundles Specialist | 301 | 319 | 273 | 0.8558 | 0.9070 | 0.8806 |
-| General | Subscriber Care Specialist | 432 | 447 | 393 | 0.8792 | 0.9097 | 0.8942 |
+| General | Subscriber Care Specialist | 432 | 438 | 392 | 0.8950 | 0.9074 | 0.9011 |
 
 ## 3. Whisper large-v3 STT Sample & Per-Stage Latency
 
@@ -55,12 +55,12 @@
 
 | Stage | Samples (n) | p50 (ms) | p95 (ms) | Mean (ms) | Max (ms) |
 |---|---:|---:|---:|---:|---:|
-| `transcribe` | 10 | 15317.20 | 19020.71 | 15910.00 | 19615.59 |
-| `classify` | 30 | 286.13 | 381.69 | 298.53 | 649.18 |
-| `priority` | 30 | 0.02 | 0.03 | 0.02 | 0.03 |
-| `route` | 30 | 1.29 | 1.45 | 1.30 | 3.35 |
-| `brief` | 30 | 0.00 | 0.00 | 0.00 | 0.00 |
-| `end_to_end` | 10 | 15614.76 | 19359.02 | 16244.48 | 19953.06 |
+| `transcribe` | 10 | 21545.31 | 24793.36 | 22313.28 | 25227.86 |
+| `classify` | 30 | 52934.81 | 57465.12 | 53558.23 | 58411.42 |
+| `priority` | 30 | 0.02 | 0.02 | 0.02 | 0.03 |
+| `route` | 30 | 0.97 | 1.29 | 5.28 | 129.72 |
+| `brief` | 30 | 0.00 | 0.00 | 0.01 | 0.38 |
+| `end_to_end` | 10 | 78710.76 | 80528.09 | 77775.09 | 81121.53 |
 
 ## 4. Exceptions & Provenance
 

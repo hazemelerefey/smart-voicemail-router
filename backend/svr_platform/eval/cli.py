@@ -1249,8 +1249,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--seed",
         type=int,
-        default=42,
-        help="Single-task MARBERTv2 checkpoint seed directory (default: 42).",
+        default=99,
+        help="Single-task MARBERTv2 checkpoint seed directory (default: 99).",
     )
     parser.add_argument(
         "--batch-size",

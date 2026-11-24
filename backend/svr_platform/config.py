@@ -53,6 +53,7 @@ class Settings(BaseSettings):
     whisper_device: str = Field(default="cpu", alias="WHISPER_DEVICE")
     whisper_compute_type: str = Field(default="int8", alias="WHISPER_COMPUTE_TYPE")
     marbert_base_model: str = Field(default="UBC-NLP/MARBERTv2", alias="MARBERT_BASE_MODEL")
+    marbert_checkpoint_seed: int = Field(default=99, alias="MARBERT_CHECKPOINT_SEED")
 
     ffmpeg_bin: str = Field(
         default=str(_DEFAULT_FFMPEG) if _DEFAULT_FFMPEG.exists() else "ffmpeg",

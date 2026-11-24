@@ -61,11 +61,11 @@ Appendix
 
 ### 1.1 Product summary
 
-Smart Voicemail Router (SVR) is a production system that turns a single-speaker Egyptian Arabic voicemail into a structured, explainable callback ticket. It transcribes the voicemail, classifies it on four fields with a validated MARBERTv2 model, computes an explainable queue priority, and routes it to an available agent whose skills fit the complaint. A supervisor sees the prioritized queue, the evidence for every decision, and a human review queue. It is for a telecom customer-care operation. It addresses arrival-order queues that hide urgent complaints, agents who must listen to a whole message before understanding the issue, and callbacks that start cold.
+Smart Voicemail Router (SVR) is a production system that turns a single-speaker Egyptian Arabic voicemail into a structured, explainable callback ticket. It transcribes the voicemail, classifies it on four fields with a validated MARBERTv2 model, computes an explainable queue priority, and routes it to an available agent whose skills fit the complaint. A supervisor sees the prioritized queue, the evidence for every decision, and a human review queue. It is built for telecom companies. It addresses arrival-order queues that hide urgent complaints, agents who must listen to a whole message before understanding the issue, and callbacks that start cold.
 
 ### 1.2 Before and after
 
-- Today: voicemails are handled in arrival order. An agent listens to the whole message before understanding the issue. There is no structured record of what the complaint is, how urgent it is, or who should handle it.
+- Today: a telecom company's customer-care team handles voicemails in arrival order. An agent listens to the whole message before understanding the issue. There is no structured record of what the complaint is, how urgent it is, or who should handle it.
 - With SVR: a voicemail becomes a structured ticket in seconds, with a transcript, four classified fields, an explainable priority, and an assigned agent. The supervisor sees why the ticket has its priority and why it went to that agent.
 
 ### 1.3 Purpose of this document
@@ -125,7 +125,7 @@ This document defines the functional, AI, and non-functional requirements, scope
 
 ### 2.1 Problem statement
 
-A customer-care team handles voicemail in arrival order. A time-sensitive service failure can wait behind a routine question. The agent who eventually calls back must listen to the whole message before understanding the issue, and the callback can start cold, with no summary, no customer request, and no routing rationale. The cost is delayed handling of urgent complaints, wasted agent time discovering the issue, and no structured record for routing or measurement. The evidence base is the SVR Voicemail Corpus: 6,522 voicemails, 12.63 hours of audio, with a clean set of 5,096 rows.
+A telecom company's customer-care team handles voicemail in arrival order. A time-sensitive service failure can wait behind a routine question. The agent who eventually calls back must listen to the whole message before understanding the issue, and the callback can start cold, with no summary, no customer request, and no routing rationale. The cost is delayed handling of urgent complaints, wasted agent time discovering the issue, and no structured record for routing or measurement. The evidence base is the SVR Voicemail Corpus: 6,522 voicemails, 12.63 hours of audio, with a clean set of 5,096 rows.
 
 ### 2.2 Why AI
 
@@ -336,7 +336,7 @@ No direct named competitor with a published price for Egyptian Arabic voicemail 
 
 ### 5.4 Positioning statement
 
-For a telecom customer-care operation that receives Egyptian Arabic voicemails, SVR is a voicemail routing system that turns each voicemail into a structured, explainable callback ticket with a priority and an assigned agent. Unlike manual handling or generic transcription, it understands the complaint, the urgency, the customer state, and the churn risk from the words, and it shows why every decision was made.
+For telecom companies that receive Egyptian Arabic voicemails, SVR is a voicemail routing system built for telecom customer care that turns each voicemail into a structured, explainable callback ticket with a priority and an assigned agent. Unlike manual handling or generic transcription, it understands the complaint, the urgency, the customer state, and the churn risk from the words, and it shows why every decision was made. All terms and features follow telecom practice.
 
 ### 5.5 Defensibility (AI moat)
 

@@ -542,6 +542,7 @@ def create_app(
         models_dir=resolved_settings.svr_models_dir,
         repo_root=resolved_settings.repo_root,
         base_model_id=resolved_settings.marbert_base_model,
+        seed=resolved_settings.marbert_checkpoint_seed,
     )
 
     @asynccontextmanager

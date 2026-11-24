@@ -76,6 +76,7 @@ def main() -> int:
         models_dir=settings.svr_models_dir,
         repo_root=settings.repo_root,
         base_model_id=settings.marbert_base_model,
+        seed=settings.marbert_checkpoint_seed,
     )
     redis_client = _connect_redis(settings.redis_url)
 

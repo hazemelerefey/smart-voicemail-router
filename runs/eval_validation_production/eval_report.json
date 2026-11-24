@@ -1,69 +1,69 @@
 {
   "schema_version": 1,
-  "created_utc": "2026-11-24T21:04:49+00:00",
-  "eval_run_id": "08a8409c-9738-4398-9a2c-18b1427a8581",
+  "created_utc": "2026-11-24T23:16:29+00:00",
+  "eval_run_id": "d17c758b-619e-4b14-884e-5be3ba9f35f8",
   "guard_claim_id": null,
   "split": "validation",
   "infra_split": "val",
   "dataset_version": "v2",
   "dataset_sha256": "50df253ad6506b70a262b512eff1f79562f2cd65d58143127899025ad707cb18",
   "n_rows": 1003,
-  "model_version": "UBC-NLP/MARBERTv2:single-task-lr2e5-shaa92e68685217",
+  "model_version": "UBC-NLP/MARBERTv2:single-task-lr2e5-sha3ec4889bda76",
   "confidence_threshold": 0.5,
   "checkpoint_provenance": {
     "models_dir": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task",
-    "seed": 42,
+    "seed": 99,
     "has_local_checkpoints": true,
-    "combined_sha256": "0ea433c589f414572f4adf5c28c570bab84f8ffebc1871c979c84721f00f5adb",
+    "combined_sha256": "7093cbf8d34043878c25f4ed5638969fdd9133e692c5de8cbeada18576fdd002",
     "files": {
       "complaint_category": {
-        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_42\\complaint_category\\epoch_02\\model.safetensors",
-        "sha256": "f94ed9b5b41afa19e81c708aeb7d6f45e61e329922adea4346c50d440a302007"
+        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_99\\complaint_category\\epoch_03\\model.safetensors",
+        "sha256": "8b4343c6cbc0adba6577a51abf2fdfbd4cb1240ccae837fbf666762d480246bd"
       },
       "complaint_urgency": {
-        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_42\\complaint_urgency\\epoch_02\\model.safetensors",
-        "sha256": "17701f7beeb2ffeed81309142b82fefdca0a5127b161b81619000d591ee0970f"
+        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_99\\complaint_urgency\\epoch_03\\model.safetensors",
+        "sha256": "193320afd041374730a7b127f30d12012bd97244dcf46c9b5974d983080a3a7e"
       },
       "customer_state": {
-        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_42\\customer_state\\epoch_03\\model.safetensors",
-        "sha256": "ad363d75189feb55877353ea62637b87759d679c97f30fe9b4c7fb7788e7c511"
+        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_99\\customer_state\\epoch_03\\model.safetensors",
+        "sha256": "0717d740041dc4b7b42ef96fe27b8a8fbd6a857d6d5e823bc6d62f458cb3898c"
       },
       "churn_risk": {
-        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_42\\churn_risk\\epoch_03\\model.safetensors",
-        "sha256": "47fd0d571139772142dc1b2b15bf3c54003b35418676dd0abcaefcfc05e3d3c0"
+        "path": "E:\\migration\\Projects\\SVR\\models\\marbertv2-single-task\\seed_99\\churn_risk\\epoch_02\\model.safetensors",
+        "sha256": "468617a076fbd0dc06a1e6daf14560cc2a7b504d9fdd6831aac5c0ed68db33b3"
       }
     }
   },
   "ai9_gates": {
-    "all_passed": false,
+    "all_passed": true,
     "checks": {
       "complaint_category": {
-        "actual": 0.792157,
+        "actual": 0.790274,
         "threshold": 0.75,
         "passed": true
       },
       "complaint_urgency": {
-        "actual": 0.716751,
+        "actual": 0.719621,
         "threshold": 0.7,
         "passed": true
       },
       "customer_state": {
-        "actual": 0.755019,
+        "actual": 0.75053,
         "threshold": 0.7,
         "passed": true
       },
       "churn_risk": {
-        "actual": 0.798998,
+        "actual": 0.916165,
         "threshold": 0.8,
-        "passed": false
+        "passed": true
       },
       "combined": {
-        "actual": 0.765731,
+        "actual": 0.794148,
         "threshold": 0.75,
         "passed": true
       },
       "routing_agreement": {
-        "actual": 0.887338,
+        "actual": 0.89332,
         "threshold": 0.8,
         "passed": true
       }
@@ -91,77 +91,77 @@
           "sim_services"
         ],
         "classes_without_support": [],
-        "accuracy": 0.810568295114656,
+        "accuracy": 0.8115653040877367,
         "macro": {
-          "precision": 0.7957202774234253,
-          "recall": 0.7978378546127453,
-          "f1": 0.7921568190023112
+          "precision": 0.788184645219065,
+          "recall": 0.7980835443869968,
+          "f1": 0.79027409646385
         },
         "per_class": {
           "network_and_connectivity": {
-            "precision": 0.9276315789473685,
-            "recall": 0.815028901734104,
-            "f1": 0.8676923076923077,
+            "precision": 0.9324324324324325,
+            "recall": 0.7976878612716763,
+            "f1": 0.8598130841121495,
             "support": 173
           },
           "billing_and_charges": {
-            "precision": 0.7345679012345679,
-            "recall": 0.8561151079136691,
-            "f1": 0.7906976744186047,
+            "precision": 0.7551020408163265,
+            "recall": 0.7985611510791367,
+            "f1": 0.7762237762237761,
             "support": 139
           },
           "balance_and_data": {
-            "precision": 0.7909090909090909,
-            "recall": 0.6744186046511628,
-            "f1": 0.7280334728033473,
+            "precision": 0.7401574803149606,
+            "recall": 0.7286821705426356,
+            "f1": 0.7343749999999999,
             "support": 129
           },
           "app_and_account": {
-            "precision": 0.8412698412698413,
-            "recall": 0.8833333333333333,
-            "f1": 0.8617886178861788,
+            "precision": 0.8333333333333334,
+            "recall": 0.9166666666666666,
+            "f1": 0.8730158730158729,
             "support": 120
           },
           "branch_and_staff": {
-            "precision": 0.7303370786516854,
-            "recall": 0.8333333333333334,
-            "f1": 0.7784431137724552,
+            "precision": 0.8181818181818182,
+            "recall": 0.8076923076923077,
+            "f1": 0.8129032258064518,
             "support": 78
           },
           "no_reply_or_long_wait": {
-            "precision": 0.8533333333333334,
-            "recall": 0.7529411764705882,
-            "f1": 0.7999999999999999,
+            "precision": 0.7931034482758621,
+            "recall": 0.8117647058823529,
+            "f1": 0.8023255813953488,
             "support": 85
           },
           "cancellation_request": {
-            "precision": 0.7441860465116279,
-            "recall": 0.8,
-            "f1": 0.7710843373493975,
+            "precision": 0.7333333333333333,
+            "recall": 0.825,
+            "f1": 0.776470588235294,
             "support": 40
           },
           "thanks_or_praise": {
-            "precision": 0.9772727272727273,
-            "recall": 0.9772727272727273,
-            "f1": 0.9772727272727273,
+            "precision": 0.9770992366412213,
+            "recall": 0.9696969696969697,
+            "f1": 0.9733840304182511,
             "support": 132
           },
           "other": {
-            "precision": 0.5789473684210527,
+            "precision": 0.6226415094339622,
             "recall": 0.532258064516129,
-            "f1": 0.5546218487394958,
+            "f1": 0.5739130434782608,
             "support": 62
           },
           "offers_and_packages": {
-            "precision": 0.574468085106383,
-            "recall": 0.8181818181818182,
-            "f1": 0.675,
+            "precision": 0.5555555555555556,
+            "recall": 0.7575757575757576,
+            "f1": 0.6410256410256411,
             "support": 33
           },
           "sim_services": {
-            "precision": 1.0,
+            "precision": 0.9090909090909091,
             "recall": 0.8333333333333334,
-            "f1": 0.9090909090909091,
+            "f1": 0.8695652173913043,
             "support": 12
           }
         },
@@ -183,117 +183,117 @@
           ],
           "counts": [
             [
-              141,
-              4,
-              6,
-              5,
-              6,
-              5,
-              0,
-              0,
-              4,
-              2,
-              0
-            ],
-            [
-              2,
-              119,
-              8,
-              0,
-              1,
-              1,
-              4,
-              0,
-              2,
-              2,
-              0
-            ],
-            [
-              1,
-              22,
-              87,
-              5,
-              0,
-              0,
-              1,
-              1,
+              138,
               4,
               8,
-              0
-            ],
-            [
-              0,
-              4,
+              5,
               2,
-              106,
-              2,
+              10,
               0,
-              1,
-              1,
+              0,
               3,
-              1,
-              0
+              2,
+              1
             ],
             [
+              2,
+              111,
+              15,
+              0,
               1,
-              6,
               0,
+              5,
               0,
-              65,
               3,
-              0,
-              0,
               2,
-              1,
               0
             ],
             [
-              2,
+              1,
+              17,
+              94,
+              5,
               0,
-              4,
-              2,
+              0,
+              1,
+              1,
+              1,
               9,
-              64,
+              0
+            ],
+            [
+              0,
+              3,
               1,
+              110,
+              2,
+              0,
+              1,
+              1,
+              1,
+              1,
+              0
+            ],
+            [
+              1,
+              7,
+              0,
+              0,
+              63,
+              5,
+              0,
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              4,
+              2,
+              3,
+              69,
+              1,
+              0,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              2,
+              0,
+              0,
+              1,
+              33,
               0,
               3,
               0,
               0
             ],
             [
+              1,
               0,
+              0,
+              3,
+              0,
+              0,
+              0,
+              128,
+              0,
+              0,
+              0
+            ],
+            [
               2,
-              1,
-              0,
-              0,
-              1,
-              32,
-              0,
               4,
-              0,
-              0
-            ],
-            [
-              1,
-              0,
-              0,
-              2,
-              0,
-              0,
-              0,
-              129,
-              0,
-              0,
-              0
-            ],
-            [
-              2,
+              3,
+              5,
               5,
               2,
-              4,
-              6,
-              1,
-              3,
+              2,
               0,
               33,
               6,
@@ -304,12 +304,12 @@
               0,
               0,
               2,
-              0,
-              0,
               1,
+              0,
+              2,
               1,
               2,
-              27,
+              25,
               0
             ],
             [
@@ -337,29 +337,29 @@
           "low"
         ],
         "classes_without_support": [],
-        "accuracy": 0.7726819541375872,
+        "accuracy": 0.7776669990029911,
         "macro": {
-          "precision": 0.7045485251858681,
-          "recall": 0.7418814569499501,
-          "f1": 0.7167513211090096
+          "precision": 0.714527993450547,
+          "recall": 0.7465920685098767,
+          "f1": 0.7196213089487159
         },
         "per_class": {
           "high": {
-            "precision": 0.4533333333333333,
-            "recall": 0.6538461538461539,
-            "f1": 0.5354330708661418,
+            "precision": 0.4268292682926829,
+            "recall": 0.6730769230769231,
+            "f1": 0.5223880597014926,
             "support": 104
           },
           "medium": {
-            "precision": 0.8258527827648114,
-            "recall": 0.7876712328767124,
-            "f1": 0.8063102541630149,
+            "precision": 0.8245614035087719,
+            "recall": 0.8047945205479452,
+            "f1": 0.8145580589254766,
             "support": 584
           },
           "low": {
-            "precision": 0.8344594594594594,
-            "recall": 0.7841269841269841,
-            "f1": 0.8085106382978723,
+            "precision": 0.8921933085501859,
+            "recall": 0.7619047619047619,
+            "f1": 0.821917808219178,
             "support": 315
           }
         },
@@ -373,19 +373,19 @@
           ],
           "counts": [
             [
-              68,
-              36,
-              0
+              70,
+              33,
+              1
             ],
             [
-              75,
-              460,
-              49
+              86,
+              470,
+              28
             ],
             [
-              7,
-              61,
-              247
+              8,
+              67,
+              240
             ]
           ]
         },
@@ -400,35 +400,35 @@
           "satisfied"
         ],
         "classes_without_support": [],
-        "accuracy": 0.7355289421157685,
+        "accuracy": 0.7225548902195609,
         "macro": {
-          "precision": 0.7315503232498866,
-          "recall": 0.7912550952382119,
-          "f1": 0.7550189583132032
+          "precision": 0.7251915316028401,
+          "recall": 0.7912557501189086,
+          "f1": 0.7505303418505833
         },
         "per_class": {
           "calm": {
-            "precision": 0.7057291666666666,
-            "recall": 0.6724565756823822,
-            "f1": 0.6886912325285897,
+            "precision": 0.6721698113207547,
+            "recall": 0.707196029776675,
+            "f1": 0.6892382103990327,
             "support": 403
           },
           "frustrated": {
-            "precision": 0.7081447963800905,
-            "recall": 0.7146118721461188,
-            "f1": 0.7113636363636364,
+            "precision": 0.713216957605985,
+            "recall": 0.6529680365296804,
+            "f1": 0.6817640047675805,
             "support": 438
           },
           "mad": {
-            "precision": 0.5348837209302325,
-            "recall": 0.7931034482758621,
-            "f1": 0.6388888888888888,
+            "precision": 0.5454545454545454,
+            "recall": 0.8275862068965517,
+            "f1": 0.6575342465753425,
             "support": 29
           },
           "satisfied": {
-            "precision": 0.9774436090225563,
-            "recall": 0.9848484848484849,
-            "f1": 0.981132075471698,
+            "precision": 0.9699248120300752,
+            "recall": 0.9772727272727273,
+            "f1": 0.9735849056603774,
             "support": 132
           }
         },
@@ -443,28 +443,28 @@
           ],
           "counts": [
             [
-              271,
-              123,
-              6,
+              285,
+              110,
+              5,
               3
             ],
             [
-              111,
-              313,
-              14,
-              0
+              136,
+              286,
+              15,
+              1
             ],
             [
               0,
-              6,
-              23,
+              5,
+              24,
               0
             ],
             [
-              2,
+              3,
               0,
               0,
-              130
+              129
             ]
           ]
         },
@@ -477,23 +477,23 @@
           "not_at_risk"
         ],
         "classes_without_support": [],
-        "accuracy": 0.996011964107677,
+        "accuracy": 0.9980059820538385,
         "macro": {
-          "precision": 0.998,
-          "recall": 0.7142857142857143,
-          "f1": 0.798997995991984
+          "precision": 0.9989979959919839,
+          "recall": 0.8571428571428572,
+          "f1": 0.916165162153126
         },
         "per_class": {
           "at_risk": {
             "precision": 1.0,
-            "recall": 0.42857142857142855,
-            "f1": 0.6,
+            "recall": 0.7142857142857143,
+            "f1": 0.8333333333333333,
             "support": 7
           },
           "not_at_risk": {
-            "precision": 0.996,
+            "precision": 0.9979959919839679,
             "recall": 1.0,
-            "f1": 0.9979959919839679,
+            "f1": 0.9989969909729188,
             "support": 996
           }
         },
@@ -506,8 +506,8 @@
           ],
           "counts": [
             [
-              3,
-              4
+              5,
+              2
             ],
             [
               0,
@@ -532,31 +532,31 @@
     ],
     "combined_macro_f1": {
       "label": "unweighted mean of the per-field macro-F1 values",
-      "mean": 0.765731273604127,
+      "mean": 0.7941477273540688,
       "values": {
-        "complaint_category": 0.7921568190023112,
-        "complaint_urgency": 0.7167513211090096,
-        "customer_state": 0.7550189583132032,
-        "churn_risk": 0.798997995991984
+        "complaint_category": 0.79027409646385,
+        "complaint_urgency": 0.7196213089487159,
+        "customer_state": 0.7505303418505833,
+        "churn_risk": 0.916165162153126
       }
     }
   },
   "per_field_macro_f1": {
-    "complaint_category": 0.792157,
-    "complaint_urgency": 0.716751,
-    "customer_state": 0.755019,
-    "churn_risk": 0.798998
+    "complaint_category": 0.790274,
+    "complaint_urgency": 0.719621,
+    "customer_state": 0.75053,
+    "churn_risk": 0.916165
   },
-  "combined_macro_f1": 0.765731,
+  "combined_macro_f1": 0.794148,
   "churn_at_risk_analysis": {
     "true_at_risk_count": 7,
-    "predicted_at_risk_count": 3,
-    "true_positives": 3,
+    "predicted_at_risk_count": 5,
+    "true_positives": 5,
     "false_positives": 0,
-    "false_negatives": 4,
+    "false_negatives": 2,
     "at_risk_precision": 1.0,
-    "at_risk_recall": 0.428571,
-    "at_risk_f1": 0.6,
+    "at_risk_recall": 0.714286,
+    "at_risk_f1": 0.833333,
     "fragility_warning": "Churn macro-F1 depends on only 7 at_risk rows in validation; one row shifts the score materially. Inspect per-seed churn values alongside the mean."
   },
   "sira_reference_val_f1": {
@@ -643,13 +643,13 @@
   },
   "routing_agreement": {
     "total_rows": 1003,
-    "agreed_rows": 890,
-    "disagreed_rows": 113,
+    "agreed_rows": 896,
+    "disagreed_rows": 107,
     "unmapped_predictions": 0,
-    "routing_agreement": 0.887338,
-    "routing_agreement_pct": 88.73,
-    "exact_category_match_rate": 0.810568,
-    "exact_category_match_pct": 81.06,
+    "routing_agreement": 0.89332,
+    "routing_agreement_pct": 89.33,
+    "exact_category_match_rate": 0.811565,
+    "exact_category_match_pct": 81.16,
     "threshold": 0.8,
     "meets_ai9_threshold": true,
     "skill_mapping": {
@@ -669,11 +669,11 @@
       "Network": {
         "ideal_agent": "Network Care Specialist",
         "support": 270,
-        "predicted": 237,
-        "agreed": 224,
-        "precision": 0.945148,
-        "recall": 0.82963,
-        "f1": 0.883629
+        "predicted": 246,
+        "agreed": 231,
+        "precision": 0.939024,
+        "recall": 0.855556,
+        "f1": 0.895349
       },
       "Billing": {
         "ideal_agent": "Billing & Bundles Specialist",
@@ -687,11 +687,11 @@
       "General": {
         "ideal_agent": "Subscriber Care Specialist",
         "support": 432,
-        "predicted": 447,
-        "agreed": 393,
-        "precision": 0.879195,
-        "recall": 0.909722,
-        "f1": 0.894198
+        "predicted": 438,
+        "agreed": 392,
+        "precision": 0.894977,
+        "recall": 0.907407,
+        "f1": 0.901149
       }
     },
     "confusion_matrix": {
@@ -704,19 +704,19 @@
       ],
       "counts": [
         [
-          224,
-          16,
-          30
+          231,
+          18,
+          21
         ],
         [
-          4,
+          3,
           273,
-          24
+          25
         ],
         [
-          9,
-          30,
-          393
+          12,
+          28,
+          392
         ]
       ]
     }
@@ -724,24 +724,24 @@
   "priority_agreement": {
     "scored_rows": 1002,
     "excluded_unclear_rows": 1,
-    "bucket_agreement": 0.768463,
-    "bucket_agreement_pct": 76.85,
-    "exact_score_agreement": 0.627745,
-    "exact_score_agreement_pct": 62.77
+    "bucket_agreement": 0.754491,
+    "bucket_agreement_pct": 75.45,
+    "exact_score_agreement": 0.607784,
+    "exact_score_agreement_pct": 60.78
   },
   "operational_metrics": {
     "confidence_threshold": 0.5,
-    "human_review_count": 131,
-    "human_review_rate": 0.130608,
-    "human_review_rate_pct": 13.06,
+    "human_review_count": 84,
+    "human_review_rate": 0.083749,
+    "human_review_rate_pct": 8.37,
     "meets_ai10_review_rate_target": true,
     "prob_sum_violations": 0,
     "confidence_distribution": {
-      "min": 0.246,
-      "p10": 0.4803,
-      "p50": 0.6772,
-      "p90": 0.8789,
-      "mean": 0.6683
+      "min": 0.2142,
+      "p10": 0.5092,
+      "p50": 0.7078,
+      "p90": 0.9143,
+      "mean": 0.6993
     }
   },
   "stt_sample": {
@@ -764,17 +764,17 @@
     "needs_review_count": 0,
     "latency_ms": {
       "n": 10,
-      "min": 14378.83,
-      "p50": 15317.2,
-      "p95": 19020.71,
-      "max": 19615.59,
-      "mean": 15910.0
+      "min": 20662.03,
+      "p50": 21545.31,
+      "p95": 24793.36,
+      "max": 25227.86,
+      "mean": 22313.28
     },
     "files": [
       {
         "audio_file": "frustrated_0001.wav",
         "duration_seconds": 8.0,
-        "latency_ms": 15781.2,
+        "latency_ms": 23947.13,
         "min_avg_logprob": -0.0341,
         "max_no_speech_prob": 0.0129,
         "needs_review": false,
@@ -785,7 +785,7 @@
       {
         "audio_file": "mad_0003.wav",
         "duration_seconds": 11.112,
-        "latency_ms": 18293.63,
+        "latency_ms": 25227.86,
         "min_avg_logprob": -0.1186,
         "max_no_speech_prob": 0.012,
         "needs_review": false,
@@ -796,7 +796,7 @@
       {
         "audio_file": "frustrated_0109.wav",
         "duration_seconds": 6.784,
-        "latency_ms": 15246.55,
+        "latency_ms": 20662.03,
         "min_avg_logprob": -0.2015,
         "max_no_speech_prob": 0.0203,
         "needs_review": false,
@@ -807,7 +807,7 @@
       {
         "audio_file": "frustrated_0500.wav",
         "duration_seconds": 9.748,
-        "latency_ms": 19615.59,
+        "latency_ms": 24262.3,
         "min_avg_logprob": -0.2231,
         "max_no_speech_prob": 0.0275,
         "needs_review": false,
@@ -818,7 +818,7 @@
       {
         "audio_file": "calm_0136.wav",
         "duration_seconds": 9.102,
-        "latency_ms": 16988.63,
+        "latency_ms": 23231.28,
         "min_avg_logprob": -0.1188,
         "max_no_speech_prob": 0.0157,
         "needs_review": false,
@@ -829,7 +829,7 @@
       {
         "audio_file": "frustrated_0264.wav",
         "duration_seconds": 6.933,
-        "latency_ms": 14378.83,
+        "latency_ms": 20888.83,
         "min_avg_logprob": -0.0974,
         "max_no_speech_prob": 0.0776,
         "needs_review": false,
@@ -840,7 +840,7 @@
       {
         "audio_file": "satisfied_0058.wav",
         "duration_seconds": 5.845,
-        "latency_ms": 14487.05,
+        "latency_ms": 20973.23,
         "min_avg_logprob": -0.0438,
         "max_no_speech_prob": 0.0132,
         "needs_review": false,
@@ -851,7 +851,7 @@
       {
         "audio_file": "frustrated_0122.wav",
         "duration_seconds": 5.013,
-        "latency_ms": 14510.7,
+        "latency_ms": 20849.52,
         "min_avg_logprob": -0.1548,
         "max_no_speech_prob": 0.106,
         "needs_review": false,
@@ -862,7 +862,7 @@
       {
         "audio_file": "frustrated_0403.wav",
         "duration_seconds": 5.818,
-        "latency_ms": 14409.93,
+        "latency_ms": 21216.42,
         "min_avg_logprob": -0.2097,
         "max_no_speech_prob": 0.0175,
         "needs_review": false,
@@ -873,7 +873,7 @@
       {
         "audio_file": "frustrated_0485.wav",
         "duration_seconds": 8.29,
-        "latency_ms": 15387.85,
+        "latency_ms": 21874.19,
         "min_avg_logprob": -0.1177,
         "max_no_speech_prob": 0.0624,
         "needs_review": false,
@@ -886,53 +886,53 @@
   "latency_ms": {
     "transcribe": {
       "n": 10,
-      "min": 14378.83,
-      "p50": 15317.2,
-      "p95": 19020.71,
-      "max": 19615.59,
-      "mean": 15910.0
+      "min": 20662.03,
+      "p50": 21545.31,
+      "p95": 24793.36,
+      "max": 25227.86,
+      "mean": 22313.28
     },
     "classify": {
       "n": 30,
-      "min": 215.81,
-      "p50": 286.13,
-      "p95": 381.69,
-      "max": 649.18,
-      "mean": 298.53
+      "min": 51512.14,
+      "p50": 52934.81,
+      "p95": 57465.12,
+      "max": 58411.42,
+      "mean": 53558.23
     },
     "priority": {
       "n": 30,
       "min": 0.02,
       "p50": 0.02,
-      "p95": 0.03,
+      "p95": 0.02,
       "max": 0.03,
       "mean": 0.02
     },
     "route": {
       "n": 30,
-      "min": 1.03,
-      "p50": 1.29,
-      "p95": 1.45,
-      "max": 3.35,
-      "mean": 1.3
+      "min": 0.92,
+      "p50": 0.97,
+      "p95": 1.29,
+      "max": 129.72,
+      "mean": 5.28
     },
     "brief": {
       "n": 30,
       "min": 0.0,
       "p50": 0.0,
       "p95": 0.0,
-      "max": 0.0,
-      "mean": 0.0
+      "max": 0.38,
+      "mean": 0.01
     },
     "end_to_end": {
       "n": 10,
-      "min": 14646.9,
-      "p50": 15614.76,
-      "p95": 19359.02,
-      "max": 19953.06,
-      "mean": 16244.48
+      "min": 74298.07,
+      "p50": 78710.76,
+      "p95": 80528.09,
+      "max": 81121.53,
+      "mean": 77775.09
     },
-    "full_split_classification_seconds": 277.27,
+    "full_split_classification_seconds": 449.56,
     "full_split_batch_size": 32
   },
   "hardware": {
