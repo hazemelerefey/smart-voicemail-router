@@ -105,6 +105,20 @@ export default function LoginPage() {
           </div>
         </div>
 
+        <svg
+          width="100%"
+          height="18"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+          style={{ display: "block", marginBottom: 14 }}
+        >
+          <path d="M0 60H440M760 60H1200" stroke="var(--accent)" strokeWidth="4" />
+          <g stroke="var(--accent)" strokeWidth="9" strokeLinecap="round">
+            <path d="M490 60v-12m28 24V38m28 44V22m28 60V8m28 74V22m28 60V38m28 22V48m28 12V54" />
+          </g>
+        </svg>
+
         <h1>{locale === "ar" ? "تسجيل دخول المشغل" : "Operator Sign In"}</h1>
         <p className="sub">
           {locale === "ar"

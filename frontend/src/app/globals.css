@@ -1,79 +1,92 @@
-/* SVR Operator Design System - Apple Precision Editorial Tokens (nexu-io/open-design/apple) */
+/* SVR Operator Design System - Official SVR Presentation Brand Tokens */
 /* Zero gradients, zero glassmorphism, zero pulsing dots, zero em/en dashes */
 
 :root,
 [data-theme="light"] {
-  /* Surfaces (3 levels: white canvas, Pale Apple Gray, near-white warm stop) */
-  --bg: #ffffff;
-  --surface: #f5f5f7;
-  --surface-warm: #fbfbfd;
-  --surface-hover: #ebebef;
+  /* Core Brand Tokens (brand_tokens.json / svr-theme.css) */
+  --svr-red: #C81D20;
+  --svr-deep-red: #9F111B;
+  --svr-soft-red: #FEE4E2;
+  --svr-charcoal: #1F2937;
+  --svr-body: #344054;
+  --svr-slate: #475467;
+  --svr-label: #667085;
+  --svr-mid-gray: #98A2B3;
+  --svr-line-gray: #D0D5DD;
+  --svr-card-stroke: #E4E7EC;
+  --svr-mist: #F2F4F7;
+  --svr-white: #FFFFFF;
+  --svr-amber: #FF9A00;
 
-  /* Foreground ramp (4 levels: Near-Black Ink -> Utility Dark -> Secondary -> Mid Border) */
-  --fg: #1d1d1f;
-  --fg-2: #424245;
-  --muted: #6e6e73;
-  --meta: #86868b;
+  /* Semantic Bindings */
+  --bg: var(--svr-white);
+  --surface: var(--svr-mist);
+  --surface-warm: var(--svr-white);
+  --surface-hover: #EAECF0;
 
-  /* Borders (2 levels: Soft Border Gray & light inner separator) */
-  --border: #d2d2d7;
-  --border-soft: #e8e8ed;
+  --fg: var(--svr-charcoal);
+  --fg-2: var(--svr-body);
+  --muted: var(--svr-slate);
+  --meta: var(--svr-label);
 
-  /* Accent (Apple Action Blue) */
-  --accent: #0071e3;
-  --accent-on: #ffffff;
-  --accent-hover: #0077ed;
-  --accent-active: #0066cc;
+  --border: var(--svr-line-gray);
+  --border-soft: var(--svr-card-stroke);
 
-  /* Semantic status tokens */
-  --success: #16a34a;
-  --warn: #eab308;
-  --danger: #dc2626;
-  --ok: #15803d;
-  --ok-bg: #f0fdf4;
-  --high: #a16207;
-  --high-bg: #fefce8;
-  --urgent: #c81e1e;
-  --urgent-bg: #fef2f2;
-  --info: #0066cc;
-  --info-bg: #f0f7ff;
+  --accent: var(--svr-red);
+  --accent-on: var(--svr-white);
+  --accent-hover: var(--svr-deep-red);
+  --accent-active: var(--svr-deep-red);
+  --accent-soft: var(--svr-soft-red);
+
+  /* Semantic Status Tokens (WCAG AA contrast) */
+  --success: #15803D;
+  --warn: #B45309;
+  --danger: #C81D20;
+  --ok: #15803D;
+  --ok-bg: #ECFDF3;
+  --high: #B45309;
+  --high-bg: #FEF7E6;
+  --urgent: #C81D20;
+  --urgent-bg: #FEE4E2;
+  --info: #1F2937;
+  --info-bg: #F2F4F7;
 
   /* Compatibility aliases */
   --ink: var(--fg);
-  --faint: var(--muted);
+  --faint: var(--meta);
   --line: var(--border-soft);
   --line-strong: var(--border);
   --accent-ink: var(--accent-on);
 
   /* Typography */
-  --font-display: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", Helvetica, "Noto Sans Arabic", Arial, sans-serif;
-  --font-body: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, "Noto Sans Arabic", Arial, sans-serif;
-  --font-mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
+  --font-display: var(--font-montserrat), "Montserrat", "Noto Sans Arabic", Arial, sans-serif;
+  --font-body: var(--font-montserrat), "Montserrat", "Noto Sans Arabic", Arial, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, Consolas, monospace;
 
   --text-xs: 12px;
   --text-sm: 14px;
   --text-base: 15px;
-  --text-lg: 21px;
-  --text-xl: 28px;
-  --leading-body: 1.47;
-  --leading-tight: 1.1;
+  --text-lg: 20px;
+  --text-xl: 26px;
+  --leading-body: 1.5;
+  --leading-tight: 1.15;
   --tracking-display: -0.015em;
 
-  /* Purposeful radius tiers */
+  /* Radii & Elevation (brand_tokens.json) */
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-pill: 980px;
-  --radius: var(--radius-md);
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+  --radius: 12px;
 
-  /* Elevation (3 levels) */
   --elev-flat: none;
-  --elev-ring: 0 0 0 1px var(--border);
-  --elev-raised: 0 12px 32px rgba(0, 0, 0, 0.08);
-  --backdrop: rgba(29, 29, 31, 0.48);
+  --elev-ring: 0 0 0 1px var(--border-soft);
+  --elev-card: 0 8px 24px rgba(16, 24, 40, 0.06);
+  --elev-raised: 0 12px 32px rgba(16, 24, 40, 0.12);
+  --backdrop: rgba(16, 24, 40, 0.52);
 
-  /* Focus halo & Apple deceleration motion */
-  --focus-ring: 0 0 0 4px color-mix(in oklab, var(--accent), transparent 65%);
+  /* Focus ring & Motion */
+  --focus-ring: 0 0 0 3px rgba(200, 29, 32, 0.22);
   --motion-fast: 150ms;
   --motion-base: 220ms;
   --ease-standard: cubic-bezier(0.28, 0, 0.22, 1);
@@ -82,44 +95,47 @@
 }
 
 [data-theme="dark"] {
-  --bg: #000000;
-  --surface: #1d1d1f;
-  --surface-warm: #141416;
-  --surface-hover: #2c2c2e;
+  --bg: #0F141B;
+  --surface: #18202C;
+  --surface-warm: #141B24;
+  --surface-hover: #222D3D;
 
-  --fg: #f5f5f7;
-  --fg-2: #d2d2d7;
-  --muted: #a1a1a6;
-  --meta: #86868b;
+  --fg: #F9FAFB;
+  --fg-2: #E5E7EB;
+  --muted: #98A2B3;
+  --meta: #98A2B3;
 
-  --border: #38383a;
-  --border-soft: #2c2c2e;
+  --border: #344054;
+  --border-soft: #263142;
 
-  --accent: #2997ff;
-  --accent-on: #ffffff;
-  --accent-hover: #47a6ff;
-  --accent-active: #0071e3;
+  --accent: #E53935;
+  --accent-on: #FFFFFF;
+  --accent-hover: #EF5350;
+  --accent-active: #C81D20;
+  --accent-soft: #361518;
 
-  --success: #30d158;
-  --warn: #ffd60a;
-  --danger: #ff453a;
-  --ok: #30d158;
-  --ok-bg: #0f2918;
-  --high: #ffd60a;
-  --high-bg: #2a230b;
-  --urgent: #ff453a;
-  --urgent-bg: #2c1517;
-  --info: #2997ff;
-  --info-bg: #0d223a;
+  --success: #34D399;
+  --warn: #FFB020;
+  --danger: #F97066;
+  --ok: #34D399;
+  --ok-bg: #0F291E;
+  --high: #FFB020;
+  --high-bg: #2B200B;
+  --urgent: #F97066;
+  --urgent-bg: #361518;
+  --info: #D0D5DD;
+  --info-bg: #1F2937;
 
   --ink: var(--fg);
-  --faint: var(--muted);
+  --faint: var(--meta);
   --line: var(--border-soft);
   --line-strong: var(--border);
   --accent-ink: var(--accent-on);
 
-  --elev-raised: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --elev-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --elev-raised: 0 12px 32px rgba(0, 0, 0, 0.55);
   --backdrop: rgba(0, 0, 0, 0.68);
+  --focus-ring: 0 0 0 3px rgba(229, 57, 53, 0.35);
   color-scheme: dark;
 }
 
@@ -186,7 +202,7 @@ summary {
 h1 {
   font-family: var(--font-display);
   font-size: var(--text-xl);
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 0 6px;
   letter-spacing: var(--tracking-display);
   line-height: 1.14;
@@ -195,7 +211,7 @@ h1 {
 h2 {
   font-family: var(--font-display);
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 0 12px;
   letter-spacing: -0.012em;
   line-height: 1.25;
@@ -204,7 +220,7 @@ h2 {
 h3 {
   font-family: var(--font-display);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0 0 8px;
   line-height: 1.35;
 }
@@ -430,10 +446,11 @@ p {
 }
 
 .rail-link.current {
-  background-color: var(--bg);
+  background-color: var(--accent-soft);
   color: var(--ink);
   font-weight: 700;
-  border-color: var(--line);
+  border-color: transparent;
+  border-inline-start: 3px solid var(--accent);
 }
 
 .rail-link svg {
@@ -456,8 +473,8 @@ p {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--faint);
+  letter-spacing: 0.075em;
+  color: var(--accent);
   padding: 12px 12px 4px;
 }
 
@@ -652,7 +669,7 @@ textarea:focus {
   background-color: var(--accent);
   color: var(--accent-ink);
   border-color: var(--accent);
-  font-weight: 600;
+  font-weight: 700;
   padding: 0 22px;
 }
 
@@ -694,13 +711,14 @@ textarea:focus {
   cursor: not-allowed;
 }
 
-/* Cards & Panels (Apple 18px radius + soft surface rhythm) */
+/* Cards & Panels (12px radius + soft enterprise shadow) */
 .card {
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
   padding: 20px 22px;
   margin-block-end: 18px;
   background-color: var(--bg);
+  box-shadow: var(--elev-card);
 }
 
 .card-surface {
@@ -771,21 +789,22 @@ textarea:focus {
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
   padding: 16px 18px;
-  background-color: var(--surface);
+  background-color: var(--bg);
+  box-shadow: var(--elev-card);
 }
 
 .kpi-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   color: var(--muted);
 }
 
 .kpi-value {
   font-family: var(--font-display);
   font-size: var(--text-xl);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: var(--tracking-display);
   font-variant-numeric: tabular-nums;
   margin-block-start: 4px;
