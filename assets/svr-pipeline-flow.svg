@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="270" viewBox="0 0 1600 270" role="img" aria-label="Smart Voicemail Router 5-Stage Pipeline Architecture">
+  <rect x="2" y="2" width="1596" height="266" rx="20" fill="#09090B" stroke="#27272A" stroke-width="2"/>
+
+  <g font-family="Inter, system-ui, -apple-system, sans-serif">
+    <!-- Stage 1 -->
+    <g transform="translate(28, 28)">
+      <rect width="280" height="214" rx="14" fill="#111114" stroke="#27272A"/>
+      <rect x="0" y="0" width="280" height="5" rx="2.5" fill="#EF4444"/>
+      <text x="22" y="38" fill="#EF4444" font-size="12" font-weight="700" letter-spacing="1.2">STAGE 01</text>
+      <text x="22" y="68" fill="#FAFAFA" font-size="18" font-weight="700">Audio Intake &amp; Vault</text>
+      <text x="22" y="100" fill="#A1A1AA" font-size="13">WAV / MP3 / M4A + 16 kHz Mic</text>
+      <text x="22" y="124" fill="#A1A1AA" font-size="13">Magic-byte &amp; ffprobe (&lt;= 60s)</text>
+      <text x="22" y="148" fill="#A1A1AA" font-size="13">SHA-256 Idempotent Dedup</text>
+      <text x="22" y="172" fill="#A1A1AA" font-size="13">Fernet Encryption at Rest</text>
+      <text x="22" y="198" fill="#71717A" font-size="11.5" font-weight="600">HTTP 202 Accepted (&lt; 2s)</text>
+    </g>
+
+    <!-- Arrow 1->2 -->
+    <path d="M316 135 H334 M328 129 L335 135 L328 141" fill="none" stroke="#52525B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Stage 2 -->
+    <g transform="translate(342, 28)">
+      <rect width="280" height="214" rx="14" fill="#111114" stroke="#27272A"/>
+      <rect x="0" y="0" width="280" height="5" rx="2.5" fill="#38BDF8"/>
+      <text x="22" y="38" fill="#38BDF8" font-size="12" font-weight="700" letter-spacing="1.2">STAGE 02</text>
+      <text x="22" y="68" fill="#FAFAFA" font-size="18" font-weight="700">Whisper large-v3 STT</text>
+      <text x="22" y="100" fill="#A1A1AA" font-size="13">Self-hosted faster-whisper</text>
+      <text x="22" y="124" fill="#A1A1AA" font-size="13">Egyptian Arabic Dialect</text>
+      <text x="22" y="148" fill="#A1A1AA" font-size="13">EN Telecom Terms (eSIM, 5G)</text>
+      <text x="22" y="172" fill="#A1A1AA" font-size="13">Arabic Text Normalization</text>
+      <text x="22" y="198" fill="#71717A" font-size="11.5" font-weight="600">10-Column Structured STT v1</text>
+    </g>
+
+    <!-- Arrow 2->3 -->
+    <path d="M630 135 H648 M642 129 L649 135 L642 141" fill="none" stroke="#52525B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Stage 3 -->
+    <g transform="translate(656, 28)">
+      <rect width="288" height="214" rx="14" fill="#111114" stroke="#27272A"/>
+      <rect x="0" y="0" width="288" height="5" rx="2.5" fill="#22D3EE"/>
+      <text x="22" y="38" fill="#22D3EE" font-size="12" font-weight="700" letter-spacing="1.2">STAGE 03</text>
+      <text x="22" y="68" fill="#FAFAFA" font-size="18" font-weight="700">4x MARBERTv2 Triage</text>
+      <text x="22" y="100" fill="#A1A1AA" font-size="13">Complaint Category (11 classes)</text>
+      <text x="22" y="124" fill="#A1A1AA" font-size="13">Complaint Urgency (High/Med/Low)</text>
+      <text x="22" y="148" fill="#A1A1AA" font-size="13">Customer State (4 emotions)</text>
+      <text x="22" y="172" fill="#A1A1AA" font-size="13">Subscriber Churn Risk (2 classes)</text>
+      <text x="22" y="198" fill="#71717A" font-size="11.5" font-weight="600">0.7941 Combined Val Macro-F1</text>
+    </g>
+
+    <!-- Arrow 3->4 -->
+    <path d="M952 135 H970 M964 129 L971 135 L964 141" fill="none" stroke="#52525B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Stage 4 -->
+    <g transform="translate(978, 28)">
+      <rect width="280" height="214" rx="14" fill="#111114" stroke="#27272A"/>
+      <rect x="0" y="0" width="280" height="5" rx="2.5" fill="#F59E0B"/>
+      <text x="22" y="38" fill="#F59E0B" font-size="12" font-weight="700" letter-spacing="1.2">STAGE 04</text>
+      <text x="22" y="68" fill="#FAFAFA" font-size="18" font-weight="700">Priority &amp; Skill Route</text>
+      <text x="22" y="100" fill="#A1A1AA" font-size="13">Deterministic Score 1..6 Rule</text>
+      <text x="22" y="124" fill="#A1A1AA" font-size="13">Urgent / High / Normal / Low</text>
+      <text x="22" y="148" fill="#A1A1AA" font-size="13">Network, Billing &amp; General</text>
+      <text x="22" y="172" fill="#A1A1AA" font-size="13">Live Agent Shift Capacity</text>
+      <text x="22" y="198" fill="#71717A" font-size="11.5" font-weight="600">89.33% Routing Agreement</text>
+    </g>
+
+    <!-- Arrow 4->5 -->
+    <path d="M1266 135 H1284 M1278 129 L1285 135 L1278 141" fill="none" stroke="#52525B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Stage 5 -->
+    <g transform="translate(1292, 28)">
+      <rect width="280" height="214" rx="14" fill="#111114" stroke="#27272A"/>
+      <rect x="0" y="0" width="280" height="5" rx="2.5" fill="#10B981"/>
+      <text x="22" y="38" fill="#10B981" font-size="12" font-weight="700" letter-spacing="1.2">STAGE 05</text>
+      <text x="22" y="68" fill="#FAFAFA" font-size="18" font-weight="700">Live Operator Console</text>
+      <text x="22" y="100" fill="#A1A1AA" font-size="13">Grounded AR / EN Script Brief</text>
+      <text x="22" y="124" fill="#A1A1AA" font-size="13">WebSocket Queue Push (/ws)</text>
+      <text x="22" y="148" fill="#A1A1AA" font-size="13">Supervisor Override Preview</text>
+      <text x="22" y="172" fill="#A1A1AA" font-size="13">Immutable CSV/JSON Audit Log</text>
+      <text x="22" y="198" fill="#71717A" font-size="11.5" font-weight="600">Prometheus + Grafana SLA</text>
+    </g>
+  </g>
+</svg>

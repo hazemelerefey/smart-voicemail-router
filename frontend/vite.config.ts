@@ -24,7 +24,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
   },
   server: {
@@ -32,6 +32,11 @@ export default defineConfig({
     headers: securityHeaders,
     proxy: {
       '/api': {
+        target: apiUpstream,
+        changeOrigin: true,
+        ws: true,
+      },
+      '/ws': {
         target: apiUpstream,
         changeOrigin: true,
         ws: true,
@@ -44,6 +49,11 @@ export default defineConfig({
     headers: securityHeaders,
     proxy: {
       '/api': {
+        target: apiUpstream,
+        changeOrigin: true,
+        ws: true,
+      },
+      '/ws': {
         target: apiUpstream,
         changeOrigin: true,
         ws: true,

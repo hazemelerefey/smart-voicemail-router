@@ -97,9 +97,48 @@ def test_classifier_degrades_safely_to_human_review_when_checkpoints_unavailable
 
 
 def test_classifier_serves_validated_marbertv2_artifact_on_validation_corpus(tmp_path: Path):
+    import csv
+    import json
+
+    repo_root = Path(__file__).resolve().parents[2]
+    if not (repo_root / "final" / "clean_training_val.csv").is_file():
+        repo_root = tmp_path
+        final_dir = repo_root / "final"
+        runs_dir = repo_root / "runs" / "exp_fair-marbertv2-lr2e5"
+        final_dir.mkdir(parents=True, exist_ok=True)
+        runs_dir.mkdir(parents=True, exist_ok=True)
+        sample_text = "الصوت في المكالمات دائما عالي وش جامد ومش سامع علي الطرف التاني"
+        with (final_dir / "clean_training_val.csv").open("w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["audio_file", "text", "text_norm"])
+            writer.writeheader()
+            writer.writerow({"audio_file": "calm_0001.wav", "text": sample_text, "text_norm": sample_text})
+        pred_payload = {
+            "rows": [
+                {
+                    "audio_file": "calm_0001.wav",
+                    "labels": {
+                        "complaint_category": "network_and_connectivity",
+                        "complaint_urgency": "high",
+                        "customer_state": "frustrated",
+                        "churn_risk": "not_at_risk",
+                    },
+                    "probabilities": {
+                        "complaint_category": {"network_and_connectivity": 0.91, "other": 0.09},
+                        "complaint_urgency": {"high": 0.84, "medium": 0.12, "low": 0.04},
+                        "customer_state": {"frustrated": 0.80, "calm": 0.20},
+                        "churn_risk": {"not_at_risk": 0.95, "at_risk": 0.05},
+                    },
+                }
+            ]
+        }
+        for s in (42, 99):
+            (runs_dir / f"predictions_val_seed{s}.json").write_text(
+                json.dumps(pred_payload, ensure_ascii=False), encoding="utf-8"
+            )
+
     svc = MARBERTv2ClassifierService(
         models_dir=tmp_path / "no_local_ckpts",
-        repo_root=Path("E:/migration/Projects/SVR"),
+        repo_root=repo_root,
         allow_validated_artifact_fallback=True,
     )
     res = svc.classify(

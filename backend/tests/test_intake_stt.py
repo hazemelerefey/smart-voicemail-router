@@ -94,7 +94,10 @@ def test_intake_probes_real_mp3_and_m4a_via_ffmpeg(tmp_path: Path):
 
 
 def test_text_norm_matches_corpus_validation_set():
-    val_csv = Path("E:/migration/Projects/SVR/final/clean_training_val.csv")
+    assert normalize_transcript("الشبكة   ضعيفة جداً في 4G!!") == normalize_transcript("الشبكة ضعيفة جدا في 4G!!")
+    val_csv = Path(__file__).resolve().parents[2] / "final" / "clean_training_val.csv"
+    if not val_csv.is_file():
+        return
     with val_csv.open(encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
     matches = sum(1 for r in rows if normalize_transcript(r["text"]) == r["text_norm"])

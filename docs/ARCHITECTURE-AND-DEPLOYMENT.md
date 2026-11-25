@@ -10,14 +10,14 @@
 
 ## 1. Production Architecture Overview
 
-SVR is a local-first, single-tenant web platform composed of a Next.js operator UI, a FastAPI REST and WebSocket backend, horizontally scalable Python AI workers, PostgreSQL 16, Redis 7, encrypted audio storage, and a Prometheus + Grafana observability stack.
+SVR is a local-first, single-tenant web platform composed of a Vite + React 19 + shadcn/ui operator UI (served via Nginx Alpine), a FastAPI REST and WebSocket backend, horizontally scalable Python AI workers, PostgreSQL 16, Redis 7, encrypted audio storage, and a Prometheus + Grafana observability stack.
 
 ### 1.1 System Architecture Diagram
 
 ```mermaid
 flowchart LR
-    Browser["Operator Browser (Next.js UI, EN/AR RTL, Mic WAV Recorder)"]
-    NextJS["Frontend Container (Node 22 / Next.js :3000)"]
+    Browser["Operator Browser (React 19 + shadcn/ui, EN/AR RTL, Mic WAV Recorder)"]
+    Frontend["Frontend Container (Nginx Alpine / Vite SPA :3000)"]
     API["FastAPI Backend (:8000, Auth/RBAC, REST, WS /ws/queue, /api/metrics)"]
     Redis["Redis 7 (:6379, Job Queue + Sliding-Window Rate Limiter)"]
     Worker["Scalable AI Workers (ops/worker_runner.py, NFR9)"]
@@ -27,8 +27,8 @@ flowchart LR
     Prom["Prometheus (:9090, 15s scrape + AI10 Alert Rules)"]
     Graf["Grafana (:3001, Pre-provisioned SVR Dashboard)"]
 
-    Browser -->|"HTTPS / WSS (HttpOnly Cookie + CSRF)"| NextJS
-    NextJS -->|"/api/* Rewrite Proxy"| API
+    Browser -->|"HTTPS / WSS (HttpOnly Cookie + CSRF)"| Frontend
+    Frontend -->|"/api/* & /ws/* Proxy"| API
     Browser -->|"WS /ws/queue"| API
     API --> PG
     API --> Redis

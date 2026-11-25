@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="480" viewBox="0 0 1600 480" role="img" aria-label="Smart Voicemail Router - Enterprise Telecom AI Operations Platform">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#09090B"/>
+      <stop offset="55%" stop-color="#0C0C10"/>
+      <stop offset="100%" stop-color="#09090B"/>
+    </linearGradient>
+    <radialGradient id="redGlow" cx="14%" cy="32%" r="42%">
+      <stop offset="0%" stop-color="#C81D20" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#C81D20" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="skyGlow" cx="84%" cy="50%" r="45%">
+      <stop offset="0%" stop-color="#0284C7" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#0284C7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="brandRed" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E02428"/>
+      <stop offset="100%" stop-color="#A81417"/>
+    </linearGradient>
+    <pattern id="gridDark" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.03"/>
+    </pattern>
+    <pattern id="stripeBlue" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="7" height="7" fill="#38BDF8"/>
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#111114" stroke-width="2.2" stroke-opacity="0.62"/>
+    </pattern>
+    <pattern id="stripeCyan" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="7" height="7" fill="#22D3EE"/>
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#111114" stroke-width="2.2" stroke-opacity="0.62"/>
+    </pattern>
+    <pattern id="stripeTeal" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="7" height="7" fill="#2DD4BF"/>
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#111114" stroke-width="2.2" stroke-opacity="0.62"/>
+    </pattern>
+    <pattern id="stripeIndigo" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="7" height="7" fill="#818CF8"/>
+      <line x1="0" y1="0" x2="0" y2="7" stroke="#111114" stroke-width="2.2" stroke-opacity="0.62"/>
+    </pattern>
+    <linearGradient id="fadeMaskG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="72%" stop-color="#FFFFFF" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.06"/>
+    </linearGradient>
+    <mask id="barFade" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+      <rect x="0" y="0" width="1" height="1" fill="url(#fadeMaskG)"/>
+    </mask>
+  </defs>
+
+  <rect x="2" y="2" width="1596" height="476" rx="24" fill="url(#bgGrad)" stroke="#27272A" stroke-width="2"/>
+  <rect x="2" y="2" width="1596" height="476" rx="24" fill="url(#gridDark)"/>
+  <rect x="2" y="2" width="1596" height="476" rx="24" fill="url(#redGlow)"/>
+  <rect x="2" y="2" width="1596" height="476" rx="24" fill="url(#skyGlow)"/>
+
+  <!-- SVR Brand Mark -->
+  <g transform="translate(84, 78)">
+    <rect x="0" y="0" width="76" height="76" rx="18" fill="url(#brandRed)" stroke="#FF6B6E" stroke-opacity="0.35" stroke-width="1.5"/>
+    <path d="M19 42 C19 25 57 25 57 42" fill="none" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round"/>
+    <rect x="16" y="39" width="7" height="15" rx="3.5" fill="#FFFFFF"/>
+    <rect x="53" y="39" width="7" height="15" rx="3.5" fill="#FFFFFF"/>
+    <line x1="30" y1="38" x2="30" y2="50" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+    <line x1="38" y1="33" x2="38" y2="55" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+    <line x1="46" y1="39" x2="46" y2="49" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Eyebrow Pill -->
+  <g transform="translate(180, 96)">
+    <rect x="0" y="0" width="346" height="34" rx="17" fill="#141418" stroke="#27272A" stroke-width="1"/>
+    <circle cx="18" cy="17" r="4.5" fill="#38BDF8"/>
+    <text x="32" y="22" fill="#E4E4E7" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="600" letter-spacing="1.2">ENTERPRISE TELECOM AI OPERATIONS</text>
+  </g>
+
+  <!-- Main Product Title -->
+  <text x="84" y="226" fill="#FAFAFA" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="60" font-weight="800" letter-spacing="-1.6">Smart Voicemail Router</text>
+
+  <!-- Subtitle -->
+  <text x="84" y="274" fill="#A1A1AA" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="21" font-weight="400">Transform Egyptian Arabic subscriber voicemails into prioritized, skill-routed</text>
+  <text x="84" y="304" fill="#A1A1AA" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="21" font-weight="400">callback tickets with grounded bilingual scripts and full auditability.</text>
+
+  <!-- Feature Pills -->
+  <g transform="translate(84, 356)" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="600" fill="#E4E4E7">
+    <g transform="translate(0, 0)">
+      <rect width="184" height="38" rx="19" fill="#141418" stroke="#27272A"/>
+      <circle cx="19" cy="19" r="4" fill="#38BDF8"/>
+      <text x="32" y="24">Whisper large-v3 STT</text>
+    </g>
+    <g transform="translate(196, 0)">
+      <rect width="194" height="38" rx="19" fill="#141418" stroke="#27272A"/>
+      <circle cx="19" cy="19" r="4" fill="#22D3EE"/>
+      <text x="32" y="24">4x MARBERTv2 Triage</text>
+    </g>
+    <g transform="translate(402, 0)">
+      <rect width="182" height="38" rx="19" fill="#141418" stroke="#27272A"/>
+      <circle cx="19" cy="19" r="4" fill="#34D399"/>
+      <text x="32" y="24">89.3% Skill Routing</text>
+    </g>
+    <g transform="translate(596, 0)">
+      <rect width="176" height="38" rx="19" fill="#141418" stroke="#27272A"/>
+      <circle cx="19" cy="19" r="4" fill="#FBBF24"/>
+      <text x="32" y="24">EN / AR Native RTL</text>
+    </g>
+    <g transform="translate(784, 0)">
+      <rect width="184" height="38" rx="19" fill="#141418" stroke="#27272A"/>
+      <circle cx="19" cy="19" r="4" fill="#EF4444"/>
+      <text x="32" y="24">Fernet Encrypted</text>
+    </g>
+  </g>
+
+  <!-- Right Live Telemetry Card -->
+  <g transform="translate(1098, 72)">
+    <rect x="0" y="0" width="418" height="336" rx="20" fill="#111114" stroke="#27272A" stroke-width="1.5"/>
+    <text x="26" y="40" fill="#FAFAFA" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="16" font-weight="700">Live Triage Telemetry</text>
+    <text x="26" y="62" fill="#71717A" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="12.5">Validation Macro-F1 across 4 heads</text>
+    <rect x="304" y="24" width="88" height="26" rx="13" fill="#0C2A3E" stroke="#0284C7" stroke-opacity="0.5"/>
+    <circle cx="319" cy="37" r="3.5" fill="#38BDF8"/>
+    <text x="329" y="41" fill="#38BDF8" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">Live WS</text>
+
+    <!-- Chart Grid -->
+    <line x1="26" y1="104" x2="392" y2="104" stroke="#27272A" stroke-dasharray="3 3"/>
+    <line x1="26" y1="162" x2="392" y2="162" stroke="#27272A" stroke-dasharray="3 3"/>
+    <line x1="26" y1="220" x2="392" y2="220" stroke="#27272A" stroke-dasharray="3 3"/>
+    <line x1="26" y1="268" x2="392" y2="268" stroke="#27272A"/>
+
+    <!-- Patterned Fade-Out Columns -->
+    <g font-family="Inter, system-ui, -apple-system, sans-serif" text-anchor="middle">
+      <text x="76" y="120" fill="#FAFAFA" font-size="12" font-weight="700">0.79</text>
+      <rect x="52" y="128" width="48" height="140" rx="6" fill="url(#stripeBlue)" mask="url(#barFade)"/>
+      <text x="76" y="290" fill="#A1A1AA" font-size="12">Category</text>
+
+      <text x="164" y="134" fill="#FAFAFA" font-size="12" font-weight="700">0.72</text>
+      <rect x="140" y="142" width="48" height="126" rx="6" fill="url(#stripeCyan)" mask="url(#barFade)"/>
+      <text x="164" y="290" fill="#A1A1AA" font-size="12">Urgency</text>
+
+      <text x="252" y="128" fill="#FAFAFA" font-size="12" font-weight="700">0.75</text>
+      <rect x="228" y="136" width="48" height="132" rx="6" fill="url(#stripeTeal)" mask="url(#barFade)"/>
+      <text x="252" y="290" fill="#A1A1AA" font-size="12">State</text>
+
+      <text x="340" y="96" fill="#FAFAFA" font-size="12" font-weight="700">0.92</text>
+      <rect x="316" y="104" width="48" height="164" rx="6" fill="url(#stripeIndigo)" mask="url(#barFade)"/>
+      <text x="340" y="290" fill="#A1A1AA" font-size="12">Churn</text>
+    </g>
+
+    <text x="26" y="318" fill="#A1A1AA" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="12">Combined F1: <tspan fill="#FAFAFA" font-weight="700">0.7941</tspan></text>
+    <text x="242" y="318" fill="#A1A1AA" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="12">Quality Gates: <tspan fill="#34D399" font-weight="700">6/6 PASS</tspan></text>
+  </g>
+</svg>
