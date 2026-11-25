@@ -112,19 +112,30 @@ class WhisperSTTService:
         with self._lock:
             if self._model is not None:
                 return self._model
+            if self.low_memory_mode and self.device == "cpu":
+                os.environ.setdefault("CT2_USE_MKL", "0")
+                os.environ.setdefault("OMP_NUM_THREADS", "1")
+                os.environ.setdefault("MKL_NUM_THREADS", "1")
             from faster_whisper import WhisperModel
 
             logger.info(
-                "Loading local Whisper model=%s device=%s compute_type=%s",
+                "Loading local Whisper model=%s device=%s compute_type=%s low_memory=%s",
                 self.model_id,
                 self.device,
                 self.compute_type,
+                self.low_memory_mode,
             )
+            kwargs: dict[str, object] = {
+                "device": self.device,
+                "compute_type": self.compute_type,
+                "download_root": self.download_root,
+            }
+            if self.low_memory_mode and self.device == "cpu":
+                kwargs["cpu_threads"] = 1
+                kwargs["num_workers"] = 1
             self._model = WhisperModel(
                 self.model_id,
-                device=self.device,
-                compute_type=self.compute_type,
-                download_root=self.download_root,
+                **kwargs,
             )
             return self._model
 
