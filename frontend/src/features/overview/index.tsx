@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
   Activity,
   AlertCircle,
@@ -11,7 +11,16 @@ import {
   RefreshCw,
   Users,
 } from 'lucide-react'
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 import { useSvr } from '@/context/svr-provider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -49,6 +58,29 @@ const CHURN_LABEL: Record<string, { en: string; ar: string }> = {
   not_at_risk: { en: 'Not at risk', ar: 'مش معرض للفقد' },
 }
 
+const SHORT_CATEGORY_LABELS: Record<string, { en: string; ar: string }> = {
+  network_and_connectivity: { en: 'Network', ar: 'الشبكة' },
+  billing_and_charges: { en: 'Billing', ar: 'الفواتير' },
+  balance_and_data: { en: 'Data', ar: 'الرصيد' },
+  app_and_account: { en: 'Account', ar: 'الحساب' },
+  branch_and_staff: { en: 'Branch', ar: 'الفروع' },
+  no_reply_or_long_wait: { en: 'Wait Time', ar: 'الانتظار' },
+  cancellation_request: { en: 'Cancel', ar: 'الإلغاء' },
+  thanks_or_praise: { en: 'Praise', ar: 'شكر' },
+  offers_and_packages: { en: 'Offers', ar: 'العروض' },
+  sim_services: { en: 'SIM', ar: 'الشريحة' },
+  other: { en: 'Other', ar: 'أخرى' },
+}
+
+const CATEGORY_GRADIENTS = [
+  { id: 'catGrad-0', top: '#38bdf8', bottom: '#2563eb', glow: 'rgba(56, 189, 248, 0.38)' },
+  { id: 'catGrad-1', top: '#22d3ee', bottom: '#0284c7', glow: 'rgba(34, 211, 238, 0.36)' },
+  { id: 'catGrad-2', top: '#2dd4bf', bottom: '#0d9488', glow: 'rgba(45, 212, 191, 0.34)' },
+  { id: 'catGrad-3', top: '#818cf8', bottom: '#4f46e5', glow: 'rgba(129, 140, 248, 0.36)' },
+  { id: 'catGrad-4', top: '#a78bfa', bottom: '#7c3aed', glow: 'rgba(167, 139, 250, 0.34)' },
+  { id: 'catGrad-5', top: '#94a3b8', bottom: '#475569', glow: 'rgba(148, 163, 184, 0.3)' },
+] as const
+
 function seconds(ms: number | undefined): string {
   if (ms === undefined || !Number.isFinite(ms) || ms <= 0) return '-'
   return `${(ms / 1000).toFixed(1)}s`
@@ -59,10 +91,14 @@ function prettyStage(key: string): string {
 }
 
 export function OverviewPage() {
+  const navigate = useNavigate()
   const { locale, wsVersion, settings } = useSvr()
   const t = UI_COPY[locale]
   const isAr = locale === 'ar'
   const L = (en: string, ar: string) => (isAr ? ar : en)
+
+  const [hoveredCatIdx, setHoveredCatIdx] = useState<number | null>(null)
+  const [hoveredHistIdx, setHoveredHistIdx] = useState<number | null>(null)
 
   const [summary, setSummary] = useState<MonitoringSummaryResponse | null>(null)
   const [queue, setQueue] = useState<TicketListResponse | null>(null)
@@ -102,14 +138,18 @@ export function OverviewPage() {
   const unassigned = queue?.counts_by_status?.unassigned ?? 0
   const humanReview = queue?.human_review_count ?? 0
 
-  const categoryData = Object.entries(summary?.classification_distribution?.complaint_category ?? {})
+  const rawCategories = Object.entries(summary?.classification_distribution?.complaint_category ?? {})
     .filter(([, n]) => n > 0)
     .sort((a, b) => b[1] - a[1])
-    .map(([cat, count]) => ({
-      name: labelForCategory(cat, locale),
-      count,
-    }))
-  const classifiedTotal = categoryData.reduce((acc, r) => acc + r.count, 0)
+  const classifiedTotal = rawCategories.reduce((acc, [, n]) => acc + n, 0)
+  const categoryData = rawCategories.map(([cat, count]) => ({
+    key: cat,
+    name: SHORT_CATEGORY_LABELS[cat]?.[locale] ?? labelForCategory(cat, locale),
+    fullName: labelForCategory(cat, locale),
+    count,
+    pct: classifiedTotal > 0 ? Math.round((count / classifiedTotal) * 100) : 0,
+  }))
+  const activeCat = hoveredCatIdx !== null ? categoryData[hoveredCatIdx] : undefined
 
   const threshold = settings?.confidence_threshold ?? 0.5
   const histData = (summary?.confidence_histogram ?? []).map((h, i) => {
@@ -277,14 +317,24 @@ export function OverviewPage() {
           {/* Main 7-col grid: Recharts Categories + Top of Queue */}
           <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
             <Card className='col-span-1 lg:col-span-4'>
-              <CardHeader>
-                <CardTitle>{L('Complaint Categories', 'أنواع الشكاوى')}</CardTitle>
-                <CardDescription>
-                  {L(
-                    `${classifiedTotal} classified of ${summary?.total_tickets ?? 0} total tickets`,
-                    `${classifiedTotal} مصنفة من إجمالي ${summary?.total_tickets ?? 0} تذكرة`
-                  )}
-                </CardDescription>
+              <CardHeader className='flex flex-row items-start justify-between gap-2'>
+                <div>
+                  <CardTitle>{L('Complaint Categories', 'أنواع الشكاوى')}</CardTitle>
+                  <CardDescription>
+                    {L(
+                      `${classifiedTotal} classified of ${summary?.total_tickets ?? 0} total tickets`,
+                      `${classifiedTotal} مصنفة من إجمالي ${summary?.total_tickets ?? 0} تذكرة`
+                    )}
+                  </CardDescription>
+                </div>
+                {activeCat && (
+                  <div className='rounded-md border bg-muted/50 px-2.5 py-1 text-end text-xs transition-all'>
+                    <div className='font-semibold text-foreground'>{activeCat.fullName}</div>
+                    <div className='font-mono text-muted-foreground tabular-nums'>
+                      {activeCat.count} ({activeCat.pct}%)
+                    </div>
+                  </div>
+                )}
               </CardHeader>
               <CardContent className='ps-2'>
                 {categoryData.length === 0 ? (
@@ -293,38 +343,92 @@ export function OverviewPage() {
                   </p>
                 ) : (
                   <ResponsiveContainer width='100%' height={300}>
-                    <BarChart data={categoryData} margin={{ top: 8, right: 16, left: 0, bottom: 24 }}>
+                    <BarChart
+                      data={categoryData}
+                      margin={{ top: 14, right: 16, left: 0, bottom: 8 }}
+                      onMouseLeave={() => setHoveredCatIdx(null)}
+                    >
+                      <defs>
+                        {CATEGORY_GRADIENTS.map((g) => (
+                          <linearGradient key={g.id} id={g.id} x1='0' y1='0' x2='0' y2='1'>
+                            <stop offset='0%' stopColor={g.top} stopOpacity={0.95} />
+                            <stop offset='100%' stopColor={g.bottom} stopOpacity={0.88} />
+                          </linearGradient>
+                        ))}
+                      </defs>
+                      <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='var(--border)' opacity={0.6} />
                       <XAxis
                         dataKey='name'
-                        stroke='#888888'
-                        fontSize={11}
+                        stroke='var(--muted-foreground)'
+                        fontSize={12}
                         tickLine={false}
                         axisLine={false}
                         interval={0}
-                        angle={-15}
-                        textAnchor='end'
-                        height={52}
+                        angle={0}
+                        textAnchor='middle'
+                        dy={6}
+                        height={32}
                       />
                       <YAxis
-                        stroke='#888888'
+                        stroke='var(--muted-foreground)'
                         fontSize={12}
                         tickLine={false}
                         axisLine={false}
                         allowDecimals={false}
                       />
                       <Tooltip
-                        cursor={{ fill: 'var(--accent)', opacity: 0.4 }}
-                        contentStyle={{
-                          backgroundColor: 'var(--popover)',
-                          borderColor: 'var(--border)',
-                          borderRadius: 'var(--radius)',
-                          color: 'var(--popover-foreground)',
-                          fontSize: '12px',
+                        cursor={false}
+                        content={({ active, payload }) => {
+                          if (!active || !payload?.length) return null
+                          const row = payload[0]?.payload as (typeof categoryData)[number] | undefined
+                          if (!row) return null
+                          return (
+                            <div className='rounded-lg border border-border bg-popover px-3 py-2 text-xs text-popover-foreground shadow-lg'>
+                              <div className='font-semibold'>{row.fullName}</div>
+                              <div className='mt-0.5 flex items-center gap-2 text-muted-foreground tabular-nums'>
+                                <span>{L('Tickets', 'التذاكر')}: <strong className='text-foreground'>{row.count}</strong></span>
+                                <span>·</span>
+                                <span>{row.pct}%</span>
+                              </div>
+                            </div>
+                          )
                         }}
-                        itemStyle={{ color: 'var(--popover-foreground)' }}
-                        labelStyle={{ color: 'var(--muted-foreground)' }}
                       />
-                      <Bar dataKey='count' fill='currentColor' radius={[4, 4, 0, 0]} className='fill-primary' />
+                      <Bar
+                        dataKey='count'
+                        radius={[8, 8, 2, 2]}
+                        maxBarSize={56}
+                        isAnimationActive
+                        animationDuration={750}
+                        animationEasing='ease-out'
+                        className='cursor-pointer'
+                        onMouseEnter={(_, idx) => setHoveredCatIdx(idx)}
+                        onMouseLeave={() => setHoveredCatIdx(null)}
+                        onClick={() => void navigate({ to: '/dashboard' })}
+                      >
+                        {categoryData.map((entry, idx) => {
+                          const grad = CATEGORY_GRADIENTS[Math.min(idx, CATEGORY_GRADIENTS.length - 1)]
+                          const isHovered = hoveredCatIdx === idx
+                          const isDimmed = hoveredCatIdx !== null && !isHovered
+                          return (
+                            <Cell
+                              key={entry.key}
+                              fill={`url(#${grad.id})`}
+                              style={{
+                                opacity: isDimmed ? 0.38 : 1,
+                                filter: isHovered
+                                  ? `brightness(1.14) drop-shadow(0 6px 14px ${grad.glow})`
+                                  : 'none',
+                                transform: isHovered ? 'scaleY(1.03)' : 'scaleY(1)',
+                                transformOrigin: 'bottom',
+                                transformBox: 'fill-box',
+                                transition:
+                                  'opacity 220ms ease, filter 220ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1)',
+                              }}
+                            />
+                          )
+                        })}
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 )}
@@ -401,11 +505,22 @@ export function OverviewPage() {
               </CardHeader>
               <CardContent className='ps-2'>
                 <ResponsiveContainer width='100%' height={240}>
-                  <BarChart data={histData}>
-                    <XAxis dataKey='bin' stroke='#888888' fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke='#888888' fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
+                  <BarChart data={histData} onMouseLeave={() => setHoveredHistIdx(null)}>
+                    <defs>
+                      <linearGradient id='histGradOk' x1='0' y1='0' x2='0' y2='1'>
+                        <stop offset='0%' stopColor='#38bdf8' stopOpacity={0.95} />
+                        <stop offset='100%' stopColor='#2563eb' stopOpacity={0.85} />
+                      </linearGradient>
+                      <linearGradient id='histGradWarn' x1='0' y1='0' x2='0' y2='1'>
+                        <stop offset='0%' stopColor='#fbbf24' stopOpacity={0.95} />
+                        <stop offset='100%' stopColor='#d97706' stopOpacity={0.88} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='var(--border)' opacity={0.6} />
+                    <XAxis dataKey='bin' stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
                     <Tooltip
-                      cursor={{ fill: 'var(--accent)', opacity: 0.4 }}
+                      cursor={false}
                       contentStyle={{
                         backgroundColor: 'var(--popover)',
                         borderColor: 'var(--border)',
@@ -416,13 +531,33 @@ export function OverviewPage() {
                       itemStyle={{ color: 'var(--popover-foreground)' }}
                       labelStyle={{ color: 'var(--muted-foreground)' }}
                     />
-                    <Bar dataKey='count' radius={[4, 4, 0, 0]}>
-                      {histData.map((entry, idx) => (
-                        <Cell
-                          key={idx}
-                          fill={entry.below ? 'var(--bar-warn)' : 'var(--primary)'}
-                        />
-                      ))}
+                    <Bar
+                      dataKey='count'
+                      radius={[6, 6, 2, 2]}
+                      isAnimationActive
+                      animationDuration={650}
+                      onMouseEnter={(_, idx) => setHoveredHistIdx(idx)}
+                      onMouseLeave={() => setHoveredHistIdx(null)}
+                    >
+                      {histData.map((entry, idx) => {
+                        const isHovered = hoveredHistIdx === idx
+                        const isDimmed = hoveredHistIdx !== null && !isHovered
+                        return (
+                          <Cell
+                            key={idx}
+                            fill={entry.below ? 'url(#histGradWarn)' : 'url(#histGradOk)'}
+                            style={{
+                              opacity: isDimmed ? 0.38 : 1,
+                              filter: isHovered ? 'brightness(1.15)' : 'none',
+                              transform: isHovered ? 'scaleY(1.03)' : 'scaleY(1)',
+                              transformOrigin: 'bottom',
+                              transformBox: 'fill-box',
+                              transition:
+                                'opacity 200ms ease, filter 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1)',
+                            }}
+                          />
+                        )
+                      })}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>

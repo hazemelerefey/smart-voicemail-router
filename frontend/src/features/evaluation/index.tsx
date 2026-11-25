@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AlertCircle, AlertTriangle, CheckCircle2, RefreshCw } from 'lucide-react'
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useSvr } from '@/context/svr-provider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -34,6 +34,7 @@ export function EvaluationPage() {
   const [summary, setSummary] = useState<MonitoringSummaryResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [hoveredF1Idx, setHoveredF1Idx] = useState<number | null>(null)
 
   const load = useCallback(async () => {
     setError(null)
@@ -201,11 +202,18 @@ export function EvaluationPage() {
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width='100%' height={250}>
-                    <BarChart data={chartData}>
-                      <XAxis dataKey='field' stroke='#888888' fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis domain={[0, 1]} stroke='#888888' fontSize={12} tickLine={false} axisLine={false} />
+                    <BarChart data={chartData} onMouseLeave={() => setHoveredF1Idx(null)}>
+                      <defs>
+                        <linearGradient id='evalGrad' x1='0' y1='0' x2='0' y2='1'>
+                          <stop offset='0%' stopColor='#38bdf8' stopOpacity={0.95} />
+                          <stop offset='100%' stopColor='#2563eb' stopOpacity={0.85} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='var(--border)' opacity={0.6} />
+                      <XAxis dataKey='field' stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis domain={[0, 1]} stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} />
                       <Tooltip
-                        cursor={{ fill: 'var(--accent)', opacity: 0.4 }}
+                        cursor={false}
                         contentStyle={{
                           backgroundColor: 'var(--popover)',
                           borderColor: 'var(--border)',
@@ -216,7 +224,34 @@ export function EvaluationPage() {
                         itemStyle={{ color: 'var(--popover-foreground)' }}
                         labelStyle={{ color: 'var(--muted-foreground)' }}
                       />
-                      <Bar dataKey='f1' fill='var(--primary)' radius={[4, 4, 0, 0]} />
+                      <Bar
+                        dataKey='f1'
+                        radius={[8, 8, 2, 2]}
+                        isAnimationActive
+                        animationDuration={650}
+                        onMouseEnter={(_, idx) => setHoveredF1Idx(idx)}
+                        onMouseLeave={() => setHoveredF1Idx(null)}
+                      >
+                        {chartData.map((entry, idx) => {
+                          const isHovered = hoveredF1Idx === idx
+                          const isDimmed = hoveredF1Idx !== null && !isHovered
+                          return (
+                            <Cell
+                              key={entry.field}
+                              fill='url(#evalGrad)'
+                              style={{
+                                opacity: isDimmed ? 0.38 : 1,
+                                filter: isHovered ? 'brightness(1.15)' : 'none',
+                                transform: isHovered ? 'scaleY(1.03)' : 'scaleY(1)',
+                                transformOrigin: 'bottom',
+                                transformBox: 'fill-box',
+                                transition:
+                                  'opacity 200ms ease, filter 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1)',
+                              }}
+                            />
+                          )
+                        })}
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </CardContent>
