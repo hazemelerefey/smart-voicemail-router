@@ -2,6 +2,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="139.5 143.0 455.0 455.0" width="1024" height="1024" role="img" aria-label="SVR System app icon">
   <title>SVR System app icon</title>
   <defs>
+    <clipPath id="glassClip">
+      <rect x="142.5" y="146.0" width="449.0" height="449.0" rx="106.0"/>
+    </clipPath>
+    <linearGradient id="glassBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0B0E11"/>
+      <stop offset="0.28" stop-color="#030406"/>
+      <stop offset="0.62" stop-color="#000000"/>
+      <stop offset="1" stop-color="#020507"/>
+    </linearGradient>
+    <radialGradient id="glassTopGlow" cx="240" cy="146" r="240" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="0.45" stop-color="#FFFFFF" stop-opacity="0.04"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glassSheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="0.55" stop-color="#FFFFFF" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glassSweep" x1="0" y1="0" x2="1" y2="0.8">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.07"/>
+      <stop offset="0.6" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glassCyanRefract" cx="560" cy="580" r="210" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#01D6D0" stop-opacity="0.18"/>
+      <stop offset="0.5" stop-color="#01D6D0" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#01D6D0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glassRim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.42"/>
+      <stop offset="0.35" stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="0.65" stop-color="#FFFFFF" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#01D6D0" stop-opacity="0.30"/>
+    </linearGradient>
+    <linearGradient id="glassInnerRim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="0.48" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="1" stop-color="#01D6D0" stop-opacity="0.10"/>
+    </linearGradient>
     <linearGradient id="lk1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
     <linearGradient id="lk2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
     <linearGradient id="lk3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#01D6D0"/><stop offset="0.5" stop-color="#01D1CE"/><stop offset="1" stop-color="#06CAC7"/></linearGradient>
@@ -9,7 +48,15 @@
     <linearGradient id="lkBot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00C5BF"/><stop offset="1" stop-color="#09C1BC"/></linearGradient>
     <linearGradient id="lkArrow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#08D2CD"/><stop offset="1" stop-color="#01D5D1"/></linearGradient>
   </defs>
-  <rect x="142.5" y="146.0" width="449.0" height="449.0" rx="106.0" fill="#000000" stroke="rgba(255,255,255,0.14)" stroke-width="6"/>
+  <g clip-path="url(#glassClip)">
+    <rect x="142.5" y="146.0" width="449.0" height="449.0" fill="url(#glassBase)"/>
+    <rect x="142.5" y="146.0" width="449.0" height="449.0" fill="url(#glassTopGlow)"/>
+    <path d="M142.5,146 H591.5 V296 Q367,358 142.5,286 Z" fill="url(#glassSheen)"/>
+    <rect x="142.5" y="146.0" width="449.0" height="449.0" fill="url(#glassSweep)"/>
+    <rect x="142.5" y="146.0" width="449.0" height="449.0" fill="url(#glassCyanRefract)"/>
+  </g>
+  <rect x="142.5" y="146.0" width="449.0" height="449.0" rx="106.0" fill="none" stroke="url(#glassRim)" stroke-width="5.5"/>
+  <rect x="148.5" y="152.0" width="437.0" height="437.0" rx="100.5" fill="none" stroke="url(#glassInnerRim)" stroke-width="2"/>
   <g id="mark">
     <g fill="url(#lk1)"><rect x="210.2" y="344.0" width="39.6" height="65.5" rx="19.8"/></g>
     <g fill="url(#lk2)"><rect x="271.2" y="306.0" width="39.6" height="140.5" rx="19.8"/></g>
