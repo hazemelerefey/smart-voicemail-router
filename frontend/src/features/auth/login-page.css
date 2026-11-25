@@ -1,15 +1,3 @@
-@property --a {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-
-@keyframes spinA {
-  to {
-    --a: 360deg;
-  }
-}
-
 @keyframes bl {
   50% {
     transform: scaleY(0.12);
@@ -50,13 +38,13 @@
   --focus: #00D1D1;
   --err: #ff7b72;
   --edge: rgba(255, 255, 255, 0.07);
-  --vig: rgba(0, 0, 0, 0.78);
+  --vig: rgba(0, 0, 0, 0.56);
   --stroke: 229, 234, 240;
   --hi: 0, 209, 209;
-  --sa: 0.1;
+  --sa: 0.24;
   --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   --nb: screen;
-  --no: 0.09;
+  --no: 0.13;
   --ui: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, monospace;
   color-scheme: dark;
@@ -86,13 +74,13 @@
   --focus: #00868A;
   --err: #C62828;
   --edge: rgba(11, 18, 23, 0.16);
-  --vig: rgba(238, 243, 245, 0.92);
+  --vig: rgba(238, 243, 245, 0.72);
   --stroke: 11, 18, 23;
   --hi: 0, 150, 154;
-  --sa: 0.13;
+  --sa: 0.26;
   --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   --nb: multiply;
-  --no: 0.07;
+  --no: 0.1;
   color-scheme: light;
 }
 
@@ -598,7 +586,7 @@
   transform: rotate(-45deg) translate(1px, -1px);
 }
 
-/* pearl edge button: obsidian fill, rotating hairline in brand colors, no glow */
+/* obsidian button with crisp static hairline border */
 .svr-login .go {
   all: unset;
   box-sizing: border-box;
@@ -608,6 +596,7 @@
   width: 100%;
   height: 52px;
   border-radius: 12px;
+  border: 1px solid var(--line2);
   color: #f3f1ea;
   font: 600 15px var(--ui);
   display: flex;
@@ -615,41 +604,26 @@
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  transition: transform 0.12s;
-}
-
-.svr-login .go::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: 13px;
-  z-index: -2;
-  background: conic-gradient(
-    from var(--a),
-    var(--edge) 0deg,
-    var(--edge) 180deg,
-    #0F2E33 210deg,
-    #00D1D1 252deg,
-    #7FE8F3 296deg,
-    #E5EAF0 332deg,
-    var(--edge) 360deg
-  );
-  animation: spinA 5s linear infinite;
+  transition: transform 0.12s, border-color 0.15s;
 }
 
 .svr-login .go::after {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 12px;
+  border-radius: 11px;
   z-index: -1;
   background:
     repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 7px),
     linear-gradient(#0c0e10, #030405);
 }
 
-.svr-login .go:hover::before {
-  animation-duration: 2s;
+.svr-login .go:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.svr-login[data-theme='light'] .go:hover {
+  border-color: rgba(11, 18, 23, 0.45);
 }
 
 .svr-login .go:active {
