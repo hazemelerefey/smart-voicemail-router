@@ -56,6 +56,121 @@ function isValidEmail(v: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
 }
 
+function drawTelecomIcon(ctx: CanvasRenderingContext2D, kind: number, s: number) {
+  ctx.beginPath()
+  switch (kind) {
+    case 0: {
+      // Voicemail tape reels
+      const r = s * 0.34
+      const ox = s * 0.52
+      const cy = s * 0.14
+      ctx.moveTo(-ox + r, cy)
+      ctx.arc(-ox, cy, r, 0, Math.PI * 2)
+      ctx.moveTo(ox + r, cy)
+      ctx.arc(ox, cy, r, 0, Math.PI * 2)
+      ctx.moveTo(-ox, cy + r)
+      ctx.lineTo(ox, cy + r)
+      break
+    }
+    case 1: {
+      // SVR audio waveform bars
+      const bars: [number, number][] = [
+        [-0.64, 0.32],
+        [-0.22, 0.64],
+        [0.22, 0.88],
+        [0.64, 0.48],
+      ]
+      for (const [bx, bh] of bars) {
+        ctx.moveTo(bx * s, -bh * s)
+        ctx.lineTo(bx * s, bh * s)
+      }
+      break
+    }
+    case 2: {
+      // Cellular signal bars
+      const bars: [number, number][] = [
+        [-0.66, 0.25],
+        [-0.22, 0.46],
+        [0.22, 0.68],
+        [0.66, 0.90],
+      ]
+      const base = s * 0.68
+      for (const [bx, bh] of bars) {
+        ctx.moveTo(bx * s, base)
+        ctx.lineTo(bx * s, base - bh * s * 1.45)
+      }
+      break
+    }
+    case 3: {
+      // Smart routing node and arrow
+      const r = s * 0.24
+      ctx.moveTo(-s * 0.7 + r, 0)
+      ctx.arc(-s * 0.7, 0, r, 0, Math.PI * 2)
+      ctx.moveTo(-s * 0.46, 0)
+      ctx.lineTo(s * 0.72, 0)
+      ctx.moveTo(s * 0.32, -s * 0.4)
+      ctx.lineTo(s * 0.72, 0)
+      ctx.lineTo(s * 0.32, s * 0.4)
+      break
+    }
+    case 4: {
+      // Phone handset
+      ctx.moveTo(-s * 0.62, -s * 0.56)
+      ctx.lineTo(-s * 0.26, -s * 0.68)
+      ctx.lineTo(-s * 0.08, -s * 0.28)
+      ctx.lineTo(-s * 0.3, -s * 0.12)
+      ctx.quadraticCurveTo(-s * 0.1, s * 0.16, s * 0.14, s * 0.3)
+      ctx.lineTo(s * 0.3, s * 0.08)
+      ctx.lineTo(s * 0.68, s * 0.28)
+      ctx.lineTo(s * 0.56, s * 0.64)
+      ctx.quadraticCurveTo(-s * 0.44, s * 0.56, -s * 0.62, -s * 0.56)
+      break
+    }
+    case 5: {
+      // Microphone
+      const w = s * 0.3
+      ctx.moveTo(-w, -s * 0.46)
+      ctx.arc(0, -s * 0.46, w, Math.PI, 0)
+      ctx.lineTo(w, s * 0.02)
+      ctx.arc(0, s * 0.02, w, 0, Math.PI)
+      ctx.closePath()
+      ctx.moveTo(-s * 0.56, -s * 0.02)
+      ctx.arc(0, s * 0.02, s * 0.56, Math.PI, 0, true)
+      ctx.moveTo(0, s * 0.58)
+      ctx.lineTo(0, s * 0.84)
+      ctx.moveTo(-s * 0.34, s * 0.84)
+      ctx.lineTo(s * 0.34, s * 0.84)
+      break
+    }
+    case 6: {
+      // Operator headset
+      ctx.moveTo(-s * 0.68, s * 0.1)
+      ctx.arc(0, s * 0.04, s * 0.68, Math.PI, 0)
+      ctx.moveTo(-s * 0.68, s * 0.04)
+      ctx.lineTo(-s * 0.68, s * 0.54)
+      ctx.moveTo(-s * 0.44, s * 0.12)
+      ctx.lineTo(-s * 0.44, s * 0.54)
+      ctx.moveTo(s * 0.68, s * 0.04)
+      ctx.lineTo(s * 0.68, s * 0.54)
+      ctx.moveTo(s * 0.44, s * 0.12)
+      ctx.lineTo(s * 0.44, s * 0.54)
+      break
+    }
+    default: {
+      // SIM card
+      ctx.moveTo(-s * 0.58, -s * 0.72)
+      ctx.lineTo(s * 0.18, -s * 0.72)
+      ctx.lineTo(s * 0.58, -s * 0.32)
+      ctx.lineTo(s * 0.58, s * 0.72)
+      ctx.lineTo(-s * 0.58, s * 0.72)
+      ctx.closePath()
+      ctx.rect(-s * 0.26, -s * 0.06, s * 0.52, s * 0.46)
+      break
+    }
+  }
+  ctx.stroke()
+}
+
 export function LoginPage() {
   const { user, authLoading, login, locale, setLocale } = useSvr()
   const { resolvedTheme, setTheme } = useTheme()
@@ -137,7 +252,9 @@ export function LoginPage() {
     let ty = 0
     let act = 0
     let rafId = 0
-    const S = 24
+    const stepX = 64
+    const stepY = 58
+    const iconSize = 8.5
     const t0 = performance.now()
     const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -147,28 +264,33 @@ export function LoginPage() {
       my += (ty - my) * 0.16
       ctx.clearRect(0, 0, W, H)
       ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
       const { stroke, hi, sa } = colRef.current
 
-      for (let y = S / 2; y < H; y += S) {
-        for (let x = S / 2; x < W; x += S) {
+      const rows = Math.ceil(H / stepY) + 1
+      const cols = Math.ceil(W / stepX) + 1
+      for (let row = 0; row < rows; row++) {
+        const y = row * stepY + stepY * 0.5
+        const xOffset = row % 2 === 1 ? stepX * 0.5 : 0
+        for (let col = -1; col < cols; col++) {
+          const x = col * stepX + stepX * 0.5 + xOffset
+          if (x < -stepX * 0.5 || x > W + stepX * 0.5) continue
           const dx = mx - x
           const dy = my - y
           const q = Math.sqrt(dx * dx + dy * dy)
-          let k = act ? Math.max(0, 1 - q / 200) : 0
+          let k = act ? Math.max(0, 1 - q / 210) : 0
           k = k * k * (3 - 2 * k)
-          const b = (Math.sin(x * 0.011 + t * 0.5) + Math.cos(y * 0.013 - t * 0.4)) * 0.9
-          const g = Math.atan2(dy, dx)
-          const ax = Math.cos(b) * (1 - k) + Math.cos(g) * k
-          const ay = Math.sin(b) * (1 - k) + Math.sin(g) * k
-          const a = Math.atan2(ay, ax)
-          const l = (6.5 + k * 14) / 2
+          const wave = Math.sin(col * 0.6 + row * 0.4 + t * 0.7) * 0.03
+          const kind = ((row * 3 + col * 5) % 8 + 8) % 8
           ctx.strokeStyle =
-            k > 0.04 ? `rgba(${hi},${Math.min(1, sa + k * 0.72).toFixed(3)})` : `rgba(${stroke},${sa})`
-          ctx.lineWidth = 1.25 + k * 1.1
-          ctx.beginPath()
-          ctx.moveTo(x - Math.cos(a) * l, y - Math.sin(a) * l)
-          ctx.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l)
-          ctx.stroke()
+            k > 0.03
+              ? `rgba(${hi},${Math.min(0.95, sa + k * 0.68).toFixed(3)})`
+              : `rgba(${stroke},${Math.max(0.14, sa + wave).toFixed(3)})`
+          ctx.lineWidth = 1.3 + k * 0.45
+          ctx.save()
+          ctx.translate(x, y)
+          drawTelecomIcon(ctx, kind, iconSize * (1 + k * 0.18))
+          ctx.restore()
         }
       }
       if (!rm) {
