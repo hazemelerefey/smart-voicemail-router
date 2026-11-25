@@ -40,6 +40,7 @@
   --chart-bar-fill: #334155;
   --chart-bar-stripe: #fafafa;
   --chart-axis: #334155;
+  --success: #15803d;
 }
 
 .dark {
@@ -80,6 +81,7 @@
   --chart-bar-fill: #6b6b6b;
   --chart-bar-stripe: #121212;
   --chart-axis: #e5e5e5;
+  --success: #22c55e;
 }
 
 @theme inline {
