@@ -93,7 +93,7 @@ export function LoginPage() {
   const [switching, setSwitching] = useState(false)
   const [noteHighlight, setNoteHighlight] = useState(false)
 
-  const colRef = useRef({ stroke: '229,234,240', hi: '0,209,209', sa: 0.1 })
+  const colRef = useRef({ stroke: '229,234,240', hi: '0,209,209', sa: 0.24 })
   const drawStillRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
@@ -117,7 +117,7 @@ export function LoginPage() {
     colRef.current = {
       stroke: cs.getPropertyValue('--stroke').trim() || '229,234,240',
       hi: cs.getPropertyValue('--hi').trim() || '0,209,209',
-      sa: parseFloat(cs.getPropertyValue('--sa')) || 0.1,
+      sa: parseFloat(cs.getPropertyValue('--sa')) || 0.24,
     }
     drawStillRef.current?.()
   }, [resolvedTheme])
@@ -143,7 +143,6 @@ export function LoginPage() {
 
     const draw = (now: number) => {
       const t = (now - t0) / 1000
-      const sw = ((t * 70) % (H + 360)) - 180
       mx += (tx - mx) * 0.16
       my += (ty - my) * 0.16
       ctx.clearRect(0, 0, W, H)
@@ -157,18 +156,15 @@ export function LoginPage() {
           const q = Math.sqrt(dx * dx + dy * dy)
           let k = act ? Math.max(0, 1 - q / 200) : 0
           k = k * k * (3 - 2 * k)
-          let s = Math.max(0, 1 - Math.abs(y - sw) / 50)
-          s = s * s
           const b = (Math.sin(x * 0.011 + t * 0.5) + Math.cos(y * 0.013 - t * 0.4)) * 0.9
           const g = Math.atan2(dy, dx)
           const ax = Math.cos(b) * (1 - k) + Math.cos(g) * k
           const ay = Math.sin(b) * (1 - k) + Math.sin(g) * k
           const a = Math.atan2(ay, ax)
-          const l = (4.5 + k * 14 + s * 4) / 2
-          const m = Math.max(k, s * 0.8)
+          const l = (6.5 + k * 14) / 2
           ctx.strokeStyle =
-            m > 0.04 ? `rgba(${hi},${(sa + m * 0.85).toFixed(3)})` : `rgba(${stroke},${sa})`
-          ctx.lineWidth = 1 + k * 1.1
+            k > 0.04 ? `rgba(${hi},${Math.min(1, sa + k * 0.72).toFixed(3)})` : `rgba(${stroke},${sa})`
+          ctx.lineWidth = 1.25 + k * 1.1
           ctx.beginPath()
           ctx.moveTo(x - Math.cos(a) * l, y - Math.sin(a) * l)
           ctx.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l)
