@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="139.5 143.0 455.0 455.0" width="1024" height="1024" role="img" aria-label="SVR System app icon"><title>SVR System app icon</title><defs><linearGradient id="cy3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#23FDFD"/><stop offset="0.15" stop-color="#01F4F7"/><stop offset="1" stop-color="#00F9FE"/></linearGradient><linearGradient id="cyTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00D8EC"/><stop offset="0.6" stop-color="#00E7FA"/><stop offset="1" stop-color="#02CCDA"/></linearGradient><linearGradient id="tl3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#01A5A6"/><stop offset="1" stop-color="#009B9E"/></linearGradient><linearGradient id="tlTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#01C5C5"/><stop offset="1" stop-color="#00CCCE"/></linearGradient><linearGradient id="tlBot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#067177"/><stop offset="0.5" stop-color="#008288"/><stop offset="1" stop-color="#047174"/></linearGradient><linearGradient id="lk1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#01494F"/><stop offset="0.5" stop-color="#00535A"/><stop offset="1" stop-color="#04484B"/></linearGradient><linearGradient id="lk2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#015F65"/><stop offset="0.5" stop-color="#01585E"/><stop offset="1" stop-color="#045A60"/></linearGradient><linearGradient id="lk3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#01D6D0"/><stop offset="0.5" stop-color="#01D1CE"/><stop offset="1" stop-color="#06CAC7"/></linearGradient><linearGradient id="lkTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#03E9DF"/><stop offset="1" stop-color="#01E6E2"/></linearGradient><linearGradient id="lkBot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00C5BF"/><stop offset="1" stop-color="#09C1BC"/></linearGradient><linearGradient id="lkArrow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#08D2CD"/><stop offset="1" stop-color="#01D5D1"/></linearGradient></defs>
-<defs>
-<clipPath id="gclip"><rect x="139.5" y="143.0" width="455.0" height="455.0" rx="108.0"/></clipPath>
-<linearGradient id="gbase" x1="0" y1="0" x2="455" y2="455" gradientUnits="userSpaceOnUse">
- <stop offset="0" stop-color="#1C313A"/><stop offset=".3" stop-color="#0C242D"/><stop offset=".6" stop-color="#04191F"/><stop offset="1" stop-color="#02141B"/></linearGradient>
-<radialGradient id="gtr" cx="445" cy="-5" r="300" gradientUnits="userSpaceOnUse">
- <stop offset="0" stop-color="#00F6F2"/><stop offset=".28" stop-color="#00D4D6"/><stop offset=".5" stop-color="#018A92"/><stop offset=".78" stop-color="#03434B" stop-opacity=".7"/><stop offset="1" stop-color="#03434B" stop-opacity="0"/></radialGradient>
-<radialGradient id="gbl" cx="0" cy="455" r="190" gradientUnits="userSpaceOnUse">
- <stop offset="0" stop-color="#04606A"/><stop offset=".5" stop-color="#03454E" stop-opacity=".7"/><stop offset="1" stop-color="#03454E" stop-opacity="0"/></radialGradient>
-<radialGradient id="gbr" cx="455" cy="455" r="150" gradientUnits="userSpaceOnUse">
- <stop offset="0" stop-color="#03A8A8"/><stop offset=".4" stop-color="#025A61" stop-opacity=".8"/><stop offset="1" stop-color="#03454E" stop-opacity="0"/></radialGradient>
-<linearGradient id="grim" x1="0" y1="0" x2="455" y2="455" gradientUnits="userSpaceOnUse">
- <stop offset="0" stop-color="#2A4651" stop-opacity=".45"/><stop offset=".5" stop-color="#0E3A42" stop-opacity=".2"/><stop offset="1" stop-color="#00F0EE" stop-opacity=".4"/></linearGradient>
-<filter id="gblur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3"/></filter></defs>
-<g transform="translate(139.5 143.0)">
-<g clip-path="url(#gclip2)">
- <rect width="455" height="455" fill="url(#gbase)"/>
- <rect width="455" height="455" fill="url(#gtr)"/>
- <path d="M-10,445 C100,395 250,345 332,262 C392,202 432,150 465,100 L465,465 L-10,465 Z" fill="#01121A" opacity=".72" filter="url(#gblur)"/>
- <rect width="455" height="455" fill="url(#gbl)"/>
- <rect width="455" height="455" fill="url(#gbr)"/>
- <path d="M316,0 C370,10 425,38 465,85 L465,-5 L316,-5 Z" fill="#00F7F0" opacity=".42"/>
- <path d="M465,110 C395,150 340,215 322,300 C310,360 270,420 215,465 L465,465 Z" fill="#04707A" opacity=".22" filter="url(#gblur)"/>
- <path d="M316,0 C370,10 425,38 465,85" fill="none" stroke="#9AFFFD" stroke-opacity=".35" stroke-width="1.2"/>
- <path d="M-10,445 C100,395 250,345 332,262 C392,202 432,150 465,100" fill="none" stroke="#2BC9CF" stroke-opacity=".16" stroke-width="1.2"/>
-</g>
-<clipPath id="gclip2"><rect width="455" height="455" rx="108.0"/></clipPath>
-<rect x=".75" y=".75" width="453.5" height="453.5" rx="107.25" fill="none" stroke="url(#grim)" stroke-width="1.5"/>
-</g><g id="mark"><g fill="#F4F8FB"><rect x="210.2" y="344.0" width="39.6" height="65.5" rx="19.8"/></g><g fill="#F4F8FB"><rect x="271.2" y="306.0" width="39.6" height="140.5" rx="19.8"/></g><g fill="url(#cy3)"><rect x="334.2" y="257.0" width="39.6" height="236.5" rx="19.8"/></g><path d="M393,326 A20,20 0 0 1 433,326 L433,356 L411,375.5 Q405,381 399,378 Q393,375 393,368 Z" fill="url(#cyTop)"/><path d="M393,457 L393,428 Q393,422 397.5,418.5 L418,406 Q421.5,404 425,404 Q433,404 433,412 L433,457 A20,20 0 0 1 393,457 Z" fill="#EEF7FB"/><path d="M453,376 H528 M502,349 L528,376 L502,403" fill="none" stroke="#00F7FC" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="139.5 143.0 455.0 455.0" width="1024" height="1024" role="img" aria-label="SVR System app icon">
+  <title>SVR System app icon</title>
+  <defs>
+    <linearGradient id="lk1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
+    <linearGradient id="lk2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
+    <linearGradient id="lk3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#01D6D0"/><stop offset="0.5" stop-color="#01D1CE"/><stop offset="1" stop-color="#06CAC7"/></linearGradient>
+    <linearGradient id="lkTop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#03E9DF"/><stop offset="1" stop-color="#01E6E2"/></linearGradient>
+    <linearGradient id="lkBot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00C5BF"/><stop offset="1" stop-color="#09C1BC"/></linearGradient>
+    <linearGradient id="lkArrow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#08D2CD"/><stop offset="1" stop-color="#01D5D1"/></linearGradient>
+  </defs>
+  <rect x="142.5" y="146.0" width="449.0" height="449.0" rx="106.0" fill="#000000" stroke="rgba(255,255,255,0.14)" stroke-width="6"/>
+  <g id="mark">
+    <g fill="url(#lk1)"><rect x="210.2" y="344.0" width="39.6" height="65.5" rx="19.8"/></g>
+    <g fill="url(#lk2)"><rect x="271.2" y="306.0" width="39.6" height="140.5" rx="19.8"/></g>
+    <g fill="url(#lk3)"><rect x="334.2" y="257.0" width="39.6" height="236.5" rx="19.8"/></g>
+    <path d="M393,326 A20,20 0 0 1 433,326 L433,356 L411,375.5 Q405,381 399,378 Q393,375 393,368 Z" fill="url(#lkTop)"/>
+    <path d="M393,457 L393,428 Q393,422 397.5,418.5 L418,406 Q421.5,404 425,404 Q433,404 433,412 L433,457 A20,20 0 0 1 393,457 Z" fill="url(#lkBot)"/>
+    <path d="M453,376 H528 M502,349 L528,376 L502,403" fill="none" stroke="url(#lkArrow)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

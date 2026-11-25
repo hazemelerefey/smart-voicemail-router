@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 export function SvrBrandMark({ className = 'size-7' }: { className?: string }) {
   return (
     <img
-      src='/brand/svr-app-icon-primary.png'
+      src='/icon.svg'
       alt='SVR System'
       draggable={false}
       className={cn('select-none object-contain', className)}
