@@ -24,9 +24,9 @@ import type {
   VoicemailUploadResponse,
 } from "./types";
 
-const CONFIGURED_BASE = (process.env.NEXT_PUBLIC_API_BASE || "").replace(/\/+$/, "");
+const CONFIGURED_BASE = (import.meta.env.VITE_API_BASE || "").replace(/\/+$/, "");
 
-/** Build API URL: defaults to same-origin /api proxy via Next.js rewrites. */
+/** Build API URL: defaults to same-origin /api proxy via Vite proxy / Nginx. */
 export function apiUrl(path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`;
   if (CONFIGURED_BASE) {
