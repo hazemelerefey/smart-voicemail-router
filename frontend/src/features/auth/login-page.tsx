@@ -99,7 +99,7 @@ export function LoginPage() {
           <ol className='divide-y divide-zinc-800 border-t border-zinc-800'>
             {aside.steps.map((s, idx) => (
               <li key={s.title} className='grid grid-cols-[2.25rem_1fr] gap-x-3 py-4'>
-                <span className='row-span-2 font-mono text-sm font-bold text-red-400'>
+                <span className='row-span-2 font-mono text-sm font-bold text-[#03E9DF]'>
                   {String(idx + 1).padStart(2, '0')}
                 </span>
                 <span className='text-sm font-semibold'>{s.title}</span>

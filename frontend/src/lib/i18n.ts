@@ -157,7 +157,7 @@ export const LANGUAGE_MIX_LABELS: Record<Locale, Record<string, string>> = {
 
 export const UI_COPY = {
   en: {
-    appName: "SVR Operations",
+    appName: "SVR System",
     orgName: "Egypt Telecom Care",
     skipToMain: "Skip to main content",
     navQueue: "Callback Queue",

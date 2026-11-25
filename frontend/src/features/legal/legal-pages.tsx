@@ -15,7 +15,7 @@ export function PrivacyPage() {
       <div className='mb-6 flex items-center justify-between'>
         <div className='flex items-center gap-2.5'>
           <SvrBrandMark className='size-8' />
-          <span className='font-bold'>SVR Operations</span>
+          <span className='font-bold'>SVR System</span>
         </div>
         <Button variant='outline' size='sm' asChild>
           <Link to={backTo}>
@@ -55,7 +55,7 @@ export function TermsPage() {
       <div className='mb-6 flex items-center justify-between'>
         <div className='flex items-center gap-2.5'>
           <SvrBrandMark className='size-8' />
-          <span className='font-bold'>SVR Operations</span>
+          <span className='font-bold'>SVR System</span>
         </div>
         <Button variant='outline' size='sm' asChild>
           <Link to={backTo}>
@@ -72,7 +72,7 @@ export function TermsPage() {
           <p>
             {isAr
               ? 'يقتصر استخدام النظام على موظفي ومشرفي خدمة عملاء الاتصالات المصرح لهم لمتابعة شكاوى المشتركين.'
-              : 'Access to SVR Operations is restricted to authorized telecom customer-care personnel for subscriber complaint triage, callback routing, and quality auditing.'}
+              : 'Access to SVR System is restricted to authorized telecom customer-care personnel for subscriber complaint triage, callback routing, and quality auditing.'}
           </p>
           <p>
             {isAr
