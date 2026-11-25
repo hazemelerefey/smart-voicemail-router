@@ -112,9 +112,23 @@ Telecom contact centers accumulate thousands of subscriber voicemails across pea
 
 ## End-to-End 5-Stage AI Pipeline
 
-<div align="center">
-  <img src="assets/svr-pipeline-flow.svg" alt="SVR 5-Stage Voicemail-to-Ticket Pipeline" width="100%">
-</div>
+```mermaid
+flowchart LR
+    S1["01. Audio Intake & Vault<br/>WAV/MP3/M4A + 16 kHz Mic<br/>ffprobe <= 60s · Fernet AES-128"]
+    S2["02. Whisper large-v3 STT<br/>Self-hosted faster-whisper<br/>Egyptian Arabic + EN Telecom"]
+    S3["03. 4x MARBERTv2 Triage<br/>Category · Urgency · State · Churn<br/>Calibrated Confidence Gate"]
+    S4["04. Priority & Skill Route<br/>Deterministic Score 1..6<br/>Network / Billing / General"]
+    S5["05. Live Operator Console<br/>Grounded AR/EN Script Brief<br/>WebSocket Push + Audit Log"]
+    HR["Human Routing Queue<br/>Low Confidence / Unassigned /<br/>Manual Override Review"]
+
+    S1 -->|"HTTP 202 (< 2s)"| S2
+    S2 -->|"10-Col STT v1"| S3
+    S3 -->|"High Confidence"| S4
+    S3 -->|"Below Threshold"| HR
+    S4 -->|"Agent Assigned"| S5
+    S4 -->|"No Capacity / Paused"| HR
+    HR -->|"Supervisor Override"| S5
+```
 
 <br/>
 
@@ -269,7 +283,7 @@ Open `http://localhost:3000` and sign in with a seeded bootstrap operator accoun
 
 ```text
 smart-voicemail-router/
-├── assets/                     # Adaptive SVG banners, pipeline diagram & live UI screenshots
+├── assets/                     # Adaptive product banners & live UI screenshots
 ├── backend/                    # FastAPI application, SQLAlchemy 2.0 ORM & AI pipeline
 │   ├── svr_platform/
 │   │   ├── api/                # REST endpoints, RBAC, rate limiting & WebSocket QueueHub
