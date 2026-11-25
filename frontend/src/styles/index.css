@@ -87,10 +87,11 @@
 }
 
 .svr-chart {
+  position: relative;
   background-color: var(--chart-canvas);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 0.75rem 0.75rem 0.5rem 0.25rem;
+  padding: 0.5rem 0.5rem 0.25rem 0.25rem;
 }
 
 /* Chart motion: crisp, precise, no glow. Staggered rise, label reveal, focus-and-dim hover. */

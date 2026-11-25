@@ -36,6 +36,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Main } from '@/components/layout/main'
 import { SvrChartTooltip } from '@/components/svr/chart-tooltip'
+import { SvrCrosshairChart } from '@/components/svr/crosshair-chart'
 import { MonitoringAlertsPopover } from '@/components/svr/monitoring-alerts-popover'
 import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
@@ -143,6 +144,7 @@ export function OverviewPage() {
     }
   }).sort((a, b) => b.count - a.count || a.idx - b.idx)
   const activeCategoryCount = categoryData.filter((c) => c.count > 0).length
+  const catYMax = Math.max(4, ...categoryData.map((d) => d.count))
 
   const threshold = settings?.confidence_threshold ?? 0.5
   const histData = (summary?.confidence_histogram ?? []).map((h, i) => {
@@ -153,6 +155,7 @@ export function OverviewPage() {
       below: lo + 0.1 <= threshold + 1e-9,
     }
   })
+  const histYMax = Math.max(4, ...histData.map((d) => d.count))
 
   const stateDist = summary?.classification_distribution?.customer_state ?? {}
   const churnDist = summary?.classification_distribution?.churn_risk ?? {}
@@ -299,8 +302,8 @@ export function OverviewPage() {
 
           {/* Main 7-col grid: Recharts Categories + Top of Queue */}
           <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-            <Card className='col-span-1 lg:col-span-4'>
-              <CardHeader>
+            <Card className='col-span-1 flex flex-col lg:col-span-4'>
+              <CardHeader className='pb-3'>
                 <CardTitle>{L('Complaint Categories', 'أنواع الشكاوى')}</CardTitle>
                 <CardDescription>
                   {L(
@@ -309,19 +312,24 @@ export function OverviewPage() {
                   )}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className='flex flex-1 flex-col px-3 pb-3 pt-0'>
                 {classifiedTotal === 0 ? (
                   <p className='px-4 py-8 text-sm text-muted-foreground'>
                     {L('No classified tickets yet.', 'لا توجد تذاكر مصنفة بعد.')}
                   </p>
                 ) : (
-                  <div className='svr-chart'>
-<ResponsiveContainer width='100%' height={300}>
-                    <BarChart
-                      data={categoryData}
-                      barCategoryGap='14%'
-                      margin={{ top: 28, right: 16, left: 0, bottom: 8 }}
-                    >
+                  <SvrCrosshairChart
+                    xLabels={categoryData.map((d) => d.name)}
+                    yDomain={[0, catYMax]}
+                    formatY={(v) => v.toFixed(1)}
+                    className='w-full'
+                  >
+                    <ResponsiveContainer width='100%' height={400}>
+                      <BarChart
+                        data={categoryData}
+                        barCategoryGap='14%'
+                        margin={{ top: 22, right: 12, left: 4, bottom: 10 }}
+                      >
                       <defs>
                         <linearGradient id='catFadeGrad' x1='0' y1='0' x2='0' y2='1'>
                           <stop offset='0%' stopColor='#ffffff' stopOpacity={0.95} />
@@ -363,6 +371,8 @@ export function OverviewPage() {
                         height={32}
                       />
                       <YAxis
+                        width={34}
+                        domain={[0, catYMax]}
                         stroke='var(--chart-grid)'
                         tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
                         tickLine={false}
@@ -413,9 +423,9 @@ export function OverviewPage() {
                           />
                         ))}
                       </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                  </div>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </SvrCrosshairChart>
                 )}
               </CardContent>
             </Card>
@@ -474,8 +484,8 @@ export function OverviewPage() {
         <TabsContent value='analytics' className='space-y-4'>
           <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
             {/* Confidence Histogram */}
-            <Card className='col-span-1 lg:col-span-4'>
-              <CardHeader>
+            <Card className='col-span-1 flex flex-col lg:col-span-4'>
+              <CardHeader className='pb-3'>
                 <CardTitle>{L('Classification Confidence', 'ثقة التصنيف')}</CardTitle>
                 <CardDescription>
                   {L(
@@ -484,14 +494,19 @@ export function OverviewPage() {
                   )}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className='svr-chart'>
-<ResponsiveContainer width='100%' height={240}>
-                  <BarChart
-                    data={histData}
-                    barCategoryGap='14%'
-                    margin={{ top: 24, right: 12, left: 0, bottom: 4 }}
-                  >
+              <CardContent className='flex flex-1 flex-col px-3 pb-3 pt-0'>
+                <SvrCrosshairChart
+                  xLabels={histData.map((d) => d.bin)}
+                  yDomain={[0, histYMax]}
+                  formatY={(v) => v.toFixed(1)}
+                  className='w-full'
+                >
+                  <ResponsiveContainer width='100%' height={280}>
+                    <BarChart
+                      data={histData}
+                      barCategoryGap='14%'
+                      margin={{ top: 24, right: 12, left: 4, bottom: 10 }}
+                    >
                     <defs>
                       <linearGradient id='histFadeGrad' x1='0' y1='0' x2='0' y2='1'>
                         <stop offset='0%' stopColor='#ffffff' stopOpacity={0.95} />
@@ -519,6 +534,8 @@ export function OverviewPage() {
                       axisLine={{ stroke: 'var(--chart-grid)' }}
                     />
                     <YAxis
+                      width={34}
+                      domain={[0, histYMax]}
                       stroke='var(--chart-grid)'
                       tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
                       tickLine={false}
@@ -570,9 +587,9 @@ export function OverviewPage() {
                         />
                       ))}
                     </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-                </div>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </SvrCrosshairChart>
               </CardContent>
             </Card>
 

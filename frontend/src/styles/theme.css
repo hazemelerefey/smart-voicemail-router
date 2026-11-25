@@ -41,6 +41,9 @@
   --chart-bar-stripe: #fafafa;
   --chart-axis: #334155;
   --chart-slot: rgba(15, 23, 42, 0.032);
+  --chart-crosshair: rgba(15, 23, 42, 0.48);
+  --chart-pill-bg: #0f172a;
+  --chart-pill-fg: #ffffff;
   --success: #15803d;
 }
 
@@ -77,12 +80,15 @@
   --chart-4: oklch(0.72 0.19 305);
   --chart-5: oklch(0.66 0.21 24);
   --bar-warn: #f59e0b;
-  --chart-canvas: #121212;
-  --chart-grid: rgba(255, 255, 255, 0.08);
+  --chart-canvas: #000000;
+  --chart-grid: rgba(255, 255, 255, 0.09);
   --chart-bar-fill: #6b6b6b;
-  --chart-bar-stripe: #121212;
+  --chart-bar-stripe: #000000;
   --chart-axis: #e5e5e5;
-  --chart-slot: rgba(255, 255, 255, 0.028);
+  --chart-slot: rgba(255, 255, 255, 0.024);
+  --chart-crosshair: rgba(255, 255, 255, 0.65);
+  --chart-pill-bg: #e5e5e5;
+  --chart-pill-fg: #0a0a0a;
   --success: #22c55e;
 }
 
