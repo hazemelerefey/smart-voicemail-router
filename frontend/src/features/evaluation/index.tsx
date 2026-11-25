@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/table'
 import { Main } from '@/components/layout/main'
 import { SvrChartTooltip } from '@/components/svr/chart-tooltip'
+import { SvrCrosshairChart } from '@/components/svr/crosshair-chart'
 import { MonitoringAlertsPopover } from '@/components/svr/monitoring-alerts-popover'
 import { api, ApiError } from '@/lib/api'
 import { UI_COPY } from '@/lib/i18n'
@@ -189,19 +190,24 @@ export function EvaluationPage() {
 
           {latest && (
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-              <Card className='lg:col-span-3'>
-                <CardHeader>
+              <Card className='flex flex-col lg:col-span-3'>
+                <CardHeader className='pb-3'>
                   <CardTitle>{L('Per-Field Macro-F1', 'دقة كل حقل Macro-F1')}</CardTitle>
                   <CardDescription className='font-mono text-xs'>{latest.model_version}</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className='svr-chart'>
-<ResponsiveContainer width='100%' height={250}>
-                    <BarChart
-                      data={chartData}
-                      barCategoryGap='18%'
-                      margin={{ top: 24, right: 12, left: 0, bottom: 4 }}
-                    >
+                <CardContent className='flex flex-1 flex-col px-3 pb-3 pt-0'>
+                  <SvrCrosshairChart
+                    xLabels={chartData.map((d) => d.field)}
+                    yDomain={[0, 1]}
+                    formatY={(v) => v.toFixed(2)}
+                    className='w-full'
+                  >
+                    <ResponsiveContainer width='100%' height={290}>
+                      <BarChart
+                        data={chartData}
+                        barCategoryGap='18%'
+                        margin={{ top: 24, right: 12, left: 4, bottom: 10 }}
+                      >
                       <defs>
                         <linearGradient id='evalFadeGrad' x1='0' y1='0' x2='0' y2='1'>
                           <stop offset='0%' stopColor='#ffffff' stopOpacity={0.95} />
@@ -225,6 +231,7 @@ export function EvaluationPage() {
                         axisLine={{ stroke: 'var(--chart-grid)' }}
                       />
                       <YAxis
+                        width={38}
                         domain={[0, 1]}
                         stroke='var(--chart-grid)'
                         tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
@@ -275,9 +282,9 @@ export function EvaluationPage() {
                           />
                         ))}
                       </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                  </div>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </SvrCrosshairChart>
                 </CardContent>
               </Card>
 
