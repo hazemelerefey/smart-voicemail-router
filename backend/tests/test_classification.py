@@ -112,22 +112,27 @@ def test_classifier_serves_validated_marbertv2_artifact_on_validation_corpus(tmp
             writer = csv.DictWriter(f, fieldnames=["audio_file", "text", "text_norm"])
             writer.writeheader()
             writer.writerow({"audio_file": "calm_0001.wav", "text": sample_text, "text_norm": sample_text})
+        from svr_platform.taxonomy import TRAINED_CLASSES_BY_FIELD
+
+        chosen = {
+            "complaint_category": "network_and_connectivity",
+            "complaint_urgency": "high",
+            "customer_state": "frustrated",
+            "churn_risk": "not_at_risk",
+        }
+        probs = {}
+        for fld, top_cls in chosen.items():
+            classes = list(TRAINED_CLASSES_BY_FIELD[fld])
+            rem = round(0.10 / max(len(classes) - 1, 1), 6)
+            d = {c: rem for c in classes if c != top_cls}
+            d[top_cls] = round(1.0 - sum(d.values()), 6)
+            probs[fld] = d
         pred_payload = {
             "rows": [
                 {
                     "audio_file": "calm_0001.wav",
-                    "labels": {
-                        "complaint_category": "network_and_connectivity",
-                        "complaint_urgency": "high",
-                        "customer_state": "frustrated",
-                        "churn_risk": "not_at_risk",
-                    },
-                    "probabilities": {
-                        "complaint_category": {"network_and_connectivity": 0.91, "other": 0.09},
-                        "complaint_urgency": {"high": 0.84, "medium": 0.12, "low": 0.04},
-                        "customer_state": {"frustrated": 0.80, "calm": 0.20},
-                        "churn_risk": {"not_at_risk": 0.95, "at_risk": 0.05},
-                    },
+                    "labels": chosen,
+                    "probabilities": probs,
                 }
             ]
         }
