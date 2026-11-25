@@ -9,6 +9,7 @@ import {
   UserX,
 } from 'lucide-react'
 import { labelForBucket, labelForStatus, type Locale } from '@/lib/i18n'
+export { PriorityScoreAvatar } from '@/components/svr/priority-avatar'
 
 export function TicketStatusText({ status, locale }: { status: string; locale: Locale }) {
   const label = labelForStatus(status, locale)

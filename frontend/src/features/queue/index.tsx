@@ -31,7 +31,7 @@ import {
 } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Main } from '@/components/layout/main'
-import { BucketText, TicketStatusText, scoreSquareClass } from '@/components/svr/status-badges'
+import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
 import { api, ApiError } from '@/lib/api'
 import {
@@ -303,11 +303,7 @@ export function CallbackQueuePage() {
                 {data.items.map((ticket) => (
                   <TableRow key={ticket.id}>
                     <TableCell>
-                      <div
-                        className={`flex size-9 items-center justify-center rounded-md text-sm font-bold tabular-nums ${scoreSquareClass(ticket.queue_priority)}`}
-                      >
-                        {ticket.priority_score !== null ? ticket.priority_score : '-'}
-                      </div>
+                      <PriorityScoreAvatar score={ticket.priority_score} bucket={ticket.queue_priority} size='sm' />
                     </TableCell>
                     <TableCell className='max-w-md'>
                       <Link

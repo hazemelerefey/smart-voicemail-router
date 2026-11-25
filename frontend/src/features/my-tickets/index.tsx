@@ -7,7 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Main } from '@/components/layout/main'
-import { BucketText, TicketStatusText, scoreSquareClass } from '@/components/svr/status-badges'
+import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { api, ApiError } from '@/lib/api'
 import { UI_COPY, labelForCategory } from '@/lib/i18n'
 import { formatDuration, formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
@@ -96,11 +96,7 @@ export function MyTicketsPage() {
               <CardHeader className='pb-3'>
                 <div className='flex flex-wrap items-start justify-between gap-3'>
                   <div className='flex items-start gap-3'>
-                    <div
-                      className={`flex size-10 shrink-0 items-center justify-center rounded-md text-base font-bold tabular-nums ${scoreSquareClass(ticket.queue_priority)}`}
-                    >
-                      {ticket.priority_score !== null ? ticket.priority_score : '-'}
-                    </div>
+                    <PriorityScoreAvatar score={ticket.priority_score} bucket={ticket.queue_priority} size='md' />
                     <div>
                       <CardTitle className='flex flex-wrap items-center gap-2 text-base'>
                         <Link
