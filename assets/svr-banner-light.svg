@@ -1,15 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="480" viewBox="0 0 1600 480" role="img" aria-label="Smart Voicemail Router - Enterprise Telecom AI Operations Platform">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="440" viewBox="0 0 1600 440" role="img" aria-label="Smart Voicemail Router - Enterprise Telecom AI Operations Platform">
   <defs>
-    <linearGradient id="bgLight" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="bgL" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#FFFFFF"/>
-      <stop offset="55%" stop-color="#F8FAFC"/>
+      <stop offset="50%" stop-color="#F8FAFC"/>
       <stop offset="100%" stop-color="#FFFFFF"/>
     </linearGradient>
-    <radialGradient id="redGlowL" cx="14%" cy="32%" r="42%">
-      <stop offset="0%" stop-color="#C81D20" stop-opacity="0.09"/>
+    <radialGradient id="glowRedL" cx="12%" cy="30%" r="38%">
+      <stop offset="0%" stop-color="#C81D20" stop-opacity="0.08"/>
       <stop offset="100%" stop-color="#C81D20" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="skyGlowL" cx="84%" cy="50%" r="45%">
+    <radialGradient id="glowBlueL" cx="82%" cy="50%" r="42%">
       <stop offset="0%" stop-color="#0284C7" stop-opacity="0.10"/>
       <stop offset="100%" stop-color="#0284C7" stop-opacity="0"/>
     </radialGradient>
@@ -17,129 +17,92 @@
       <stop offset="0%" stop-color="#E02428"/>
       <stop offset="100%" stop-color="#A81417"/>
     </linearGradient>
-    <pattern id="gridLight" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#0F172A" stroke-width="1" stroke-opacity="0.035"/>
-    </pattern>
-    <pattern id="stripeBlueL" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <rect width="7" height="7" fill="#0284C7"/>
-      <line x1="0" y1="0" x2="0" y2="7" stroke="#FFFFFF" stroke-width="2.2" stroke-opacity="0.62"/>
-    </pattern>
-    <pattern id="stripeCyanL" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <rect width="7" height="7" fill="#0891B2"/>
-      <line x1="0" y1="0" x2="0" y2="7" stroke="#FFFFFF" stroke-width="2.2" stroke-opacity="0.62"/>
-    </pattern>
-    <pattern id="stripeTealL" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <rect width="7" height="7" fill="#0D9488"/>
-      <line x1="0" y1="0" x2="0" y2="7" stroke="#FFFFFF" stroke-width="2.2" stroke-opacity="0.62"/>
-    </pattern>
-    <pattern id="stripeIndigoL" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <rect width="7" height="7" fill="#4F46E5"/>
-      <line x1="0" y1="0" x2="0" y2="7" stroke="#FFFFFF" stroke-width="2.2" stroke-opacity="0.62"/>
-    </pattern>
-    <linearGradient id="fadeMaskGL" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
-      <stop offset="72%" stop-color="#FFFFFF" stop-opacity="0.58"/>
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.08"/>
+    <linearGradient id="waveSkyL" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2563EB" stop-opacity="0"/>
+      <stop offset="28%" stop-color="#2563EB" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#0284C7" stop-opacity="0.15"/>
     </linearGradient>
-    <mask id="barFadeL" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
-      <rect x="0" y="0" width="1" height="1" fill="url(#fadeMaskGL)"/>
-    </mask>
+    <linearGradient id="waveCyanL" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0D9488" stop-opacity="0"/>
+      <stop offset="35%" stop-color="#0D9488" stop-opacity="0.80"/>
+      <stop offset="100%" stop-color="#0891B2" stop-opacity="0.12"/>
+    </linearGradient>
+    <linearGradient id="waveRedL" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#DC2626" stop-opacity="0"/>
+      <stop offset="32%" stop-color="#DC2626" stop-opacity="0.80"/>
+      <stop offset="100%" stop-color="#C81D20" stop-opacity="0.10"/>
+    </linearGradient>
+    <pattern id="gridL" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#0F172A" stroke-width="1" stroke-opacity="0.035"/>
+    </pattern>
   </defs>
 
-  <rect x="2" y="2" width="1596" height="476" rx="24" fill="url(#bgLight)" stroke="#E2E8F0" stroke-width="2"/>
-  <rect x="2" y="2" width="1596" height="476" rx="24" fill="url(#gridLight)"/>
-  <rect x="2" y="2" width="1596" height="476" rx="24" fill="url(#redGlowL)"/>
-  <rect x="2" y="2" width="1596" height="476" rx="24" fill="url(#skyGlowL)"/>
+  <rect x="2" y="2" width="1596" height="436" rx="22" fill="url(#bgL)" stroke="#E2E8F0" stroke-width="2"/>
+  <rect x="2" y="2" width="1596" height="436" rx="22" fill="url(#gridL)"/>
+  <rect x="2" y="2" width="1596" height="436" rx="22" fill="url(#glowRedL)"/>
+  <rect x="2" y="2" width="1596" height="436" rx="22" fill="url(#glowBlueL)"/>
+
+  <!-- Right Acoustic Waveform to Routing Streams Artwork -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M 930 220 C 1020 220, 1050 112, 1185 112 C 1310 112, 1380 112, 1540 112" stroke="url(#waveRedL)" stroke-width="3.5"/>
+    <path d="M 930 220 C 1030 220, 1070 146, 1210 146 C 1330 146, 1400 146, 1540 146" stroke="url(#waveRedL)" stroke-width="1.5" stroke-opacity="0.4"/>
+
+    <path d="M 910 220 C 1030 220, 1080 220, 1220 220 C 1340 220, 1410 220, 1540 220" stroke="url(#waveSkyL)" stroke-width="4.5"/>
+    <path d="M 950 220 C 1050 202, 1130 238, 1250 220 C 1360 206, 1440 228, 1540 220" stroke="url(#waveSkyL)" stroke-width="1.6" stroke-opacity="0.45"/>
+
+    <path d="M 930 220 C 1020 220, 1050 328, 1185 328 C 1310 328, 1380 328, 1540 328" stroke="url(#waveCyanL)" stroke-width="3.5"/>
+    <path d="M 930 220 C 1030 220, 1070 294, 1210 294 C 1330 294, 1400 294, 1540 294" stroke="url(#waveCyanL)" stroke-width="1.5" stroke-opacity="0.4"/>
+  </g>
+
+  <!-- Equalizer Acoustic Bars on Right Entry -->
+  <g transform="translate(888, 174)" fill="#2563EB">
+    <rect x="0" y="34" width="5" height="24" rx="2.5" opacity="0.4"/>
+    <rect x="11" y="20" width="5" height="52" rx="2.5" opacity="0.6"/>
+    <rect x="22" y="6" width="5" height="80" rx="2.5" opacity="0.88"/>
+    <rect x="33" y="16" width="5" height="60" rx="2.5" opacity="0.7"/>
+    <rect x="44" y="28" width="5" height="36" rx="2.5" opacity="0.5"/>
+  </g>
+
+  <!-- Minimalist Routing Destination Chips (No Status Dots) -->
+  <g font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13" font-weight="600">
+    <g transform="translate(1310, 92)">
+      <rect width="204" height="40" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+      <rect x="0" y="8" width="4" height="24" rx="2" fill="#DC2626"/>
+      <text x="18" y="25" fill="#0F172A">Urgent Escalation</text>
+    </g>
+    <g transform="translate(1310, 200)">
+      <rect width="204" height="40" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+      <rect x="0" y="8" width="4" height="24" rx="2" fill="#2563EB"/>
+      <text x="18" y="25" fill="#0F172A">Network &amp; Billing</text>
+    </g>
+    <g transform="translate(1310, 308)">
+      <rect width="204" height="40" rx="10" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
+      <rect x="0" y="8" width="4" height="24" rx="2" fill="#0D9488"/>
+      <text x="18" y="25" fill="#0F172A">Subscriber Care</text>
+    </g>
+  </g>
 
   <!-- SVR Brand Mark -->
-  <g transform="translate(84, 78)">
-    <rect x="0" y="0" width="76" height="76" rx="18" fill="url(#brandRedL)"/>
-    <path d="M19 42 C19 25 57 25 57 42" fill="none" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round"/>
-    <rect x="16" y="39" width="7" height="15" rx="3.5" fill="#FFFFFF"/>
-    <rect x="53" y="39" width="7" height="15" rx="3.5" fill="#FFFFFF"/>
-    <line x1="30" y1="38" x2="30" y2="50" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
-    <line x1="38" y1="33" x2="38" y2="55" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
-    <line x1="46" y1="39" x2="46" y2="49" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+  <g transform="translate(84, 84)">
+    <rect x="0" y="0" width="74" height="74" rx="18" fill="url(#brandRedL)"/>
+    <path d="M18 41 C18 24 56 24 56 41" fill="none" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round"/>
+    <rect x="15" y="38" width="7" height="15" rx="3.5" fill="#FFFFFF"/>
+    <rect x="52" y="38" width="7" height="15" rx="3.5" fill="#FFFFFF"/>
+    <line x1="29" y1="37" x2="29" y2="49" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+    <line x1="37" y1="32" x2="37" y2="54" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+    <line x1="45" y1="38" x2="45" y2="48" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
   </g>
 
-  <!-- Eyebrow Pill -->
-  <g transform="translate(180, 96)">
-    <rect x="0" y="0" width="346" height="34" rx="17" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
-    <circle cx="18" cy="17" r="4.5" fill="#2563EB"/>
-    <text x="32" y="22" fill="#0F172A" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="700" letter-spacing="1.2">ENTERPRISE TELECOM AI OPERATIONS</text>
-  </g>
+  <!-- Clean Eyebrow Label (Zero Dots) -->
+  <text x="180" y="128" fill="#64748B" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="700" letter-spacing="2.2">ENTERPRISE TELECOM AI OPERATIONS</text>
 
   <!-- Main Product Title -->
-  <text x="84" y="226" fill="#0F172A" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="60" font-weight="800" letter-spacing="-1.6">Smart Voicemail Router</text>
+  <text x="84" y="232" fill="#0F172A" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="60" font-weight="800" letter-spacing="-1.6">Smart Voicemail Router</text>
 
   <!-- Subtitle -->
-  <text x="84" y="274" fill="#475569" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="21" font-weight="400">Transform Egyptian Arabic subscriber voicemails into prioritized, skill-routed</text>
-  <text x="84" y="304" fill="#475569" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="21" font-weight="400">callback tickets with grounded bilingual scripts and full auditability.</text>
+  <text x="84" y="278" fill="#475569" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="20.5" font-weight="400">Self-hosted Egyptian Arabic voicemail triage, deterministic priority scoring,</text>
+  <text x="84" y="308" fill="#475569" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="20.5" font-weight="400">and skill-based callback routing for telecom customer care.</text>
 
-  <!-- Feature Pills -->
-  <g transform="translate(84, 356)" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13.5" font-weight="600" fill="#1E293B">
-    <g transform="translate(0, 0)">
-      <rect width="184" height="38" rx="19" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
-      <circle cx="19" cy="19" r="4" fill="#2563EB"/>
-      <text x="32" y="24">Whisper large-v3 STT</text>
-    </g>
-    <g transform="translate(196, 0)">
-      <rect width="194" height="38" rx="19" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
-      <circle cx="19" cy="19" r="4" fill="#0891B2"/>
-      <text x="32" y="24">4x MARBERTv2 Triage</text>
-    </g>
-    <g transform="translate(402, 0)">
-      <rect width="182" height="38" rx="19" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
-      <circle cx="19" cy="19" r="4" fill="#059669"/>
-      <text x="32" y="24">89.3% Skill Routing</text>
-    </g>
-    <g transform="translate(596, 0)">
-      <rect width="176" height="38" rx="19" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
-      <circle cx="19" cy="19" r="4" fill="#D97706"/>
-      <text x="32" y="24">EN / AR Native RTL</text>
-    </g>
-    <g transform="translate(784, 0)">
-      <rect width="184" height="38" rx="19" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
-      <circle cx="19" cy="19" r="4" fill="#DC2626"/>
-      <text x="32" y="24">Fernet Encrypted</text>
-    </g>
-  </g>
-
-  <!-- Right Live Telemetry Card -->
-  <g transform="translate(1098, 72)">
-    <rect x="0" y="0" width="418" height="336" rx="20" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.5"/>
-    <text x="26" y="40" fill="#0F172A" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="16" font-weight="700">Live Triage Telemetry</text>
-    <text x="26" y="62" fill="#64748B" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="12.5">Validation Macro-F1 across 4 heads</text>
-    <rect x="304" y="24" width="88" height="26" rx="13" fill="#EFF6FF" stroke="#BFDBFE"/>
-    <circle cx="319" cy="37" r="3.5" fill="#2563EB"/>
-    <text x="329" y="41" fill="#2563EB" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">Live WS</text>
-
-    <!-- Chart Grid -->
-    <line x1="26" y1="104" x2="392" y2="104" stroke="#E2E8F0" stroke-dasharray="3 3"/>
-    <line x1="26" y1="162" x2="392" y2="162" stroke="#E2E8F0" stroke-dasharray="3 3"/>
-    <line x1="26" y1="220" x2="392" y2="220" stroke="#E2E8F0" stroke-dasharray="3 3"/>
-    <line x1="26" y1="268" x2="392" y2="268" stroke="#CBD5E1"/>
-
-    <!-- Patterned Fade-Out Columns -->
-    <g font-family="Inter, system-ui, -apple-system, sans-serif" text-anchor="middle">
-      <text x="76" y="120" fill="#0F172A" font-size="12" font-weight="700">0.79</text>
-      <rect x="52" y="128" width="48" height="140" rx="6" fill="url(#stripeBlueL)" mask="url(#barFadeL)"/>
-      <text x="76" y="290" fill="#475569" font-size="12">Category</text>
-
-      <text x="164" y="134" fill="#0F172A" font-size="12" font-weight="700">0.72</text>
-      <rect x="140" y="142" width="48" height="126" rx="6" fill="url(#stripeCyanL)" mask="url(#barFadeL)"/>
-      <text x="164" y="290" fill="#475569" font-size="12">Urgency</text>
-
-      <text x="252" y="128" fill="#0F172A" font-size="12" font-weight="700">0.75</text>
-      <rect x="228" y="136" width="48" height="132" rx="6" fill="url(#stripeTealL)" mask="url(#barFadeL)"/>
-      <text x="252" y="290" fill="#475569" font-size="12">State</text>
-
-      <text x="340" y="96" fill="#0F172A" font-size="12" font-weight="700">0.92</text>
-      <rect x="316" y="104" width="48" height="164" rx="6" fill="url(#stripeIndigoL)" mask="url(#barFadeL)"/>
-      <text x="340" y="290" fill="#475569" font-size="12">Churn</text>
-    </g>
-
-    <text x="26" y="318" fill="#475569" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="12">Combined F1: <tspan fill="#0F172A" font-weight="700">0.7941</tspan></text>
-    <text x="242" y="318" fill="#475569" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="12">Quality Gates: <tspan fill="#059669" font-weight="700">6/6 PASS</tspan></text>
-  </g>
+  <!-- Clean Spec Footer Line (Zero Dots) -->
+  <text x="84" y="370" fill="#334155" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" letter-spacing="0.4">Whisper large-v3   |   4x MARBERTv2   |   0.7941 Macro-F1   |   89.3% Routing Match   |   Fernet Encrypted</text>
 </svg>
