@@ -1,9 +1,9 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/svr-banner-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="assets/svr-banner-light.svg">
-  <img alt="Smart Voicemail Router - Enterprise Telecom AI Operations Platform" src="assets/svr-banner-dark.svg" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/svr-banner-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="assets/svr-banner-light.png">
+  <img alt="SVR System - Smart Voicemail Router" src="assets/svr-banner-dark.png" width="100%">
 </picture>
 
 <br/>
