@@ -9,6 +9,7 @@ import {
   IconChartBar,
   IconHistory,
   IconInbox,
+  IconLayoutDashboard,
   IconLanguage,
   IconLogout,
   IconMenu2,
@@ -88,7 +89,14 @@ export function AppShell({ children, allowedRoles, reviewBadgeCount }: AppShellP
 
   const opsNav = [
     ...(isSupervisorOrAdmin
-      ? [{ href: "/dashboard", label: t.navQueue, icon: IconInbox }]
+      ? [
+          {
+            href: "/overview",
+            label: locale === "ar" ? "نظرة عامة" : "Overview",
+            icon: IconLayoutDashboard,
+          },
+          { href: "/dashboard", label: t.navQueue, icon: IconInbox },
+        ]
       : []),
     ...(user.role === "agent"
       ? [{ href: "/my-tickets", label: t.navMyTickets, icon: IconPhoneCall }]
@@ -202,7 +210,7 @@ export function AppShell({ children, allowedRoles, reviewBadgeCount }: AppShellP
     router.replace("/login");
   };
 
-  const homeHref = user.role === "agent" ? "/my-tickets" : "/dashboard";
+  const homeHref = user.role === "agent" ? "/my-tickets" : "/overview";
 
   return (
     <div className="app-shell">

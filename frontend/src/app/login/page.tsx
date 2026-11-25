@@ -49,7 +49,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      router.replace(user.role === "agent" ? "/my-tickets" : "/dashboard");
+      router.replace(user.role === "agent" ? "/my-tickets" : "/overview");
     }
   }, [authLoading, user, router]);
 
@@ -69,7 +69,7 @@ export default function LoginPage() {
       await api.login(email.trim(), password);
       const me = await refreshAuth();
       if (me) {
-        router.replace(me.role === "agent" ? "/my-tickets" : "/dashboard");
+        router.replace(me.role === "agent" ? "/my-tickets" : "/overview");
       }
     } catch (err) {
       if (err instanceof ApiError) {

@@ -17,7 +17,7 @@ export default function HomePage() {
     } else if (user.role === "agent") {
       router.replace("/my-tickets");
     } else {
-      router.replace("/dashboard");
+      router.replace("/overview");
     }
   }, [authLoading, user, router]);
 

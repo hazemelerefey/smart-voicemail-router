@@ -2042,7 +2042,11 @@ def create_app(
             tickets_by_status[t.status] = tickets_by_status.get(t.status, 0) + 1
             if t.needs_human_review:
                 flagged_total += 1
-            if t.status not in (TicketStatus.FAILED.value, TicketStatus.PROCESSING.value, TicketStatus.RECEIVED.value):
+            if (
+                t.status
+                not in (TicketStatus.FAILED.value, TicketStatus.PROCESSING.value, TicketStatus.RECEIVED.value)
+                and t.review_reason != "processing_error"
+            ):
                 succeeded_total += 1
             if t.processing_ms > 0:
                 e2e_latencies.append(float(t.processing_ms))
