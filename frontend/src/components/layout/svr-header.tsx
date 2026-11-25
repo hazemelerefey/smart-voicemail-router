@@ -27,8 +27,8 @@ export function SvrHeader() {
         >
           {wsStatus === 'connected' ? (
             <>
-              <PlugZap className='size-3.5 text-emerald-600 dark:text-emerald-400' />
-              <span className='text-emerald-700 dark:text-emerald-400'>{t.wsConnected}</span>
+              <PlugZap className='size-3.5 text-blue-600 dark:text-sky-400' />
+              <span className='text-blue-600 dark:text-sky-400'>{t.wsConnected}</span>
             </>
           ) : wsStatus === 'reconnecting' ? (
             <>
