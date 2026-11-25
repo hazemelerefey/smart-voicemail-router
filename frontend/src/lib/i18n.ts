@@ -111,7 +111,7 @@ export const REVIEW_REASON_LABELS: Record<Locale, Record<string, string>> = {
     invalid_label: "Invalid Label",
     no_eligible_agent: "No Eligible Agent",
     processing_error: "Processing Error",
-    kill_switch_active: "Auto-Routing Kill Switch Active",
+    kill_switch_active: "Automatic Routing Paused",
     supervisor_requested: "Supervisor Requested Review",
     weekly_quality_sample: "Weekly 5% Quality Sample",
   },
@@ -173,7 +173,7 @@ export const UI_COPY = {
     wsReconnecting: "Reconnecting queue",
     wsOffline: "Live updates offline",
     killSwitchBanner:
-      "Automatic routing is paused (Kill Switch active). All new subscriber voicemails route to the Human Routing Queue.",
+      "Automatic routing is paused. All new subscriber voicemails are routed to the Human Routing Queue.",
     manageKillSwitch: "Manage in Settings",
     themeLight: "Light",
     themeDark: "Dark",

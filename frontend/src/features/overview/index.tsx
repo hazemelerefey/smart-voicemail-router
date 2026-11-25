@@ -267,7 +267,7 @@ export function OverviewPage() {
                   {has24h && p95_24h
                     ? latencyOk
                       ? L('Within 10s', 'ضمن 10 ثواني')
-                      : L('Above 10s CPU SLA', 'أعلى من 10 ثواني')
+                      : L('Above 10s target', 'أعلى من 10 ثواني')
                     : '-'}
                 </p>
               </CardContent>

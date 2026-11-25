@@ -376,7 +376,7 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
           <CardHeader>
             <CardTitle>{L('Subscriber Callback Brief', 'ملخص معاودة الاتصال')}</CardTitle>
             <CardDescription>
-              {L('Grounded from ticket facts and approved templates', 'مبني على حقائق التذكرة والقوالب المعتمدة')}
+              {L('Generated from voicemail details and approved response templates', 'مبني على تفاصيل الرسالة وقوالب الرد المعتمدة')}
             </CardDescription>
           </CardHeader>
           <CardContent className='space-y-3 text-sm'>
@@ -388,7 +388,7 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
             </div>
             <div className='border-t pt-3'>
               <div className='text-xs font-semibold uppercase text-muted-foreground'>
-                {L('Summary (up to 200 chars)', 'الملخص (حتى 200 حرف)')}
+                {L('Summary', 'الملخص')}
               </div>
               <p className='mt-1' dir='auto'>{ticket.summary || '-'}</p>
             </div>

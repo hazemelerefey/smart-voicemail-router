@@ -559,7 +559,7 @@ def create_app(
         description=(
             "Production API for Egypt Telecom Care single-speaker Egyptian Arabic voicemail "
             "transcription, four-field MARBERTv2 classification, explainable queue prioritization, "
-            "and deterministic telecom agent routing (SVR-PRD-02)."
+            "and deterministic telecom agent routing."
         ),
         lifespan=lifespan,
     )
@@ -2102,7 +2102,7 @@ def create_app(
                     severity="warning",
                     message=(
                         f"24h human review rate is {review_rate_24h * 100:.1f}%, "
-                        "exceeding the 20.0% AI10 alert threshold."
+                        "exceeding the 20.0% alert threshold."
                     ),
                     value=review_rate_24h,
                     threshold=0.20,
@@ -2115,7 +2115,7 @@ def create_app(
                     severity="critical",
                     message=(
                         f"24h p95 end-to-end latency is {e2e_stats_24h['p95']:.0f} ms, "
-                        "exceeding the 10,000 ms (10 s) AI10/NFR20 alert threshold."
+                        "exceeding the 10,000 ms (10 s) latency target."
                     ),
                     value=e2e_stats_24h["p95"],
                     threshold=10000.0,

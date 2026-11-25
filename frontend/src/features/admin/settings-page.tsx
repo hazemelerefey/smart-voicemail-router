@@ -71,8 +71,8 @@ export function AdminSettingsPage() {
       })
       toast.success(
         L(
-          'Settings updated (new uploads snapshot this threshold per FR21).',
-          'تم حفظ الإعدادات (التذاكر الجديدة فقط تستخدم القيم المحدثة).'
+          'Settings saved. Updated thresholds apply to all incoming voicemails.',
+          'تم حفظ الإعدادات. الحدود المحدثة تطبق على التذاكر الواردة الجديدة.'
         )
       )
       await refreshSettings()
@@ -92,11 +92,11 @@ export function AdminSettingsPage() {
       toast.success(
         nextState
           ? L('Automatic routing restored.', 'تم تفعيل التوجيه الآلي.')
-          : L('Auto-Routing Kill Switch engaged.', 'تم تفعيل مفتاح إيقاف التوجيه الآلي.')
+          : L('Automatic routing paused. Incoming voicemails will route to manual review.', 'تم إيقاف التوجيه التلقائي مؤقتا.')
       )
       await refreshSettings()
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.detail : 'Failed to toggle kill switch.')
+      toast.error(err instanceof ApiError ? err.detail : 'Failed to update automatic routing setting.')
     } finally {
       setBusy(false)
     }
@@ -129,8 +129,8 @@ export function AdminSettingsPage() {
           </h1>
           <p className='text-sm text-muted-foreground'>
             {L(
-              'FR21 isolated configuration thresholds, auto-routing kill switch, and approved Arabic/English scripts.',
-              'إعدادات النظام المعزولة (FR21) ومفتاح إيقاف التوجيه الآلي وقوالب معاودة الاتصال.'
+              'Configure review thresholds, automatic routing controls, and approved callback scripts.',
+              'إعداد حدود المراجعة والتحكم في التوجيه التلقائي وقوالب معاودة الاتصال المعتمدة.'
             )}
           </p>
         </div>
@@ -154,9 +154,9 @@ export function AdminSettingsPage() {
           <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
             <Card>
               <CardHeader>
-                <CardTitle>{L('Pipeline Thresholds (FR21 Snapshot)', 'حدود خط المعالجة (FR21)')}</CardTitle>
+                <CardTitle>{L('Pipeline Thresholds', 'حدود خط المعالجة')}</CardTitle>
                 <CardDescription>
-                  {L('Changes apply to new tickets only; existing tickets keep their snapshot.', 'التعديلات تطبق على التذاكر الجديدة فقط.')}
+                  {L('Changes apply to new voicemails only; existing tickets retain their original settings.', 'التعديلات تطبق على التذاكر الجديدة فقط.')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -210,11 +210,11 @@ export function AdminSettingsPage() {
               <CardHeader>
                 <CardTitle className='flex items-center gap-2'>
                   <ShieldOff className='size-5 text-destructive' />
-                  {L('Auto-Routing Kill Switch (PRD 10.5)', 'مفتاح إيقاف التوجيه الآلي')}
+                  {L('Automatic Routing Control', 'التحكم في التوجيه التلقائي')}
                 </CardTitle>
                 <CardDescription>
                   {L(
-                    'When disabled, all incoming voicemails remain UNASSIGNED and enter the Human Routing Queue.',
+                    'When disabled, incoming voicemails remain unassigned and route to the Human Routing Queue for manual assignment.',
                     'عند الإيقاف تبقى كل التذاكر بدون موظف وتحول لقائمة المراجعة البشرية.'
                   )}
                 </CardDescription>
@@ -224,8 +224,8 @@ export function AdminSettingsPage() {
                   <div>
                     <div className='text-sm font-semibold'>
                       {autoRoutingEnabled
-                        ? L('Automatic Routing: ENABLED', 'التوجيه الآلي: مفعل')
-                        : L('Automatic Routing: DISABLED', 'التوجيه الآلي: متوقف')}
+                        ? L('Automatic Routing Enabled', 'التوجيه الآلي: مفعل')
+                        : L('Automatic Routing Paused', 'التوجيه الآلي: متوقف')}
                     </div>
                     <div className='text-xs text-muted-foreground'>
                       {L('Applies immediately to all incoming voicemails.', 'يطبق فورا على التذاكر الواردة.')}
@@ -248,7 +248,7 @@ export function AdminSettingsPage() {
             <CardHeader>
               <CardTitle>{L('11-Category Callback Script Templates', 'قوالب معاودة الاتصال المعتمدة (11 فئة)')}</CardTitle>
               <CardDescription>
-                {L('Rule-based opening lines grounded per complaint category (no invented facts).', 'جمل افتتاحية معتمدة لكل فئة شكوى.')}
+                {L('Approved opening scripts tailored for each telecom complaint category.', 'جمل افتتاحية معتمدة لكل فئة شكوى.')}
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-4'>
@@ -302,11 +302,11 @@ export function AdminSettingsPage() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {L('Engage Auto-Routing Kill Switch?', 'تأكيد إيقاف التوجيه الآلي؟')}
+              {L('Pause Automatic Routing?', 'تأكيد إيقاف التوجيه الآلي؟')}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {L(
-                'All new voicemails will remain UNASSIGNED and route straight to the Human Routing Queue until re-enabled.',
+                'Incoming voicemails will remain unassigned and route directly to the Human Routing Queue until automatic routing is re-enabled.',
                 'ستبقى كل الرسائل الصوتية الجديدة بدون موظف وتحول للمراجعة البشرية لحين إعادة التفعيل.'
               )}
             </AlertDialogDescription>
@@ -314,7 +314,7 @@ export function AdminSettingsPage() {
           <AlertDialogFooter>
             <AlertDialogCancel>{L('Cancel', 'إلغاء')}</AlertDialogCancel>
             <AlertDialogAction onClick={() => void handleToggleAutoRouting(false)}>
-              {L('Disable Auto-Routing', 'إيقاف التوجيه الآلي')}
+              {L('Pause Automatic Routing', 'إيقاف التوجيه الآلي')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

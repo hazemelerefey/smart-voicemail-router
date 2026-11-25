@@ -153,7 +153,7 @@ export function AdminAgentsPage() {
     setBusy(true)
     try {
       await api.updateSkillMappings(Object.fromEntries(mappings.map((m) => [m.category, m.skill_name])))
-      toast.success(L('11-category FR20 skill mapping saved.', 'تم حفظ ربط الـ 11 فئة بالمهارات.'))
+      toast.success(L('Category skill mapping saved.', 'تم حفظ ربط فئات الشكاوى بالمهارات.'))
       await load()
     } catch (err) {
       toast.error(err instanceof ApiError ? err.detail : 'Failed to save skill mappings.')
@@ -171,8 +171,8 @@ export function AdminAgentsPage() {
           </h1>
           <p className='text-sm text-muted-foreground'>
             {L(
-              'Manage telecom care specialists, shift availability, capacity, and the FR20 11-category routing table.',
-              'إدارة موظفي خدمة العملاء وتوافرهم وسعتهم وجدول ربط الـ 11 فئة بالمهارات (FR20).'
+              'Manage telecom care specialists, shift availability, capacity, and category-to-skill routing rules.',
+              'إدارة موظفي خدمة العملاء وتوافرهم وسعتهم وقواعد ربط فئات الشكاوى بالمهارات.'
             )}
           </p>
         </div>
@@ -201,9 +201,9 @@ export function AdminAgentsPage() {
         <div className='space-y-6'>
           <Card>
             <CardHeader>
-              <CardTitle>{L('Telecom Care Roster (Seed Order)', 'قائمة الموظفين')}</CardTitle>
+              <CardTitle>{L('Telecom Care Roster', 'قائمة الموظفين')}</CardTitle>
               <CardDescription>
-                {L('First eligible active agent in seed order receives each ticket.', 'أول موظف مؤهل حسب ترتيب البذرة يستلم التذكرة.')}
+                {L('First eligible active agent in priority order receives each ticket.', 'أول موظف مؤهل حسب ترتيب الأولوية يستلم التذكرة.')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -256,7 +256,7 @@ export function AdminAgentsPage() {
           <Card>
             <CardHeader className='flex flex-row items-center justify-between'>
               <div>
-                <CardTitle>{L('FR20 11-Category Skill Mapping', 'ربط الـ 11 فئة بالمهارات')}</CardTitle>
+                <CardTitle>{L('Category Skill Mapping', 'ربط فئات الشكاوى بالمهارات')}</CardTitle>
                 <CardDescription>
                   {L('All 11 fixed telecom complaint categories must map to a skill.', 'يجب ربط جميع الفئات الـ 11 بمهارة.')}
                 </CardDescription>
@@ -312,7 +312,7 @@ export function AdminAgentsPage() {
           <DialogHeader>
             <DialogTitle>{editing ? L('Edit Agent', 'تعديل موظف') : L('New Agent', 'إضافة موظف')}</DialogTitle>
             <DialogDescription>
-              {L('Configure telecom skills, capacity, and seed order.', 'تحديد المهارات والسعة والترتيب.')}
+              {L('Configure telecom skills, capacity, and assignment order.', 'تحديد المهارات والسعة والترتيب.')}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSaveAgent} className='space-y-4'>
@@ -344,7 +344,7 @@ export function AdminAgentsPage() {
                 />
               </div>
               <div className='grid gap-1.5'>
-                <Label htmlFor='agent-order'>{L('Seed Order', 'الترتيب')}</Label>
+                <Label htmlFor='agent-order'>{L('Assignment Order', 'الترتيب')}</Label>
                 <Input
                   id='agent-order'
                   type='number'

@@ -94,8 +94,8 @@ export function EvaluationPage() {
           </h1>
           <p className='text-sm text-muted-foreground'>
             {L(
-              'Validation-split MARBERTv2 Macro-F1, AI9 release gates, FR20 routing agreement, and AI10 latency alerts.',
-              'نتائج Macro-F1 على بيانات التحقق وبوابات AI9 ونسبة التوجيه FR20 وتنبيهات AI10.'
+              'Validation Macro-F1 scores, release quality gates, skill routing accuracy, and pipeline latency monitoring.',
+              'نتائج Macro-F1 على بيانات التحقق وبوابات الجودة ودقة التوجيه ومراقبة زمن المعالجة.'
             )}
           </p>
         </div>
@@ -148,7 +148,7 @@ export function EvaluationPage() {
               <Card>
                 <CardHeader className='pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    {L('FR20 Routing Agreement', 'توافق التوجيه FR20')}
+                    {L('Skill Routing Agreement', 'دقة التوجيه بالمهارات')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -171,7 +171,7 @@ export function EvaluationPage() {
                   <div className='text-2xl font-bold tabular-nums'>
                     {summary ? formatPct(summary.human_review_rate_24h, 1) : '-'}
                   </div>
-                  <p className='text-xs text-muted-foreground'>AI10 alert &gt; 20.0%</p>
+                  <p className='text-xs text-muted-foreground'>Alert threshold &gt; 20.0%</p>
                 </CardContent>
               </Card>
 
@@ -186,7 +186,7 @@ export function EvaluationPage() {
                     {latencies.end_to_end?.p50 ? `${(latencies.end_to_end.p50 / 1000).toFixed(1)}s` : '-'} /{' '}
                     {latencies.end_to_end?.p95 ? `${(latencies.end_to_end.p95 / 1000).toFixed(1)}s` : '-'}
                   </div>
-                  <p className='text-xs text-muted-foreground'>PRD L8 GPU target &lt;= 10s</p>
+                  <p className='text-xs text-muted-foreground'>Production GPU SLA target &lt;= 10s</p>
                 </CardContent>
               </Card>
             </div>
@@ -224,11 +224,11 @@ export function EvaluationPage() {
 
               <Card className='lg:col-span-4'>
                 <CardHeader>
-                  <CardTitle>{L('AI9 Release Gates', 'بوابات الاعتماد AI9')}</CardTitle>
+                  <CardTitle>{L('Release Quality Gates', 'بوابات اعتماد الجودة')}</CardTitle>
                   <CardDescription>
                     {L(
-                      'Evaluated exclusively on frozen validation split (1,003 rows, 1 unclear excluded from customer_state).',
-                      'التقييم على بيانات التحقق فقط (1,003 صف، استثناء صف unclear واحد من حالة العميل).'
+                      'Evaluated on the validation benchmark split (1,003 samples).',
+                      'التقييم على بيانات التحقق المعتمدة (1,003 عينة).'
                     )}
                   </CardDescription>
                 </CardHeader>
@@ -277,7 +277,7 @@ export function EvaluationPage() {
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
               <Card>
                 <CardHeader>
-                  <CardTitle>{L('Churn Fragility & 5-Seed Breakdown', 'حساسية خطر الفقد عبر 5 بذور')}</CardTitle>
+                  <CardTitle>{L('Churn Sensitivity & Multi-Run Breakdown', 'حساسية خطر الفقد عبر التشغيلات')}</CardTitle>
                   <CardDescription>
                     True at_risk in validation: {String(churnDetails.true_at_risk_count ?? 7)} / 1,003 (TP{' '}
                     {String(churnDetails.true_positives ?? '-')}, FP {String(churnDetails.false_positives ?? '-')}, FN{' '}
@@ -288,7 +288,7 @@ export function EvaluationPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Seed</TableHead>
+                        <TableHead>Run</TableHead>
                         <TableHead className='text-end'>Category</TableHead>
                         <TableHead className='text-end'>Urgency</TableHead>
                         <TableHead className='text-end'>State</TableHead>
@@ -312,7 +312,7 @@ export function EvaluationPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>{L('FR20 Skill Routing & Stage Latencies', 'دقة التوجيه وزمن المراحل')}</CardTitle>
+                  <CardTitle>{L('Skill Routing & Stage Latencies', 'دقة التوجيه وزمن المراحل')}</CardTitle>
                 </CardHeader>
                 <CardContent className='space-y-4'>
                   <Table>
