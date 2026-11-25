@@ -41,7 +41,7 @@ import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/
 import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
 import { api, ApiError } from '@/lib/api'
 import { UI_COPY, labelForBucket, labelForCategory } from '@/lib/i18n'
-import { QUEUE_BUCKETS, formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
+import { COMPLAINT_CATEGORIES, QUEUE_BUCKETS, formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
 import type { AgentResponse, MonitoringSummaryResponse, TicketListResponse } from '@/lib/types'
 
 const REVIEW_RATE_TARGET = 0.2
@@ -66,7 +66,7 @@ const SHORT_CATEGORY_LABELS: Record<string, { en: string; ar: string }> = {
   balance_and_data: { en: 'Data', ar: 'الرصيد' },
   app_and_account: { en: 'Account', ar: 'الحساب' },
   branch_and_staff: { en: 'Branch', ar: 'الفروع' },
-  no_reply_or_long_wait: { en: 'Wait Time', ar: 'الانتظار' },
+  no_reply_or_long_wait: { en: 'Wait', ar: 'الانتظار' },
   cancellation_request: { en: 'Cancel', ar: 'الإلغاء' },
   thanks_or_praise: { en: 'Praise', ar: 'شكر' },
   offers_and_packages: { en: 'Offers', ar: 'العروض' },
@@ -129,17 +129,20 @@ export function OverviewPage() {
   const unassigned = queue?.counts_by_status?.unassigned ?? 0
   const humanReview = queue?.human_review_count ?? 0
 
-  const rawCategories = Object.entries(summary?.classification_distribution?.complaint_category ?? {})
-    .filter(([, n]) => n > 0)
-    .sort((a, b) => b[1] - a[1])
-  const classifiedTotal = rawCategories.reduce((acc, [, n]) => acc + n, 0)
-  const categoryData = rawCategories.map(([cat, count]) => ({
-    key: cat,
-    name: SHORT_CATEGORY_LABELS[cat]?.[locale] ?? labelForCategory(cat, locale),
-    fullName: labelForCategory(cat, locale),
-    count,
-    pct: classifiedTotal > 0 ? Math.round((count / classifiedTotal) * 100) : 0,
-  }))
+  const categoryCounts = summary?.classification_distribution?.complaint_category ?? {}
+  const classifiedTotal = Object.values(categoryCounts).reduce((acc, n) => acc + n, 0)
+  const categoryData = COMPLAINT_CATEGORIES.map((cat, idx) => {
+    const count = categoryCounts[cat] ?? 0
+    return {
+      key: cat,
+      idx,
+      name: SHORT_CATEGORY_LABELS[cat]?.[locale] ?? labelForCategory(cat, locale),
+      fullName: labelForCategory(cat, locale),
+      count,
+      pct: classifiedTotal > 0 ? Math.round((count / classifiedTotal) * 100) : 0,
+    }
+  }).sort((a, b) => b.count - a.count || a.idx - b.idx)
+  const activeCategoryCount = categoryData.filter((c) => c.count > 0).length
 
   const threshold = settings?.confidence_threshold ?? 0.5
   const histData = (summary?.confidence_histogram ?? []).map((h, i) => {
@@ -301,13 +304,13 @@ export function OverviewPage() {
                 <CardTitle>{L('Complaint Categories', 'أنواع الشكاوى')}</CardTitle>
                 <CardDescription>
                   {L(
-                    `${classifiedTotal} classified of ${summary?.total_tickets ?? 0} total tickets`,
-                    `${classifiedTotal} مصنفة من إجمالي ${summary?.total_tickets ?? 0} تذكرة`
+                    `${classifiedTotal} classified across ${activeCategoryCount} of ${COMPLAINT_CATEGORIES.length} categories`,
+                    `${classifiedTotal} مصنفة عبر ${activeCategoryCount} من ${COMPLAINT_CATEGORIES.length} فئات`
                   )}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {categoryData.length === 0 ? (
+                {classifiedTotal === 0 ? (
                   <p className='px-4 py-8 text-sm text-muted-foreground'>
                     {L('No classified tickets yet.', 'لا توجد تذاكر مصنفة بعد.')}
                   </p>
@@ -316,6 +319,7 @@ export function OverviewPage() {
 <ResponsiveContainer width='100%' height={300}>
                     <BarChart
                       data={categoryData}
+                      barCategoryGap='14%'
                       margin={{ top: 28, right: 16, left: 0, bottom: 8 }}
                     >
                       <defs>
@@ -349,7 +353,7 @@ export function OverviewPage() {
                       <XAxis
                         dataKey='name'
                         stroke='var(--chart-grid)'
-                        tick={{ fill: 'var(--chart-axis)', fontSize: 12, fontWeight: 500 }}
+                        tick={{ fill: 'var(--chart-axis)', fontSize: 11, fontWeight: 500 }}
                         tickLine={false}
                         axisLine={{ stroke: 'var(--chart-grid)' }}
                         interval={0}
@@ -386,7 +390,8 @@ export function OverviewPage() {
                       <Bar
                         dataKey='count'
                         radius={[0, 0, 0, 0]}
-                        maxBarSize={52}
+                        maxBarSize={68}
+                        background={{ fill: 'var(--chart-slot)' }}
                         isAnimationActive={false}
                         className='cursor-pointer'
                         onClick={() => void navigate({ to: '/dashboard' })}
@@ -395,6 +400,7 @@ export function OverviewPage() {
                           dataKey='count'
                           position='top'
                           offset={8}
+                          formatter={(v: unknown) => (typeof v === 'number' && v > 0 ? String(v) : '')}
                           fill='var(--chart-axis)'
                           fontSize={12}
                           fontWeight={500}
@@ -483,6 +489,7 @@ export function OverviewPage() {
 <ResponsiveContainer width='100%' height={240}>
                   <BarChart
                     data={histData}
+                    barCategoryGap='14%'
                     margin={{ top: 24, right: 12, left: 0, bottom: 4 }}
                   >
                     <defs>
@@ -543,6 +550,7 @@ export function OverviewPage() {
                     <Bar
                       dataKey='count'
                       radius={[0, 0, 0, 0]}
+                      background={{ fill: 'var(--chart-slot)' }}
                       isAnimationActive={false}
                     >
                       <LabelList

@@ -199,6 +199,7 @@ export function EvaluationPage() {
 <ResponsiveContainer width='100%' height={250}>
                     <BarChart
                       data={chartData}
+                      barCategoryGap='18%'
                       margin={{ top: 24, right: 12, left: 0, bottom: 4 }}
                     >
                       <defs>
@@ -253,7 +254,8 @@ export function EvaluationPage() {
                       <Bar
                         dataKey='f1'
                         radius={[0, 0, 0, 0]}
-                        maxBarSize={52}
+                        maxBarSize={96}
+                        background={{ fill: 'var(--chart-slot)' }}
                         isAnimationActive={false}
                       >
                         <LabelList
