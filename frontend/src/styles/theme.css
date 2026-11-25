@@ -40,6 +40,7 @@
   --chart-bar-fill: #334155;
   --chart-bar-stripe: #fafafa;
   --chart-axis: #334155;
+  --chart-slot: rgba(15, 23, 42, 0.032);
   --success: #15803d;
 }
 
@@ -81,6 +82,7 @@
   --chart-bar-fill: #6b6b6b;
   --chart-bar-stripe: #121212;
   --chart-axis: #e5e5e5;
+  --chart-slot: rgba(255, 255, 255, 0.028);
   --success: #22c55e;
 }
 
