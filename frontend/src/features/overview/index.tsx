@@ -3,7 +3,6 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import {
   Activity,
   AlertCircle,
-  AlertTriangle,
   ArrowRight,
   BellRing,
   CheckCircle2,
@@ -36,6 +35,8 @@ import {
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Main } from '@/components/layout/main'
+import { SvrChartTooltip } from '@/components/svr/chart-tooltip'
+import { MonitoringAlertsPopover } from '@/components/svr/monitoring-alerts-popover'
 import { BucketText, TicketStatusText, scoreSquareClass } from '@/components/svr/status-badges'
 import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
 import { api, ApiError } from '@/lib/api'
@@ -88,6 +89,7 @@ export function OverviewPage() {
   const t = UI_COPY[locale]
   const isAr = locale === 'ar'
   const L = (en: string, ar: string) => (isAr ? ar : en)
+
 
   const [summary, setSummary] = useState<MonitoringSummaryResponse | null>(null)
   const [queue, setQueue] = useState<TicketListResponse | null>(null)
@@ -177,6 +179,7 @@ export function OverviewPage() {
           </p>
         </div>
         <div className='flex items-center gap-2'>
+          <MonitoringAlertsPopover alerts={summary?.alerts ?? []} locale={locale} />
           <Button variant='outline' onClick={() => void load()} disabled={loading}>
             <RefreshCw className='size-4' />
             <span>{L('Refresh', 'تحديث')}</span>
@@ -194,17 +197,6 @@ export function OverviewPage() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-
-      {summary?.alerts?.map((a) => (
-        <Alert
-          key={a.code}
-          variant={a.severity === 'critical' ? 'destructive' : 'default'}
-          className='mb-3'
-        >
-          <AlertTriangle className='size-4' />
-          <AlertDescription>{a.message}</AlertDescription>
-        </Alert>
-      ))}
 
       <Tabs defaultValue='overview' className='space-y-4'>
         <TabsList>
@@ -321,7 +313,7 @@ export function OverviewPage() {
                   </p>
                 ) : (
                   <div className='svr-chart'>
-                  <ResponsiveContainer width='100%' height={300}>
+<ResponsiveContainer width='100%' height={300}>
                     <BarChart
                       data={categoryData}
                       margin={{ top: 28, right: 16, left: 0, bottom: 8 }}
@@ -375,29 +367,27 @@ export function OverviewPage() {
                       />
                       <Tooltip
                         cursor={false}
-                        content={({ active, payload }) => {
-                          if (!active || !payload?.length) return null
-                          const row = payload[0]?.payload as (typeof categoryData)[number] | undefined
-                          if (!row) return null
-                          return (
-                            <div className='rounded-md border border-border bg-popover px-3 py-2 text-xs text-popover-foreground shadow-lg'>
-                              <div className='font-semibold'>{row.fullName}</div>
-                              <div className='mt-0.5 flex items-center gap-2 text-muted-foreground tabular-nums'>
-                                <span>{L('Tickets', 'التذاكر')}: <strong className='text-foreground'>{row.count}</strong></span>
-                                <span>·</span>
-                                <span>{row.pct}%</span>
-                              </div>
-                            </div>
-                          )
-                        }}
+                        wrapperClassName='svr-tooltip'
+                        content={({ active, payload }) => (
+                          <SvrChartTooltip
+                            active={active}
+                            payload={payload}
+                            format={(r) => {
+                              const row = r as (typeof categoryData)[number]
+                              return {
+                                title: row.fullName,
+                                value: String(row.count),
+                                caption: L(`${row.pct}% of classified tickets`, `${row.pct}% من التذاكر المصنفة`),
+                              }
+                            }}
+                          />
+                        )}
                       />
                       <Bar
                         dataKey='count'
                         radius={[0, 0, 0, 0]}
                         maxBarSize={52}
-                        isAnimationActive
-                        animationDuration={850}
-                        animationEasing='ease-out'
+                        isAnimationActive={false}
                         className='cursor-pointer'
                         onClick={() => void navigate({ to: '/dashboard' })}
                       >
@@ -494,7 +484,7 @@ export function OverviewPage() {
               </CardHeader>
               <CardContent>
                 <div className='svr-chart'>
-                <ResponsiveContainer width='100%' height={240}>
+<ResponsiveContainer width='100%' height={240}>
                   <BarChart
                     data={histData}
                     margin={{ top: 24, right: 12, left: 0, bottom: 4 }}
@@ -534,22 +524,30 @@ export function OverviewPage() {
                     />
                     <Tooltip
                       cursor={false}
-                      contentStyle={{
-                        backgroundColor: 'var(--popover)',
-                        borderColor: 'var(--border)',
-                        borderRadius: 'var(--radius)',
-                        color: 'var(--popover-foreground)',
-                        fontSize: '12px',
-                      }}
-                      itemStyle={{ color: 'var(--popover-foreground)' }}
-                      labelStyle={{ color: 'var(--muted-foreground)' }}
+                      wrapperClassName='svr-tooltip'
+                      content={({ active, payload }) => (
+                        <SvrChartTooltip
+                          active={active}
+                          payload={payload}
+                          format={(r) => {
+                            const row = r as (typeof histData)[number]
+                            const hi = (Number(row.bin) + 0.1).toFixed(1)
+                            return {
+                              title: L(`Confidence ${row.bin} to ${hi}`, `الثقة ${row.bin} إلى ${hi}`),
+                              value: String(row.count),
+                              caption: row.below
+                                ? L('Below review threshold', 'أقل من حد المراجعة')
+                                : L('At or above review threshold', 'ضمن أو أعلى من حد المراجعة'),
+                              tone: row.below ? 'negative' : 'default',
+                            }
+                          }}
+                        />
+                      )}
                     />
                     <Bar
                       dataKey='count'
                       radius={[0, 0, 0, 0]}
-                      isAnimationActive
-                      animationDuration={850}
-                      animationEasing='ease-out'
+                      isAnimationActive={false}
                     >
                       <LabelList
                         dataKey='count'

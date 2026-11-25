@@ -15,6 +15,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Main } from '@/components/layout/main'
+import { SvrChartTooltip } from '@/components/svr/chart-tooltip'
+import { MonitoringAlertsPopover } from '@/components/svr/monitoring-alerts-popover'
 import { api, ApiError } from '@/lib/api'
 import { UI_COPY } from '@/lib/i18n'
 import { formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
@@ -29,6 +31,7 @@ export function EvaluationPage() {
   const t = UI_COPY[locale]
   const isAr = locale === 'ar'
   const L = (en: string, ar: string) => (isAr ? ar : en)
+
 
   const [runs, setRuns] = useState<EvalRunResponse[]>([])
   const [summary, setSummary] = useState<MonitoringSummaryResponse | null>(null)
@@ -99,10 +102,13 @@ export function EvaluationPage() {
             )}
           </p>
         </div>
-        <Button variant='outline' onClick={() => void load()} disabled={loading}>
-          <RefreshCw className='size-4' />
-          <span>{L('Refresh', 'تحديث')}</span>
-        </Button>
+        <div className='flex items-center gap-2'>
+          <MonitoringAlertsPopover alerts={summary?.alerts ?? []} locale={locale} />
+          <Button variant='outline' onClick={() => void load()} disabled={loading}>
+            <RefreshCw className='size-4' />
+            <span>{L('Refresh', 'تحديث')}</span>
+          </Button>
+        </div>
       </div>
 
       {error && (
@@ -111,17 +117,6 @@ export function EvaluationPage() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-
-      {summary?.alerts?.map((a) => (
-        <Alert
-          key={a.code}
-          variant={a.severity === 'critical' ? 'destructive' : 'default'}
-          className='mb-3'
-        >
-          <AlertTriangle className='size-4' />
-          <AlertDescription>{a.message}</AlertDescription>
-        </Alert>
-      ))}
 
       {loading ? (
         <p className='py-8 text-sm text-muted-foreground'>{t.loading}</p>
@@ -201,7 +196,7 @@ export function EvaluationPage() {
                 </CardHeader>
                 <CardContent>
                   <div className='svr-chart'>
-                  <ResponsiveContainer width='100%' height={250}>
+<ResponsiveContainer width='100%' height={250}>
                     <BarChart
                       data={chartData}
                       margin={{ top: 24, right: 12, left: 0, bottom: 4 }}
@@ -237,23 +232,29 @@ export function EvaluationPage() {
                       />
                       <Tooltip
                         cursor={false}
-                        contentStyle={{
-                          backgroundColor: 'var(--popover)',
-                          borderColor: 'var(--border)',
-                          borderRadius: 'var(--radius)',
-                          color: 'var(--popover-foreground)',
-                          fontSize: '12px',
-                        }}
-                        itemStyle={{ color: 'var(--popover-foreground)' }}
-                        labelStyle={{ color: 'var(--muted-foreground)' }}
+                        wrapperClassName='svr-tooltip'
+                        content={({ active, payload }) => (
+                          <SvrChartTooltip
+                            active={active}
+                            payload={payload}
+                            format={(r) => {
+                              const row = r as (typeof chartData)[number]
+                              const pass = row.f1 >= row.gate
+                              return {
+                                title: `${row.field} Macro-F1`,
+                                value: row.f1.toFixed(4),
+                                caption: `${L('Release gate', 'حد الاعتماد')} ${row.gate.toFixed(2)} · ${pass ? 'PASS' : 'FAIL'}`,
+                                tone: pass ? 'positive' : 'negative',
+                              }
+                            }}
+                          />
+                        )}
                       />
                       <Bar
                         dataKey='f1'
                         radius={[0, 0, 0, 0]}
                         maxBarSize={52}
-                        isAnimationActive
-                        animationDuration={850}
-                        animationEasing='ease-out'
+                        isAnimationActive={false}
                       >
                         <LabelList
                           dataKey='f1'

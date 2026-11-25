@@ -93,18 +93,106 @@
   padding: 0.75rem 0.75rem 0.5rem 0.25rem;
 }
 
-.svr-chart .recharts-bar-rectangle {
-  transform-box: fill-box;
-  transform-origin: bottom;
-  transition: opacity 240ms ease, filter 240ms ease, transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+/* Chart motion: crisp, precise, no glow. Staggered rise, label reveal, focus-and-dim hover. */
+@keyframes svr-bar-rise {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }
 
+@keyframes svr-label-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes svr-grid-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes svr-tooltip-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.svr-chart .recharts-cartesian-grid {
+  animation: svr-grid-reveal 400ms ease-out both;
+}
+
+.svr-chart .recharts-bar-rectangle {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  cursor: pointer;
+  animation: svr-bar-rise 640ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  transition:
+    opacity 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.svr-chart .recharts-bar-rectangle:nth-child(1) { animation-delay: 40ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(2) { animation-delay: 100ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(3) { animation-delay: 160ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(4) { animation-delay: 220ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(5) { animation-delay: 280ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(6) { animation-delay: 340ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(7) { animation-delay: 400ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(8) { animation-delay: 460ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(9) { animation-delay: 520ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(10) { animation-delay: 580ms; }
+.svr-chart .recharts-bar-rectangle:nth-child(n + 11) { animation-delay: 640ms; }
+
+.svr-chart .recharts-label-list .recharts-text {
+  animation: svr-label-reveal 420ms cubic-bezier(0.22, 1, 0.36, 1) 560ms backwards;
+}
+
+/* Focus and dim: hovered bar stays solid, siblings recede */
 .svr-chart .recharts-bar-rectangles:hover .recharts-bar-rectangle:not(:hover) {
-  opacity: 0.42;
+  opacity: 0.32;
 }
 
 .svr-chart .recharts-bar-rectangle:hover {
   opacity: 1;
-  filter: brightness(1.28);
-  transform: scaleY(1.025);
+  transform: translateY(-2px);
+}
+
+.svr-tooltip {
+  z-index: 40;
+  outline: none;
+}
+
+.svr-tooltip > * {
+  animation: svr-tooltip-in 100ms ease-out both;
+}
+
+.svr-tooltip.recharts-tooltip-wrapper {
+  transition: transform 100ms ease-out !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svr-chart .recharts-cartesian-grid,
+  .svr-chart .recharts-bar-rectangle,
+  .svr-chart .recharts-label-list .recharts-text,
+  .svr-tooltip > * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
