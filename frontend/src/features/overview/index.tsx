@@ -16,6 +16,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -97,9 +98,6 @@ export function OverviewPage() {
   const isAr = locale === 'ar'
   const L = (en: string, ar: string) => (isAr ? ar : en)
 
-  const [hoveredCatIdx, setHoveredCatIdx] = useState<number | null>(null)
-  const [hoveredHistIdx, setHoveredHistIdx] = useState<number | null>(null)
-
   const [summary, setSummary] = useState<MonitoringSummaryResponse | null>(null)
   const [queue, setQueue] = useState<TicketListResponse | null>(null)
   const [agents, setAgents] = useState<AgentResponse[]>([])
@@ -149,7 +147,6 @@ export function OverviewPage() {
     count,
     pct: classifiedTotal > 0 ? Math.round((count / classifiedTotal) * 100) : 0,
   }))
-  const activeCat = hoveredCatIdx !== null ? categoryData[hoveredCatIdx] : undefined
 
   const threshold = settings?.confidence_threshold ?? 0.5
   const histData = (summary?.confidence_histogram ?? []).map((h, i) => {
@@ -317,24 +314,14 @@ export function OverviewPage() {
           {/* Main 7-col grid: Recharts Categories + Top of Queue */}
           <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
             <Card className='col-span-1 lg:col-span-4'>
-              <CardHeader className='flex flex-row items-start justify-between gap-2'>
-                <div>
-                  <CardTitle>{L('Complaint Categories', 'أنواع الشكاوى')}</CardTitle>
-                  <CardDescription>
-                    {L(
-                      `${classifiedTotal} classified of ${summary?.total_tickets ?? 0} total tickets`,
-                      `${classifiedTotal} مصنفة من إجمالي ${summary?.total_tickets ?? 0} تذكرة`
-                    )}
-                  </CardDescription>
-                </div>
-                {activeCat && (
-                  <div className='rounded-md border bg-muted/50 px-2.5 py-1 text-end text-xs transition-all'>
-                    <div className='font-semibold text-foreground'>{activeCat.fullName}</div>
-                    <div className='font-mono text-muted-foreground tabular-nums'>
-                      {activeCat.count} ({activeCat.pct}%)
-                    </div>
-                  </div>
-                )}
+              <CardHeader>
+                <CardTitle>{L('Complaint Categories', 'أنواع الشكاوى')}</CardTitle>
+                <CardDescription>
+                  {L(
+                    `${classifiedTotal} classified of ${summary?.total_tickets ?? 0} total tickets`,
+                    `${classifiedTotal} مصنفة من إجمالي ${summary?.total_tickets ?? 0} تذكرة`
+                  )}
+                </CardDescription>
               </CardHeader>
               <CardContent className='ps-2'>
                 {categoryData.length === 0 ? (
@@ -342,21 +329,44 @@ export function OverviewPage() {
                     {L('No classified tickets yet.', 'لا توجد تذاكر مصنفة بعد.')}
                   </p>
                 ) : (
+                  <div className='svr-chart'>
                   <ResponsiveContainer width='100%' height={300}>
                     <BarChart
                       data={categoryData}
-                      margin={{ top: 14, right: 16, left: 0, bottom: 8 }}
-                      onMouseLeave={() => setHoveredCatIdx(null)}
+                      margin={{ top: 26, right: 16, left: 0, bottom: 8 }}
                     >
                       <defs>
-                        {CATEGORY_GRADIENTS.map((g) => (
-                          <linearGradient key={g.id} id={g.id} x1='0' y1='0' x2='0' y2='1'>
-                            <stop offset='0%' stopColor={g.top} stopOpacity={0.95} />
-                            <stop offset='100%' stopColor={g.bottom} stopOpacity={0.88} />
-                          </linearGradient>
+                        <linearGradient id='catFadeGrad' x1='0' y1='0' x2='0' y2='1'>
+                          <stop offset='0%' stopColor='#ffffff' stopOpacity={1} />
+                          <stop offset='70%' stopColor='#ffffff' stopOpacity={0.55} />
+                          <stop offset='100%' stopColor='#ffffff' stopOpacity={0.04} />
+                        </linearGradient>
+                        <mask id='catFadeMask' maskUnits='objectBoundingBox' maskContentUnits='objectBoundingBox'>
+                          <rect x='0' y='0' width='1' height='1' fill='url(#catFadeGrad)' />
+                        </mask>
+                        {CATEGORY_GRADIENTS.map((g, i) => (
+                          <pattern
+                            key={g.id}
+                            id={`catPat-${i}`}
+                            width='8'
+                            height='8'
+                            patternUnits='userSpaceOnUse'
+                            patternTransform='rotate(45)'
+                          >
+                            <rect width='8' height='8' fill={g.top} />
+                            <line
+                              x1='0'
+                              y1='0'
+                              x2='0'
+                              y2='8'
+                              stroke='var(--card)'
+                              strokeWidth='2.2'
+                              strokeOpacity='0.6'
+                            />
+                          </pattern>
                         ))}
                       </defs>
-                      <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='var(--border)' opacity={0.6} />
+                      <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' opacity={0.45} />
                       <XAxis
                         dataKey='name'
                         stroke='var(--muted-foreground)'
@@ -396,41 +406,36 @@ export function OverviewPage() {
                       />
                       <Bar
                         dataKey='count'
-                        radius={[8, 8, 2, 2]}
+                        radius={[6, 6, 0, 0]}
                         maxBarSize={56}
                         isAnimationActive
                         animationDuration={750}
                         animationEasing='ease-out'
                         className='cursor-pointer'
-                        onMouseEnter={(_, idx) => setHoveredCatIdx(idx)}
-                        onMouseLeave={() => setHoveredCatIdx(null)}
                         onClick={() => void navigate({ to: '/dashboard' })}
                       >
+                        <LabelList
+                          dataKey='count'
+                          position='top'
+                          offset={8}
+                          fill='var(--foreground)'
+                          fontSize={12}
+                          fontWeight={600}
+                        />
                         {categoryData.map((entry, idx) => {
-                          const grad = CATEGORY_GRADIENTS[Math.min(idx, CATEGORY_GRADIENTS.length - 1)]
-                          const isHovered = hoveredCatIdx === idx
-                          const isDimmed = hoveredCatIdx !== null && !isHovered
+                          const gradIdx = Math.min(idx, CATEGORY_GRADIENTS.length - 1)
                           return (
                             <Cell
                               key={entry.key}
-                              fill={`url(#${grad.id})`}
-                              style={{
-                                opacity: isDimmed ? 0.38 : 1,
-                                filter: isHovered
-                                  ? `brightness(1.14) drop-shadow(0 6px 14px ${grad.glow})`
-                                  : 'none',
-                                transform: isHovered ? 'scaleY(1.03)' : 'scaleY(1)',
-                                transformOrigin: 'bottom',
-                                transformBox: 'fill-box',
-                                transition:
-                                  'opacity 220ms ease, filter 220ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1)',
-                              }}
+                              fill={`url(#catPat-${gradIdx})`}
+                              mask='url(#catFadeMask)'
                             />
                           )
                         })}
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -504,19 +509,31 @@ export function OverviewPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className='ps-2'>
+                <div className='svr-chart'>
                 <ResponsiveContainer width='100%' height={240}>
-                  <BarChart data={histData} onMouseLeave={() => setHoveredHistIdx(null)}>
+                  <BarChart
+                    data={histData}
+                    margin={{ top: 24, right: 12, left: 0, bottom: 4 }}
+                  >
                     <defs>
-                      <linearGradient id='histGradOk' x1='0' y1='0' x2='0' y2='1'>
-                        <stop offset='0%' stopColor='#38bdf8' stopOpacity={0.95} />
-                        <stop offset='100%' stopColor='#2563eb' stopOpacity={0.85} />
+                      <linearGradient id='histFadeGrad' x1='0' y1='0' x2='0' y2='1'>
+                        <stop offset='0%' stopColor='#ffffff' stopOpacity={1} />
+                        <stop offset='70%' stopColor='#ffffff' stopOpacity={0.55} />
+                        <stop offset='100%' stopColor='#ffffff' stopOpacity={0.04} />
                       </linearGradient>
-                      <linearGradient id='histGradWarn' x1='0' y1='0' x2='0' y2='1'>
-                        <stop offset='0%' stopColor='#fbbf24' stopOpacity={0.95} />
-                        <stop offset='100%' stopColor='#d97706' stopOpacity={0.88} />
-                      </linearGradient>
+                      <mask id='histFadeMask' maskUnits='objectBoundingBox' maskContentUnits='objectBoundingBox'>
+                        <rect x='0' y='0' width='1' height='1' fill='url(#histFadeGrad)' />
+                      </mask>
+                      <pattern id='histPatOk' width='8' height='8' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
+                        <rect width='8' height='8' fill='#38bdf8' />
+                        <line x1='0' y1='0' x2='0' y2='8' stroke='var(--card)' strokeWidth='2.2' strokeOpacity='0.6' />
+                      </pattern>
+                      <pattern id='histPatWarn' width='8' height='8' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
+                        <rect width='8' height='8' fill='#f59e0b' />
+                        <line x1='0' y1='0' x2='0' y2='8' stroke='var(--card)' strokeWidth='2.2' strokeOpacity='0.6' />
+                      </pattern>
                     </defs>
-                    <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='var(--border)' opacity={0.6} />
+                    <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' opacity={0.45} />
                     <XAxis dataKey='bin' stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} />
                     <YAxis stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
                     <Tooltip
@@ -533,34 +550,30 @@ export function OverviewPage() {
                     />
                     <Bar
                       dataKey='count'
-                      radius={[6, 6, 2, 2]}
+                      radius={[6, 6, 0, 0]}
                       isAnimationActive
                       animationDuration={650}
-                      onMouseEnter={(_, idx) => setHoveredHistIdx(idx)}
-                      onMouseLeave={() => setHoveredHistIdx(null)}
                     >
-                      {histData.map((entry, idx) => {
-                        const isHovered = hoveredHistIdx === idx
-                        const isDimmed = hoveredHistIdx !== null && !isHovered
-                        return (
-                          <Cell
-                            key={idx}
-                            fill={entry.below ? 'url(#histGradWarn)' : 'url(#histGradOk)'}
-                            style={{
-                              opacity: isDimmed ? 0.38 : 1,
-                              filter: isHovered ? 'brightness(1.15)' : 'none',
-                              transform: isHovered ? 'scaleY(1.03)' : 'scaleY(1)',
-                              transformOrigin: 'bottom',
-                              transformBox: 'fill-box',
-                              transition:
-                                'opacity 200ms ease, filter 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1)',
-                            }}
-                          />
-                        )
-                      })}
+                      <LabelList
+                        dataKey='count'
+                        position='top'
+                        offset={6}
+                        formatter={(v: unknown) => (typeof v === 'number' && v > 0 ? String(v) : '')}
+                        fill='var(--foreground)'
+                        fontSize={11}
+                        fontWeight={600}
+                      />
+                      {histData.map((entry, idx) => (
+                        <Cell
+                          key={idx}
+                          fill={entry.below ? 'url(#histPatWarn)' : 'url(#histPatOk)'}
+                          mask='url(#histFadeMask)'
+                        />
+                      ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
+                </div>
               </CardContent>
             </Card>
 

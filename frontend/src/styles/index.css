@@ -85,3 +85,19 @@
     height: 0;
   }
 }
+
+.svr-chart .recharts-bar-rectangle {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transition: opacity 220ms ease, filter 220ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.svr-chart .recharts-bar-rectangles:hover .recharts-bar-rectangle:not(:hover) {
+  opacity: 0.35;
+}
+
+.svr-chart .recharts-bar-rectangle:hover {
+  opacity: 1;
+  filter: brightness(1.16);
+  transform: scaleY(1.03);
+}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AlertCircle, AlertTriangle, CheckCircle2, RefreshCw } from 'lucide-react'
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useSvr } from '@/context/svr-provider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -34,7 +34,6 @@ export function EvaluationPage() {
   const [summary, setSummary] = useState<MonitoringSummaryResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [hoveredF1Idx, setHoveredF1Idx] = useState<number | null>(null)
 
   const load = useCallback(async () => {
     setError(null)
@@ -201,15 +200,27 @@ export function EvaluationPage() {
                   <CardDescription className='font-mono text-xs'>{latest.model_version}</CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <div className='svr-chart'>
                   <ResponsiveContainer width='100%' height={250}>
-                    <BarChart data={chartData} onMouseLeave={() => setHoveredF1Idx(null)}>
+                    <BarChart
+                      data={chartData}
+                      margin={{ top: 24, right: 12, left: 0, bottom: 4 }}
+                    >
                       <defs>
-                        <linearGradient id='evalGrad' x1='0' y1='0' x2='0' y2='1'>
-                          <stop offset='0%' stopColor='#38bdf8' stopOpacity={0.95} />
-                          <stop offset='100%' stopColor='#2563eb' stopOpacity={0.85} />
+                        <linearGradient id='evalFadeGrad' x1='0' y1='0' x2='0' y2='1'>
+                          <stop offset='0%' stopColor='#ffffff' stopOpacity={1} />
+                          <stop offset='70%' stopColor='#ffffff' stopOpacity={0.55} />
+                          <stop offset='100%' stopColor='#ffffff' stopOpacity={0.04} />
                         </linearGradient>
+                        <mask id='evalFadeMask' maskUnits='objectBoundingBox' maskContentUnits='objectBoundingBox'>
+                          <rect x='0' y='0' width='1' height='1' fill='url(#evalFadeGrad)' />
+                        </mask>
+                        <pattern id='evalPat' width='8' height='8' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
+                          <rect width='8' height='8' fill='#38bdf8' />
+                          <line x1='0' y1='0' x2='0' y2='8' stroke='var(--card)' strokeWidth='2.2' strokeOpacity='0.6' />
+                        </pattern>
                       </defs>
-                      <CartesianGrid vertical={false} strokeDasharray='3 3' stroke='var(--border)' opacity={0.6} />
+                      <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' opacity={0.45} />
                       <XAxis dataKey='field' stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} />
                       <YAxis domain={[0, 1]} stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} />
                       <Tooltip
@@ -226,34 +237,30 @@ export function EvaluationPage() {
                       />
                       <Bar
                         dataKey='f1'
-                        radius={[8, 8, 2, 2]}
+                        radius={[6, 6, 0, 0]}
                         isAnimationActive
                         animationDuration={650}
-                        onMouseEnter={(_, idx) => setHoveredF1Idx(idx)}
-                        onMouseLeave={() => setHoveredF1Idx(null)}
                       >
-                        {chartData.map((entry, idx) => {
-                          const isHovered = hoveredF1Idx === idx
-                          const isDimmed = hoveredF1Idx !== null && !isHovered
-                          return (
-                            <Cell
-                              key={entry.field}
-                              fill='url(#evalGrad)'
-                              style={{
-                                opacity: isDimmed ? 0.38 : 1,
-                                filter: isHovered ? 'brightness(1.15)' : 'none',
-                                transform: isHovered ? 'scaleY(1.03)' : 'scaleY(1)',
-                                transformOrigin: 'bottom',
-                                transformBox: 'fill-box',
-                                transition:
-                                  'opacity 200ms ease, filter 200ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1)',
-                              }}
-                            />
-                          )
-                        })}
+                        <LabelList
+                          dataKey='f1'
+                          position='top'
+                          offset={6}
+                          formatter={(v: unknown) => (typeof v === 'number' ? v.toFixed(2) : '')}
+                          fill='var(--foreground)'
+                          fontSize={12}
+                          fontWeight={600}
+                        />
+                        {chartData.map((entry) => (
+                          <Cell
+                            key={entry.field}
+                            fill='url(#evalPat)'
+                            mask='url(#evalFadeMask)'
+                          />
+                        ))}
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
+                  </div>
                 </CardContent>
               </Card>
 
