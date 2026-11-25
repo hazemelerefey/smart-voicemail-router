@@ -1,0 +1,814 @@
+@property --a {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes spinA {
+  to {
+    --a: 360deg;
+  }
+}
+
+@keyframes bl {
+  50% {
+    transform: scaleY(0.12);
+  }
+}
+
+@keyframes sp {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dr {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes sh {
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+.svr-login {
+  --bg: #000;
+  --hero: #000;
+  --fld: #08090b;
+  --chip: #050607;
+  --line: rgba(255, 255, 255, 0.08);
+  --line2: rgba(255, 255, 255, 0.16);
+  --tx: #f3f5f7;
+  --mu: #8a919b;
+  --dim: #59606a;
+  --focus: #00D1D1;
+  --err: #ff7b72;
+  --edge: rgba(255, 255, 255, 0.07);
+  --vig: rgba(0, 0, 0, 0.78);
+  --stroke: 229, 234, 240;
+  --hi: 0, 209, 209;
+  --sa: 0.1;
+  --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  --nb: screen;
+  --no: 0.09;
+  --ui: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  color-scheme: dark;
+  box-sizing: border-box;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--tx);
+  font: 15px/1.5 var(--ui);
+  -webkit-font-smoothing: antialiased;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  transition: background 0.3s, color 0.3s;
+}
+
+.svr-login[data-theme='light'] {
+  --bg: #fff;
+  --hero: #EEF3F5;
+  --fld: #fff;
+  --chip: #fff;
+  --line: rgba(11, 18, 23, 0.1);
+  --line2: rgba(11, 18, 23, 0.2);
+  --tx: #0B1217;
+  --mu: #566670;
+  --dim: #87949c;
+  --focus: #00868A;
+  --err: #C62828;
+  --edge: rgba(11, 18, 23, 0.16);
+  --vig: rgba(238, 243, 245, 0.92);
+  --stroke: 11, 18, 23;
+  --hi: 0, 150, 154;
+  --sa: 0.13;
+  --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  --nb: multiply;
+  --no: 0.07;
+  color-scheme: light;
+}
+
+.svr-login *,
+.svr-login *::before,
+.svr-login *::after {
+  box-sizing: border-box;
+}
+
+.svr-login[dir='rtl'] input,
+.svr-login[dir='rtl'] button {
+  font-family: 'IBM Plex Sans Arabic', Inter, system-ui, sans-serif;
+}
+
+/* hero */
+.svr-login .hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--hero);
+  border-inline-end: 1px solid var(--line);
+  padding: 40px 56px;
+  min-height: 100vh;
+  transition: background 0.3s;
+}
+
+.svr-login .bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.svr-login .bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--no);
+  mix-blend-mode: var(--nb);
+  background-image: var(--noise);
+}
+
+.svr-login .bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, var(--vig) 100%);
+}
+
+.svr-login .svr-login-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.svr-login .chip {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  background: var(--chip);
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px var(--line2);
+  transition: opacity 0.16s;
+}
+
+.svr-login .chip svg {
+  width: 38px;
+  height: 27px;
+  display: block;
+}
+
+.svr-login .chip b {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.svr-login .chip span {
+  padding-inline-start: 14px;
+  border-inline-start: 1px solid var(--line2);
+  color: var(--mu);
+  font-size: 12.5px;
+}
+
+/* form side */
+.svr-login .side {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 40px;
+  min-height: 100vh;
+  background: var(--bg);
+  transition: background 0.3s;
+}
+
+.svr-login .top {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.svr-login .lang {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.svr-login .lang button {
+  all: unset;
+  cursor: pointer;
+  font: 500 12px var(--ui);
+  padding: 5px 13px;
+  border-radius: 999px;
+  color: var(--mu);
+  transition: color 0.15s, background 0.15s;
+}
+
+.svr-login .lang button:hover {
+  color: var(--tx);
+}
+
+.svr-login .lang button:focus-visible,
+.svr-login .th:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.svr-login .lang button[aria-pressed='true'] {
+  background: var(--tx);
+  color: var(--bg);
+}
+
+.svr-login .th {
+  all: unset;
+  cursor: pointer;
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--mu);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.svr-login .th:hover {
+  color: var(--tx);
+  border-color: var(--line2);
+}
+
+.svr-login .th svg {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.45s cubic-bezier(0.3, 0.8, 0.2, 1), opacity 0.25s;
+}
+
+.svr-login .th .sun {
+  opacity: 0;
+  transform: rotate(-80deg) scale(0.5);
+}
+
+.svr-login[data-theme='light'] .th .sun {
+  opacity: 1;
+  transform: none;
+}
+
+.svr-login[data-theme='light'] .th .moon {
+  opacity: 0;
+  transform: rotate(80deg) scale(0.5);
+}
+
+.svr-login .center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.svr-login .card {
+  width: 100%;
+  max-width: 380px;
+  transition: opacity 0.16s;
+}
+
+.svr-login .card.sw,
+.svr-login .chip.sw {
+  opacity: 0;
+}
+
+.svr-login .card h1 {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.svr-login[dir='rtl'] .card h1 {
+  letter-spacing: 0;
+}
+
+.svr-login .lead {
+  color: var(--mu);
+  margin: 0 0 30px;
+}
+
+.svr-login .fld {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.svr-login .fld input {
+  width: 100%;
+  height: 56px;
+  padding: 22px 46px 6px 16px;
+  padding-inline: 16px 46px;
+  background: var(--fld);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--tx);
+  font: 15px var(--ui);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.svr-login .fld input:hover {
+  border-color: var(--line2);
+}
+
+.svr-login .fld input:focus {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 1px var(--focus);
+}
+
+.svr-login .fld.bad input {
+  border-color: var(--err);
+  box-shadow: 0 0 0 1px var(--err);
+}
+
+.svr-login .fld input[readonly] {
+  opacity: 0.6;
+}
+
+.svr-login .fld input:-webkit-autofill {
+  -webkit-text-fill-color: var(--tx);
+  box-shadow: 0 0 0 100px var(--fld) inset;
+  caret-color: var(--tx);
+}
+
+.svr-login .fld label {
+  position: absolute;
+  top: 17px;
+  inset-inline-start: 16px;
+  color: var(--mu);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.18s, color 0.18s;
+}
+
+.svr-login[dir='rtl'] .fld label {
+  transform-origin: right top;
+}
+
+.svr-login .fld input:focus + label,
+.svr-login .fld input:not(:placeholder-shown) + label {
+  transform: translateY(-10px) scale(0.76);
+}
+
+.svr-login .fld input:focus + label {
+  color: var(--focus);
+}
+
+.svr-login .fld.bad input + label {
+  color: var(--err);
+}
+
+.svr-login .ok,
+.svr-login .eye {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  width: 46px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+}
+
+.svr-login .ok svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--focus);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.35s;
+}
+
+.svr-login .fld.valid .ok svg {
+  stroke-dashoffset: 0;
+}
+
+.svr-login .ok {
+  pointer-events: none;
+}
+
+.svr-login .eye {
+  all: unset;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  width: 46px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  color: var(--mu);
+  transition: color 0.15s;
+}
+
+.svr-login .eye:hover {
+  color: var(--tx);
+}
+
+.svr-login .eye:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+  border-radius: 12px;
+}
+
+.svr-login .eye svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+}
+
+.svr-login .eye .pup {
+  fill: currentColor;
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.25s cubic-bezier(0.3, 0.8, 0.2, 1);
+}
+
+.svr-login .eye .sl {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.svr-login .eye .lid {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.svr-login .eye[aria-pressed='false'] .pup {
+  transform: scale(0);
+}
+
+.svr-login .eye[aria-pressed='true'] .pup {
+  transform: scale(1);
+}
+
+.svr-login .eye[aria-pressed='true'] .sl {
+  stroke-dashoffset: 1;
+}
+
+.svr-login .eye.blink .lid {
+  animation: bl 0.24s ease;
+}
+
+.svr-login .eye[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% - 4px);
+  inset-inline-end: 6px;
+  background: var(--tx);
+  color: var(--bg);
+  font: 500 11px var(--ui);
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(3px);
+  pointer-events: none;
+  transition: 0.15s;
+}
+
+.svr-login .eye:hover::after,
+.svr-login .eye:focus-visible::after {
+  opacity: 1;
+  transform: none;
+}
+
+.svr-login .caps {
+  position: absolute;
+  top: 19px;
+  inset-inline-end: 50px;
+  display: none;
+  font: 500 10px var(--mono);
+  letter-spacing: 0.08em;
+  color: var(--tx);
+  border: 1px solid var(--line2);
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+
+.svr-login .caps.on {
+  display: block;
+}
+
+.svr-login .hint {
+  font-size: 12.5px;
+  color: var(--err);
+  margin: -6px 0 10px;
+  padding-inline: 4px;
+}
+
+.svr-login .hint:empty {
+  display: none;
+}
+
+.svr-login .row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 18px 0 22px;
+  font-size: 13px;
+  color: var(--mu);
+}
+
+.svr-login .row a {
+  color: var(--mu);
+  text-decoration: none;
+}
+
+.svr-login .row a:hover,
+.svr-login .row a:focus-visible {
+  color: var(--tx);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.svr-login .chk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.svr-login .chk input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid var(--line2);
+  display: grid;
+  place-items: center;
+  margin: 0;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.svr-login .chk input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.svr-login .chk input:checked {
+  background: var(--tx);
+  border-color: var(--tx);
+}
+
+.svr-login .chk input:checked::after {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border: 2px solid var(--bg);
+  border-top: 0;
+  border-inline-end: 0;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+/* pearl edge button: obsidian fill, rotating hairline in brand colors, no glow */
+.svr-login .go {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  width: 100%;
+  height: 52px;
+  border-radius: 12px;
+  color: #f3f1ea;
+  font: 600 15px var(--ui);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+
+.svr-login .go::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  z-index: -2;
+  background: conic-gradient(
+    from var(--a),
+    var(--edge) 0deg,
+    var(--edge) 180deg,
+    #0F2E33 210deg,
+    #00D1D1 252deg,
+    #7FE8F3 296deg,
+    #E5EAF0 332deg,
+    var(--edge) 360deg
+  );
+  animation: spinA 5s linear infinite;
+}
+
+.svr-login .go::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 7px),
+    linear-gradient(#0c0e10, #030405);
+}
+
+.svr-login .go:hover::before {
+  animation-duration: 2s;
+}
+
+.svr-login .go:active {
+  transform: scale(0.985);
+}
+
+.svr-login .go:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
+.svr-login .go .ar {
+  transition: transform 0.2s;
+}
+
+.svr-login .go:hover .ar {
+  transform: translateX(3px);
+}
+
+.svr-login[dir='rtl'] .go .ar {
+  transform: scaleX(-1);
+}
+
+.svr-login[dir='rtl'] .go:hover .ar {
+  transform: scaleX(-1) translateX(3px);
+}
+
+.svr-login .go svg {
+  flex: none;
+}
+
+.svr-login .spin,
+.svr-login .tick {
+  display: none;
+}
+
+.svr-login .spin {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(229, 234, 240, 0.25);
+  border-top-color: #E5EAF0;
+  animation: sp 0.7s linear infinite;
+}
+
+.svr-login .tick {
+  stroke: #7FE8F3;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.svr-login .go.busy .spin {
+  display: block;
+}
+
+.svr-login .go.busy .ar {
+  display: none;
+}
+
+.svr-login .go.busy {
+  pointer-events: none;
+}
+
+.svr-login .go.done .ar {
+  display: none;
+}
+
+.svr-login .go.done .tick {
+  display: block;
+  animation: dr 0.4s forwards;
+}
+
+.svr-login .go .bar {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 2px;
+  background: #00D1D1;
+  transform: scaleX(0);
+  transform-origin: left;
+  border-radius: 2px;
+}
+
+.svr-login[dir='rtl'] .go .bar {
+  transform-origin: right;
+}
+
+.svr-login .go.busy .bar {
+  transform: scaleX(1);
+  transition: transform 1.3s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.svr-login .shake {
+  animation: sh 0.4s;
+}
+
+.svr-login .note {
+  display: flex;
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--mu);
+  transition: color 0.2s;
+}
+
+.svr-login .note.highlight {
+  color: var(--tx);
+}
+
+.svr-login .note svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.svr-login .foot {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.svr-login .foot a {
+  color: var(--mu);
+  text-decoration: none;
+  margin-inline-end: 18px;
+}
+
+.svr-login .foot a:hover {
+  color: var(--tx);
+}
+
+@media (max-width: 960px) {
+  .svr-login {
+    grid-template-columns: 1fr;
+  }
+  .svr-login .hero {
+    min-height: 0;
+    padding: 24px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    height: 200px;
+  }
+  .svr-login .side {
+    min-height: 0;
+    padding: 12px 24px 24px;
+  }
+  .svr-login .center {
+    padding: 28px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svr-login * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
