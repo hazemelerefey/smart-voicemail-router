@@ -35,6 +35,11 @@
   --brand-red: #C81D20;
   --urgent: #C81D20;
   --bar-warn: #d97706;
+  --chart-canvas: #fafafa;
+  --chart-grid: rgba(15, 23, 42, 0.08);
+  --chart-bar-fill: #334155;
+  --chart-bar-stripe: #fafafa;
+  --chart-axis: #334155;
 }
 
 .dark {
@@ -70,6 +75,11 @@
   --chart-4: oklch(0.72 0.19 305);
   --chart-5: oklch(0.66 0.21 24);
   --bar-warn: #f59e0b;
+  --chart-canvas: #121212;
+  --chart-grid: rgba(255, 255, 255, 0.08);
+  --chart-bar-fill: #6b6b6b;
+  --chart-bar-stripe: #121212;
+  --chart-axis: #e5e5e5;
 }
 
 @theme inline {

@@ -208,21 +208,33 @@ export function EvaluationPage() {
                     >
                       <defs>
                         <linearGradient id='evalFadeGrad' x1='0' y1='0' x2='0' y2='1'>
-                          <stop offset='0%' stopColor='#ffffff' stopOpacity={1} />
-                          <stop offset='70%' stopColor='#ffffff' stopOpacity={0.55} />
-                          <stop offset='100%' stopColor='#ffffff' stopOpacity={0.04} />
+                          <stop offset='0%' stopColor='#ffffff' stopOpacity={0.95} />
+                          <stop offset='65%' stopColor='#ffffff' stopOpacity={0.55} />
+                          <stop offset='100%' stopColor='#ffffff' stopOpacity={0.10} />
                         </linearGradient>
                         <mask id='evalFadeMask' maskUnits='objectBoundingBox' maskContentUnits='objectBoundingBox'>
                           <rect x='0' y='0' width='1' height='1' fill='url(#evalFadeGrad)' />
                         </mask>
-                        <pattern id='evalPat' width='8' height='8' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
-                          <rect width='8' height='8' fill='#38bdf8' />
-                          <line x1='0' y1='0' x2='0' y2='8' stroke='var(--card)' strokeWidth='2.2' strokeOpacity='0.6' />
+                        <pattern id='evalPat' width='9' height='9' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
+                          <rect width='9' height='9' fill='var(--chart-bar-fill)' />
+                          <line x1='0' y1='0' x2='0' y2='9' stroke='var(--chart-bar-stripe)' strokeWidth='3.4' />
                         </pattern>
                       </defs>
-                      <CartesianGrid strokeDasharray='3 3' stroke='var(--border)' opacity={0.45} />
-                      <XAxis dataKey='field' stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis domain={[0, 1]} stroke='var(--muted-foreground)' fontSize={12} tickLine={false} axisLine={false} />
+                      <CartesianGrid stroke='var(--chart-grid)' strokeWidth={1} />
+                      <XAxis
+                        dataKey='field'
+                        stroke='var(--chart-grid)'
+                        tick={{ fill: 'var(--chart-axis)', fontSize: 12, fontWeight: 500 }}
+                        tickLine={false}
+                        axisLine={{ stroke: 'var(--chart-grid)' }}
+                      />
+                      <YAxis
+                        domain={[0, 1]}
+                        stroke='var(--chart-grid)'
+                        tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
+                        tickLine={false}
+                        axisLine={{ stroke: 'var(--chart-grid)' }}
+                      />
                       <Tooltip
                         cursor={false}
                         contentStyle={{
@@ -237,18 +249,20 @@ export function EvaluationPage() {
                       />
                       <Bar
                         dataKey='f1'
-                        radius={[6, 6, 0, 0]}
+                        radius={[0, 0, 0, 0]}
+                        maxBarSize={52}
                         isAnimationActive
-                        animationDuration={650}
+                        animationDuration={850}
+                        animationEasing='ease-out'
                       >
                         <LabelList
                           dataKey='f1'
                           position='top'
-                          offset={6}
+                          offset={8}
                           formatter={(v: unknown) => (typeof v === 'number' ? v.toFixed(2) : '')}
-                          fill='var(--foreground)'
+                          fill='var(--chart-axis)'
                           fontSize={12}
-                          fontWeight={600}
+                          fontWeight={500}
                         />
                         {chartData.map((entry) => (
                           <Cell
