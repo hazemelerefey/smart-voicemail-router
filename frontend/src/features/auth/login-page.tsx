@@ -208,7 +208,7 @@ export function LoginPage() {
   const [switching, setSwitching] = useState(false)
   const [noteHighlight, setNoteHighlight] = useState(false)
 
-  const colRef = useRef({ stroke: '229,234,240', hi: '0,209,209', sa: 0.24 })
+  const colRef = useRef({ stroke: '11,18,23', hi: '0,150,154', sa: 0.26 })
   const drawStillRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
