@@ -6,6 +6,12 @@ import type { QueueWsEvent, SettingsResponse, UserResponse } from '@/lib/types'
 
 export type WsStatus = 'connecting' | 'connected' | 'reconnecting' | 'offline'
 
+export interface WsFeedItem {
+  id: string
+  receivedAt: string
+  event: QueueWsEvent
+}
+
 interface SvrContextValue {
   user: UserResponse | null
   authLoading: boolean
@@ -21,6 +27,10 @@ interface SvrContextValue {
   lastWsEvent: QueueWsEvent | null
   wsConnectedAt: string | null
   lastWsEventAt: string | null
+  wsFeed: WsFeedItem[]
+  wsUnreadCount: number
+  markWsFeedRead: () => void
+  clearWsFeed: () => void
   reconnectWs: () => void
   reviewBadgeCount: number | undefined
   refreshReviewBadge: () => Promise<void>
@@ -39,8 +49,19 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
   const [lastWsEvent, setLastWsEvent] = useState<QueueWsEvent | null>(null)
   const [wsConnectedAt, setWsConnectedAt] = useState<string | null>(null)
   const [lastWsEventAt, setLastWsEventAt] = useState<string | null>(null)
+  const [wsFeed, setWsFeed] = useState<WsFeedItem[]>([])
+  const [wsUnreadCount, setWsUnreadCount] = useState(0)
   const [wsReconnectSeq, setWsReconnectSeq] = useState(0)
   const [reviewBadgeCount, setReviewBadgeCount] = useState<number | undefined>(undefined)
+
+  const markWsFeedRead = useCallback(() => {
+    setWsUnreadCount(0)
+  }, [])
+
+  const clearWsFeed = useCallback(() => {
+    setWsFeed([])
+    setWsUnreadCount(0)
+  }, [])
 
   const reconnectWs = useCallback(() => {
     if (reconnectTimerRef.current !== null) {
@@ -134,6 +155,8 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
       setWsStatus('offline')
       setWsConnectedAt(null)
       setLastWsEventAt(null)
+      setWsFeed([])
+      setWsUnreadCount(0)
     }
   }, [])
 
@@ -170,12 +193,24 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
 
       socket.onmessage = (ev) => {
         if (cancelled) return
-        setLastWsEventAt(new Date().toISOString())
+        const nowIso = new Date().toISOString()
+        setLastWsEventAt(nowIso)
         try {
           const parsed = JSON.parse(String(ev.data)) as QueueWsEvent
           setLastWsEvent(parsed)
           setWsVersion((v) => v + 1)
-          if (parsed.type === 'settings.updated') {
+          if (parsed.type !== 'queue_snapshot') {
+            setWsFeed((prev) => [
+              {
+                id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                receivedAt: nowIso,
+                event: parsed,
+              },
+              ...prev.slice(0, 11),
+            ])
+            setWsUnreadCount((n) => n + 1)
+          }
+          if (parsed.type === 'settings_updated' || parsed.type === 'settings.updated') {
             void refreshSettings()
           }
           if (user.role === 'admin' || user.role === 'supervisor') {
@@ -233,6 +268,10 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
         lastWsEvent,
         wsConnectedAt,
         lastWsEventAt,
+        wsFeed,
+        wsUnreadCount,
+        markWsFeedRead,
+        clearWsFeed,
         reconnectWs,
         reviewBadgeCount,
         refreshReviewBadge,
