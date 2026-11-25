@@ -1,7 +1,9 @@
-# Dataset directories at any depth and common dataset exports
+# Datasets and tabular exports
 data/
 dataset/
 datasets/
+final/
+runs/
 *.csv
 *.tsv
 *.jsonl
@@ -18,7 +20,6 @@ datasets/
 *.tsv.gz
 *.jsonl.gz
 *.parquet.gz
-*.parquet.gzip
 *.zip
 *.tar
 *.tar.gz
@@ -40,7 +41,7 @@ uploads/
 *.mp4
 *.webm
 
-# Transcripts and transcript exports
+# Transcripts
 transcripts/
 *transcript*.txt
 *transcript*.csv
@@ -48,10 +49,11 @@ transcripts/
 *.transcript
 *.transcript.txt
 
-# Local credentials and secret material
+# Local credentials and secrets
 .env
 .env.*
 !.env.example
+!frontend/.env.example
 secrets/
 secrets.*
 *.secret
@@ -65,7 +67,7 @@ credentials.*
 id_rsa*
 id_ed25519*
 
-# Model artifacts and generated weights
+# Model weights and artifacts
 models/
 model_artifacts/
 checkpoints/
@@ -83,11 +85,20 @@ weights/
 *.pkl
 *.bin
 
-# Local Python environments and caches
+# Runtime storage and local databases
+storage/
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+
+# Python environments and caches
 .venv/
 .venv-*/
 venv/
+backend/.venv/
 env/
+*.egg-info/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -98,8 +109,15 @@ __pycache__/
 .tox/
 .conda/
 
-# Experiment and tool caches
+# Frontend dependencies and build artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/out/
+
+# Experiment and OS caches
 mlruns/
 wandb/
 *.log
 .DS_Store
+Thumbs.db
