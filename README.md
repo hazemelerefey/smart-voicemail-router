@@ -1,9 +1,9 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/svr-banner-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="assets/svr-banner-light.png">
-  <img alt="SVR System - Smart Voicemail Router" src="assets/svr-banner-dark.png" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/svr-banner-dark.png">
+  <img alt="SVR System - Smart Voicemail Router" src="assets/svr-banner-light.png" width="100%">
 </picture>
 
 <br/>
@@ -34,9 +34,9 @@
 </p>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/screenshots/overview-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="assets/screenshots/overview-light.png">
-  <img alt="Smart Voicemail Router Operations Overview Console" src="assets/screenshots/overview-dark.png" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/screenshots/overview-dark.png">
+  <img alt="Smart Voicemail Router Operations Overview Console" src="assets/screenshots/overview-light.png" width="100%">
 </picture>
 
 </div>
@@ -93,7 +93,7 @@ Telecom contact centers accumulate thousands of subscriber voicemails across pea
     </td>
     <td width="50%" valign="top">
       <h3>🌐 Native Bilingual Console (EN / AR RTL)</h3>
-      <p>Built on <strong>React 19, Vite, Tailwind CSS v4, and shadcn/ui</strong> with instant English/Arabic RTL switching, <code>Ctrl+K</code> command menu, Pure Black Dark and Crisp Light themes, and live WebSocket synchronization.</p>
+      <p>Built on <strong>React 19, Vite, Tailwind CSS v4, and shadcn/ui</strong> with instant English/Arabic RTL switching, <code>Ctrl+K</code> command menu, Crisp Light (Primary) and Pure Black Dark themes, and live WebSocket synchronization.</p>
     </td>
   </tr>
   <tr>
@@ -155,12 +155,12 @@ flowchart LR
 <table>
   <tr>
     <td width="50%" valign="top">
-      <img src="assets/screenshots/overview-dark.png" alt="Operations Overview - Black Dark Mode" width="100%"/>
-      <p align="center"><strong>Operations Overview (Black Dark Mode)</strong><br/><sub>Real-time KPI telemetry, patterned fade-out category volume chart, and top-priority callback queue.</sub></p>
+      <img src="assets/screenshots/overview-light.png" alt="Operations Overview - Crisp Light Mode (Primary)" width="100%"/>
+      <p align="center"><strong>Operations Overview (Crisp Light Mode - Primary)</strong><br/><sub>High-contrast daylight workspace with instant theme, language (EN/AR RTL), and Ctrl+K command switching.</sub></p>
     </td>
     <td width="50%" valign="top">
-      <img src="assets/screenshots/overview-light.png" alt="Operations Overview - Light Mode" width="100%"/>
-      <p align="center"><strong>Operations Overview (Crisp Light Mode)</strong><br/><sub>High-contrast daylight workspace with instant theme, language (EN/AR RTL), and Ctrl+K command switching.</sub></p>
+      <img src="assets/screenshots/overview-dark.png" alt="Operations Overview - Black Dark Mode (Secondary)" width="100%"/>
+      <p align="center"><strong>Operations Overview (Black Dark Mode - Secondary)</strong><br/><sub>Real-time KPI telemetry, patterned fade-out category volume chart, and top-priority callback queue.</sub></p>
     </td>
   </tr>
   <tr>
