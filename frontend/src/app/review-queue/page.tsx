@@ -264,7 +264,7 @@ export default function ReviewQueuePage() {
                         </span>
                         <span className="num">{formatUtcTimestamp(ticket.created_at, locale)}</span>
                       </div>
-                      {ticket.route_reason && (
+                      {ticket.route_reason && ticket.summary && (
                         <div className="faint" style={{ fontSize: 12, marginTop: 4 }}>
                           {locale === "ar" ? "سياق خط المعالجة:" : "Pipeline context:"}{" "}
                           {ticket.route_reason}

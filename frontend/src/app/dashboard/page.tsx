@@ -7,13 +7,14 @@ import {
   IconAlertTriangle,
   IconArrowLeft,
   IconArrowRight,
+  IconBellRinging,
   IconMicrophone,
   IconRefresh,
   IconSearch,
 } from "@tabler/icons-react";
 import { AppShell } from "@/components/AppShell";
 import { useApp } from "@/components/AppProvider";
-import { BucketText, TicketStatusText, bucketColorClass } from "@/components/StatusLabel";
+import { BucketText, TicketStatusText } from "@/components/StatusLabel";
 import { VoicemailIntakeDrawer } from "@/components/VoicemailIntakeDrawer";
 import { api, ApiError } from "@/lib/api";
 import {
@@ -33,9 +34,17 @@ import {
 } from "@/lib/taxonomy";
 import type { AgentResponse, TicketListResponse } from "@/lib/types";
 
+const SEGMENT_CLASS: Record<string, string> = {
+  urgent: "seg-urgent",
+  high: "seg-high",
+  normal: "seg-normal",
+  low: "seg-low",
+};
+
 export default function DashboardPage() {
   const { locale, wsVersion } = useApp();
   const t = UI_COPY[locale];
+  const isAr = locale === "ar";
 
   const [bucket, setBucket] = useState<string>("");
   const [category, setCategory] = useState<string>("");
@@ -109,80 +118,111 @@ export default function DashboardPage() {
 
   const counts = data?.counts_by_bucket || {};
   const totalAll = Object.values(counts).reduce((a, b) => a + b, 0);
+  const urgentCount = counts.urgent ?? 0;
+  const inPipeline =
+    (data?.counts_by_status?.processing ?? 0) + (data?.counts_by_status?.received ?? 0);
+  const unassignedCount = data?.counts_by_status?.unassigned ?? 0;
 
   return (
-    <AppShell
-      allowedRoles={["supervisor", "admin"]}
-      reviewBadgeCount={data?.human_review_count}
-    >
+    <AppShell allowedRoles={["supervisor", "admin"]} reviewBadgeCount={data?.human_review_count}>
       <div className="page-head">
         <div>
-          <h1>{locale === "ar" ? "قائمة معاودة الاتصال" : "Subscriber Callback Queue"}</h1>
+          <h1>{isAr ? "قائمة معاودة الاتصال" : "Subscriber Callback Queue"}</h1>
           <p className="sub" style={{ margin: 0 }}>
-            {locale === "ar"
+            {isAr
               ? "الرسائل الصوتية مرتبة حسب الأولوية (العاجل أولا) مع تحديث مباشر لحالة المعالجة."
               : "Prioritized subscriber voicemails ordered urgent-first with real-time pipeline status."}
           </p>
         </div>
 
         <div className="page-head-actions">
-          <button
-            type="button"
-            className="btn"
-            onClick={() => void fetchQueue()}
-            disabled={loading}
-          >
+          <button type="button" className="btn" onClick={() => void fetchQueue()} disabled={loading}>
             <IconRefresh size={17} stroke={1.8} aria-hidden="true" />
-            <span>{locale === "ar" ? "تحديث" : "Refresh"}</span>
+            <span>{isAr ? "تحديث" : "Refresh"}</span>
           </button>
-          <button
-            type="button"
-            className="btn primary"
-            onClick={() => setIntakeOpen(true)}
-          >
+          <button type="button" className="btn primary" onClick={() => setIntakeOpen(true)}>
             <IconMicrophone size={17} stroke={1.8} aria-hidden="true" />
             <span>{t.intakeOpen}</span>
           </button>
         </div>
       </div>
 
-      {/* KPI Strip */}
-      <div className="kpi-strip">
-        <div className="kpi-box">
-          <div className="kpi-label">{locale === "ar" ? "إجمالي القائمة" : "Total Tickets"}</div>
-          <div className="kpi-value num">{data ? data.total : "-"}</div>
-          <div className="kpi-sub">
-            {locale === "ar" ? "مطابق للتصفية الحالية" : "Matching active filters"}
+      {/* Overview: one hero, one ledger */}
+      <section className="overview" aria-label={isAr ? "ملخص القائمة" : "Queue overview"}>
+        <div className="hero-tile">
+          <div className="hero-label">
+            <IconBellRinging size={16} stroke={1.9} aria-hidden="true" />
+            <span>{isAr ? "عاجل الآن" : "Urgent now"}</span>
+          </div>
+          <div className="hero-number num">{data ? urgentCount : "-"}</div>
+          <p className="hero-note">
+            {isAr
+              ? "درجة الأولوية 6: استعجال عالي، خطر فقد العميل، وحالة العميل غاضب أو منزعج."
+              : "Priority score 6: high urgency, churn at risk, and customer state mad or frustrated."}
+          </p>
+
+          <div
+            className="dist-bar"
+            role="img"
+            aria-label={
+              isAr ? "توزيع التذاكر حسب درجة الأولوية" : "Ticket distribution by priority bucket"
+            }
+          >
+            {QUEUE_BUCKETS.map((b) =>
+              (counts[b] ?? 0) > 0 ? (
+                <span
+                  key={b}
+                  className={`dist-seg ${SEGMENT_CLASS[b]}`}
+                  style={{ flexGrow: counts[b] }}
+                />
+              ) : null
+            )}
+          </div>
+          <dl className="dist-legend">
+            {QUEUE_BUCKETS.map((b) => (
+              <div key={b} className={`dist-item ${SEGMENT_CLASS[b]}`}>
+                <dd className="num">{counts[b] ?? 0}</dd>
+                <dt>{labelForBucket(b, locale)}</dt>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <div className="ledger">
+          <div className="ledger-row">
+            <div className="ledger-label">{isAr ? "إجمالي القائمة" : "Total tickets"}</div>
+            <div className="ledger-sub">
+              {isAr ? "مطابق للتصفية الحالية" : "Matching the active filters"}
+            </div>
+            <div className="ledger-value num">{data ? data.total : "-"}</div>
+          </div>
+          <div className="ledger-row">
+            <div className="ledger-label">
+              {isAr ? "المراجعة والتوجيه البشري" : "Human Routing Queue"}
+            </div>
+            <div className="ledger-sub">
+              <Link href="/review-queue">{isAr ? "فتح قائمة المراجعة" : "Open review queue"}</Link>
+            </div>
+            <div className="ledger-value num high-text">{data?.human_review_count ?? 0}</div>
+          </div>
+          <div className="ledger-row">
+            <div className="ledger-label">{isAr ? "قيد المعالجة" : "In pipeline"}</div>
+            <div className="ledger-sub">
+              {isAr ? "تفريغ وتصنيف جاري الآن" : "Transcription and classification running"}
+            </div>
+            <div className="ledger-value num">{inPipeline}</div>
+          </div>
+          <div className="ledger-row">
+            <div className="ledger-label">{isAr ? "بدون موظف" : "Unassigned"}</div>
+            <div className="ledger-sub">
+              {isAr
+                ? "مفيش موظف مؤهل، في انتظار التوجيه البشري"
+                : "No eligible agent, waiting for human routing"}
+            </div>
+            <div className="ledger-value num">{unassignedCount}</div>
           </div>
         </div>
-        <div className="kpi-box">
-          <div className="kpi-label">{locale === "ar" ? "أولوية عاجلة" : "Urgent Bucket"}</div>
-          <div className="kpi-value num urgent-text">{counts.urgent ?? 0}</div>
-          <div className="kpi-sub">
-            {locale === "ar" ? "درجة الأولوية 6" : "Priority score 6"}
-          </div>
-        </div>
-        <div className="kpi-box">
-          <div className="kpi-label">
-            {locale === "ar" ? "المراجعة والتوجيه البشري" : "Human Routing Queue"}
-          </div>
-          <div className="kpi-value num high-text">{data?.human_review_count ?? 0}</div>
-          <div className="kpi-sub">
-            <Link href="/review-queue">
-              {locale === "ar" ? "فتح قائمة المراجعة" : "Open review queue"}
-            </Link>
-          </div>
-        </div>
-        <div className="kpi-box">
-          <div className="kpi-label">{locale === "ar" ? "قيد المعالجة" : "In Pipeline"}</div>
-          <div className="kpi-value num info-text">
-            {(data?.counts_by_status?.processing ?? 0) + (data?.counts_by_status?.received ?? 0)}
-          </div>
-          <div className="kpi-sub">
-            {locale === "ar" ? "تفريغ وتصنيف فوري" : "Active STT / MARBERTv2"}
-          </div>
-        </div>
-      </div>
+      </section>
 
       {/* Bucket Tabs */}
       <div className="tabs" role="tablist" aria-label="Queue priority buckets">
@@ -197,7 +237,7 @@ export default function DashboardPage() {
           }}
         >
           <span>{t.allBuckets}</span>
-          <span className="faint num">({totalAll})</span>
+          <span className="num tab-count">{totalAll}</span>
         </button>
         {QUEUE_BUCKETS.map((b) => (
           <button
@@ -212,19 +252,15 @@ export default function DashboardPage() {
             }}
           >
             <span>{labelForBucket(b, locale)}</span>
-            <span className="faint num">({counts[b] ?? 0})</span>
+            <span className="num tab-count">{counts[b] ?? 0}</span>
           </button>
         ))}
       </div>
 
       {/* Filters Toolbar */}
-      <form
-        className="toolbar"
-        style={{ marginTop: 12 }}
-        onSubmit={handleSearchSubmit}
-      >
+      <form className="toolbar" onSubmit={handleSearchSubmit}>
         <label className="field" style={{ flex: "1 1 240px" }}>
-          <span>{locale === "ar" ? "بحث في النص الصوتي" : "Transcript Search"}</span>
+          <span>{isAr ? "بحث في النص الصوتي" : "Transcript search"}</span>
           <div style={{ display: "flex", gap: 6 }}>
             <input
               type="search"
@@ -233,7 +269,7 @@ export default function DashboardPage() {
               placeholder={t.searchPlaceholder}
               style={{ flex: 1, minWidth: 0 }}
             />
-            <button type="submit" className="btn" aria-label={locale === "ar" ? "بحث" : "Search"}>
+            <button type="submit" className="btn" aria-label={isAr ? "بحث" : "Search"}>
               <IconSearch size={17} stroke={1.8} aria-hidden="true" />
             </button>
           </div>
@@ -296,7 +332,7 @@ export default function DashboardPage() {
 
         {(bucket || category || statusFilter || agentId || searchQuery) && (
           <button type="button" className="btn ghost" onClick={resetFilters}>
-            {locale === "ar" ? "مسح التصفية" : "Clear Filters"}
+            {isAr ? "مسح التصفية" : "Clear filters"}
           </button>
         )}
       </form>
@@ -320,68 +356,80 @@ export default function DashboardPage() {
         </div>
       ) : (
         <>
-          <ul className="ticket-list" aria-label="Prioritized callback tickets">
-            {data.items.map((ticket) => (
-              <li key={ticket.id}>
-                <Link href={`/tickets/${ticket.id}`} className="ticket-row">
-                  <div className={`ticket-prio ${bucketColorClass(ticket.queue_priority)}`}>
-                    {ticket.priority_score !== null ? ticket.priority_score : "-"}
-                    <span className="ticket-prio-sub">
-                      {ticket.queue_priority ? labelForBucket(ticket.queue_priority, locale) : "-"}
-                    </span>
-                  </div>
+          <div className="queue">
+            <div className="queue-head" aria-hidden="true">
+              <span>{isAr ? "الأولوية" : "Score"}</span>
+              <span>{isAr ? "التذكرة" : "Ticket"}</span>
+              <span className="q-agent-col">{isAr ? "الموظف" : "Agent"}</span>
+              <span className="q-conf">{isAr ? "الثقة" : "Confidence"}</span>
+              <span className="q-when">{isAr ? "الاستلام" : "Received"}</span>
+              <span>{isAr ? "الحالة" : "Status"}</span>
+            </div>
 
-                  <div className="ticket-title">
-                    <span>{labelForCategory(ticket.complaint_category, locale)}</span>
-                    <span className="mono muted">#{ticket.id.slice(0, 8)}</span>
-                    <span className="mono faint">{ticket.file_name}</span>
-                    {ticket.needs_human_review && (
-                      <span className="status-inline high-text">
-                        <IconAlertTriangle size={14} stroke={2} aria-hidden="true" />
-                        {ticket.review_reason
-                          ? labelForReviewReason(ticket.review_reason, locale)
-                          : locale === "ar"
-                            ? "مراجعة بشرية"
-                            : "Human Review"}
-                      </span>
-                    )}
-                  </div>
+            <ul className="ticket-list" aria-label="Prioritized callback tickets">
+              {data.items.map((ticket) => (
+                <li key={ticket.id}>
+                  <Link href={`/tickets/${ticket.id}`} className="ticket-row">
+                    <div className={`q-score ${ticket.queue_priority ?? "none"}`}>
+                      {ticket.priority_score !== null ? ticket.priority_score : "-"}
+                    </div>
 
-                  <div className="ticket-excerpt" dir="auto">
-                    {ticket.summary || ticket.customer_request || ticket.route_reason || "-"}
-                  </div>
+                    <div className="q-main">
+                      <div className="q-title">
+                        <span>{labelForCategory(ticket.complaint_category, locale)}</span>
+                        <span className="mono muted">#{ticket.id.slice(0, 8)}</span>
+                        {ticket.needs_human_review && (
+                          <span className="status-inline high-text">
+                            <IconAlertTriangle size={14} stroke={2} aria-hidden="true" />
+                            {ticket.review_reason
+                              ? labelForReviewReason(ticket.review_reason, locale)
+                              : isAr
+                                ? "مراجعة بشرية"
+                                : "Human Review"}
+                          </span>
+                        )}
+                      </div>
+                      <div className="q-excerpt" dir="auto">
+                        {ticket.summary || ticket.customer_request || ticket.route_reason || "-"}
+                      </div>
+                    </div>
 
-                  <div className="ticket-meta">
-                    <span>
-                      {locale === "ar" ? "الموظف:" : "Agent:"}{" "}
-                      <strong>
-                        {ticket.assigned_agent_name || t.unassignedOption}
-                      </strong>
-                    </span>
-                    <span>
-                      {locale === "ar" ? "الثقة:" : "Conf:"}{" "}
-                      <strong className="num">{formatPct(ticket.confidence)}</strong>
-                      <span className="faint num">
+                    <div className="q-agent">
+                      {ticket.assigned_agent_name ? (
+                        ticket.assigned_agent_name
+                      ) : (
+                        <span className="faint" aria-label={t.unassignedOption}>
+                          -
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="q-conf num">
+                      <strong>{formatPct(ticket.confidence)}</strong>
+                      <span className="faint">
                         {" "}
                         / {formatPct(ticket.confidence_threshold_snapshot, 0)}
                       </span>
-                    </span>
-                    <span className="num">{formatDuration(ticket.duration_seconds)}</span>
-                    <span className="num">{formatUtcTimestamp(ticket.created_at, locale)}</span>
-                  </div>
+                    </div>
 
-                  <div className="ticket-right">
-                    <TicketStatusText status={ticket.status} locale={locale} />
-                    <BucketText bucket={ticket.queue_priority} locale={locale} />
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                    <div className="q-when num">
+                      <span>{formatUtcTimestamp(ticket.created_at, locale)}</span>
+                      <span className="faint">{formatDuration(ticket.duration_seconds)}</span>
+                    </div>
+
+                    <div className="q-status">
+                      <TicketStatusText status={ticket.status} locale={locale} />
+                      <BucketText bucket={ticket.queue_priority} locale={locale} />
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <div className="pager">
             <span>
-              {locale === "ar"
+              {isAr
                 ? `عرض ${data.items.length} من أصل ${data.total} تذكرة`
                 : `Showing ${data.items.length} of ${data.total} tickets`}
             </span>

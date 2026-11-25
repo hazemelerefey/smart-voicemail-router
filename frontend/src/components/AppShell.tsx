@@ -120,7 +120,11 @@ export function AppShell({ children, allowedRoles, reviewBadgeCount }: AppShellP
       <nav aria-label={t.navSectionOps}>
         {opsNav.map((item) => {
           const Icon = item.icon;
-          const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const active =
+            pathname === item.href ||
+            pathname.startsWith(`${item.href}/`) ||
+            ((item.href === "/dashboard" || item.href === "/my-tickets") &&
+              pathname.startsWith("/tickets"));
           return (
             <Link
               key={item.href}
@@ -216,7 +220,7 @@ export function AppShell({ children, allowedRoles, reviewBadgeCount }: AppShellP
           <IconMenu2 size={20} stroke={1.8} aria-hidden="true" />
         </button>
 
-        <Link href={homeHref} className="brand-link">
+        <Link href={homeHref} className="brand-link topbar-brand-mobile">
           <SvrBrandMark size={28} />
           <span className="brand-title">{t.appName}</span>
           <span className="brand-title-compact" aria-hidden="true">SVR</span>
@@ -281,6 +285,13 @@ export function AppShell({ children, allowedRoles, reviewBadgeCount }: AppShellP
       )}
 
       <aside className="rail" aria-label="Sidebar navigation">
+        <Link href={homeHref} className="rail-brand">
+          <SvrBrandMark size={36} />
+          <span className="rail-brand-text">
+            <span className="rail-brand-name">SVR</span>
+            <span className="rail-brand-sub">Smart Voicemail Router</span>
+          </span>
+        </Link>
         {renderNavLinks()}
       </aside>
 
