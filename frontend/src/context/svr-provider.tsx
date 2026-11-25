@@ -19,6 +19,9 @@ interface SvrContextValue {
   wsStatus: WsStatus
   wsVersion: number
   lastWsEvent: QueueWsEvent | null
+  wsConnectedAt: string | null
+  lastWsEventAt: string | null
+  reconnectWs: () => void
   reviewBadgeCount: number | undefined
   refreshReviewBadge: () => Promise<void>
 }
@@ -34,7 +37,22 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
   const [wsStatus, setWsStatus] = useState<WsStatus>('offline')
   const [wsVersion, setWsVersion] = useState(0)
   const [lastWsEvent, setLastWsEvent] = useState<QueueWsEvent | null>(null)
+  const [wsConnectedAt, setWsConnectedAt] = useState<string | null>(null)
+  const [lastWsEventAt, setLastWsEventAt] = useState<string | null>(null)
+  const [wsReconnectSeq, setWsReconnectSeq] = useState(0)
   const [reviewBadgeCount, setReviewBadgeCount] = useState<number | undefined>(undefined)
+
+  const reconnectWs = useCallback(() => {
+    if (reconnectTimerRef.current !== null) {
+      window.clearTimeout(reconnectTimerRef.current)
+      reconnectTimerRef.current = null
+    }
+    if (wsRef.current) {
+      wsRef.current.close()
+      wsRef.current = null
+    }
+    setWsReconnectSeq((n) => n + 1)
+  }, [])
 
   const wsRef = useRef<WebSocket | null>(null)
   const reconnectTimerRef = useRef<number | null>(null)
@@ -114,6 +132,8 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
       setSettings(null)
       setReviewBadgeCount(undefined)
       setWsStatus('offline')
+      setWsConnectedAt(null)
+      setLastWsEventAt(null)
     }
   }, [])
 
@@ -144,11 +164,13 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
       socket.onopen = () => {
         if (cancelled) return
         attempt = 0
+        setWsConnectedAt(new Date().toISOString())
         setWsStatus('connected')
       }
 
       socket.onmessage = (ev) => {
         if (cancelled) return
+        setLastWsEventAt(new Date().toISOString())
         try {
           const parsed = JSON.parse(String(ev.data)) as QueueWsEvent
           setLastWsEvent(parsed)
@@ -168,6 +190,7 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
         if (cancelled) return
         wsRef.current = null
         attempt += 1
+        setWsConnectedAt(null)
         setWsStatus('reconnecting')
         const delayMs = Math.min(15000, 1500 * attempt)
         reconnectTimerRef.current = window.setTimeout(connect, delayMs)
@@ -191,7 +214,7 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
         wsRef.current = null
       }
     }
-  }, [user, refreshSettings, refreshReviewBadge])
+  }, [user, wsReconnectSeq, refreshSettings, refreshReviewBadge])
 
   return (
     <SvrContext.Provider
@@ -208,6 +231,9 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
         wsStatus,
         wsVersion,
         lastWsEvent,
+        wsConnectedAt,
+        lastWsEventAt,
+        reconnectWs,
         reviewBadgeCount,
         refreshReviewBadge,
       }}
