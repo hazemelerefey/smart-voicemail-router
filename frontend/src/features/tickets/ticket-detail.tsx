@@ -47,7 +47,7 @@ import {
 } from '@/components/ui/table'
 import { Textarea } from '@/components/ui/textarea'
 import { Main } from '@/components/layout/main'
-import { BucketText, TicketStatusText, scoreSquareClass } from '@/components/svr/status-badges'
+import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { api, apiUrl, ApiError } from '@/lib/api'
 import {
   UI_COPY,
@@ -287,11 +287,7 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
     <Main>
       <div className='mb-4 flex flex-wrap items-start justify-between gap-3'>
         <div className='flex items-start gap-3'>
-          <div
-            className={`flex size-12 shrink-0 items-center justify-center rounded-lg text-xl font-bold tabular-nums ${scoreSquareClass(ticket.queue_priority)}`}
-          >
-            {ticket.priority_score !== null ? ticket.priority_score : '-'}
-          </div>
+          <PriorityScoreAvatar score={ticket.priority_score} bucket={ticket.queue_priority} size='lg' />
           <div>
             <div className='flex flex-wrap items-center gap-2'>
               <h1 className='text-2xl font-bold tracking-tight'>
