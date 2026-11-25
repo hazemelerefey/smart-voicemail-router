@@ -312,7 +312,18 @@ export function OverviewPage() {
                         axisLine={false}
                         allowDecimals={false}
                       />
-                      <Tooltip />
+                      <Tooltip
+                        cursor={{ fill: 'var(--accent)', opacity: 0.4 }}
+                        contentStyle={{
+                          backgroundColor: 'var(--popover)',
+                          borderColor: 'var(--border)',
+                          borderRadius: 'var(--radius)',
+                          color: 'var(--popover-foreground)',
+                          fontSize: '12px',
+                        }}
+                        itemStyle={{ color: 'var(--popover-foreground)' }}
+                        labelStyle={{ color: 'var(--muted-foreground)' }}
+                      />
                       <Bar dataKey='count' fill='currentColor' radius={[4, 4, 0, 0]} className='fill-primary' />
                     </BarChart>
                   </ResponsiveContainer>
@@ -393,12 +404,23 @@ export function OverviewPage() {
                   <BarChart data={histData}>
                     <XAxis dataKey='bin' stroke='#888888' fontSize={12} tickLine={false} axisLine={false} />
                     <YAxis stroke='#888888' fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
-                    <Tooltip />
+                    <Tooltip
+                      cursor={{ fill: 'var(--accent)', opacity: 0.4 }}
+                      contentStyle={{
+                        backgroundColor: 'var(--popover)',
+                        borderColor: 'var(--border)',
+                        borderRadius: 'var(--radius)',
+                        color: 'var(--popover-foreground)',
+                        fontSize: '12px',
+                      }}
+                      itemStyle={{ color: 'var(--popover-foreground)' }}
+                      labelStyle={{ color: 'var(--muted-foreground)' }}
+                    />
                     <Bar dataKey='count' radius={[4, 4, 0, 0]}>
                       {histData.map((entry, idx) => (
                         <Cell
                           key={idx}
-                          fill={entry.below ? '#d97706' : 'var(--primary)'}
+                          fill={entry.below ? 'var(--bar-warn)' : 'var(--primary)'}
                         />
                       ))}
                     </Bar>

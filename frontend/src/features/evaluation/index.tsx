@@ -204,7 +204,18 @@ export function EvaluationPage() {
                     <BarChart data={chartData}>
                       <XAxis dataKey='field' stroke='#888888' fontSize={12} tickLine={false} axisLine={false} />
                       <YAxis domain={[0, 1]} stroke='#888888' fontSize={12} tickLine={false} axisLine={false} />
-                      <Tooltip />
+                      <Tooltip
+                        cursor={{ fill: 'var(--accent)', opacity: 0.4 }}
+                        contentStyle={{
+                          backgroundColor: 'var(--popover)',
+                          borderColor: 'var(--border)',
+                          borderRadius: 'var(--radius)',
+                          color: 'var(--popover-foreground)',
+                          fontSize: '12px',
+                        }}
+                        itemStyle={{ color: 'var(--popover-foreground)' }}
+                        labelStyle={{ color: 'var(--muted-foreground)' }}
+                      />
                       <Bar dataKey='f1' fill='var(--primary)' radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>

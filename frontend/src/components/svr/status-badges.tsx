@@ -30,14 +30,14 @@ export function TicketStatusText({ status, locale }: { status: string; locale: L
     case 'processing':
     case 'received':
       return (
-        <span className='inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400'>
+        <span className='inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-sky-400'>
           <Clock className='size-3.5 shrink-0' />
           {label}
         </span>
       )
     case 'in_progress':
       return (
-        <span className='inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400'>
+        <span className='inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-sky-400'>
           <Play className='size-3.5 shrink-0' />
           {label}
         </span>
@@ -94,7 +94,7 @@ export function BucketText({
   }
   if (bucket === 'normal') {
     return (
-      <span className='text-xs font-medium text-blue-600 dark:text-blue-400'>
+      <span className='text-xs font-medium text-blue-600 dark:text-sky-400'>
         {label}
       </span>
     )
@@ -104,7 +104,7 @@ export function BucketText({
 
 export function scoreSquareClass(bucket: string | null | undefined): string {
   if (bucket === 'urgent') return 'bg-destructive text-white'
-  if (bucket === 'high') return 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30'
+  if (bucket === 'high') return 'bg-amber-500/15 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 border border-amber-500/30 dark:border-amber-500/35'
   if (bucket === 'normal') return 'bg-secondary text-foreground border border-border'
   return 'bg-muted text-muted-foreground border border-border'
 }

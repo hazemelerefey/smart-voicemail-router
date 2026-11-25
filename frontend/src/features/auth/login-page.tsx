@@ -85,7 +85,7 @@ export function LoginPage() {
 
   return (
     <div className='relative container grid min-h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
-      <div className='relative hidden h-full flex-col justify-between bg-zinc-900 p-10 text-white lg:flex dark:border-e'>
+      <div className='relative hidden h-full flex-col justify-between bg-zinc-900 p-10 text-white lg:flex dark:bg-[#080808] dark:border-e dark:border-border'>
         <div className='flex items-center gap-3'>
           <SvrBrandMark className='size-9' />
           <div className='flex flex-col leading-tight'>
