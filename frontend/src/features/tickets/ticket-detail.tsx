@@ -48,6 +48,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { Main } from '@/components/layout/main'
 import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
+import { VoicemailAudioPlayer } from '@/components/svr/voicemail-audio-player'
 import { api, apiUrl, ApiError } from '@/lib/api'
 import {
   UI_COPY,
@@ -362,7 +363,11 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
               {formatDuration(ticket.duration_seconds)} · {(ticket.size_bytes / 1024).toFixed(1)} KB)
             </span>
           </div>
-          <audio controls preload='none' src={apiUrl(ticket.audio_url)} className='min-w-[260px] flex-1' />
+          <VoicemailAudioPlayer
+            src={apiUrl(ticket.audio_url)}
+            initialDurationSeconds={ticket.duration_seconds}
+            className='min-w-[280px] flex-1'
+          />
         </CardContent>
       </Card>
 
