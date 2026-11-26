@@ -1,0 +1,56 @@
+# Smart Voicemail Router (SVR) - RTX 3050 (6 GB VRAM) + 16 GB RAM GPU Overlay
+# Option B (Max Egyptian Accuracy with Sequential GPU Swap):
+#   1. Whisper Egyptian Arabic (int8_float16, ~2.3 GB VRAM) -> unloads after STT
+#   2. Ollama aya-expanse:8b (Q4_K_M, ~5.0 GB VRAM) -> unloads after VoiceGate
+#   3. 4x MARBERTv2 ONNX INT8 on CPU (0 GB VRAM, ~105 ms warm)
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.gpu-6gb.yml up -d --build
+
+services:
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  backend:
+    build:
+      args:
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu124}
+    environment:
+      WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-/data/models/whisper-large-v3-egyptian-ct2}
+      WHISPER_DEVICE: cuda
+      WHISPER_COMPUTE_TYPE: int8_float16
+      QWEN_MODEL_ID: ${QWEN_MODEL_ID:-aya-expanse:8b}
+      SVR_LOW_MEMORY_MODE: "1"
+      SVR_MARBERT_BACKEND: onnx
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  worker:
+    build:
+      args:
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu124}
+    environment:
+      WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-/data/models/whisper-large-v3-egyptian-ct2}
+      WHISPER_DEVICE: cuda
+      WHISPER_COMPUTE_TYPE: int8_float16
+      QWEN_MODEL_ID: ${QWEN_MODEL_ID:-aya-expanse:8b}
+      SVR_LOW_MEMORY_MODE: "1"
+      SVR_MARBERT_BACKEND: onnx
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

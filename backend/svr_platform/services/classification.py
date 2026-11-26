@@ -313,10 +313,10 @@ class MARBERTv2ClassifierService:
         return None
 
     def _use_onnx_backend(self, ckpt_dirs: dict[str, Path]) -> bool:
-        if self._device != "cpu":
-            return False
         backend = os.environ.get("SVR_MARBERT_BACKEND", "auto").strip().lower()
         if backend == "torch":
+            return False
+        if self._device != "cpu" and backend != "onnx":
             return False
         if not all(self._onnx_path_for(ckpt_dirs[f]) is not None for f in CLASSIFICATION_FIELDS):
             return False

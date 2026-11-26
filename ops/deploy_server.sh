@@ -2,9 +2,22 @@
 set -euo pipefail
 
 # Smart Voicemail Router (SVR) - One-Command Production Server Bootstrap
-# Target: Ubuntu/Debian/Oracle Linux host (e.g., Oracle Cloud Always Free Ampere ARM 4 OCPU / 24 GB RAM)
+# Target: Linux CPU host (Oracle Cloud ARM 24 GB) or 6 GB GPU host (RTX 3050 6 GB + 16 GB RAM with --gpu-6gb)
+
+GPU_6GB=0
+for arg in "$@"; do
+  case "$arg" in
+    --gpu-6gb) GPU_6GB=1 ;;
+    *) echo "Unknown option: $arg (supported: --gpu-6gb)"; exit 1 ;;
+  esac
+done
 
 COMPOSE_FILES="-f docker-compose.yml -f docker-compose.prod.yml"
+LLM_MODEL="${QWEN_MODEL_ID:-qwen2.5:3b}"
+if [ "$GPU_6GB" -eq 1 ]; then
+  COMPOSE_FILES="${COMPOSE_FILES} -f docker-compose.gpu-6gb.yml"
+  LLM_MODEL="${QWEN_MODEL_ID:-aya-expanse:8b}"
+fi
 
 if ! command -v docker >/dev/null 2>&1; then
   echo "ERROR: docker is not installed. Install Docker Engine first:"
@@ -40,11 +53,17 @@ if [ ! -d "models/marbertv2-single-task/seed_99" ]; then
   exit 1
 fi
 
-echo "Building and starting SVR production stack..."
+if [ "$GPU_6GB" -eq 1 ] && [ ! -d "models/whisper-large-v3-egyptian-ct2" ]; then
+  echo "NOTE: models/whisper-large-v3-egyptian-ct2 not found; falling back to WHISPER_MODEL_ID=large-v3."
+  echo "To enable the fine-tuned Egyptian Whisper model, run: python3 ops/build_egyptian_whisper_ct2.py"
+  export WHISPER_MODEL_ID="large-v3"
+fi
+
+echo "Building and starting SVR production stack (${COMPOSE_FILES})..."
 docker compose ${COMPOSE_FILES} up -d --build --remove-orphans
 
-echo "Pulling qwen2.5:3b into local Ollama container..."
-docker compose ${COMPOSE_FILES} exec -T ollama ollama pull "${QWEN_MODEL_ID:-qwen2.5:3b}"
+echo "Pulling ${LLM_MODEL} into local Ollama container..."
+docker compose ${COMPOSE_FILES} exec -T ollama ollama pull "${LLM_MODEL}"
 
 echo "Waiting for backend healthcheck..."
 for i in $(seq 1 24); do

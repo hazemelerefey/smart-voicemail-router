@@ -178,6 +178,21 @@ docker compose exec -T ollama ollama pull qwen2.5:3b
 
 On 24 GB RAM hosts (such as Oracle Cloud Always Free Ampere ARM 4 OCPU / 24 GB RAM), `docker-compose.prod.yml` sets `SVR_LOW_MEMORY_MODE=0` so `Whisper large-v3`, `qwen2.5:3b`, and all 4 `MARBERTv2` ONNX INT8 sessions remain warm in memory (`~105 ms` classification p50). GitHub Actions CD (`.github/workflows/deploy.yml`) builds multi-arch `linux/amd64,linux/arm64` images to GHCR and deploys over SSH when `DEPLOY_ENABLED=true`.
 
+#### RTX 3050 (6 GB VRAM) + 16 GB RAM GPU Profile (`docker-compose.gpu-6gb.yml`)
+
+For 6 GB NVIDIA GPUs (such as **RTX 3050 6 GB** with 16 GB system RAM), `docker-compose.gpu-6gb.yml` configures sequential GPU execution so VRAM never exceeds 6 GB while cutting end-to-end latency to ~3-5 s:
+- **Stage 1-2 (STT):** `AbdelrahmanHassan/whisper-large-v3-egyptian-arabic` converted to CTranslate2 `int8_float16` (`~2.3 GB` VRAM, built via `python ops/build_egyptian_whisper_ct2.py`, then unloaded).
+- **Stage 3 (VoiceGate):** `aya-expanse:8b` (`Q4_K_M`, `~5.0 GB` VRAM) via Ollama GPU, unloaded via `keep_alive=0` after verification.
+- **Stage 4 (Triage):** `SVR_MARBERT_BACKEND=onnx` keeps all 4 `MARBERTv2` ONNX INT8 heads on CPU (`0 GB` VRAM, `~105 ms` warm).
+
+```bash
+# Optional: build Egyptian Arabic Whisper CT2 model first (needs peft + ctranslate2 + transformers)
+python ops/build_egyptian_whisper_ct2.py
+
+# Start 6 GB GPU stack with Caddy HTTPS + aya-expanse:8b
+bash ops/deploy_server.sh --gpu-6gb
+```
+
 Scale horizontal AI pipeline workers (PRD NFR9):
 
 ```bash
