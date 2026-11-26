@@ -195,3 +195,22 @@ def test_onnx_backend_forced_on_cuda_when_env_is_onnx(tmp_path: Path, monkeypatc
 
     monkeypatch.setenv("SVR_MARBERT_BACKEND", "onnx")
     assert svc._use_onnx_backend(ckpt_dirs) is True
+
+
+def test_discover_and_fingerprint_onnx_only_checkpoints(tmp_path: Path):
+    from svr_platform.services.classification import (
+        compute_checkpoint_fingerprint,
+        discover_single_task_checkpoints,
+    )
+
+    for field_name in CLASSIFICATION_FIELDS:
+        d = tmp_path / "seed_99" / field_name / "epoch_03"
+        d.mkdir(parents=True)
+        (d / "config.json").write_text("{}", encoding="utf-8")
+        (d / "model_int8.onnx").write_bytes(f"onnx-{field_name}".encode("utf-8"))
+
+    found = discover_single_task_checkpoints(tmp_path, seed=99)
+    assert found is not None
+    assert set(found.keys()) == set(CLASSIFICATION_FIELDS)
+    fp = compute_checkpoint_fingerprint(found)
+    assert len(fp) == 12
