@@ -21,20 +21,23 @@ ffmpeg -version | head -n 1
 
 ---
 
-## Step 2: Prepare Model Artifacts (Not Tracked in Git)
+## Step 2: Download & Prepare Model Artifacts (Not Tracked in Git)
 
 1. **MARBERTv2 (`seed_99` only, required for all deployments):**
-   - Only `models/marbertv2-single-task/seed_99/<field>/` (`complaint_category`, `complaint_urgency`, `customer_state`, `churn_risk`) is needed in production.
-   - If `model_int8.onnx` files are not already present inside `seed_99/<field>/`, export them once for 2.18x faster CPU inference (`~105 ms` total):
+   - Verified Google Drive sources:
+     - **Production `seed_99` (direct folder):** `https://drive.google.com/drive/folders/1wZPNugbk9Mxkl-zG1pLnP_nac9QWY_tG`
+     - **All 5 seeds + `MANIFEST.json`:** `https://drive.google.com/drive/folders/1HarYxoqG-YWW-IR5n-PkEWBV-gV4I6Rv`
+     - **Handoff & `SHA256_MANIFEST.csv`:** `https://drive.google.com/drive/folders/1UbB6vuA4u1IEiWQFwb3ySynAE0kEwEWw`
+   - Run the automated downloader + ONNX INT8 exporter (`~105 ms` CPU triage, `0 GB` VRAM):
      ```bash
-     pip install onnx onnxscript onnxruntime
-     python ops/export_marbert_onnx.py --seed 99
+     pip install gdown onnx onnxscript onnxruntime
+     python ops/download_models.py
      ```
 2. **Egyptian Arabic Whisper (`int8_float16`, recommended for 6 GB NVIDIA GPUs like RTX 3050):**
-   - Merges `AbdelrahmanHassan/whisper-large-v3-egyptian-arabic` LoRA onto `openai/whisper-large-v3` and converts to CTranslate2 at `models/whisper-large-v3-egyptian-ct2` (`~2.3 GB` VRAM):
+   - Merges `AbdelrahmanHassan/whisper-large-v3-egyptian-arabic` LoRA onto `openai/whisper-large-v3` and converts to CTranslate2 at `models/whisper-large-v3-egyptian-ct2` (`~2.3 GB` VRAM). You can run both in one step:
      ```bash
-     pip install torch transformers peft ctranslate2
-     python ops/build_egyptian_whisper_ct2.py
+     pip install gdown onnx onnxscript onnxruntime torch transformers peft ctranslate2
+     python ops/download_models.py --with-egyptian-whisper
      ```
 
 ---

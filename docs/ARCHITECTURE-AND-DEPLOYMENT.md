@@ -149,7 +149,7 @@ OpenAPI 3.1 documentation is automatically served at `/docs` and `/openapi.json`
 
 - **Docker Deployment:** Docker Engine 24+, Docker Compose v2, 16 GB+ RAM (or **Oracle Cloud Always Free Ampere ARM: 4 OCPUs / 24 GB RAM** for CPU-only production). GPU host with NVIDIA Container Toolkit is optional for `< 10s` Whisper STT p95 latency (PRD A2, L8).
 - **Local Standalone Deployment:** Python 3.11+, Node.js 22+, `ffmpeg` and `ffprobe` on `PATH` (or configured via `FFMPEG_BIN` / `FFPROBE_BIN`).
-- **Model Artifacts (Single Seed Only):** Place only the selected production seed (`seed_99`) checkpoints under `models/marbertv2-single-task/seed_99/<field>/` (`complaint_category`, `complaint_urgency`, `customer_state`, `churn_risk`). Run `python ops/export_marbert_onnx.py --seed 99` to generate `model_int8.onnx` (~377.7 MB per head, 2.18x faster on CPU). Whisper `large-v3` downloads automatically into `HF_HOME` on first run, and `ollama` pulls `qwen2.5:3b` into `svr_ollama`.
+- **Model Artifacts (Single Seed Only):** Download `seed_99` from [Google Drive](https://drive.google.com/drive/folders/1wZPNugbk9Mxkl-zG1pLnP_nac9QWY_tG) (or run `python ops/download_models.py`, which downloads `seed_99` into `models/marbertv2-single-task/seed_99/` and exports `model_int8.onnx` for 2.18x faster CPU inference). Whisper `large-v3` downloads automatically into `HF_HOME` on first run, and `ollama` pulls `qwen2.5:3b` into `svr_ollama`.
 
 ### 5.2 Secret Provisioning
 
