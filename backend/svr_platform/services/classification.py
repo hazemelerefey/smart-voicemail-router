@@ -69,7 +69,12 @@ def discover_single_task_checkpoints(models_dir: Path, seed: int = 42) -> dict[s
             if not cand.is_dir():
                 continue
             has_config = (cand / "config.json").is_file()
-            has_weights = (cand / "model.safetensors").is_file() or (cand / "pytorch_model.bin").is_file()
+            has_weights = (
+                (cand / "model.safetensors").is_file()
+                or (cand / "pytorch_model.bin").is_file()
+                or (cand / "model_int8.onnx").is_file()
+                or (cand / "model.onnx").is_file()
+            )
             if has_config and has_weights:
                 matched = cand
                 break
@@ -84,9 +89,14 @@ def compute_checkpoint_fingerprint(checkpoint_dirs: dict[str, Path]) -> str:
     hasher = hashlib.sha256()
     for field_name in CLASSIFICATION_FIELDS:
         cdir = checkpoint_dirs[field_name]
-        wfile = cdir / "model.safetensors"
-        if not wfile.is_file():
-            wfile = cdir / "pytorch_model.bin"
+        wfile = next(
+            (
+                cdir / fname
+                for fname in ("model.safetensors", "pytorch_model.bin", "model_int8.onnx", "model.onnx")
+                if (cdir / fname).is_file()
+            ),
+            cdir / "model.safetensors",
+        )
         hasher.update(field_name.encode("utf-8"))
         with wfile.open("rb") as f:
             for chunk in iter(lambda: f.read(1024 * 1024), b""):
