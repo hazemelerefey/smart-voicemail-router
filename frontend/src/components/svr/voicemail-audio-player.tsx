@@ -27,11 +27,13 @@ export function VoicemailAudioPlayer({
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(initialDurationSeconds)
   const [speedIdx, setSpeedIdx] = useState(0)
+  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
     setPlaying(false)
     setCurrentTime(0)
     setDuration(initialDurationSeconds)
+    setLoadError(false)
   }, [src, initialDurationSeconds])
 
   const effectiveDuration = duration > 0 ? duration : initialDurationSeconds
@@ -41,11 +43,13 @@ export function VoicemailAudioPlayer({
     const el = audioRef.current
     if (!el) return
     if (el.paused) {
+      setLoadError(false)
       try {
         await el.play()
         setPlaying(true)
       } catch {
         setPlaying(false)
+        setLoadError(true)
       }
     } else {
       el.pause()
@@ -77,25 +81,29 @@ export function VoicemailAudioPlayer({
   }
 
   return (
-    <div
-      className={`flex items-center gap-3 rounded-xl border border-border bg-muted/40 px-3 py-2 shadow-xs dark:bg-muted/25 ${className}`}
-    >
-      <audio
-        ref={audioRef}
-        src={src}
-        preload='metadata'
-        onLoadedMetadata={(e) => {
-          const d = e.currentTarget.duration
-          if (Number.isFinite(d) && d > 0) setDuration(d)
-        }}
-        onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onEnded={() => {
-          setPlaying(false)
-          setCurrentTime(0)
-        }}
-      />
+    <div className={`flex flex-col gap-1 ${className}`}>
+      <div className='flex items-center gap-3 rounded-xl border border-border bg-muted/40 px-3 py-2 shadow-xs dark:bg-muted/25'>
+        <audio
+          ref={audioRef}
+          src={src}
+          preload='metadata'
+          onLoadedMetadata={(e) => {
+            const d = e.currentTarget.duration
+            if (Number.isFinite(d) && d > 0) setDuration(d)
+            setLoadError(false)
+          }}
+          onError={() => {
+            setPlaying(false)
+            setLoadError(true)
+          }}
+          onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onEnded={() => {
+            setPlaying(false)
+            setCurrentTime(0)
+          }}
+        />
 
       <Button
         type='button'
@@ -155,6 +163,12 @@ export function VoicemailAudioPlayer({
       >
         {muted ? <VolumeX className='size-4 text-destructive' /> : <Volume2 className='size-4' />}
       </Button>
+      </div>
+      {loadError && (
+        <span className='px-1 text-xs text-destructive'>
+          Audio recording unavailable on server (stream failed to load).
+        </span>
+      )}
     </div>
   )
 }

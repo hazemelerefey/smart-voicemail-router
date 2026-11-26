@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
-import { AlertCircle, AlertTriangle, CheckCircle2, RefreshCw } from 'lucide-react'
+import { Activity, AlertCircle, AlertTriangle, CheckCircle2, Clock, RefreshCw, Target, Users } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useSvr } from '@/context/svr-provider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -17,6 +16,7 @@ import {
 import { Main } from '@/components/layout/main'
 import { SvrChartTooltip } from '@/components/svr/chart-tooltip'
 import { SvrCrosshairChart } from '@/components/svr/crosshair-chart'
+import { KpiCard } from '@/components/svr/kpi-card'
 import { MonitoringAlertsPopover } from '@/components/svr/monitoring-alerts-popover'
 import { api, ApiError } from '@/lib/api'
 import { UI_COPY } from '@/lib/i18n'
@@ -25,6 +25,21 @@ import type { EvalRunResponse, MonitoringSummaryResponse } from '@/lib/types'
 
 function f1Str(val: unknown): string {
   return typeof val === 'number' && Number.isFinite(val) ? val.toFixed(4) : '-'
+}
+
+const EVAL_TASK_LABELS: Record<'en' | 'ar', Record<string, string>> = {
+  en: {
+    complaint_category: 'Complaint Category',
+    complaint_urgency: 'Complaint Urgency',
+    customer_state: 'Customer State',
+    churn_risk: 'Churn Risk',
+  },
+  ar: {
+    complaint_category: 'فئة الشكوى',
+    complaint_urgency: 'استعجال الشكوى',
+    customer_state: 'حالة العميل',
+    churn_risk: 'خطر إلغاء الخط',
+  },
 }
 
 export function EvaluationPage() {
@@ -125,66 +140,97 @@ export function EvaluationPage() {
         <div className='space-y-4'>
           {latest && (
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              <Card>
-                <CardHeader className='pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    {L('Combined Macro-F1', 'متوسط Macro-F1')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold tabular-nums'>
-                    {f1Str(metrics.combined_macro_f1)}
-                  </div>
-                  <p className='text-xs text-muted-foreground'>
-                    {latest.split} · {String(metrics.n_rows ?? 1003)} rows
-                  </p>
-                </CardContent>
-              </Card>
+              <KpiCard
+                title={L('Combined Macro-F1', 'متوسط Macro-F1')}
+                icon={Target}
+                iconTone='blue'
+                value={f1Str(metrics.combined_macro_f1)}
+                pill={{ label: L('Benchmark', 'مرجعي'), tone: 'blue' }}
+              >
+                {latest.split} · {String(metrics.n_rows ?? 1003)} {L('rows', 'عينة')}
+              </KpiCard>
 
-              <Card>
-                <CardHeader className='pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    {L('Skill Routing Agreement', 'دقة التوجيه بالمهارات')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold tabular-nums'>
-                    {typeof metrics.routing_agreement_pct === 'number'
-                      ? `${metrics.routing_agreement_pct.toFixed(2)}%`
-                      : '-'}
-                  </div>
-                  <p className='text-xs text-muted-foreground'>Gate &gt;= 80.0%</p>
-                </CardContent>
-              </Card>
+              <KpiCard
+                title={L('Skill Routing · Gate', 'دقة التوجيه')}
+                icon={Activity}
+                iconTone={
+                  typeof metrics.routing_agreement_pct !== 'number'
+                    ? 'grey'
+                    : metrics.routing_agreement_pct >= 80
+                      ? 'green'
+                      : 'red'
+                }
+                value={
+                  typeof metrics.routing_agreement_pct === 'number' ? (
+                    <>
+                      {metrics.routing_agreement_pct.toFixed(2)}
+                      <span className='ms-0.5 text-lg font-medium text-muted-foreground'>%</span>
+                    </>
+                  ) : (
+                    '-'
+                  )
+                }
+                pill={
+                  typeof metrics.routing_agreement_pct !== 'number'
+                    ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
+                    : metrics.routing_agreement_pct >= 80
+                      ? { label: L('Passing (>= 80%)', 'مقبول (>= 80%)'), tone: 'green' }
+                      : { label: L('Below gate', 'أقل من الحد'), tone: 'red' }
+                }
+              >
+                {L('Gate target >= 80.0%', 'الحد المستهدف >= 80.0%')}
+              </KpiCard>
 
-              <Card>
-                <CardHeader className='pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    {L('24h Human Review Rate', 'معدل المراجعة (24س)')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold tabular-nums'>
-                    {summary ? formatPct(summary.human_review_rate_24h, 1) : '-'}
-                  </div>
-                  <p className='text-xs text-muted-foreground'>Alert threshold &gt; 20.0%</p>
-                </CardContent>
-              </Card>
+              <KpiCard
+                title={L('Human Review · 24h', 'المراجعة · 24 ساعة')}
+                icon={Users}
+                iconTone={!summary ? 'grey' : summary.human_review_rate_24h <= 0.2 ? 'green' : 'red'}
+                value={summary ? formatPct(summary.human_review_rate_24h, 1) : '-'}
+                pill={
+                  !summary
+                    ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
+                    : summary.human_review_rate_24h <= 0.2
+                      ? { label: L('Within 20% target', 'ضمن 20%'), tone: 'green' }
+                      : { label: L('Above 20% target', 'أعلى من 20%'), tone: 'red' }
+                }
+              >
+                {L('Alert threshold > 20.0%', 'حد التنبيه > 20.0%')}
+              </KpiCard>
 
-              <Card>
-                <CardHeader className='pb-2'>
-                  <CardTitle className='text-sm font-medium'>
-                    {L('End-to-End p50 / p95', 'الزمن الكلي p50 / p95')}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold tabular-nums'>
-                    {latencies.end_to_end?.p50 ? `${(latencies.end_to_end.p50 / 1000).toFixed(1)}s` : '-'} /{' '}
-                    {latencies.end_to_end?.p95 ? `${(latencies.end_to_end.p95 / 1000).toFixed(1)}s` : '-'}
-                  </div>
-                  <p className='text-xs text-muted-foreground'>Production GPU SLA target &lt;= 10s</p>
-                </CardContent>
-              </Card>
+              <KpiCard
+                title={L('E2E p50 / p95', 'الزمن الكلي p50 / p95')}
+                icon={Clock}
+                iconTone={
+                  !latencies.end_to_end?.p95
+                    ? 'grey'
+                    : latencies.end_to_end.p95 <= 10000
+                      ? 'green'
+                      : 'red'
+                }
+                value={
+                  latencies.end_to_end?.p50 || latencies.end_to_end?.p95 ? (
+                    <span className='text-2xl'>
+                      {latencies.end_to_end?.p50 ? `${(latencies.end_to_end.p50 / 1000).toFixed(1)}` : '-'}
+                      <span className='mx-1 text-base font-medium text-muted-foreground'>/</span>
+                      {latencies.end_to_end?.p95 ? `${(latencies.end_to_end.p95 / 1000).toFixed(1)}` : '-'}
+                      <span className='ms-0.5 text-base font-medium text-muted-foreground'>
+                        {L('s', 'ث')}
+                      </span>
+                    </span>
+                  ) : (
+                    '-'
+                  )
+                }
+                pill={
+                  !latencies.end_to_end?.p95
+                    ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
+                    : latencies.end_to_end.p95 <= 10000
+                      ? { label: L('Within 10s SLA', 'ضمن 10 ثواني'), tone: 'green' }
+                      : { label: L('Above 10s SLA', 'أعلى من 10 ثواني'), tone: 'red' }
+                }
+              >
+                {L('Production GPU SLA <= 10s', 'هدف الإنتاج <= 10 ثواني')}
+              </KpiCard>
             </div>
           )}
 
@@ -314,7 +360,9 @@ export function EvaluationPage() {
                         const passed = Boolean(g.passed)
                         return (
                           <TableRow key={f}>
-                            <TableCell className='font-mono text-xs'>{f}</TableCell>
+                            <TableCell className='font-medium'>
+                              {EVAL_TASK_LABELS[locale][f] ?? f}
+                            </TableCell>
                             <TableCell className='text-end font-mono tabular-nums'>{f1Str(perField[f])}</TableCell>
                             <TableCell className='text-end font-mono tabular-nums'>
                               {typeof g.threshold === 'number'
@@ -324,10 +372,14 @@ export function EvaluationPage() {
                                   : '-'}
                             </TableCell>
                             <TableCell>
-                              <Badge variant={passed ? 'default' : 'destructive'} className='gap-1'>
+                              <span
+                                className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-semibold leading-4 text-white shadow-xs ${
+                                  passed ? 'bg-[#00C853]' : 'bg-[#FF1744]'
+                                }`}
+                              >
                                 {passed ? <CheckCircle2 className='size-3' /> : <AlertTriangle className='size-3' />}
                                 {passed ? 'PASS' : 'FAIL'}
-                              </Badge>
+                              </span>
                             </TableCell>
                           </TableRow>
                         )

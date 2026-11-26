@@ -38,11 +38,24 @@ interface SvrContextValue {
 
 const SvrContext = createContext<SvrContextValue | null>(null)
 
+const LOCALE_STORAGE_KEY = 'svr_locale'
+
+function readSavedLocale(): Locale {
+  if (typeof window === 'undefined') return 'en'
+  try {
+    const raw = window.localStorage.getItem(LOCALE_STORAGE_KEY)
+    if (raw === 'ar' || raw === 'en') return raw
+  } catch {
+    // Ignore storage access failures
+  }
+  return 'en'
+}
+
 export function SvrProvider({ children }: { children: React.ReactNode }) {
   const { setDir } = useDirection()
   const [user, setUser] = useState<UserResponse | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
-  const [locale, setLocaleState] = useState<Locale>('en')
+  const [locale, setLocaleState] = useState<Locale>(readSavedLocale)
   const [settings, setSettings] = useState<SettingsResponse | null>(null)
   const [wsStatus, setWsStatus] = useState<WsStatus>('offline')
   const [wsVersion, setWsVersion] = useState(0)
@@ -81,12 +94,24 @@ export function SvrProvider({ children }: { children: React.ReactNode }) {
   const setLocale = useCallback(
     (loc: Locale) => {
       setLocaleState(loc)
+      try {
+        window.localStorage.setItem(LOCALE_STORAGE_KEY, loc)
+      } catch {
+        // Ignore storage access failures
+      }
       setDir(loc === 'ar' ? 'rtl' : 'ltr')
       document.documentElement.lang = loc
       document.documentElement.dir = loc === 'ar' ? 'rtl' : 'ltr'
     },
     [setDir]
   )
+
+  useEffect(() => {
+    const nextDir = locale === 'ar' ? 'rtl' : 'ltr'
+    setDir(nextDir)
+    document.documentElement.lang = locale
+    document.documentElement.dir = nextDir
+  }, [locale, setDir])
 
   const refreshSettings = useCallback(async () => {
     try {

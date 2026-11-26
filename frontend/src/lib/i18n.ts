@@ -314,3 +314,18 @@ export function labelForLanguageMix(val: string | null | undefined, locale: Loca
   if (!val) return "-";
   return LANGUAGE_MIX_LABELS[locale][val] || val;
 }
+
+/** Sanitize raw backend allocator/runtime traces from queue summary lines. */
+export function formatTicketSummary(
+  ticket: { summary?: string | null; customer_request?: string | null; route_reason?: string | null },
+  locale: Locale
+): string {
+  const raw = ticket.summary || ticket.customer_request || ticket.route_reason || "";
+  if (!raw) return "-";
+  if (/mkl_malloc|transcription failed|failed to allocate/i.test(raw)) {
+    return locale === "ar"
+      ? "تعذر تفريغ الملف الصوتي بسبب ضغط مؤقت على الذاكرة. افتح التذكرة للمراجعة أو إعادة المحاولة."
+      : "Transcription paused due to a temporary worker memory limit — inspect ticket to retry.";
+  }
+  return raw;
+}

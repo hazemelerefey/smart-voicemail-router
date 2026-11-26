@@ -1,5 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { FileText, LogOut, ShieldCheck } from 'lucide-react'
+import { FileText, LifeBuoy, LogOut, ShieldCheck, User } from 'lucide-react'
 import { useSvr } from '@/context/svr-provider'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -57,6 +57,18 @@ export function ProfileDropdown() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link to='/account'>
+              <User className='me-2 size-4' />
+              {locale === 'ar' ? 'الحساب والملف الشخصي' : 'Account & Profile'}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to='/support'>
+              <LifeBuoy className='me-2 size-4' />
+              {locale === 'ar' ? 'الدعم ودليل التشغيل' : 'Support'}
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to='/privacy'>
               <ShieldCheck className='me-2 size-4' />

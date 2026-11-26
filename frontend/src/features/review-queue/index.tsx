@@ -16,7 +16,7 @@ import {
 import { Main } from '@/components/layout/main'
 import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { api, ApiError } from '@/lib/api'
-import { UI_COPY, labelForCategory, labelForReviewReason } from '@/lib/i18n'
+import { UI_COPY, formatTicketSummary, labelForCategory, labelForReviewReason } from '@/lib/i18n'
 import { formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
 import type { AgentResponse, TicketSummary } from '@/lib/types'
 
@@ -200,7 +200,7 @@ export function ReviewQueuePage() {
               </CardHeader>
               <CardContent className='space-y-3'>
                 <p className='text-sm' dir='auto'>
-                  {ticket.summary || ticket.route_reason || '-'}
+                  {formatTicketSummary(ticket, locale)}
                 </p>
                 {ticket.route_reason && ticket.summary && (
                   <p className='text-xs text-muted-foreground'>

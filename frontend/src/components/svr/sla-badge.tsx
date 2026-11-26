@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Clock } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
 import type { Locale } from '@/lib/i18n'
 
 const SLA_MINUTES: Record<string, number> = {
@@ -9,6 +8,9 @@ const SLA_MINUTES: Record<string, number> = {
   normal: 240,
   low: 1440,
 }
+
+const SLA_PILL_BASE =
+  'inline-flex w-fit shrink-0 items-center gap-1 whitespace-nowrap rounded-md px-2 py-0.5 text-[11px] font-semibold leading-4 tabular-nums shadow-xs'
 
 function formatDurationMinutes(absMins: number, locale: Locale): string {
   if (absMins < 60) {
@@ -42,10 +44,10 @@ export function SlaCountdownBadge({
 
   if (status === 'resolved' || status === 'closed') {
     return (
-      <Badge variant='outline' className='gap-1 text-[11px] font-normal text-muted-foreground'>
-        <Clock className='size-3' />
+      <span className={`${SLA_PILL_BASE} border border-border bg-muted/60 font-sans font-medium text-muted-foreground`}>
+        <Clock className='size-3 shrink-0' />
         <span>{locale === 'ar' ? 'تم ضمن المهلة' : 'SLA Met'}</span>
-      </Badge>
+      </span>
     )
   }
 
@@ -59,42 +61,39 @@ export function SlaCountdownBadge({
   if (diffMins <= 0) {
     const overdue = Math.abs(diffMins)
     return (
-      <Badge variant='destructive' className='gap-1 font-mono text-[11px]'>
-        <Clock className='size-3' />
+      <span className={`${SLA_PILL_BASE} bg-[#FF1744] text-white`}>
+        <Clock className='size-3 shrink-0' />
         <span>
           {locale === 'ar'
             ? `تجاوز +${formatDurationMinutes(overdue, locale)}`
             : `Breached +${formatDurationMinutes(overdue, locale)}`}
         </span>
-      </Badge>
+      </span>
     )
   }
 
   const nearBreach = diffMins <= Math.max(5, Math.round(targetMins * 0.25))
   if (nearBreach) {
     return (
-      <Badge
-        variant='outline'
-        className='gap-1 border-amber-500/50 bg-amber-500/10 font-mono text-[11px] text-amber-700 dark:text-amber-400'
-      >
-        <Clock className='size-3' />
+      <span className={`${SLA_PILL_BASE} bg-[#EF6C00] text-white`}>
+        <Clock className='size-3 shrink-0' />
         <span>
           {locale === 'ar'
             ? `متبقي ${formatDurationMinutes(diffMins, locale)}`
             : `${formatDurationMinutes(diffMins, locale)} left`}
         </span>
-      </Badge>
+      </span>
     )
   }
 
   return (
-    <Badge variant='outline' className='gap-1 font-mono text-[11px] font-normal text-muted-foreground'>
-      <Clock className='size-3' />
+    <span className={`${SLA_PILL_BASE} border border-border bg-muted/50 font-medium text-muted-foreground`}>
+      <Clock className='size-3 shrink-0' />
       <span>
         {locale === 'ar'
           ? `متبقي ${formatDurationMinutes(diffMins, locale)}`
           : `${formatDurationMinutes(diffMins, locale)} left`}
       </span>
-    </Badge>
+    </span>
   )
 }

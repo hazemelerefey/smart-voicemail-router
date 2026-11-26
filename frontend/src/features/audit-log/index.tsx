@@ -26,6 +26,15 @@ import { UI_COPY } from '@/lib/i18n'
 import { formatUtcTimestamp } from '@/lib/taxonomy'
 import type { AuditEventResponse } from '@/lib/types'
 
+function formatAuditDetails(val: Record<string, unknown> | null | undefined): string {
+  if (!val) return '-'
+  const entries = Object.entries(val).filter(([, v]) => v !== null && v !== undefined && v !== '')
+  if (entries.length === 0) return '-'
+  return entries
+    .map(([k, v]) => `${k.replace(/_/g, ' ')}: ${typeof v === 'object' ? JSON.stringify(v) : String(v)}`)
+    .join(' · ')
+}
+
 export function AuditLogPage() {
   const { locale } = useSvr()
   const t = UI_COPY[locale]
@@ -95,8 +104,11 @@ export function AuditLogPage() {
       <Card className='mb-4'>
         <CardContent className='flex flex-wrap items-center gap-3 pt-4'>
           <Select value={actionFilter} onValueChange={setActionFilter}>
-            <SelectTrigger className='w-56'>
-              <SelectValue placeholder={L('Action', 'الحدث')} />
+            <SelectTrigger className='w-full sm:w-64' aria-label={L('Action', 'الحدث')}>
+              <span className='flex items-center gap-1 truncate'>
+                <span className='text-muted-foreground'>{L('Action', 'الحدث')}:</span>
+                <SelectValue placeholder={t.allOption} />
+              </span>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='all'>{t.allOption}</SelectItem>
@@ -133,7 +145,7 @@ export function AuditLogPage() {
       {loading ? (
         <p className='py-8 text-sm text-muted-foreground'>{t.loading}</p>
       ) : (
-        <div className='rounded-md border bg-card'>
+        <div className='overflow-x-auto rounded-md border bg-card'>
           <Table>
             <TableHeader>
               <TableRow>
@@ -155,8 +167,8 @@ export function AuditLogPage() {
                   <TableCell className='font-mono text-xs'>
                     {ev.entity_type} #{ev.entity_id.slice(0, 8)}
                   </TableCell>
-                  <TableCell className='max-w-xs truncate font-mono text-xs text-muted-foreground'>
-                    {ev.new_value ? JSON.stringify(ev.new_value) : '-'}
+                  <TableCell className='max-w-xs truncate text-xs text-muted-foreground'>
+                    {formatAuditDetails(ev.new_value)}
                   </TableCell>
                 </TableRow>
               ))}
