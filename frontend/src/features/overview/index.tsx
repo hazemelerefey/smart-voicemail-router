@@ -38,6 +38,7 @@ import { Main } from '@/components/layout/main'
 import { SvrChartTooltip } from '@/components/svr/chart-tooltip'
 import { SvrCrosshairChart } from '@/components/svr/crosshair-chart'
 import { MonitoringAlertsPopover } from '@/components/svr/monitoring-alerts-popover'
+import { KpiCard } from '@/components/svr/kpi-card'
 import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
 import { api, ApiError } from '@/lib/api'
@@ -213,91 +214,74 @@ export function OverviewPage() {
         <TabsContent value='overview' className='space-y-4'>
           {/* 4 Shadcn KPI Cards */}
           <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-            <Card>
-              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                <CardTitle className='text-sm font-medium'>{L('Urgent Now', 'عاجل الآن')}</CardTitle>
-                <BellRing className='size-4 text-destructive' />
-              </CardHeader>
-              <CardContent>
-                <div className='text-2xl font-bold tabular-nums text-destructive'>
-                  {queue ? urgent : '-'}
-                </div>
-                <p className='text-xs text-muted-foreground'>
-                  {L(
-                    `${unassigned} unassigned · ${QUEUE_BUCKETS.map((b) => `${labelForBucket(b, locale)} ${counts[b] ?? 0}`).join(' / ')}`,
-                    `${unassigned} بدون موظف`
-                  )}
-                </p>
-              </CardContent>
-            </Card>
+            <KpiCard
+              title={L('Urgent Now', 'عاجل الآن')}
+              icon={BellRing}
+              iconTone='red'
+              value={queue ? urgent : '-'}
+              valueClassName={urgent > 0 ? 'text-destructive' : ''}
+              pill={
+                !queue
+                  ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
+                  : urgent > 0
+                    ? { label: L('Needs action', 'يحتاج إجراء'), tone: 'red' }
+                    : { label: L('All clear', 'لا شيء عاجل'), tone: 'green' }
+              }
+            >
+              <div className='flex flex-col gap-1'>
+                <span>{L(`${unassigned} unassigned`, `${unassigned} بدون موظف`)}</span>
+                <span className='flex flex-wrap gap-x-2 gap-y-0.5'>
+                  {QUEUE_BUCKETS.map((b) => (
+                    <span key={b} className='inline-flex items-center gap-1'>
+                      <span className={`size-2 rounded-sm ${b === 'urgent' ? 'bg-[#FF1744]' : b === 'high' ? 'bg-[#EF6C00]' : b === 'normal' ? 'bg-[#2979FF]' : 'bg-[#616161]'}`} />
+                      {labelForBucket(b, locale)} {counts[b] ?? 0}
+                    </span>
+                  ))}
+                </span>
+              </div>
+            </KpiCard>
 
-            <Card>
-              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                <CardTitle className='text-sm font-medium'>
-                  {L('Voicemails (24h)', 'الرسائل (24 ساعة)')}
-                </CardTitle>
-                <Activity className='size-4 text-muted-foreground' />
-              </CardHeader>
-              <CardContent>
-                <div className='text-2xl font-bold tabular-nums'>
-                  {summary?.tickets_last_24h ?? 0}
-                </div>
-                <p className='text-xs text-muted-foreground'>
-                  {L(`${summary?.total_tickets ?? 0} total tickets`, `${summary?.total_tickets ?? 0} تذكرة إجمالا`)}
-                </p>
-              </CardContent>
-            </Card>
+            <KpiCard
+              title={L('Voicemails · 24h', 'الرسائل · 24 ساعة')}
+              icon={Activity}
+              iconTone='blue'
+              value={summary?.tickets_last_24h ?? 0}
+              pill={{ label: L('Live', 'مباشر'), tone: 'blue' }}
+            >
+              {L(`${summary?.total_tickets ?? 0} total tickets`, `${summary?.total_tickets ?? 0} تذكرة إجمالا`)}
+            </KpiCard>
 
-            <Card>
-              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                <CardTitle className='text-sm font-medium'>
-                  {L('Human Review Rate (24h)', 'نسبة المراجعة (24 ساعة)')}
-                </CardTitle>
-                <Users className='size-4 text-muted-foreground' />
-              </CardHeader>
-              <CardContent>
-                <div className='text-2xl font-bold tabular-nums'>
-                  {has24h ? formatPct(reviewRate24h, 1) : '-'}
-                </div>
-                <p className='text-xs text-muted-foreground'>
-                  {has24h ? (
-                    reviewOk ? (
-                      <span className='text-emerald-600 dark:text-emerald-400'>
-                        {L(`${humanReview} in review · Within 20% target`, `${humanReview} للمراجعة · ضمن 20%`)}
-                      </span>
-                    ) : (
-                      <span className='text-destructive'>
-                        {L(`${humanReview} in review · Above 20% target`, `${humanReview} للمراجعة · أعلى من 20%`)}
-                      </span>
-                    )
-                  ) : (
-                    L('No 24h tickets', 'لا توجد تذاكر خلال 24 ساعة')
-                  )}
-                </p>
-              </CardContent>
-            </Card>
+            <KpiCard
+              title={L('Human Review · 24h', 'المراجعة · 24 ساعة')}
+              icon={Users}
+              iconTone={!has24h ? 'grey' : reviewOk ? 'green' : 'red'}
+              value={has24h ? formatPct(reviewRate24h, 1) : '-'}
+              pill={
+                !has24h
+                  ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
+                  : reviewOk
+                    ? { label: L('Within 20% target', 'ضمن 20%'), tone: 'green' }
+                    : { label: L('Above 20% target', 'أعلى من 20%'), tone: 'red' }
+              }
+            >
+              {has24h ? L(`${humanReview} in review`, `${humanReview} للمراجعة`) : L('No 24h tickets', 'لا توجد تذاكر خلال 24 ساعة')}
+            </KpiCard>
 
-            <Card>
-              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                <CardTitle className='text-sm font-medium'>
-                  {L('End-to-End p95 (24h)', 'زمن المعالجة p95')}
-                </CardTitle>
-                <CheckCircle2 className='size-4 text-muted-foreground' />
-              </CardHeader>
-              <CardContent>
-                <div className='text-2xl font-bold tabular-nums'>
-                  {has24h ? seconds(p95_24h) : '-'}
-                </div>
-                <p className='text-xs text-muted-foreground'>
-                  {L('Success', 'النجاح')}: {formatPct(summary?.processing_success_rate ?? 0, 1)} ·{' '}
-                  {has24h && p95_24h
-                    ? latencyOk
-                      ? L('Within 10s', 'ضمن 10 ثواني')
-                      : L('Above 10s target', 'أعلى من 10 ثواني')
-                    : '-'}
-                </p>
-              </CardContent>
-            </Card>
+            <KpiCard
+              title={L('E2E p95 · 24h', 'زمن المعالجة p95')}
+              icon={CheckCircle2}
+              iconTone={has24h && p95_24h ? (latencyOk ? 'green' : 'red') : 'grey'}
+              value={has24h ? seconds(p95_24h) : '-'}
+              pill={
+                has24h && p95_24h
+                  ? latencyOk
+                    ? { label: L('Within 10s target', 'ضمن 10 ثواني'), tone: 'green' }
+                    : { label: L('Above 10s target', 'أعلى من 10 ثواني'), tone: 'red' }
+                  : { label: L('No data', 'لا بيانات'), tone: 'grey' }
+              }
+            >
+              {L('Success', 'النجاح')} {formatPct(summary?.processing_success_rate ?? 0, 1)}
+            </KpiCard>
           </div>
 
           {/* Main 7-col grid: Recharts Categories + Top of Queue */}
