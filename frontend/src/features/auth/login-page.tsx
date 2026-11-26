@@ -661,7 +661,7 @@ export function LoginPage() {
           <div>
             <Link to='/privacy'>{t.privacy}</Link>
             <Link to='/terms'>{t.terms}</Link>
-            <a href='mailto:admin@telecom.local'>{t.support}</a>
+            <Link to='/support'>{t.support}</Link>
           </div>
           <div>© 2026 SVR System</div>
         </div>

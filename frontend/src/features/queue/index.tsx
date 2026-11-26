@@ -5,6 +5,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  Download,
   Mic,
   RefreshCw,
   Search,
@@ -31,6 +32,7 @@ import {
 } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Main } from '@/components/layout/main'
+import { SlaCountdownBadge } from '@/components/svr/sla-badge'
 import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
 import { api, ApiError } from '@/lib/api'
@@ -132,6 +134,47 @@ export function CallbackQueuePage() {
     agentId !== 'all' ||
     Boolean(searchQuery)
 
+  const handleExportCsv = () => {
+    const items = data?.items ?? []
+    if (items.length === 0) return
+    const escapeCell = (val: unknown) => {
+      const s = String(val ?? '').replace(/"/g, '""')
+      return `"${s}"`
+    }
+    const headers = [
+      'Ticket ID',
+      'Priority Score',
+      'Queue Bucket',
+      'Status',
+      'Category',
+      'Assigned Agent',
+      'Confidence',
+      'Created At',
+      'Summary',
+    ]
+    const rows = items.map((tk) => [
+      tk.id,
+      tk.priority_score ?? '',
+      tk.queue_priority ?? '',
+      tk.status,
+      labelForCategory(tk.complaint_category, locale),
+      tk.assigned_agent_name ?? '',
+      formatPct(tk.confidence),
+      tk.created_at,
+      tk.summary || tk.customer_request || tk.route_reason || '',
+    ])
+    const csv = '\uFEFF' + [headers, ...rows].map((r) => r.map(escapeCell).join(',')).join('\r\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `svr-callback-queue-${new Date().toISOString().slice(0, 10)}.csv`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <Main>
       <div className='mb-4 flex flex-wrap items-center justify-between gap-3'>
@@ -147,6 +190,14 @@ export function CallbackQueuePage() {
           </p>
         </div>
         <div className='flex items-center gap-2'>
+          <Button
+            variant='outline'
+            onClick={handleExportCsv}
+            disabled={loading || !(data?.items.length)}
+          >
+            <Download className='size-4' />
+            <span>{L('Export CSV', 'تصدير CSV')}</span>
+          </Button>
           <Button variant='outline' onClick={() => void fetchQueue()} disabled={loading}>
             <RefreshCw className='size-4' />
             <span>{L('Refresh', 'تحديث')}</span>
@@ -318,6 +369,12 @@ export function CallbackQueuePage() {
                           <span className='font-mono text-xs text-muted-foreground'>
                             #{ticket.id.slice(0, 8)}
                           </span>
+                          <SlaCountdownBadge
+                            createdAt={ticket.created_at}
+                            priority={ticket.queue_priority}
+                            status={ticket.status}
+                            locale={locale}
+                          />
                           {ticket.needs_human_review && (
                             <span className='inline-flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400'>
                               <AlertTriangle className='size-3.5' />

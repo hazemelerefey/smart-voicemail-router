@@ -61,6 +61,9 @@ function LegalDocumentShell({
               >
                 <Link to='/terms'>{isAr ? 'الشروط' : 'Terms'}</Link>
               </Button>
+              <Button variant='ghost' size='sm' asChild>
+                <Link to='/support'>{isAr ? 'الدعم' : 'Support'}</Link>
+              </Button>
             </nav>
           </div>
 
