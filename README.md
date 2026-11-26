@@ -78,31 +78,31 @@ Telecom contact centers accumulate thousands of subscriber voicemails across pea
 <table>
   <tr>
     <td width="50%" valign="top">
-      <h3>🎙️ Dialectal Arabic + Telecom STT</h3>
+      <h3><img src="assets/icons/capability-stt.svg" width="20" height="20" align="absmiddle" alt="" />&nbsp; Dialectal Arabic + Telecom STT</h3>
       <p>Self-hosted <code>Whisper large-v3</code> pipeline with 16 kHz mono PCM normalization, language-mix detection, and a locked 10-column structured STT schema engineered for Egyptian Arabic customer care.</p>
     </td>
     <td width="50%" valign="top">
-      <h3>🧠 4-Head MARBERTv2 Triage</h3>
+      <h3><img src="assets/icons/capability-triage.svg" width="20" height="20" align="absmiddle" alt="" />&nbsp; 4-Head MARBERTv2 Triage</h3>
       <p>Four independent fine-tuned <code>UBC-NLP/MARBERTv2</code> classifiers achieving <strong>0.7941 combined Macro-F1</strong> across 11 telecom complaint categories, urgency, emotional state, and churn risk.</p>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <h3>⚡ Deterministic Priority & Skill Routing</h3>
+      <h3><img src="assets/icons/capability-routing.svg" width="20" height="20" align="absmiddle" alt="" />&nbsp; Deterministic Priority & Skill Routing</h3>
       <p>Zero-black-box priority scoring (<code>1..6</code> -> <code>Urgent</code>, <code>High</code>, <code>Normal</code>, <code>Low</code>) paired with real-time specialist shift availability, workload capacity caps, and instant manual routing override controls.</p>
     </td>
     <td width="50%" valign="top">
-      <h3>🌐 Native Bilingual Console (EN / AR RTL)</h3>
+      <h3><img src="assets/icons/capability-bilingual.svg" width="20" height="20" align="absmiddle" alt="" />&nbsp; Native Bilingual Console (EN / AR RTL)</h3>
       <p>Built on <strong>React 19, Vite, Tailwind CSS v4, and shadcn/ui</strong> with instant English/Arabic RTL switching, <code>Ctrl+K</code> command menu, Crisp Light (Primary) and Pure Black Dark themes, and live WebSocket synchronization.</p>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <h3>🛡️ Human-in-the-Loop Governance</h3>
+      <h3><img src="assets/icons/capability-governance.svg" width="20" height="20" align="absmiddle" alt="" />&nbsp; Human-in-the-Loop Governance</h3>
       <p>Supervisors preview priority and routing impacts before applying label corrections. Every human override preserves original model provenance (<code>model</code> vs <code>human</code>) and writes an immutable JSON diff to the Audit Log.</p>
     </td>
     <td width="50%" valign="top">
-      <h3>🔒 Sovereign Security & Observability</h3>
+      <h3><img src="assets/icons/capability-security.svg" width="20" height="20" align="absmiddle" alt="" />&nbsp; Sovereign Security & Observability</h3>
       <p>Fernet audio encryption at rest, <code>HttpOnly</code> session cookies + double-submit CSRF tokens, strict 3-tier RBAC scoping, sliding-window rate limiting, and pre-provisioned Prometheus + Grafana dashboards.</p>
     </td>
   </tr>
