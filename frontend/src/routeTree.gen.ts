@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedAuditLogRouteImport } from './routes/_authenticated/audit-log'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedEvaluationRouteImport } from './routes/_authenticated/evaluation'
@@ -43,10 +45,20 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAuditLogRoute = AuthenticatedAuditLogRouteImport.update({
   id: '/audit-log',
@@ -101,7 +113,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/account': typeof AuthenticatedAccountRoute
   '/audit-log': typeof AuthenticatedAuditLogRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/evaluation': typeof AuthenticatedEvaluationRoute
@@ -116,7 +130,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/account': typeof AuthenticatedAccountRoute
   '/audit-log': typeof AuthenticatedAuditLogRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/evaluation': typeof AuthenticatedEvaluationRoute
@@ -133,7 +149,9 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/audit-log': typeof AuthenticatedAuditLogRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/evaluation': typeof AuthenticatedEvaluationRoute
@@ -150,7 +168,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/privacy'
+    | '/support'
     | '/terms'
+    | '/account'
     | '/audit-log'
     | '/dashboard'
     | '/evaluation'
@@ -165,7 +185,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/privacy'
+    | '/support'
     | '/terms'
+    | '/account'
     | '/audit-log'
     | '/dashboard'
     | '/evaluation'
@@ -181,7 +203,9 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/login'
     | '/privacy'
+    | '/support'
     | '/terms'
+    | '/_authenticated/account'
     | '/_authenticated/audit-log'
     | '/_authenticated/dashboard'
     | '/_authenticated/evaluation'
@@ -198,6 +222,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
+  SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
 }
 
@@ -231,12 +256,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/audit-log': {
       id: '/_authenticated/audit-log'
@@ -305,6 +344,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedAuditLogRoute: typeof AuthenticatedAuditLogRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEvaluationRoute: typeof AuthenticatedEvaluationRoute
@@ -317,6 +357,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedAuditLogRoute: AuthenticatedAuditLogRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEvaluationRoute: AuthenticatedEvaluationRoute,
@@ -336,6 +377,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
+  SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport

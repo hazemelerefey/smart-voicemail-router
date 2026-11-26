@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Main } from '@/components/layout/main'
+import { SlaCountdownBadge } from '@/components/svr/sla-badge'
 import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { api, ApiError } from '@/lib/api'
 import { UI_COPY, labelForCategory } from '@/lib/i18n'
@@ -118,7 +119,13 @@ export function MyTicketsPage() {
                       </CardDescription>
                     </div>
                   </div>
-                  <div className='flex items-center gap-3'>
+                  <div className='flex flex-wrap items-center gap-2'>
+                    <SlaCountdownBadge
+                      createdAt={ticket.created_at}
+                      priority={ticket.queue_priority}
+                      status={ticket.status}
+                      locale={locale}
+                    />
                     <TicketStatusText status={ticket.status} locale={locale} />
                     <BucketText bucket={ticket.queue_priority} locale={locale} />
                   </div>
