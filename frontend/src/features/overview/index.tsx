@@ -42,8 +42,8 @@ import { KpiCard } from '@/components/svr/kpi-card'
 import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
 import { api, ApiError } from '@/lib/api'
-import { UI_COPY, formatTicketSummary, labelForBucket, labelForCategory } from '@/lib/i18n'
-import { COMPLAINT_CATEGORIES, QUEUE_BUCKETS, formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
+import { UI_COPY, formatTicketSummary, labelForCategory } from '@/lib/i18n'
+import { COMPLAINT_CATEGORIES, formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
 import type { AgentResponse, MonitoringSummaryResponse, TicketListResponse } from '@/lib/types'
 
 const REVIEW_RATE_TARGET = 0.2
@@ -217,9 +217,7 @@ export function OverviewPage() {
             <KpiCard
               title={L('Urgent Now', 'عاجل الآن')}
               icon={BellRing}
-              iconTone='red'
               value={queue ? urgent : '-'}
-              valueClassName={urgent > 0 ? 'text-destructive' : ''}
               pill={
                 !queue
                   ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
@@ -227,32 +225,16 @@ export function OverviewPage() {
                     ? { label: L('Needs action', 'يحتاج إجراء'), tone: 'red' }
                     : { label: L('All clear', 'لا شيء عاجل'), tone: 'green' }
               }
-              pillMeta={L(`${unassigned} unassigned`, `${unassigned} بدون موظف`)}
             >
-              <span className='flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px]'>
-                {QUEUE_BUCKETS.map((b) => (
-                  <span key={b} className='inline-flex items-center gap-1 whitespace-nowrap'>
-                    <span
-                      className={`size-1.5 shrink-0 rounded-full ${
-                        b === 'urgent'
-                          ? 'bg-[#FF1744]'
-                          : b === 'high'
-                            ? 'bg-[#EF6C00]'
-                            : b === 'normal'
-                              ? 'bg-[#2979FF]'
-                              : 'bg-[#616161]'
-                      }`}
-                    />
-                    {labelForBucket(b, locale)} {counts[b] ?? 0}
-                  </span>
-                ))}
-              </span>
+              {L(
+                `${unassigned} unassigned · Urgent ${counts.urgent ?? 0} / High ${counts.high ?? 0} / Low ${counts.low ?? 0}`,
+                `${unassigned} بدون موظف · عاجل ${counts.urgent ?? 0} · مرتفع ${counts.high ?? 0}`
+              )}
             </KpiCard>
 
             <KpiCard
               title={L('Voicemails · 24h', 'الرسائل · 24 ساعة')}
               icon={Activity}
-              iconTone='blue'
               value={summary?.tickets_last_24h ?? 0}
               pill={{ label: L('Live', 'مباشر'), tone: 'blue' }}
             >
@@ -262,7 +244,6 @@ export function OverviewPage() {
             <KpiCard
               title={L('Human Review · 24h', 'المراجعة · 24 ساعة')}
               icon={Users}
-              iconTone={!has24h ? 'grey' : reviewOk ? 'green' : 'red'}
               value={has24h ? formatPct(reviewRate24h, 1) : '-'}
               pill={
                 !has24h
@@ -278,7 +259,6 @@ export function OverviewPage() {
             <KpiCard
               title={L('E2E p95 · 24h', 'زمن المعالجة p95')}
               icon={CheckCircle2}
-              iconTone={has24h && p95_24h ? (latencyOk ? 'green' : 'red') : 'grey'}
               value={
                 has24h && p95_24h && p95_24h > 0 ? (
                   <>
@@ -294,8 +274,8 @@ export function OverviewPage() {
               pill={
                 has24h && p95_24h
                   ? latencyOk
-                    ? { label: L('Within 10s target', 'ضمن 10 ثواني'), tone: 'green' }
-                    : { label: L('Above 10s target', 'أعلى من 10 ثواني'), tone: 'red' }
+                    ? { label: L('Within 10s SLA', 'ضمن 10 ثواني'), tone: 'green' }
+                    : { label: L('Above 10s SLA', 'أعلى من 10 ثواني'), tone: 'red' }
                   : { label: L('No data', 'لا بيانات'), tone: 'grey' }
               }
             >

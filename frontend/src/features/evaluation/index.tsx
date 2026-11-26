@@ -143,7 +143,6 @@ export function EvaluationPage() {
               <KpiCard
                 title={L('Combined Macro-F1', 'متوسط Macro-F1')}
                 icon={Target}
-                iconTone='blue'
                 value={f1Str(metrics.combined_macro_f1)}
                 pill={{ label: L('Benchmark', 'مرجعي'), tone: 'blue' }}
               >
@@ -153,13 +152,6 @@ export function EvaluationPage() {
               <KpiCard
                 title={L('Skill Routing · Gate', 'دقة التوجيه')}
                 icon={Activity}
-                iconTone={
-                  typeof metrics.routing_agreement_pct !== 'number'
-                    ? 'grey'
-                    : metrics.routing_agreement_pct >= 80
-                      ? 'green'
-                      : 'red'
-                }
                 value={
                   typeof metrics.routing_agreement_pct === 'number' ? (
                     <>
@@ -184,7 +176,6 @@ export function EvaluationPage() {
               <KpiCard
                 title={L('Human Review · 24h', 'المراجعة · 24 ساعة')}
                 icon={Users}
-                iconTone={!summary ? 'grey' : summary.human_review_rate_24h <= 0.2 ? 'green' : 'red'}
                 value={summary ? formatPct(summary.human_review_rate_24h, 1) : '-'}
                 pill={
                   !summary
@@ -200,13 +191,6 @@ export function EvaluationPage() {
               <KpiCard
                 title={L('E2E p50 / p95', 'الزمن الكلي p50 / p95')}
                 icon={Clock}
-                iconTone={
-                  !latencies.end_to_end?.p95
-                    ? 'grey'
-                    : latencies.end_to_end.p95 <= 10000
-                      ? 'green'
-                      : 'red'
-                }
                 value={
                   latencies.end_to_end?.p50 || latencies.end_to_end?.p95 ? (
                     <span className='text-2xl'>
