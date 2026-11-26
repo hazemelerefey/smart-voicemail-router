@@ -14,7 +14,7 @@ import { labelForBucket, labelForStatus, type Locale } from '@/lib/i18n'
 export { PriorityScoreAvatar } from '@/components/svr/priority-avatar'
 
 const TAG_BASE =
-  'inline-flex w-fit items-center gap-1 rounded-md border-0 px-2 py-0.5 text-[11px] font-semibold leading-4 tracking-tight whitespace-nowrap text-white shadow-sm'
+  'svr-tag inline-flex w-fit items-center gap-1 rounded-md border-0 px-2 py-0.5 text-[11px] font-semibold leading-4 tracking-tight whitespace-nowrap text-white shadow-sm'
 
 export function TicketStatusText({ status, locale }: { status: string; locale: Locale }) {
   const label = labelForStatus(status, locale)
