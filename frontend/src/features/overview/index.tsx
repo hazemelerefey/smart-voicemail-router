@@ -227,18 +227,26 @@ export function OverviewPage() {
                     ? { label: L('Needs action', 'يحتاج إجراء'), tone: 'red' }
                     : { label: L('All clear', 'لا شيء عاجل'), tone: 'green' }
               }
+              pillMeta={L(`${unassigned} unassigned`, `${unassigned} بدون موظف`)}
             >
-              <div className='flex flex-col gap-1'>
-                <span>{L(`${unassigned} unassigned`, `${unassigned} بدون موظف`)}</span>
-                <span className='flex flex-wrap gap-x-2 gap-y-0.5'>
-                  {QUEUE_BUCKETS.map((b) => (
-                    <span key={b} className='inline-flex items-center gap-1'>
-                      <span className={`size-2 rounded-sm ${b === 'urgent' ? 'bg-[#FF1744]' : b === 'high' ? 'bg-[#EF6C00]' : b === 'normal' ? 'bg-[#2979FF]' : 'bg-[#616161]'}`} />
-                      {labelForBucket(b, locale)} {counts[b] ?? 0}
-                    </span>
-                  ))}
-                </span>
-              </div>
+              <span className='flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px]'>
+                {QUEUE_BUCKETS.map((b) => (
+                  <span key={b} className='inline-flex items-center gap-1 whitespace-nowrap'>
+                    <span
+                      className={`size-1.5 shrink-0 rounded-full ${
+                        b === 'urgent'
+                          ? 'bg-[#FF1744]'
+                          : b === 'high'
+                            ? 'bg-[#EF6C00]'
+                            : b === 'normal'
+                              ? 'bg-[#2979FF]'
+                              : 'bg-[#616161]'
+                      }`}
+                    />
+                    {labelForBucket(b, locale)} {counts[b] ?? 0}
+                  </span>
+                ))}
+              </span>
             </KpiCard>
 
             <KpiCard
@@ -271,7 +279,16 @@ export function OverviewPage() {
               title={L('E2E p95 · 24h', 'زمن المعالجة p95')}
               icon={CheckCircle2}
               iconTone={has24h && p95_24h ? (latencyOk ? 'green' : 'red') : 'grey'}
-              value={has24h ? seconds(p95_24h) : '-'}
+              value={
+                has24h && p95_24h && p95_24h > 0 ? (
+                  <>
+                    {(p95_24h / 1000).toFixed(1)}
+                    <span className='ml-0.5 text-lg font-medium text-muted-foreground'>s</span>
+                  </>
+                ) : (
+                  '-'
+                )
+              }
               pill={
                 has24h && p95_24h
                   ? latencyOk
