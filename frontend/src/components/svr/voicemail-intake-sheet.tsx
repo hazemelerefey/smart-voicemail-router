@@ -14,6 +14,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import { VoicemailAudioPlayer } from '@/components/svr/voicemail-audio-player'
 import { api, ApiError } from '@/lib/api'
 import type { Locale } from '@/lib/i18n'
 import { formatDuration } from '@/lib/taxonomy'
@@ -243,7 +244,7 @@ export function VoicemailIntakeSheet({
                   {(file.size / 1024).toFixed(1)} KB
                 </span>
               </div>
-              <audio controls src={previewUrl} className='w-full' />
+              <VoicemailAudioPlayer src={previewUrl} className='w-full' />
             </div>
           )}
 
