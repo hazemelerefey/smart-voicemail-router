@@ -5,6 +5,8 @@ from __future__ import annotations
 import asyncio
 import base64
 import csv
+import hashlib
+import hmac
 import io
 import json
 import logging
@@ -2141,7 +2143,23 @@ def create_app(
         )
 
     @application.get("/api/metrics", tags=["Monitoring"])
-    def prometheus_metrics(request: Request) -> Response:
+    def prometheus_metrics(
+        request: Request,
+        db: Session = Depends(get_db_from_app),
+        cfg: Settings = Depends(get_settings),
+    ) -> Response:
+        metrics_token = cfg.svr_metrics_token.strip()
+        auth_header = request.headers.get("Authorization", "")
+        bearer_val = auth_header[7:].strip() if auth_header.lower().startswith("bearer ") else ""
+        authorized = bool(metrics_token and bearer_val and hmac.compare_digest(bearer_val, metrics_token))
+        if not authorized:
+            raw_token = request.cookies.get(cfg.session_cookie_name) or (bearer_val or None)
+            ctx = resolve_auth_context(db, raw_token, cfg)
+            if ctx is None or ctx.role not in (UserRole.ADMIN, UserRole.SUPERVISOR):
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED if ctx is None else status.HTTP_403_FORBIDDEN,
+                    detail="Authentication or metrics scrape token required.",
+                )
         queue_hub: QueueHub = request.app.state.queue_hub
         request.app.state.prom_metrics["ws_connections"].set(queue_hub.active_count())
         data = generate_latest(request.app.state.prom_registry)
@@ -2177,8 +2195,6 @@ def create_app(
         queue_hub: QueueHub = websocket.app.state.queue_hub
 
         raw_token = websocket.cookies.get(cfg.session_cookie_name)
-        if not raw_token:
-            raw_token = websocket.query_params.get("token")
         if not raw_token:
             auth_header = websocket.headers.get("authorization", "")
             if auth_header.lower().startswith("bearer "):

@@ -69,6 +69,7 @@ class Settings(BaseSettings):
     )
     svr_cookie_secure: bool = Field(default=False, alias="SVR_COOKIE_SECURE")
     svr_trust_proxy: bool = Field(default=False, alias="SVR_TRUST_PROXY")
+    svr_metrics_token: str = Field(default="", alias="SVR_METRICS_TOKEN")
     svr_cors_origins: str = Field(
         default="http://localhost:3000,http://127.0.0.1:3000",
         alias="SVR_CORS_ORIGINS",
@@ -80,14 +81,24 @@ class Settings(BaseSettings):
 
     def model_post_init(self, __context: object) -> None:
         is_prod = self.svr_env.lower() == "production"
-        if not self.svr_secret_key:
+        placeholder_secrets = {
+            "",
+            "replace-with-32-byte-random-secret",
+            "replace-with-url-safe-base64-fernet-key",
+        }
+        placeholder_passwords = {"", "SvrTelecom2026!", "ChangeMeTelecom2026!"}
+        if self.svr_secret_key in placeholder_secrets:
             if is_prod:
-                raise RuntimeError("SVR_SECRET_KEY must be configured in production")
+                raise RuntimeError("SVR_SECRET_KEY must be set to a strong non-default secret in production")
             self.svr_secret_key = secrets.token_urlsafe(32)
-        if not self.svr_encryption_key:
+        if self.svr_encryption_key in placeholder_secrets:
             if is_prod:
-                raise RuntimeError("SVR_ENCRYPTION_KEY must be configured in production")
+                raise RuntimeError("SVR_ENCRYPTION_KEY must be set to a strong non-default Fernet key in production")
             self.svr_encryption_key = _derive_dev_fernet_key(self.svr_secret_key)
+        if is_prod and self.svr_bootstrap_password in placeholder_passwords:
+            raise RuntimeError("SVR_BOOTSTRAP_PASSWORD must be changed from the default in production")
+        if is_prod and "*" in self.cors_origins_list:
+            raise RuntimeError("Wildcard CORS origins are forbidden in production")
 
         self.svr_storage_dir = Path(self.svr_storage_dir)
         self.svr_models_dir = Path(self.svr_models_dir)
