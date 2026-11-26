@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   Bot,
   Check,
+  CheckCircle2,
   ChevronDown,
   Copy,
   RefreshCw,
@@ -422,8 +423,41 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
 
         <Card>
           <CardHeader>
-            <CardTitle>{L('Arabic Transcript (Whisper large-v3)', 'النص الصوتي (Whisper large-v3)')}</CardTitle>
-            <CardDescription>{L('Local self-hosted speech recognition', 'تفريغ صوتي محلي بالكامل')}</CardDescription>
+            <div className='flex flex-wrap items-start justify-between gap-2'>
+              <div>
+                <CardTitle>{L('Verified Arabic Transcript', 'النص الصوتي المدقق')}</CardTitle>
+                <CardDescription>
+                  {L(
+                    'Whisper large-v3 -> VoiceGate Orchestrator (Qwen2 0.5B Gate)',
+                    'تفريغ Whisper ثم بوابة التحقق والضبط عبر VoiceGate Orchestrator'
+                  )}
+                </CardDescription>
+              </div>
+              {ticket.transcript_verification && (
+                <Badge
+                  variant='outline'
+                  className={
+                    ticket.transcript_verification.needs_human_review
+                      ? 'gap-1 border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300'
+                      : ticket.transcript_verification.correction_applied
+                        ? 'gap-1 border-blue-500/40 bg-blue-500/10 text-blue-700 dark:text-sky-300'
+                        : 'gap-1 border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+                  }
+                >
+                  <CheckCircle2 className='size-3 shrink-0' />
+                  <span>
+                    {ticket.transcript_verification.needs_human_review
+                      ? L('Uncertain Gate', 'يتطلب مراجعة')
+                      : ticket.transcript_verification.correction_applied
+                        ? L('Qwen Repaired', 'تم تصحيح النص')
+                        : L('Gate Verified', 'تم التحقق')}
+                  </span>
+                  <span className='font-mono tabular-nums'>
+                    ({formatPct(ticket.transcript_verification.confidence, 0)} · {ticket.transcript_verification.rounds_run}R)
+                  </span>
+                </Badge>
+              )}
+            </div>
           </CardHeader>
           <CardContent className='space-y-3'>
             <p
@@ -432,32 +466,112 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
             >
               {ticket.transcript || L('No transcript available.', 'لا يوجد نص متاح.')}
             </p>
+            {ticket.transcript_verification && ticket.transcript_verification.changes.length > 0 && (
+              <div className='flex flex-wrap items-center gap-1.5 text-xs'>
+                <span className='font-semibold text-muted-foreground'>
+                  {L('VoiceGate Word Repairs:', 'تعديلات VoiceGate:')}
+                </span>
+                {ticket.transcript_verification.changes.map((chg, idx) => (
+                  <span
+                    key={`${idx}-${chg.from}-${chg.to}`}
+                    className='inline-flex items-center gap-1 rounded border bg-muted/50 px-2 py-0.5 font-mono text-[11px]'
+                    dir='auto'
+                  >
+                    <span className='text-muted-foreground line-through'>{chg.from || '-'}</span>
+                    <span>-&gt;</span>
+                    <span className='font-semibold'>{chg.to || '-'}</span>
+                  </span>
+                ))}
+              </div>
+            )}
             {ticket.text_norm && ticket.text_norm !== ticket.transcript && (
               <div className='text-xs text-muted-foreground'>
                 <span className='font-semibold'>text_norm:</span>{' '}
                 <span dir='rtl'>{ticket.text_norm}</span>
               </div>
             )}
-            {ticket.stt_v1_json && (
-              <Collapsible>
-                <CollapsibleTrigger asChild>
-                  <Button variant='ghost' size='sm' className='gap-1 px-2 text-xs'>
-                    <ChevronDown className='size-3.5' />
-                    {L('Whisper STT v1 Metadata (10 columns)', 'بيانات Whisper STT v1')}
-                  </Button>
-                </CollapsibleTrigger>
-                <CollapsibleContent className='mt-2 rounded-md border p-3'>
-                  <dl className='grid grid-cols-2 gap-x-4 gap-y-1 text-xs'>
-                    {Object.entries(ticket.stt_v1_json).map(([k, v]) => (
-                      <div key={k} className='contents'>
-                        <dt className='font-mono text-muted-foreground'>{k}</dt>
-                        <dd className='truncate font-mono'>{String(v ?? '-')}</dd>
+            <div className='flex flex-col gap-2'>
+              {ticket.transcript_verification && (
+                <Collapsible>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='gap-1 px-2 text-xs'>
+                      <ChevronDown className='size-3.5' />
+                      {L(
+                        'VoiceGate Orchestrator Reasoning & Raw Whisper Comparison',
+                        'تفاصيل تفكير VoiceGate Orchestrator ومقارنة النص الخام'
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className='mt-2 space-y-2.5 rounded-md border p-3 text-xs'>
+                    <div className='flex flex-wrap items-center justify-between gap-2 text-muted-foreground'>
+                      <span>
+                        <strong>{L('Agent:', 'الوكيل:')}</strong> {ticket.transcript_verification.agent_name} ·{' '}
+                        <span className='font-mono'>{ticket.transcript_verification.model}</span>
+                      </span>
+                      <span className='font-mono tabular-nums'>
+                        {ticket.transcript_verification.convergence_reason} ·{' '}
+                        {ticket.transcript_verification.latency_ms.toFixed(0)} ms
+                      </span>
+                    </div>
+                    <div>
+                      <div className='font-semibold text-muted-foreground'>
+                        {L('Original Raw Whisper Output:', 'النص الخام الأصلي من Whisper:')}
                       </div>
-                    ))}
-                  </dl>
-                </CollapsibleContent>
-              </Collapsible>
-            )}
+                      <p className='mt-1 rounded bg-muted/40 p-2 leading-relaxed' dir='rtl'>
+                        {ticket.transcript_verification.raw_text || '-'}
+                      </p>
+                    </div>
+                    {ticket.transcript_verification.trace.length > 0 && (
+                      <div className='space-y-1.5'>
+                        <div className='font-semibold text-muted-foreground'>
+                          {L('Iterative Verification Rounds:', 'جولات التحقق والتصحيح:')}
+                        </div>
+                        {ticket.transcript_verification.trace.map((rnd) => (
+                          <div key={rnd.round} className='rounded border bg-muted/20 p-2'>
+                            <div className='flex items-center justify-between gap-2 font-mono text-[11px]'>
+                              <span>
+                                Round {rnd.round} · {rnd.accepted ? 'ACCEPTED' : 'REJECTED'}
+                              </span>
+                              <span className='tabular-nums'>
+                                conf {formatPct(rnd.confidence, 0)}
+                              </span>
+                            </div>
+                            {rnd.thinking && (
+                              <p className='mt-1 text-muted-foreground'>{rnd.thinking}</p>
+                            )}
+                            {rnd.critique && (
+                              <p className='mt-1 font-mono text-[11px] text-amber-600 dark:text-amber-400'>
+                                critique: {rnd.critique}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CollapsibleContent>
+                </Collapsible>
+              )}
+              {ticket.stt_v1_json && (
+                <Collapsible>
+                  <CollapsibleTrigger asChild>
+                    <Button variant='ghost' size='sm' className='gap-1 px-2 text-xs'>
+                      <ChevronDown className='size-3.5' />
+                      {L('Whisper STT v1 Metadata (10 columns)', 'بيانات Whisper STT v1')}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className='mt-2 rounded-md border p-3'>
+                    <dl className='grid grid-cols-2 gap-x-4 gap-y-1 text-xs'>
+                      {Object.entries(ticket.stt_v1_json).map(([k, v]) => (
+                        <div key={k} className='contents'>
+                          <dt className='font-mono text-muted-foreground'>{k}</dt>
+                          <dd className='truncate font-mono'>{String(v ?? '-')}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </CollapsibleContent>
+                </Collapsible>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -661,19 +775,19 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
             <CardTitle>{L('AI Pipeline Interaction Log', 'سجل مراحل الذكاء الاصطناعي')}</CardTitle>
           </CardHeader>
           <CardContent className='overflow-x-auto'>
-            <Table>
+            <Table className='w-full table-fixed'>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{L('Stage', 'المرحلة')}</TableHead>
+                  <TableHead className='w-[125px]'>{L('Stage', 'المرحلة')}</TableHead>
                   <TableHead>{L('Status', 'الحالة')}</TableHead>
-                  <TableHead className='text-end'>{L('Latency', 'الزمن')}</TableHead>
+                  <TableHead className='w-[90px] text-end'>{L('Latency', 'الزمن')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {ticket.ai_logs.map((log) => (
                   <TableRow key={log.id}>
-                    <TableCell className='font-mono text-xs whitespace-nowrap'>{log.stage}</TableCell>
-                    <TableCell className='max-w-[200px] truncate text-xs' title={log.model}>{log.model}</TableCell>
+                    <TableCell className='truncate font-mono text-xs whitespace-nowrap' title={log.stage}>{log.stage}</TableCell>
+                    <TableCell className='truncate text-xs' title={log.model}>{log.model}</TableCell>
                     <TableCell className='text-end font-mono text-xs whitespace-nowrap tabular-nums'>
                       {log.latency_ms.toFixed(1)} ms
                     </TableCell>

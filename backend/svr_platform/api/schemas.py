@@ -165,6 +165,7 @@ class TicketDetail(StrictResponseSchema):
     text_norm: str
     language_mix: str | None = None
     stt_v1_json: dict[str, Any] | None = None
+    transcript_verification: dict[str, Any] | None = None
     complaint_category: str | None = None
     complaint_urgency: str | None = None
     customer_state: str | None = None

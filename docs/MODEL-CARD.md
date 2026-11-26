@@ -2,18 +2,19 @@
 
 **Document ID:** SVR-MC-01  
 **PRD Reference:** `docs/project/PRD.md` (`SVR-PRD-02` v1.0, Sections 8, 10.4, 13, Appendix A-D)  
-**Last Updated:** 2026-11-24  
+**Last Updated:** 2026-11-26  
 **Owner:** SVR Team  
 
 ---
 
 ## 1. Model Overview
 
-Smart Voicemail Router (SVR) converts single-speaker Egyptian Arabic telecom customer-care voicemails into structured, explainable callback tickets. The production AI pipeline uses two self-hosted model families running locally with zero third-party AI API calls:
+Smart Voicemail Router (SVR) converts single-speaker Egyptian Arabic telecom customer-care voicemails into structured, explainable callback tickets. The production AI pipeline uses three self-hosted model families running locally in sequential low-memory stages with zero third-party AI API calls:
 
 | Pipeline Stage | Model Artifact | Architecture | Input | Output |
 |---|---|---|---|---|
-| Speech-to-Text (STT) | `openai/whisper-large-v3` (self-hosted via `faster-whisper`) | Encoder-decoder transformer ASR | 16 kHz mono 16-bit PCM WAV (decoded from WAV, MP3, or M4A, up to 60 s) | Raw Arabic/telecom transcript, normalized `text_norm`, and locked 10-column STT v1 metadata |
+| Speech-to-Text (STT) | `openai/whisper-large-v3` (self-hosted via `faster-whisper`) | Encoder-decoder transformer ASR (`beam_size=3`, loudness-normalized) | 16 kHz mono 16-bit PCM WAV (decoded from WAV, MP3, or M4A, up to 60 s) | Raw Arabic/telecom transcript, normalized `text_norm`, and locked 10-column STT v1 metadata |
+| Transcript Audit & Repair | `qwen2.5:3b` (local Ollama on `127.0.0.1:11434`) | **LangGraph** `StateGraph` (`AgenticTranscriptGate`) | Raw STT transcript + acoustic/lexical signals | Verified/repaired Arabic transcript, word-level change diff, round trace, or `uncertain_transcript` escalation |
 | Complaint Category | `UBC-NLP/MARBERTv2` (single-task checkpoint 1 of 4) | Fine-tuned Arabic BERT encoder + 11-class head | `text_norm` (max 128 tokens) | Predicted label + 11 class probabilities (sum = `1.0 +/- 0.001`) |
 | Complaint Urgency | `UBC-NLP/MARBERTv2` (single-task checkpoint 2 of 4) | Fine-tuned Arabic BERT encoder + 3-class head | `text_norm` (max 128 tokens) | Predicted label + 3 class probabilities (sum = `1.0 +/- 0.001`) |
 | Customer State | `UBC-NLP/MARBERTv2` (single-task checkpoint 3 of 4) | Fine-tuned Arabic BERT encoder + 4-class head | `text_norm` (max 128 tokens) | Predicted label + 4 class probabilities (sum = `1.0 +/- 0.001`) |
@@ -114,11 +115,12 @@ Because `churn_risk` validation relies on only **7 `at_risk` rows** out of 1,003
 
 The frozen test split (`final/clean_training_test.csv`, 518 rows) is never used for training, hyperparameter tuning, or threshold calibration. Production evaluation enforces a SHA-256 once-guard (`backend/svr_platform/eval/once_guard.py`) that records an immutable claim in `runs/test_evaluations.json` before opening test labels and refuses repeat evaluations for the same `(model_version, dataset_version)` tuple.
 
-### 5.4 Speech-to-Text (`openai/whisper-large-v3`)
+### 5.4 Speech-to-Text (`openai/whisper-large-v3`) & VoiceGate Audit (`qwen2.5:3b`)
 
-- Self-hosted via `faster-whisper` (`language="ar"`, `beam_size=1`, `vad_filter=True`), decoding uploads into 16 kHz mono 16-bit PCM WAV.
+- Self-hosted via `faster-whisper` (`language="ar"`, `beam_size=3`, `vad_filter=True`), decoding uploads into 16 kHz mono 16-bit PCM WAV with safe RMS/peak loudness normalization (`normalize_wav_16k_loudness()`) for quiet microphone recordings.
 - Records all 10 locked STT v1 fields (`file`, `model`, `text`, `text_norm`, `min_avg_logprob`, `max_no_speech_prob`, `needs_review`, `review_reasons`, `dup_text_size`, `error`).
-- Flags low-confidence transcripts (`min_avg_logprob < -0.50`), high silence (`max_no_speech_prob > 0.80`), empty transcripts, or single-token transcripts for review.
+- **VoiceGate Orchestrator (`AgenticTranscriptGate`)** runs a LangGraph `StateGraph` (`pre_repair -> audit -> confidence_check -> finalize`) using local Ollama `qwen2.5:3b` (loopback-only) to remove Whisper stutter duplicates, repair Egyptian Arabic telecom ASR errors, and block hallucinations (CJK leakage, digit invention, Latin injection, word-order drift).
+- Flags low-confidence transcripts (`min_avg_logprob < -0.50`), severe acoustic degradation (`min_avg_logprob < -0.75`), high silence (`max_no_speech_prob > 0.80`), empty transcripts, or single-token transcripts for Human Review (`uncertain_transcript`).
 - Retries up to 3 times with backoff; on failure, degrades safely to the Human Review Queue (`processing_error`) without losing the voicemail (NFR14).
 
 ---

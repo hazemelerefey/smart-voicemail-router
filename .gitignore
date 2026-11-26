@@ -55,3 +55,7 @@ wandb/
 *.zip
 *.tar.gz
 *.rar
+
+# Local agent/scratch files
+.unlazy/
+scratch/

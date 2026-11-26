@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Generator
 from pathlib import Path
 
-from sqlalchemy import Engine, create_engine, event
+from sqlalchemy import Engine, create_engine, event, inspect, text
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 
@@ -52,6 +52,12 @@ class DatabaseManager:
 
     def create_all(self) -> None:
         Base.metadata.create_all(self.engine)
+        inspector = inspect(self.engine)
+        if inspector.has_table("tickets"):
+            existing_cols = {col["name"] for col in inspector.get_columns("tickets")}
+            if "transcript_verification_json" not in existing_cols:
+                with self.engine.begin() as conn:
+                    conn.execute(text("ALTER TABLE tickets ADD COLUMN transcript_verification_json JSON"))
 
     def session(self) -> Generator[Session, None, None]:
         db = self.session_factory()

@@ -3,7 +3,7 @@
 **Document ID:** SVR-ARCH-01  
 **PRD Reference:** `docs/project/PRD.md` (`SVR-PRD-02` v1.0, Sections 9, 10, 11, 15, 16)  
 **Target Domain:** Telecom customer-care operations (single-speaker Egyptian Arabic subscriber voicemails)  
-**Last Updated:** 2026-11-24  
+**Last Updated:** 2026-11-26  
 **Owner:** SVR Team  
 
 ---
@@ -23,7 +23,7 @@ flowchart LR
     Worker["Scalable AI Workers (ops/worker_runner.py, NFR9)"]
     PG["PostgreSQL 16 (SQLite WAL standalone fallback)"]
     AudioStore["Fernet-Encrypted Audio Storage (/data/storage/voicemails)"]
-    Models["Local Models (Whisper large-v3 + 4x MARBERTv2)"]
+    Models["Local Models (Whisper large-v3 + Ollama qwen2.5:3b + 4x MARBERTv2)"]
     Prom["Prometheus (:9090, 15s scrape + AI10 Alert Rules)"]
     Graf["Grafana (:3001, Pre-provisioned SVR Dashboard)"]
 
@@ -47,12 +47,13 @@ flowchart LR
 [Browser Upload / 16 kHz Mic WAV]
   -> [POST /api/voicemails: stream <= 25 MB, magic + ffprobe <= 60s, SHA-256/Idempotency dedup]
   -> [Encrypt audio via Fernet -> create Voicemail + Ticket (status=processing) -> HTTP 202 (< 2s)]
-  -> [Async Pipeline Worker (Redis queue or in-process background task)]
-       1. transcribe : Whisper large-v3 (faster-whisper) -> text, text_norm, 10-col STT v1, language_mix
-       2. classify   : 4x Single-task UBC-NLP/MARBERTv2 (lr 2e-5) -> 4 independent labels + probs + confidence
-       3. priority   : Fixed rule (urgency 1..3 + churn 0/2 + state 0/1 = score 1..6 -> bucket; null -> Human Review)
-       4. route      : FR20 skill mapping (Network/Billing/General), availability, capacity, seed order, kill switch
-       5. brief      : summary = transcript[:200], category customer_request, grounded template suggested_script
+  -> [Async Pipeline Worker (VoiceGateOrchestrator: sequential low-memory model unloading)]
+       1. transcribe        : Loudness norm + Whisper large-v3 (beam=3) -> text, text_norm, 10-col STT v1
+       2. verify_transcript : LangGraph AgenticTranscriptGate (qwen2.5:3b via loopback Ollama) -> audit-and-fix loop, guardrails, acoustic cap
+       3. classify          : 4x Single-task UBC-NLP/MARBERTv2 (lr 2e-5) -> 4 independent labels + probs + confidence
+       4. priority          : Fixed rule (urgency 1..3 + churn 0/2 + state 0/1 = score 1..6 -> bucket; null -> Human Review)
+       5. route             : FR20 skill mapping (Network/Billing/General), availability, capacity, seed order, kill switch
+       6. brief             : summary = repaired transcript[:200], category customer_request, grounded template suggested_script
   -> [Persist Ticket + AIInteractionLog + AuditEvent + Prometheus metrics]
   -> [QueueHub WebSocket push (/ws/queue) -> Live dashboard update without page reload]
 ```

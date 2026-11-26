@@ -103,6 +103,44 @@ export interface TicketListResponse {
   human_review_count: number;
 }
 
+export interface TranscriptVerificationChange {
+  from: string;
+  to: string;
+  reason?: string;
+}
+
+export interface TranscriptVerificationRound {
+  round: number;
+  thinking: string;
+  input_text: string;
+  candidate_text: string;
+  confidence: number;
+  is_coherent: boolean;
+  accepted: boolean;
+  critique?: string | null;
+  changes?: TranscriptVerificationChange[];
+}
+
+export interface TranscriptVerificationReport {
+  agent_name: string;
+  model: string;
+  backend_used: string;
+  status: string;
+  raw_text: string;
+  corrected_text: string;
+  correction_applied: boolean;
+  rounds_run: number;
+  confidence: number;
+  convergence_reason: string;
+  needs_human_review: boolean;
+  review_reason?: string | null;
+  signal_summary?: Record<string, unknown>;
+  changes: TranscriptVerificationChange[];
+  trace: TranscriptVerificationRound[];
+  latency_ms: number;
+  error?: string;
+}
+
 export interface TicketDetail {
   id: string;
   voicemail_id: string;
@@ -117,6 +155,7 @@ export interface TicketDetail {
   text_norm: string;
   language_mix: string | null;
   stt_v1_json: Record<string, unknown> | null;
+  transcript_verification?: TranscriptVerificationReport | null;
   complaint_category: string | null;
   complaint_urgency: string | null;
   customer_state: string | null;

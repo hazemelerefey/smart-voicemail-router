@@ -48,6 +48,7 @@ export type TicketStatus = (typeof TICKET_STATUSES)[number];
 
 export const REVIEW_REASONS = [
   "low_confidence",
+  "uncertain_transcript",
   "missing_label",
   "invalid_label",
   "no_eligible_agent",

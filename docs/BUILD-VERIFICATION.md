@@ -3,8 +3,11 @@
 - **Branch:** `hazem/svr-production-build`
 - **Owner:** SVR Team (Hazem)
 - **Specification:** [docs/project/PRD.md](project/PRD.md) (`SVR-PRD-02` v1.0)
-- **Verification Date (UTC):** `2026-11-24`
+- **Initial Verification Date (UTC):** `2026-11-24` (Updated `2026-11-26` for 6-Stage VoiceGate LangGraph Pipeline)
 - **Test Split Integrity:** `final/clean_training_test.csv` and `dataset/test/` were NOT touched (`runs/test_evaluations.json` does not exist). All live workflow and model evaluations ran exclusively on `final/clean_training_val.csv` (1,003 rows) and `dataset/val/`.
+
+> [!NOTE]
+> **2026-11-26 Pipeline Upgrade Addendum (Stage 03 VoiceGate Agent):** The production pipeline was upgraded from 5 stages to 6 stages by adding `verify_transcript` (`AgenticTranscriptGate` built on **LangGraph** `StateGraph` with local Ollama `qwen2.5:3b`, `max_iterations=4`, `early_stop_confidence=0.90`, anti-hallucination guardrails, and acoustic-degradation escalation at `min_avg_logprob < -0.75`), plus `normalize_wav_16k_loudness` and `beam_size=3` (no `initial_prompt`) in `WhisperSTTService`. Post-upgrade verification: `pytest backend/tests -q` passed **67/67**, `frontend` `npm run build` succeeded, and all 20 live DB tickets re-processed cleanly (`13 verified, 7 corrected, 0 uncertain`).
 
 ---
 

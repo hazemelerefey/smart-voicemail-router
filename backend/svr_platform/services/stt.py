@@ -3,14 +3,18 @@
 from __future__ import annotations
 
 import gc
+import io
 import logging
 import os
 import tempfile
 import threading
 import time
+import wave
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Callable
+
+import numpy as np
 
 from .intake import decode_to_wav_16k_mono
 from .text_norm import detect_language_mix, normalize_transcript
@@ -32,6 +36,51 @@ STT_V1_COLUMNS = (
 
 LOW_LOGPROB_THRESHOLD = -0.50
 HIGH_NO_SPEECH_THRESHOLD = 0.80
+
+
+def normalize_wav_16k_loudness(
+    wav_bytes: bytes,
+    *,
+    min_rms_trigger: float = 0.05,
+    target_rms: float = 0.10,
+    max_peak: float = 0.89,
+    max_gain: float = 20.0,
+) -> bytes:
+    """Boost quiet 16-bit PCM WAV recordings safely without clipping or amplifying pure silence."""
+    try:
+        with wave.open(io.BytesIO(wav_bytes), "rb") as w_in:
+            sr = w_in.getframerate()
+            ch = w_in.getnchannels()
+            sw = w_in.getsampwidth()
+            n_frames = w_in.getnframes()
+            if sw != 2 or n_frames == 0:
+                return wav_bytes
+            raw_pcm = w_in.readframes(n_frames)
+    except Exception:
+        return wav_bytes
+
+    pcm = np.frombuffer(raw_pcm, dtype=np.int16).astype(np.float32) / 32768.0
+    if pcm.size == 0:
+        return wav_bytes
+
+    rms = float(np.sqrt(np.mean(pcm * pcm)))
+    peak = float(np.max(np.abs(pcm)))
+    if rms < 1e-4 or peak <= 0.0 or rms >= min_rms_trigger:
+        return wav_bytes
+
+    gain = min(target_rms / rms, max_peak / peak, max_gain)
+    if gain <= 1.05:
+        return wav_bytes
+
+    boosted = np.clip(pcm * gain, -1.0, 1.0)
+    out_pcm = (boosted * 32767.0).astype(np.int16).tobytes()
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w_out:
+        w_out.setnchannels(ch)
+        w_out.setsampwidth(2)
+        w_out.setframerate(sr)
+        w_out.writeframes(out_pcm)
+    return buf.getvalue()
 
 
 @dataclass
@@ -149,6 +198,7 @@ class WhisperSTTService:
             )
 
         wav_16k = decode_to_wav_16k_mono(audio_bytes, fmt, ffmpeg_bin=self.ffmpeg_bin)
+        wav_16k = normalize_wav_16k_loudness(wav_16k)
         tmp_path: Path | None = None
         try:
             with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tf:
@@ -158,7 +208,7 @@ class WhisperSTTService:
             segments_iter, _info = model.transcribe(
                 str(tmp_path),
                 language="ar",
-                beam_size=1,
+                beam_size=3,
                 vad_filter=True,
             )
             segments = list(segments_iter)

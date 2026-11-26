@@ -19,6 +19,7 @@
 ![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=flat-square&logo=fastapi&logoColor=white)
 ![Whisper large-v3](https://img.shields.io/badge/STT-Whisper_large--v3-0284C7?style=flat-square&logo=openai&logoColor=white)
+![VoiceGate LangGraph](https://img.shields.io/badge/Agent-LangGraph_Qwen2.5--3B-8B5CF6?style=flat-square&logo=langchain&logoColor=white)
 ![MARBERTv2](https://img.shields.io/badge/NLP-4x_MARBERTv2-06B6D4?style=flat-square&logo=pytorch&logoColor=white)
 ![React 19](https://img.shields.io/badge/React-19-149ECA?style=flat-square&logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white)
@@ -47,7 +48,7 @@
 
 - [Why Smart Voicemail Router](#why-smart-voicemail-router)
 - [Core Product Capabilities](#core-product-capabilities)
-- [End-to-End 5-Stage AI Pipeline](#end-to-end-5-stage-ai-pipeline)
+- [End-to-End 6-Stage AI Pipeline](#end-to-end-6-stage-ai-pipeline)
 - [Product Tour](#product-tour)
 - [Validated Model Performance](#validated-model-performance)
 - [Quick Start](#quick-start)
@@ -66,10 +67,11 @@ Telecom contact centers accumulate thousands of subscriber voicemails across pea
 **Smart Voicemail Router (SVR)** replaces FIFO voicemail backlogs with an end-to-end operational control plane:
 
 1. **Ingests & Encrypts Locally**: Accepts uploaded audio (`WAV`, `MP3`, `M4A`) or live in-browser 16 kHz microphone recordings, validates container headers and duration (`<= 60s`), deduplicates via `SHA-256`, encrypts audio at rest with **Fernet (`AES-128-CBC + HMAC-SHA256`)**, and returns `HTTP 202 Accepted` in under 2 seconds.
-2. **Transcribes Dialectal Telecom Speech**: Runs self-hosted `faster-whisper` (`Whisper large-v3`) on Egyptian Arabic speech mixed with English telecom terms (`eSIM`, `4G`, `5G`, `DSL`, `MB/GB`).
-3. **Classifies Across Four Independent Heads**: Evaluates normalized transcripts through four dedicated single-task **`UBC-NLP/MARBERTv2`** models for **Complaint Category**, **Complaint Urgency**, **Customer State**, and **Churn Risk** with calibrated probability distributions and confidence gating.
-4. **Scores Priority & Routes by Skill + Capacity**: Applies a transparent, deterministic 1-to-6 priority rule and assigns each ticket to an available, on-shift specialist matching the required telecom skill (`Network`, `Billing`, `General`), or escalates low-confidence cases to the **Human Routing Queue**.
-5. **Equips Agents Before They Dial**: Generates a concise bilingual callback brief and an approved Arabic/English opening script grounded strictly in verified ticket facts, streamed live to operators over WebSockets.
+2. **Transcribes Dialectal Telecom Speech**: Applies safe RMS/peak loudness normalization and runs self-hosted `faster-whisper` (`Whisper large-v3`, `beam_size=3`) on Egyptian Arabic speech mixed with English telecom terms (`eSIM`, `4G`, `5G`, `DSL`, `MB/GB`).
+3. **Audits & Repairs via VoiceGate Orchestrator (LangGraph)**: Runs a local-first **LangGraph** `StateGraph` agent (`AgenticTranscriptGate` backed by `qwen2.5:3b` via loopback Ollama) in an iterative audit-and-fix loop anchored in Egyptian telecom context, with anti-hallucination guardrails and acoustic-degradation escalation (`uncertain_transcript`) when speech is unrecoverable.
+4. **Classifies Across Four Independent Heads**: Evaluates verified, normalized transcripts (`text_norm`) through four dedicated single-task **`UBC-NLP/MARBERTv2`** models for **Complaint Category**, **Complaint Urgency**, **Customer State**, and **Churn Risk** with calibrated probability distributions and confidence gating.
+5. **Scores Priority & Routes by Skill + Capacity**: Applies a transparent, deterministic 1-to-6 priority rule and assigns each ticket to an available, on-shift specialist matching the required telecom skill (`Network`, `Billing`, `General`), or escalates low-confidence cases to the **Human Routing Queue**.
+6. **Equips Agents Before They Dial**: Generates a concise bilingual callback brief from the final verified transcript and an approved Arabic/English opening script grounded strictly in verified ticket facts, streamed live to operators over WebSockets.
 
 ---
 
@@ -110,24 +112,27 @@ Telecom contact centers accumulate thousands of subscriber voicemails across pea
 
 ---
 
-## End-to-End 5-Stage AI Pipeline
+## End-to-End 6-Stage AI Pipeline
 
 ```mermaid
 flowchart LR
     S1["01. Audio Intake & Vault<br/>WAV/MP3/M4A + 16 kHz Mic<br/>ffprobe <= 60s · Fernet AES-128"]
-    S2["02. Whisper large-v3 STT<br/>Self-hosted faster-whisper<br/>Egyptian Arabic + EN Telecom"]
-    S3["03. 4x MARBERTv2 Triage<br/>Category · Urgency · State · Churn<br/>Calibrated Confidence Gate"]
-    S4["04. Priority & Skill Route<br/>Deterministic Score 1..6<br/>Network / Billing / General"]
-    S5["05. Live Operator Console<br/>Grounded AR/EN Script Brief<br/>WebSocket Push + Audit Log"]
-    HR["Human Routing Queue<br/>Low Confidence / Unassigned /<br/>Manual Override Review"]
+    S2["02. Whisper large-v3 STT<br/>Loudness Norm + faster-whisper<br/>Egyptian Arabic + EN Telecom"]
+    S3["03. VoiceGate Agent (LangGraph)<br/>Qwen2.5-3B Audit-and-Repair Loop<br/>Guardrails + Acoustic Gate"]
+    S4["04. 4x MARBERTv2 Triage<br/>Category · Urgency · State · Churn<br/>Calibrated Confidence Gate"]
+    S5["05. Priority & Skill Route<br/>Deterministic Score 1..6<br/>Network / Billing / General"]
+    S6["06. Live Operator Console<br/>Grounded AR/EN Script Brief<br/>WebSocket Push + Audit Log"]
+    HR["Human Routing Queue<br/>Uncertain Transcript / Low Conf /<br/>Manual Override Review"]
 
     S1 -->|"HTTP 202 (< 2s)"| S2
     S2 -->|"10-Col STT v1"| S3
-    S3 -->|"High Confidence"| S4
-    S3 -->|"Below Threshold"| HR
-    S4 -->|"Agent Assigned"| S5
-    S4 -->|"No Capacity / Paused"| HR
-    HR -->|"Supervisor Override"| S5
+    S3 -->|"Verified / Repaired"| S4
+    S3 -->|"Uncertain / Acoustic Loss"| HR
+    S4 -->|"High Confidence"| S5
+    S4 -->|"Below Threshold"| HR
+    S5 -->|"Agent Assigned"| S6
+    S5 -->|"No Capacity / Paused"| HR
+    HR -->|"Supervisor Override"| S6
 ```
 
 <br/>
@@ -135,10 +140,11 @@ flowchart LR
 | Stage | Engine / Mechanism | Key Output & Guardrail |
 | :--- | :--- | :--- |
 | **01. Audio Intake** | Magic-byte probe + `ffprobe` + Fernet vault | Enforces `<= 25 MB` & `<= 60s`, normalizes to 16 kHz mono WAV, deduplicates by `SHA-256` & `Idempotency-Key`, returns `202 Accepted` |
-| **02. Transcription** | `faster-whisper` (`Whisper large-v3`) | Produces raw Arabic transcript, normalized `text_norm`, segment log-probabilities, and `language_mix` indicator |
-| **03. Classification** | `4x Single-Task UBC-NLP/MARBERTv2` | Outputs validated class labels, per-class probability vectors summing to `1.0`, and minimum-head confidence gating |
-| **04. Priority & Routing** | Deterministic scoring + Telecom Skill Matrix | Computes priority score `1..6`, maps 11 categories to `Network` / `Billing` / `General`, checks live agent capacity, or flags Human Review |
-| **05. Callback Brief & Ops** | Versioned bilingual templates + `/ws/queue` | Builds grounded `summary`, `customer_request`, and `suggested_script`; broadcasts live ticket updates to connected operators |
+| **02. Transcription** | `normalize_wav_16k_loudness` + `faster-whisper` (`Whisper large-v3`, `beam_size=3`) | Boosts quiet mic recordings safely (`-20 dBFS` target), produces raw Arabic transcript, `text_norm`, segment log-probabilities, and `language_mix` |
+| **03. VoiceGate Audit** | **LangGraph** `StateGraph` (`AgenticTranscriptGate` + local Ollama `qwen2.5:3b`) | Runs `pre_repair -> audit -> confidence_check -> finalize` loop, removes Whisper stutters, repairs Egyptian telecom ASR errors, enforces anti-hallucination & acoustic caps (`min_avg_logprob < -0.75`) |
+| **04. Classification** | `4x Single-Task UBC-NLP/MARBERTv2` | Consumes verified `text_norm`, outputs validated class labels, per-class probability vectors summing to `1.0`, and minimum-head confidence gating |
+| **05. Priority & Routing** | Deterministic scoring + Telecom Skill Matrix | Computes priority score `1..6`, maps 11 categories to `Network` / `Billing` / `General`, checks live agent capacity, or flags Human Review |
+| **06. Callback Brief & Ops** | Versioned bilingual templates + `/ws/queue` | Builds grounded `summary` (from repaired transcript), `customer_request`, and `suggested_script`; broadcasts live ticket updates to connected operators |
 
 > [!IMPORTANT]
 > **Transparent Priority Formula (Score `1` to `6`)**
@@ -288,7 +294,7 @@ smart-voicemail-router/
 │   ├── svr_platform/
 │   │   ├── api/                # REST endpoints, RBAC, rate limiting & WebSocket QueueHub
 │   │   ├── evaluation/         # Production evaluation CLI & SHA-256 test-once guard
-│   │   └── services/           # Intake, Fernet crypto, Whisper STT, 4x MARBERTv2, routing & briefs
+│   │   └── services/           # Intake, Fernet crypto, Whisper STT, LangGraph VoiceGate, 4x MARBERTv2, routing & briefs
 │   ├── tests/                  # End-to-end API, security, crypto, routing & evaluation pytest suite
 │   └── Dockerfile              # Multi-stage Python 3.11 production container
 ├── frontend/                   # React 19 + Vite + Tailwind CSS v4 + shadcn/ui console

@@ -54,6 +54,17 @@ class Settings(BaseSettings):
     whisper_model_id: str = Field(default="large-v3", alias="WHISPER_MODEL_ID")
     whisper_device: str = Field(default="cpu", alias="WHISPER_DEVICE")
     whisper_compute_type: str = Field(default="int8", alias="WHISPER_COMPUTE_TYPE")
+    ollama_url: str = Field(default="http://127.0.0.1:11434", alias="OLLAMA_URL")
+    qwen_model_id: str = Field(default="qwen2.5:3b", alias="QWEN_MODEL_ID")
+    qwen_hf_model_id: str = Field(default="Qwen/Qwen2.5-0.5B-Instruct", alias="QWEN_HF_MODEL_ID")
+    qwen_backend: str = Field(default="auto", alias="QWEN_BACKEND")
+    qwen_max_rounds: int = Field(default=4, alias="QWEN_MAX_ROUNDS")
+    qwen_confidence_threshold: float = Field(default=0.75, alias="QWEN_CONFIDENCE_THRESHOLD")
+    qwen_timeout_s: float = Field(default=60.0, alias="QWEN_TIMEOUT_S")
+    # AgenticTranscriptGate settings (LangGraph-powered audit loop)
+    agentic_gate_enabled: bool = Field(default=True, alias="AGENTIC_GATE_ENABLED")
+    agentic_gate_max_iterations: int = Field(default=4, alias="AGENTIC_GATE_MAX_ITERATIONS")
+    agentic_gate_early_stop_confidence: float = Field(default=0.90, alias="AGENTIC_GATE_EARLY_STOP_CONFIDENCE")
     marbert_base_model: str = Field(default="UBC-NLP/MARBERTv2", alias="MARBERT_BASE_MODEL")
     marbert_checkpoint_seed: int = Field(default=99, alias="MARBERT_CHECKPOINT_SEED")
 
@@ -145,6 +156,10 @@ class Settings(BaseSettings):
         cache_root = _REPO_ROOT / ".cache"
         os.environ.setdefault("HF_HOME", str(cache_root / "huggingface"))
         os.environ.setdefault("TORCH_HOME", str(cache_root / "torch"))
+
+        from .services.transcript_gate import validate_loopback_url
+
+        self.ollama_url = validate_loopback_url(self.ollama_url)
 
     @property
     def cors_origins_list(self) -> list[str]:
