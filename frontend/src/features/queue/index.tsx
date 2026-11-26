@@ -405,7 +405,7 @@ export function CallbackQueuePage() {
                       <div>{formatDuration(ticket.duration_seconds)}</div>
                     </TableCell>
                     <TableCell>
-                      <div className='flex flex-col gap-0.5'>
+                      <div className='flex flex-col gap-1.5'>
                         <TicketStatusText status={ticket.status} locale={locale} />
                         <BucketText bucket={ticket.queue_priority} locale={locale} />
                       </div>
