@@ -66,6 +66,12 @@ services:
       WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-large-v3}
       WHISPER_DEVICE: ${WHISPER_DEVICE:-cpu}
       WHISPER_COMPUTE_TYPE: ${WHISPER_COMPUTE_TYPE:-int8}
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+      SVR_ALLOW_DOCKER_OLLAMA: "1"
+      QWEN_MODEL_ID: ${QWEN_MODEL_ID:-qwen2.5:3b}
+      AGENTIC_GATE_ENABLED: ${AGENTIC_GATE_ENABLED:-true}
+      AGENTIC_GATE_FAST_PATH_ENABLED: ${AGENTIC_GATE_FAST_PATH_ENABLED:-true}
+      SVR_MARBERT_BACKEND: ${SVR_MARBERT_BACKEND:-auto}
       HF_HOME: /data/cache/huggingface
       TORCH_HOME: /data/cache/torch
     volumes:
@@ -109,6 +115,12 @@ services:
       WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-large-v3}
       WHISPER_DEVICE: ${WHISPER_DEVICE:-cpu}
       WHISPER_COMPUTE_TYPE: ${WHISPER_COMPUTE_TYPE:-int8}
+      OLLAMA_URL: ${OLLAMA_URL:-http://ollama:11434}
+      SVR_ALLOW_DOCKER_OLLAMA: "1"
+      QWEN_MODEL_ID: ${QWEN_MODEL_ID:-qwen2.5:3b}
+      AGENTIC_GATE_ENABLED: ${AGENTIC_GATE_ENABLED:-true}
+      AGENTIC_GATE_FAST_PATH_ENABLED: ${AGENTIC_GATE_FAST_PATH_ENABLED:-true}
+      SVR_MARBERT_BACKEND: ${SVR_MARBERT_BACKEND:-auto}
       HF_HOME: /data/cache/huggingface
       TORCH_HOME: /data/cache/torch
     volumes:
@@ -140,6 +152,20 @@ services:
       VITE_API_BASE: ""
     ports:
       - "${SVR_FRONTEND_PORT:-3000}:3000"
+    networks:
+      - svr_internal
+
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    volumes:
+      - svr_ollama:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     networks:
       - svr_internal
 
@@ -190,6 +216,7 @@ volumes:
   svr_model_cache:
   svr_promdata:
   svr_grafanadata:
+  svr_ollama:
 
 networks:
   svr_internal:

@@ -121,3 +121,7 @@ wandb/
 *.log
 .DS_Store
 Thumbs.db
+
+# Local agent/scratch files
+.unlazy/
+scratch/

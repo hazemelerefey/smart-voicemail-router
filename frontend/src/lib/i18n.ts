@@ -107,6 +107,7 @@ export const SKILL_LABELS: Record<Locale, Record<string, string>> = {
 export const REVIEW_REASON_LABELS: Record<Locale, Record<string, string>> = {
   en: {
     low_confidence: "Low Confidence",
+    uncertain_transcript: "Uncertain Transcript (Needs Review)",
     missing_label: "Missing Label",
     invalid_label: "Invalid Label",
     no_eligible_agent: "No Eligible Agent",
@@ -117,6 +118,7 @@ export const REVIEW_REASON_LABELS: Record<Locale, Record<string, string>> = {
   },
   ar: {
     low_confidence: "ثقة النموذج منخفضة",
+    uncertain_transcript: "نص غير مؤكد (يحتاج مراجعة)",
     missing_label: "تصنيف ناقص",
     invalid_label: "تصنيف خارج القائمة المعتمدة",
     no_eligible_agent: "لا يوجد موظف متاح بالسعة المطلوبة",
@@ -325,7 +327,7 @@ export function formatTicketSummary(
   if (/mkl_malloc|transcription failed|failed to allocate/i.test(raw)) {
     return locale === "ar"
       ? "تعذر تفريغ الملف الصوتي بسبب ضغط مؤقت على الذاكرة. افتح التذكرة للمراجعة أو إعادة المحاولة."
-      : "Transcription paused due to a temporary worker memory limit — inspect ticket to retry.";
+      : "Transcription paused due to a temporary worker memory limit, inspect ticket to retry.";
   }
   return raw;
 }

@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 from svr_platform.api.main import create_app
 from svr_platform.services.classification import MARBERTv2ClassifierService
 from svr_platform.services.stt import WhisperSTTService
+from svr_platform.services.transcript_gate import TranscriptVerificationGate
 from svr_platform.taxonomy import DEFAULT_SKILL_MAPPING, TRAINED_CLASSES_BY_FIELD
 from tests.conftest import make_wav_bytes
 
@@ -65,6 +66,16 @@ def api_env(test_settings, db_manager):
             "max_no_speech_prob": 0.05,
         }
     )
+    gate = TranscriptVerificationGate(
+        reviewer_override=lambda ctx: {
+            "thinking": "Transcript is clear Egyptian Arabic with 4G telecom term.",
+            "suspect_words": [],
+            "corrected_text": ctx["current_text"],
+            "confidence": 0.94,
+            "is_coherent": True,
+            "changes": [],
+        }
+    )
     clf = MARBERTv2ClassifierService(
         models_dir=test_settings.svr_models_dir,
         repo_root=test_settings.repo_root,
@@ -75,6 +86,7 @@ def api_env(test_settings, db_manager):
         settings=test_settings,
         db_manager=db_manager,
         stt_service=stt,
+        transcript_gate=gate,
         classifier_service=clf,
     )
     return app, test_settings, state
@@ -172,7 +184,9 @@ def test_wf1_upload_pipeline_dedup_validation_and_audio_playback(api_env):
         assert len(detail["summary"]) <= 200
         assert detail["suggested_script"] != ""
         stages = [log["stage"] for log in detail["ai_logs"]]
-        assert stages == ["transcribe", "classify", "priority", "route", "brief"]
+        assert stages == ["transcribe", "verify_transcript", "classify", "priority", "route", "brief"]
+        assert detail["transcript_verification"]["agent_name"] == "VoiceGate Orchestrator"
+        assert detail["transcript_verification"]["status"] == "verified"
 
         # Encrypted audio decrypts and streams cleanly
         audio_res = client.get(f"/api/voicemails/{vm_id}/audio")

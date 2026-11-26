@@ -150,6 +150,7 @@ class Ticket(Base):
     transcript: Mapped[str] = mapped_column(Text, nullable=False, default="")
     text_norm: Mapped[str] = mapped_column(Text, nullable=False, default="")
     language_mix: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    transcript_verification_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
 
     complaint_category: Mapped[str | None] = mapped_column(String(64), nullable=True)
     complaint_urgency: Mapped[str | None] = mapped_column(String(32), nullable=True)
@@ -246,7 +247,7 @@ class AIInteractionLog(Base):
     ticket_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("tickets.id", ondelete="CASCADE"), nullable=False
     )
-    stage: Mapped[str] = mapped_column(String(32), nullable=False)  # transcribe|classify|priority|route|brief
+    stage: Mapped[str] = mapped_column(String(32), nullable=False)  # transcribe|verify_transcript|classify|priority|route|brief
     model: Mapped[str] = mapped_column(String(160), nullable=False)  # model name+version or "rules"
     input_ref: Mapped[str] = mapped_column(String(255), nullable=False)
     output: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)

@@ -105,6 +105,8 @@ from ..services.routing import (
 )
 from ..services.stt import WhisperSTTService
 from ..services.text_norm import normalize_transcript
+from ..services.agentic_gate import AgenticTranscriptGate
+from ..services.transcript_gate import TranscriptVerificationGate
 from ..taxonomy import (
     ALLOWED_TICKET_TRANSITIONS,
     ComplaintCategory,
@@ -155,7 +157,7 @@ _MEDIA_TYPES: dict[str, str] = {
     "m4a": "audio/mp4",
 }
 
-_PIPELINE_STAGES = ("transcribe", "classify", "priority", "route", "brief")
+_PIPELINE_STAGES = ("transcribe", "verify_transcript", "classify", "priority", "route", "brief")
 _STAGE_ORDER = {name: idx for idx, name in enumerate(_PIPELINE_STAGES)}
 _CSV_FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
 
@@ -358,6 +360,11 @@ def _build_ticket_detail(db: Session, ticket: Ticket) -> TicketDetail:
         text_norm=ticket.text_norm,
         language_mix=ticket.language_mix,
         stt_v1_json=vm.stt_v1_json if vm else None,
+        transcript_verification=(
+            dict(ticket.transcript_verification_json)
+            if ticket.transcript_verification_json
+            else None
+        ),
         complaint_category=ticket.complaint_category,
         complaint_urgency=ticket.complaint_urgency,
         customer_state=ticket.customer_state,
@@ -469,6 +476,7 @@ def _run_pipeline_bg(app: FastAPI, ticket_id: str) -> None:
     db_mgr: DatabaseManager = app.state.db_manager
     crypto: EncryptionService = app.state.crypto
     stt_service: WhisperSTTService = app.state.stt_service
+    transcript_gate: TranscriptVerificationGate = app.state.transcript_gate
     classifier_service: MARBERTv2ClassifierService = app.state.classifier_service
     queue_hub: QueueHub = app.state.queue_hub
     prom = app.state.prom_metrics
@@ -480,6 +488,7 @@ def _run_pipeline_bg(app: FastAPI, ticket_id: str) -> None:
                 ticket_id=ticket_id,
                 crypto=crypto,
                 stt_service=stt_service,
+                transcript_gate=transcript_gate,
                 classifier_service=classifier_service,
                 on_update=lambda evt: queue_hub.broadcast_threadsafe(evt["organization_id"], evt),
             )
@@ -523,6 +532,7 @@ def create_app(
     settings: Settings | None = None,
     db_manager: DatabaseManager | None = None,
     stt_service: WhisperSTTService | None = None,
+    transcript_gate: TranscriptVerificationGate | AgenticTranscriptGate | None = None,
     classifier_service: MARBERTv2ClassifierService | None = None,
 ) -> FastAPI:
     """Create and configure the production SVR FastAPI application."""
@@ -540,6 +550,26 @@ def create_app(
         compute_type=resolved_settings.whisper_compute_type,
         download_root=whisper_cache,
         ffmpeg_bin=resolved_settings.ffmpeg_bin,
+    )
+    resolved_gate = transcript_gate or (
+        AgenticTranscriptGate(
+            ollama_url=resolved_settings.ollama_url,
+            ollama_model=resolved_settings.qwen_model_id,
+            max_iterations=resolved_settings.agentic_gate_max_iterations,
+            confidence_threshold=resolved_settings.qwen_confidence_threshold,
+            early_stop_confidence=resolved_settings.agentic_gate_early_stop_confidence,
+            timeout_s=resolved_settings.qwen_timeout_s,
+        )
+        if resolved_settings.agentic_gate_enabled
+        else TranscriptVerificationGate(
+            backend=resolved_settings.qwen_backend,
+            ollama_url=resolved_settings.ollama_url,
+            ollama_model=resolved_settings.qwen_model_id,
+            hf_model_id=resolved_settings.qwen_hf_model_id,
+            max_rounds=resolved_settings.qwen_max_rounds,
+            confidence_threshold=resolved_settings.qwen_confidence_threshold,
+            timeout_s=resolved_settings.qwen_timeout_s,
+        )
     )
     resolved_classifier = classifier_service or MARBERTv2ClassifierService(
         models_dir=resolved_settings.svr_models_dir,
@@ -573,6 +603,7 @@ def create_app(
     application.state.rate_limiter = resolved_limiter
     application.state.queue_hub = resolved_hub
     application.state.stt_service = resolved_stt
+    application.state.transcript_gate = resolved_gate
     application.state.classifier_service = resolved_classifier
     application.state.prom_registry = prom_registry
     application.state.prom_metrics = prom_metrics
