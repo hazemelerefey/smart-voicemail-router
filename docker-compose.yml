@@ -73,7 +73,7 @@ services:
       - ./models:/data/models:ro
       - svr_model_cache:/data/cache
     ports:
-      - "${SVR_BACKEND_PORT:-8000}:8000"
+      - "127.0.0.1:${SVR_BACKEND_PORT:-8000}:8000"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
       interval: 30s
@@ -158,7 +158,7 @@ services:
       - ./ops/prometheus-alerts.yml:/etc/prometheus/alerts.yml:ro
       - svr_promdata:/prometheus
     ports:
-      - "${SVR_PROMETHEUS_PORT:-9090}:9090"
+      - "127.0.0.1:${SVR_PROMETHEUS_PORT:-9090}:9090"
     networks:
       - svr_internal
 
@@ -179,7 +179,7 @@ services:
       - ./ops/grafana-dashboard.json:/var/lib/grafana/dashboards/svr-overview.json:ro
       - svr_grafanadata:/var/lib/grafana
     ports:
-      - "${SVR_GRAFANA_PORT:-3001}:3000"
+      - "127.0.0.1:${SVR_GRAFANA_PORT:-3001}:3000"
     networks:
       - svr_internal
 
