@@ -202,21 +202,28 @@ Full training hyperparameters, confusion matrices, per-seed variance, and calibr
 
 ## Quick Start
 
-### Option A: Full Production Stack (Docker Compose)
+> [!TIP]
+> **Deploying on a new machine with an AI agent?** Point your agent to [AGENTS.md](AGENTS.md) right after `git clone`. It detects GPU/RAM/Docker, prepares `seed_99` ONNX INT8 & Egyptian Whisper CT2 models, launches the matching Compose profile, and verifies `/api/health`.
 
-Launches **PostgreSQL 16**, **Redis 7**, **FastAPI Backend**, **Scalable AI Worker**, **Nginx/Vite Operator Console**, **Prometheus**, and **Grafana** in one command:
+### Option A: One-Command Production Stack (Docker Compose)
+
+Launches **PostgreSQL 16**, **Redis 7**, **Ollama (`qwen2.5:3b` or `aya-expanse:8b`)**, **FastAPI Backend**, **Scalable AI Worker**, **Vite/Nginx Operator Console**, **Caddy Auto-HTTPS**, **Prometheus**, and **Grafana**:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/hazemelerefey/smart-voicemail-router.git
+git clone -b hazem/svr-production-build https://github.com/hazemelerefey/smart-voicemail-router.git
 cd smart-voicemail-router
 
-# 2. Configure environment variables
-cp .env.example .env
-# Edit .env to set strong production secrets (SVR_SECRET_KEY, SVR_ENCRYPTION_KEY, SVR_BOOTSTRAP_PASSWORD)
+# 2. Place seed_99 MARBERTv2 checkpoints in models/marbertv2-single-task/seed_99/
+#    (Optional: run python ops/export_marbert_onnx.py --seed 99 for 2.18x faster ONNX INT8 CPU triage)
 
-# 3. Build and start all 7 services
-docker compose up -d --build
+# 3. Bootstrap secrets, build containers, pull Ollama model, and verify /api/health:
+#    - CPU / Oracle Cloud ARM (16-24 GB RAM):
+bash ops/deploy_server.sh
+
+#    - RTX 3050 (6 GB VRAM) + 16 GB RAM (Egyptian Whisper int8_float16 + aya-expanse:8b):
+python3 ops/build_egyptian_whisper_ct2.py
+bash ops/deploy_server.sh --gpu-6gb
 ```
 
 | Service | Default URL | Purpose |
@@ -289,12 +296,13 @@ Open `http://localhost:3000` and sign in with a seeded bootstrap operator accoun
 
 ```text
 smart-voicemail-router/
+├── AGENTS.md                   # Autonomous AI agent onboarding & hardware-profile deployment guide
 ├── assets/                     # Adaptive product banners & live UI screenshots
 ├── backend/                    # FastAPI application, SQLAlchemy 2.0 ORM & AI pipeline
 │   ├── svr_platform/
 │   │   ├── api/                # REST endpoints, RBAC, rate limiting & WebSocket QueueHub
 │   │   ├── evaluation/         # Production evaluation CLI & SHA-256 test-once guard
-│   │   └── services/           # Intake, Fernet crypto, Whisper STT, LangGraph VoiceGate, 4x MARBERTv2, routing & briefs
+│   │   └── services/           # Intake, Fernet crypto, Whisper STT, LangGraph VoiceGate, 4x MARBERTv2 (ONNX/PyTorch), routing & briefs
 │   ├── tests/                  # End-to-end API, security, crypto, routing & evaluation pytest suite
 │   └── Dockerfile              # Multi-stage Python 3.11 production container
 ├── frontend/                   # React 19 + Vite + Tailwind CSS v4 + shadcn/ui console
@@ -307,11 +315,13 @@ smart-voicemail-router/
 │   ├── nginx.conf              # Production SPA + /api & /ws reverse proxy with security headers
 │   └── Dockerfile              # Multi-stage Node 22 build -> Nginx 1.27 Alpine runtime
 ├── infra/                      # Standardized evaluation harness, split verifier & metric tests
-├── ops/                        # Scalable Redis worker runner, Prometheus alerts, Grafana & backups
+├── ops/                        # Server bootstrap, ONNX/CT2 converters, Caddyfile, Prometheus, Grafana & backups
 ├── docs/                       # Architecture spec, Model Card, DPIA & verification reports
 ├── research/                   # Literature synthesis & 5-seed model selection benchmarks
-├── docker-compose.yml          # Complete 7-service production deployment stack
-└── .github/workflows/ci.yml    # Automated backend pytest, pip-audit, Vite build & security guards
+├── docker-compose.yml          # Base production stack (Postgres, Redis, Ollama, Backend, Worker, Frontend, Prometheus, Grafana)
+├── docker-compose.prod.yml     # Caddy Auto-HTTPS & warm-RAM production overlay
+├── docker-compose.gpu-6gb.yml  # RTX 3050 (6 GB VRAM) sequential GPU overlay (Egyptian Whisper CT2 + aya-expanse:8b)
+└── .github/workflows/          # ci.yml (tests, pip-audit, Vite build, static guards) & deploy.yml (multi-arch GHCR + SSH CD)
 ```
 
 ---
@@ -320,6 +330,7 @@ smart-voicemail-router/
 
 | Document | Summary |
 | :--- | :--- |
+| [**AI Agent Onboarding (AGENTS.md)**](AGENTS.md) | Autonomous clone-to-deploy playbook for new CPU and RTX 3050 (6 GB) machines |
 | [**Architecture & Deployment Guide**](docs/ARCHITECTURE-AND-DEPLOYMENT.md) | System topology, 13-table schema, Docker/GPU deployment, scaling workers, backups, and runbooks |
 | [**Model Card**](docs/MODEL-CARD.md) | Whisper large-v3 + 4x single-task MARBERTv2 architecture, training protocol, metrics, and limitations |
 | [**Data Protection Impact Assessment (DPIA)**](docs/DPIA.md) | Threat model, Fernet encryption lifecycle, retention policy, RBAC controls, and telecom privacy safeguards |
