@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { AlertCircle, RefreshCw, Save, ShieldOff } from 'lucide-react'
+import { AlertCircle, RefreshCw, Save, ShieldCheck, ShieldOff } from 'lucide-react'
 import { toast } from 'sonner'
 import { useSvr } from '@/context/svr-provider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -209,7 +209,11 @@ export function AdminSettingsPage() {
             <Card className={!autoRoutingEnabled ? 'border-destructive' : ''}>
               <CardHeader>
                 <CardTitle className='flex items-center gap-2'>
-                  <ShieldOff className='size-5 text-destructive' />
+                  {autoRoutingEnabled ? (
+                    <ShieldCheck className='size-5 text-[#00C853]' />
+                  ) : (
+                    <ShieldOff className='size-5 text-destructive' />
+                  )}
                   {L('Automatic Routing Control', 'التحكم في التوجيه التلقائي')}
                 </CardTitle>
                 <CardDescription>

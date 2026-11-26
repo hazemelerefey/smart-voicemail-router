@@ -42,7 +42,7 @@ import { KpiCard } from '@/components/svr/kpi-card'
 import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
 import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
 import { api, ApiError } from '@/lib/api'
-import { UI_COPY, labelForBucket, labelForCategory } from '@/lib/i18n'
+import { UI_COPY, formatTicketSummary, labelForBucket, labelForCategory } from '@/lib/i18n'
 import { COMPLAINT_CATEGORIES, QUEUE_BUCKETS, formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
 import type { AgentResponse, MonitoringSummaryResponse, TicketListResponse } from '@/lib/types'
 
@@ -229,7 +229,7 @@ export function OverviewPage() {
               }
               pillMeta={L(`${unassigned} unassigned`, `${unassigned} بدون موظف`)}
             >
-              <span className='flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[11px]'>
+              <span className='flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px]'>
                 {QUEUE_BUCKETS.map((b) => (
                   <span key={b} className='inline-flex items-center gap-1 whitespace-nowrap'>
                     <span
@@ -283,7 +283,9 @@ export function OverviewPage() {
                 has24h && p95_24h && p95_24h > 0 ? (
                   <>
                     {(p95_24h / 1000).toFixed(1)}
-                    <span className='ml-0.5 text-lg font-medium text-muted-foreground'>s</span>
+                    <span className='ms-0.5 text-lg font-medium text-muted-foreground'>
+                      {L('s', 'ث')}
+                    </span>
                   </>
                 ) : (
                   '-'
@@ -442,7 +444,7 @@ export function OverviewPage() {
                 <Button variant='ghost' size='sm' asChild>
                   <Link to='/dashboard'>
                     {L('View all', 'الكل')}
-                    <ArrowRight className='ms-1 size-4' />
+                    <ArrowRight className='ms-1 size-4 rtl:rotate-180' />
                   </Link>
                 </Button>
               </CardHeader>
@@ -465,7 +467,7 @@ export function OverviewPage() {
                               {labelForCategory(ticket.complaint_category, locale)}
                             </p>
                             <p className='mt-1 truncate text-xs text-muted-foreground' dir='auto'>
-                              {ticket.summary || ticket.customer_request || ticket.route_reason || '-'}
+                              {formatTicketSummary(ticket, locale)}
                             </p>
                           </div>
                         </div>

@@ -12,7 +12,7 @@ export function SvrHeader() {
 
   return (
     <Header fixed>
-      <Search />
+      <Search placeholder={locale === 'ar' ? 'بحث...' : 'Search'} />
       <div className='ms-auto flex items-center gap-2'>
         <QueueStreamStatus />
 

@@ -38,6 +38,7 @@ import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
 import { api, ApiError } from '@/lib/api'
 import {
   UI_COPY,
+  formatTicketSummary,
   labelForBucket,
   labelForCategory,
   labelForReviewReason,
@@ -189,20 +190,21 @@ export function CallbackQueuePage() {
             )}
           </p>
         </div>
-        <div className='flex items-center gap-2'>
+        <div className='flex flex-wrap items-center gap-2'>
           <Button
             variant='outline'
+            size='sm'
             onClick={handleExportCsv}
             disabled={loading || !(data?.items.length)}
           >
             <Download className='size-4' />
             <span>{L('Export CSV', 'تصدير CSV')}</span>
           </Button>
-          <Button variant='outline' onClick={() => void fetchQueue()} disabled={loading}>
+          <Button variant='outline' size='sm' onClick={() => void fetchQueue()} disabled={loading}>
             <RefreshCw className='size-4' />
             <span>{L('Refresh', 'تحديث')}</span>
           </Button>
-          <Button onClick={() => setIntakeOpen(true)}>
+          <Button size='sm' onClick={() => setIntakeOpen(true)}>
             <Mic className='size-4' />
             <span>{t.intakeOpen}</span>
           </Button>
@@ -218,7 +220,7 @@ export function CallbackQueuePage() {
         }}
         className='mb-4'
       >
-        <TabsList className='h-auto flex-wrap'>
+        <TabsList className='flex h-auto w-full flex-wrap justify-start gap-1 sm:w-fit'>
           <TabsTrigger value='all'>
             {t.allBuckets} ({totalAll})
           </TabsTrigger>
@@ -254,8 +256,11 @@ export function CallbackQueuePage() {
                 setCursor(null)
               }}
             >
-              <SelectTrigger className='w-full sm:w-48'>
-                <SelectValue placeholder={t.filterCategory} />
+              <SelectTrigger className='w-full sm:w-56' aria-label={t.filterCategory}>
+                <span className='flex items-center gap-1 truncate'>
+                  <span className='text-muted-foreground'>{t.filterCategory}:</span>
+                  <SelectValue placeholder={t.allOption} />
+                </span>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value='all'>{t.allOption}</SelectItem>
@@ -274,8 +279,11 @@ export function CallbackQueuePage() {
                 setCursor(null)
               }}
             >
-              <SelectTrigger className='w-full sm:w-40'>
-                <SelectValue placeholder={t.filterStatus} />
+              <SelectTrigger className='w-full sm:w-44' aria-label={t.filterStatus}>
+                <span className='flex items-center gap-1 truncate'>
+                  <span className='text-muted-foreground'>{t.filterStatus}:</span>
+                  <SelectValue placeholder={t.allOption} />
+                </span>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value='all'>{t.allOption}</SelectItem>
@@ -294,8 +302,11 @@ export function CallbackQueuePage() {
                 setCursor(null)
               }}
             >
-              <SelectTrigger className='w-full sm:w-48'>
-                <SelectValue placeholder={t.filterAgent} />
+              <SelectTrigger className='w-full sm:w-52' aria-label={t.filterAgent}>
+                <span className='flex items-center gap-1 truncate'>
+                  <span className='text-muted-foreground'>{t.filterAgent}:</span>
+                  <SelectValue placeholder={t.allOption} />
+                </span>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value='all'>{t.allOption}</SelectItem>
@@ -338,11 +349,11 @@ export function CallbackQueuePage() {
         </Card>
       ) : (
         <>
-          <div className='rounded-md border bg-card'>
+          <div className='overflow-x-auto rounded-md border bg-card'>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className='w-16'>{L('Score', 'الأولوية')}</TableHead>
+                  <TableHead className='w-14 sm:w-16'>{L('Score', 'الأولوية')}</TableHead>
                   <TableHead>{L('Ticket & Summary', 'التذكرة والملخص')}</TableHead>
                   <TableHead className='hidden md:table-cell'>{L('Agent', 'الموظف')}</TableHead>
                   <TableHead className='hidden lg:table-cell'>{L('Confidence', 'الثقة')}</TableHead>
@@ -356,7 +367,7 @@ export function CallbackQueuePage() {
                     <TableCell>
                       <PriorityScoreAvatar score={ticket.priority_score} bucket={ticket.queue_priority} size='sm' />
                     </TableCell>
-                    <TableCell className='max-w-md'>
+                    <TableCell className='min-w-0 max-w-[210px] sm:max-w-md'>
                       <Link
                         to='/tickets/$id'
                         params={{ id: ticket.id }}
@@ -384,8 +395,8 @@ export function CallbackQueuePage() {
                             </span>
                           )}
                         </div>
-                        <p className='truncate text-xs text-muted-foreground' dir='auto'>
-                          {ticket.summary || ticket.customer_request || ticket.route_reason || '-'}
+                        <p className='line-clamp-2 text-xs text-muted-foreground sm:truncate' dir='auto'>
+                          {formatTicketSummary(ticket, locale)}
                         </p>
                       </Link>
                     </TableCell>
@@ -429,7 +440,7 @@ export function CallbackQueuePage() {
                 disabled={!data.prev_cursor}
                 onClick={() => setCursor(data.prev_cursor)}
               >
-                <ArrowLeft className='size-4' />
+                <ArrowLeft className='size-4 rtl:rotate-180' />
                 {t.previous}
               </Button>
               <Button
@@ -439,7 +450,7 @@ export function CallbackQueuePage() {
                 onClick={() => setCursor(data.next_cursor)}
               >
                 {t.next}
-                <ArrowRight className='size-4' />
+                <ArrowRight className='size-4 rtl:rotate-180' />
               </Button>
             </div>
           </div>
