@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+from cryptography.fernet import InvalidToken
 from fastapi import (
     BackgroundTasks,
     Depends,
@@ -930,7 +931,13 @@ def create_app(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Audio file unavailable.")
 
         crypto: EncryptionService = request.app.state.crypto
-        raw_audio = crypto.read_encrypted_file(audio_path) if vm.encrypted else audio_path.read_bytes()
+        try:
+            raw_audio = crypto.read_encrypted_file(audio_path) if vm.encrypted else audio_path.read_bytes()
+        except InvalidToken as exc:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Audio cannot be decrypted with the active encryption key.",
+            ) from exc
         media_type = _MEDIA_TYPES.get(vm.format.lower(), "application/octet-stream")
         safe_filename = vm.file_name.replace('"', "").replace("\r", "").replace("\n", "")
         return Response(

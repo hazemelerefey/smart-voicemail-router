@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import json
+import logging
 import os
 import secrets
 from functools import lru_cache
@@ -87,23 +89,57 @@ class Settings(BaseSettings):
             "replace-with-url-safe-base64-fernet-key",
         }
         placeholder_passwords = {"", "SvrTelecom2026!", "ChangeMeTelecom2026!"}
-        if self.svr_secret_key in placeholder_secrets:
-            if is_prod:
-                raise RuntimeError("SVR_SECRET_KEY must be set to a strong non-default secret in production")
-            self.svr_secret_key = secrets.token_urlsafe(32)
-        if self.svr_encryption_key in placeholder_secrets:
-            if is_prod:
-                raise RuntimeError("SVR_ENCRYPTION_KEY must be set to a strong non-default Fernet key in production")
-            self.svr_encryption_key = _derive_dev_fernet_key(self.svr_secret_key)
-        if is_prod and self.svr_bootstrap_password in placeholder_passwords:
-            raise RuntimeError("SVR_BOOTSTRAP_PASSWORD must be changed from the default in production")
-        if is_prod and "*" in self.cors_origins_list:
-            raise RuntimeError("Wildcard CORS origins are forbidden in production")
-
         self.svr_storage_dir = Path(self.svr_storage_dir)
         self.svr_models_dir = Path(self.svr_models_dir)
         self.svr_storage_dir.mkdir(parents=True, exist_ok=True)
         (self.svr_storage_dir / "voicemails").mkdir(parents=True, exist_ok=True)
+
+        dev_keys: dict[str, str] = {}
+        dev_keys_file = self.svr_storage_dir / ".dev_keys.json"
+        if not is_prod and (
+            self.svr_secret_key in placeholder_secrets
+            or self.svr_encryption_key in placeholder_secrets
+        ):
+            if dev_keys_file.is_file():
+                try:
+                    loaded = json.loads(dev_keys_file.read_text(encoding="utf-8"))
+                    if isinstance(loaded, dict):
+                        dev_keys = {str(k): str(v) for k, v in loaded.items()}
+                except (OSError, ValueError):
+                    dev_keys = {}
+
+        changed_dev_keys = False
+        if self.svr_secret_key in placeholder_secrets:
+            if is_prod:
+                raise RuntimeError("SVR_SECRET_KEY must be set to a strong non-default secret in production")
+            if dev_keys.get("svr_secret_key"):
+                self.svr_secret_key = dev_keys["svr_secret_key"]
+            else:
+                self.svr_secret_key = secrets.token_urlsafe(32)
+                dev_keys["svr_secret_key"] = self.svr_secret_key
+                changed_dev_keys = True
+        if self.svr_encryption_key in placeholder_secrets:
+            if is_prod:
+                raise RuntimeError("SVR_ENCRYPTION_KEY must be set to a strong non-default Fernet key in production")
+            if dev_keys.get("svr_encryption_key"):
+                self.svr_encryption_key = dev_keys["svr_encryption_key"]
+            else:
+                self.svr_encryption_key = _derive_dev_fernet_key(self.svr_secret_key)
+                dev_keys["svr_encryption_key"] = self.svr_encryption_key
+                changed_dev_keys = True
+
+        if not is_prod and changed_dev_keys:
+            try:
+                dev_keys_file.write_text(json.dumps(dev_keys, indent=2), encoding="utf-8")
+            except OSError as exc:
+                logging.getLogger("svr_platform.config").warning(
+                    "Unable to persist local dev keys to %s: %s", dev_keys_file, exc
+                )
+
+        if is_prod and self.svr_bootstrap_password in placeholder_passwords:
+            raise RuntimeError("SVR_BOOTSTRAP_PASSWORD must be changed from the default in production")
+        if is_prod and "*" in self.cors_origins_list:
+            raise RuntimeError("Wildcard CORS origins are forbidden in production")
 
         # Keep HuggingFace and Torch caches on E: if configured in environment
         cache_root = _REPO_ROOT / ".cache"

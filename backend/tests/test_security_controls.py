@@ -133,3 +133,12 @@ def test_retention_purge_deletes_expired_records(test_settings, db_manager):
         assert res["purged_tickets"] == 1
         assert res["removed_files"] == 1
         assert not blob.exists()
+
+
+def test_dev_keys_persist_across_settings_reloads(tmp_path):
+    st_dir = tmp_path / "dev_storage"
+    s1 = Settings(SVR_ENV="development", SVR_STORAGE_DIR=st_dir)
+    s2 = Settings(SVR_ENV="development", SVR_STORAGE_DIR=st_dir)
+    assert s1.svr_secret_key == s2.svr_secret_key
+    assert s1.svr_encryption_key == s2.svr_encryption_key
+    assert (st_dir / ".dev_keys.json").is_file()
