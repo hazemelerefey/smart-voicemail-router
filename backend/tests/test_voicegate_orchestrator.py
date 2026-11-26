@@ -491,3 +491,49 @@ def test_validate_loopback_url_docker_ollama_flag(monkeypatch):
     assert validate_loopback_url("http://ollama:11434") == "http://ollama:11434"
     with pytest.raises(ValueError):
         validate_loopback_url("https://api.openai.com")
+
+
+def test_agentic_gate_fast_path_skips_llm_on_clean_transcript():
+    calls: list[dict[str, Any]] = []
+
+    def reviewer(ctx: dict[str, Any]) -> dict[str, Any]:
+        calls.append(ctx)
+        return {"corrected_text": ctx["current_text"], "confidence": 0.95, "is_coherent": True}
+
+    gate = AgenticTranscriptGate(fast_path_enabled=True, reviewer_override=reviewer)
+    res = gate.verify(
+        "النت عندي بيفصل كل شوية من الصبح",
+        min_avg_logprob=-0.20,
+        max_no_speech_prob=0.05,
+    )
+    assert len(calls) == 0
+    assert res.status == "verified"
+    assert res.rounds_run == 0
+    assert res.convergence_reason == "fast_path_clean_acoustic"
+    assert res.needs_human_review is False
+
+
+def test_agentic_gate_fast_path_does_not_skip_when_noisy_or_suspect():
+    calls: list[dict[str, Any]] = []
+
+    def reviewer(ctx: dict[str, Any]) -> dict[str, Any]:
+        calls.append(ctx)
+        return {"corrected_text": ctx["current_text"], "confidence": 0.92, "is_coherent": True}
+
+    gate = AgenticTranscriptGate(fast_path_enabled=True, reviewer_override=reviewer)
+    res_noisy = gate.verify(
+        "النت عندي بيفصل كل شوية من الصبح",
+        min_avg_logprob=-0.60,
+        max_no_speech_prob=0.10,
+    )
+    assert len(calls) >= 1
+    assert res_noisy.rounds_run >= 1
+
+    calls.clear()
+    res_suspect = gate.verify(
+        "السبكة عندي ضعيفة جدا",
+        min_avg_logprob=-0.20,
+        max_no_speech_prob=0.05,
+    )
+    assert len(calls) >= 1
+    assert res_suspect.rounds_run >= 1

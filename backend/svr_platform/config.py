@@ -63,6 +63,7 @@ class Settings(BaseSettings):
     qwen_timeout_s: float = Field(default=60.0, alias="QWEN_TIMEOUT_S")
     # AgenticTranscriptGate settings (LangGraph-powered audit loop)
     agentic_gate_enabled: bool = Field(default=True, alias="AGENTIC_GATE_ENABLED")
+    agentic_gate_fast_path_enabled: bool = Field(default=True, alias="AGENTIC_GATE_FAST_PATH_ENABLED")
     agentic_gate_max_iterations: int = Field(default=4, alias="AGENTIC_GATE_MAX_ITERATIONS")
     agentic_gate_early_stop_confidence: float = Field(default=0.90, alias="AGENTIC_GATE_EARLY_STOP_CONFIDENCE")
     marbert_base_model: str = Field(default="UBC-NLP/MARBERTv2", alias="MARBERT_BASE_MODEL")

@@ -147,9 +147,9 @@ OpenAPI 3.1 documentation is automatically served at `/docs` and `/openapi.json`
 
 ### 5.1 Prerequisites
 
-- **Docker Deployment:** Docker Engine 24+, Docker Compose v2, 16 GB+ RAM, GPU host with NVIDIA Container Toolkit recommended to meet the `<= 10 s` p95 latency target (PRD A2, L8).
+- **Docker Deployment:** Docker Engine 24+, Docker Compose v2, 16 GB+ RAM (or **Oracle Cloud Always Free Ampere ARM: 4 OCPUs / 24 GB RAM** for CPU-only production). GPU host with NVIDIA Container Toolkit is optional for `< 10s` Whisper STT p95 latency (PRD A2, L8).
 - **Local Standalone Deployment:** Python 3.11+, Node.js 22+, `ffmpeg` and `ffprobe` on `PATH` (or configured via `FFMPEG_BIN` / `FFPROBE_BIN`).
-- **Model Artifacts:** Place the 4 verified single-task `UBC-NLP/MARBERTv2` checkpoints under `models/marbertv2-single-task/seed_42/<field>/` (`complaint_category`, `complaint_urgency`, `customer_state`, `churn_risk`). Whisper `large-v3` downloads automatically into `HF_HOME` on first run (or pre-warmed offline into the cache volume).
+- **Model Artifacts (Single Seed Only):** Place only the selected production seed (`seed_99`) checkpoints under `models/marbertv2-single-task/seed_99/<field>/` (`complaint_category`, `complaint_urgency`, `customer_state`, `churn_risk`). Run `python ops/export_marbert_onnx.py --seed 99` to generate `model_int8.onnx` (~377.7 MB per head, 2.18x faster on CPU). Whisper `large-v3` downloads automatically into `HF_HOME` on first run, and `ollama` pulls `qwen2.5:3b` into `svr_ollama`.
 
 ### 5.2 Secret Provisioning
 
@@ -164,11 +164,19 @@ Set strong values in `.env` for `POSTGRES_PASSWORD`, `SVR_BOOTSTRAP_PASSWORD`, `
 
 ### 5.3 Option A: Docker Compose Production Stack (`D8`, `NFR21`, `NFR22`)
 
-Start the full 7-service stack (`postgres`, `redis`, `backend`, `worker`, `frontend`, `prometheus`, `grafana`):
+Start the full stack (`postgres`, `redis`, `ollama`, `backend`, `worker`, `frontend`, `prometheus`, `grafana`, plus `caddy` in `docker-compose.prod.yml`):
 
 ```bash
+# Development / local Docker Compose
 docker compose up -d --build
+docker compose exec -T ollama ollama pull qwen2.5:3b
+
+# Production / Oracle Cloud ARM (24 GB RAM) with Caddy Auto-HTTPS
+SVR_DOMAIN=svr.yourdomain.com docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+docker compose exec -T ollama ollama pull qwen2.5:3b
 ```
+
+On 24 GB RAM hosts (such as Oracle Cloud Always Free Ampere ARM 4 OCPU / 24 GB RAM), `docker-compose.prod.yml` sets `SVR_LOW_MEMORY_MODE=0` so `Whisper large-v3`, `qwen2.5:3b`, and all 4 `MARBERTv2` ONNX INT8 sessions remain warm in memory (`~105 ms` classification p50). GitHub Actions CD (`.github/workflows/deploy.yml`) builds multi-arch `linux/amd64,linux/arm64` images to GHCR and deploys over SSH when `DEPLOY_ENABLED=true`.
 
 Scale horizontal AI pipeline workers (PRD NFR9):
 

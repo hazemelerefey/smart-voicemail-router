@@ -1,0 +1,41 @@
+# Smart Voicemail Router (SVR) - Production Overlay with Caddy Auto-HTTPS
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+
+services:
+  backend:
+    environment:
+      SVR_LOW_MEMORY_MODE: ${SVR_LOW_MEMORY_MODE:-0}
+      SVR_COOKIE_SECURE: ${SVR_COOKIE_SECURE:-true}
+
+  worker:
+    environment:
+      SVR_LOW_MEMORY_MODE: ${SVR_LOW_MEMORY_MODE:-0}
+
+  frontend:
+    ports:
+      - "127.0.0.1:${SVR_FRONTEND_PORT:-3000}:3000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+    environment:
+      SVR_DOMAIN: ${SVR_DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./ops/Caddyfile:/etc/caddy/Caddyfile:ro
+      - svr_caddy_data:/data
+      - svr_caddy_config:/config
+    networks:
+      - svr_internal
+
+volumes:
+  svr_caddy_data:
+  svr_caddy_config:

@@ -304,6 +304,28 @@ class MARBERTv2ClassifierService:
             return False
         return device == "cpu"
 
+    @staticmethod
+    def _onnx_path_for(ckpt_dir: Path) -> Path | None:
+        for fname in ("model_int8.onnx", "model.onnx"):
+            candidate = ckpt_dir / fname
+            if candidate.is_file():
+                return candidate
+        return None
+
+    def _use_onnx_backend(self, ckpt_dirs: dict[str, Path]) -> bool:
+        if self._device != "cpu":
+            return False
+        backend = os.environ.get("SVR_MARBERT_BACKEND", "auto").strip().lower()
+        if backend == "torch":
+            return False
+        if not all(self._onnx_path_for(ckpt_dirs[f]) is not None for f in CLASSIFICATION_FIELDS):
+            return False
+        try:
+            import onnxruntime  # noqa: F401
+            return True
+        except ImportError:
+            return False
+
     def has_local_checkpoints(self) -> bool:
         return discover_single_task_checkpoints(self.models_dir, seed=self.seed) is not None
 
@@ -368,8 +390,80 @@ class MARBERTv2ClassifierService:
         best_label = max(classes, key=lambda c: prob_map[c])
         return {"label": best_label, "probabilities": prob_map}
 
+    @staticmethod
+    def _logits_to_prediction(logits_row: list[float], id2label: dict, field_name: str) -> dict:
+        max_logit = max(logits_row)
+        exps = [math.exp(x - max_logit) for x in logits_row]
+        exp_sum = sum(exps) or 1.0
+        probs_list = [e / exp_sum for e in exps]
+        classes = TRAINED_CLASSES_BY_FIELD[field_name]
+        if id2label and set(str(v) for v in id2label.values()) == set(classes):
+            prob_map = {str(id2label[i]): float(probs_list[i]) for i in range(len(probs_list))}
+        else:
+            prob_map = {classes[i]: float(probs_list[i]) for i in range(len(classes))}
+        total = sum(prob_map.values())
+        if total > 0:
+            prob_map = {k: v / total for k, v in prob_map.items()}
+        best_label = max(classes, key=lambda c: prob_map[c])
+        return {"label": best_label, "probabilities": prob_map}
+
+    @classmethod
+    def _score_single_onnx(cls, session: object, enc_np: dict, id2label: dict, field_name: str) -> dict:
+        input_names = {inp.name for inp in session.get_inputs()}  # type: ignore[attr-defined]
+        feed = {k: v for k, v in enc_np.items() if k in input_names}
+        logits = session.run(["logits"], feed)[0][0]  # type: ignore[attr-defined]
+        return cls._logits_to_prediction([float(x) for x in logits], id2label, field_name)
+
+    def _predict_with_onnx(self, ckpt_dirs: dict[str, Path], text_norm: str) -> tuple[dict[str, dict], str]:
+        import onnxruntime as ort
+
+        assert self._tokenizer is not None
+        enc_np = self._tokenizer(
+            text_norm,
+            truncation=True,
+            max_length=MAX_SEQ_LEN,
+            padding=True,
+            return_tensors="np",
+        )
+        outputs: dict[str, dict] = {}
+        low_mem = self._is_low_memory(self._device)
+        if not low_mem and self._models is None:
+            with self._lock:
+                if self._models is None:
+                    sessions: dict[str, object] = {}
+                    for field_name in CLASSIFICATION_FIELDS:
+                        onnx_path = self._onnx_path_for(ckpt_dirs[field_name])
+                        assert onnx_path is not None
+                        cfg = json.loads((ckpt_dirs[field_name] / "config.json").read_text(encoding="utf-8"))
+                        id2label = {int(k): v for k, v in (cfg.get("id2label") or {}).items()}
+                        sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
+                        sessions[field_name] = (sess, id2label)
+                    self._models = sessions
+
+        if not low_mem and self._models is not None:
+            for field_name in CLASSIFICATION_FIELDS:
+                sess, id2label = self._models[field_name]  # type: ignore[misc]
+                outputs[field_name] = self._score_single_onnx(sess, enc_np, id2label, field_name)
+            return outputs, self._loaded_model_version or f"{self.base_model_id}:single-task-lr2e5-onnx"
+
+        with self._lock:
+            for field_name in CLASSIFICATION_FIELDS:
+                onnx_path = self._onnx_path_for(ckpt_dirs[field_name])
+                assert onnx_path is not None
+                cfg = json.loads((ckpt_dirs[field_name] / "config.json").read_text(encoding="utf-8"))
+                id2label = {int(k): v for k, v in (cfg.get("id2label") or {}).items()}
+                sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
+                try:
+                    outputs[field_name] = self._score_single_onnx(sess, enc_np, id2label, field_name)
+                finally:
+                    del sess
+                    gc.collect()
+        return outputs, self._loaded_model_version or f"{self.base_model_id}:single-task-lr2e5-onnx"
+
     def _predict_with_checkpoints(self, text_norm: str) -> tuple[dict[str, dict], str]:
         ckpt_dirs = self._ensure_tokenizer_and_metadata()
+        if self._use_onnx_backend(ckpt_dirs):
+            return self._predict_with_onnx(ckpt_dirs, text_norm)
         assert self._tokenizer is not None
         enc = self._tokenizer(
             text_norm,

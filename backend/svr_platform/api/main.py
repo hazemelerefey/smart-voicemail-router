@@ -559,6 +559,7 @@ def create_app(
             confidence_threshold=resolved_settings.qwen_confidence_threshold,
             early_stop_confidence=resolved_settings.agentic_gate_early_stop_confidence,
             timeout_s=resolved_settings.qwen_timeout_s,
+            fast_path_enabled=resolved_settings.agentic_gate_fast_path_enabled,
         )
         if resolved_settings.agentic_gate_enabled
         else TranscriptVerificationGate(
