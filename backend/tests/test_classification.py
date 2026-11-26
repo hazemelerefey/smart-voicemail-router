@@ -175,3 +175,23 @@ def test_onnx_path_discovery_and_logits_scoring(tmp_path: Path):
     pred = MARBERTv2ClassifierService._logits_to_prediction([0.1, 2.5], id2label, "churn_risk")
     assert pred["label"] == classes[1]
     assert abs(sum(pred["probabilities"].values()) - 1.0) <= 0.001
+
+
+def test_onnx_backend_forced_on_cuda_when_env_is_onnx(tmp_path: Path, monkeypatch):
+    ckpt_dirs = {}
+    for field_name in CLASSIFICATION_FIELDS:
+        d = tmp_path / field_name
+        d.mkdir(parents=True)
+        (d / "model_int8.onnx").write_bytes(b"onnx")
+        ckpt_dirs[field_name] = d
+
+    svc = MARBERTv2ClassifierService(
+        models_dir=tmp_path, repo_root=tmp_path, allow_validated_artifact_fallback=False
+    )
+    svc._device = "cuda"
+
+    monkeypatch.setenv("SVR_MARBERT_BACKEND", "auto")
+    assert svc._use_onnx_backend(ckpt_dirs) is False
+
+    monkeypatch.setenv("SVR_MARBERT_BACKEND", "onnx")
+    assert svc._use_onnx_backend(ckpt_dirs) is True
