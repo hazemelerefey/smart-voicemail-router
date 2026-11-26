@@ -214,15 +214,17 @@ Launches **PostgreSQL 16**, **Redis 7**, **Ollama (`qwen2.5:3b` or `aya-expanse:
 git clone -b hazem/svr-production-build https://github.com/hazemelerefey/smart-voicemail-router.git
 cd smart-voicemail-router
 
-# 2. Place seed_99 MARBERTv2 checkpoints in models/marbertv2-single-task/seed_99/
-#    (Optional: run python ops/export_marbert_onnx.py --seed 99 for 2.18x faster ONNX INT8 CPU triage)
+# 2. Download seed_99 MARBERTv2 from Google Drive & export ONNX INT8
+pip install gdown onnx onnxscript onnxruntime
+python3 ops/download_models.py
 
 # 3. Bootstrap secrets, build containers, pull Ollama model, and verify /api/health:
 #    - CPU / Oracle Cloud ARM (16-24 GB RAM):
 bash ops/deploy_server.sh
 
 #    - RTX 3050 (6 GB VRAM) + 16 GB RAM (Egyptian Whisper int8_float16 + aya-expanse:8b):
-python3 ops/build_egyptian_whisper_ct2.py
+pip install torch transformers peft ctranslate2
+python3 ops/download_models.py --with-egyptian-whisper
 bash ops/deploy_server.sh --gpu-6gb
 ```
 
@@ -315,7 +317,7 @@ smart-voicemail-router/
 │   ├── nginx.conf              # Production SPA + /api & /ws reverse proxy with security headers
 │   └── Dockerfile              # Multi-stage Node 22 build -> Nginx 1.27 Alpine runtime
 ├── infra/                      # Standardized evaluation harness, split verifier & metric tests
-├── ops/                        # Server bootstrap, ONNX/CT2 converters, Caddyfile, Prometheus, Grafana & backups
+├── ops/                        # Server bootstrap, Drive downloader, ONNX/CT2 converters, Caddyfile, Prometheus & backups
 ├── docs/                       # Architecture spec, Model Card, DPIA & verification reports
 ├── research/                   # Literature synthesis & 5-seed model selection benchmarks
 ├── docker-compose.yml          # Base production stack (Postgres, Redis, Ollama, Backend, Worker, Frontend, Prometheus, Grafana)

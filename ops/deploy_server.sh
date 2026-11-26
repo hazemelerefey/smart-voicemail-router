@@ -48,8 +48,8 @@ fi
 
 if [ ! -d "models/marbertv2-single-task/seed_99" ]; then
   echo "WARNING: models/marbertv2-single-task/seed_99 not found."
-  echo "Copy your exported seed_99 ONNX INT8 checkpoints before starting:"
-  echo "  scp -r models/marbertv2-single-task/seed_99 user@host:$(pwd)/models/marbertv2-single-task/"
+  echo "Download seed_99 automatically from Google Drive (https://drive.google.com/drive/folders/1wZPNugbk9Mxkl-zG1pLnP_nac9QWY_tG):"
+  echo "  pip install gdown && python3 ops/download_models.py"
   exit 1
 fi
 
