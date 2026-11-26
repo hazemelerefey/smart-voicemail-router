@@ -40,14 +40,14 @@ export function KpiCard({
   children?: ReactNode
 }) {
   return (
-    <Card className={`svr-kpi h-full ${iconTone === 'red' && pill.tone === 'red' ? 'svr-kpi-urgent' : ''}`}>
+    <Card className='svr-kpi h-full'>
       <CardContent className='flex h-full flex-col gap-2.5 p-5'>
         <div className='flex items-center justify-between gap-2'>
           <span className='truncate text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
             {title}
           </span>
           <span
-            className={`svr-kpi-icon flex size-8 shrink-0 items-center justify-center rounded-lg border ${ICON_CHIP[iconTone]}`}
+            className={`flex size-8 shrink-0 items-center justify-center rounded-lg border ${ICON_CHIP[iconTone]}`}
           >
             <Icon className='size-4' />
           </span>
