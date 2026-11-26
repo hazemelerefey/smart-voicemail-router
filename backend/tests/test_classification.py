@@ -155,3 +155,23 @@ def test_classifier_serves_validated_marbertv2_artifact_on_validation_corpus(tmp
     assert res.labels["complaint_category"] == "network_and_connectivity"
     assert abs(sum(res.probabilities["complaint_category"].values()) - 1.0) <= 0.001
     assert "MARBERTv2" in res.model_version
+
+
+def test_onnx_path_discovery_and_logits_scoring(tmp_path: Path):
+    ckpt = tmp_path / "complaint_category"
+    ckpt.mkdir(parents=True)
+    assert MARBERTv2ClassifierService._onnx_path_for(ckpt) is None
+
+    fp32 = ckpt / "model.onnx"
+    fp32.write_bytes(b"fp32")
+    assert MARBERTv2ClassifierService._onnx_path_for(ckpt) == fp32
+
+    int8 = ckpt / "model_int8.onnx"
+    int8.write_bytes(b"int8")
+    assert MARBERTv2ClassifierService._onnx_path_for(ckpt) == int8
+
+    classes = list(TRAINED_CLASSES_BY_FIELD["churn_risk"])
+    id2label = {i: c for i, c in enumerate(classes)}
+    pred = MARBERTv2ClassifierService._logits_to_prediction([0.1, 2.5], id2label, "churn_risk")
+    assert pred["label"] == classes[1]
+    assert abs(sum(pred["probabilities"].values()) - 1.0) <= 0.001

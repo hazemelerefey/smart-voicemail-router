@@ -247,6 +247,7 @@ def build_langgraph_agent(
     confidence_threshold: float = 0.75,
     early_stop_confidence: float = 0.90,
     timeout_s: float = 45.0,
+    fast_path_enabled: bool = True,
     reviewer_override: Callable[[dict[str, Any]], dict[str, Any] | str] | None = None,
 ):
     """Build and return a compiled LangGraph StateGraph for transcript auditing.
@@ -264,10 +265,36 @@ def build_langgraph_agent(
         raw = state["raw_text"]
         pre_text, pre_changes, _ = pre_repair_whisper_text(raw)
         changes_dicts = [{"from": c.from_text, "to": c.to_text, "reason": c.reason} for c in pre_changes]
-        logger.debug("pre_repair: %s -> %s (%d changes)", raw[:40], pre_text[:40], len(pre_changes))
+        sig = state.get("signal_summary") or {}
+        min_lp = sig.get("min_avg_logprob")
+        max_nsp = sig.get("max_no_speech_prob")
+        clean_candidate = pre_text or raw
+        is_fast_path = (
+            fast_path_enabled
+            and sig.get("acoustic_risk") == "low"
+            and not sig.get("lexical_flags")
+            and not sig.get("suspect_hints")
+            and not pre_changes
+            and len(clean_candidate.split()) >= 3
+            and (min_lp is not None and float(min_lp) >= -0.35)
+            and (max_nsp is None or float(max_nsp) <= 0.25)
+        )
+        logger.debug("pre_repair: %s -> %s (%d changes, fast_path=%s)", raw[:40], pre_text[:40], len(pre_changes), is_fast_path)
+        if is_fast_path:
+            return {
+                "pre_repaired_text": clean_candidate,
+                "current_text": clean_candidate,
+                "pre_changes": changes_dicts,
+                "iteration": 0,
+                "confidence": 0.92,
+                "is_coherent": True,
+                "needs_human_review": False,
+                "convergence_reason": "fast_path_clean_acoustic",
+                "_next": "finalize",
+            }
         return {
-            "pre_repaired_text": pre_text or raw,
-            "current_text": pre_text or raw,
+            "pre_repaired_text": clean_candidate,
+            "current_text": clean_candidate,
             "pre_changes": changes_dicts,
             "iteration": 0,
             "_next": "audit",
@@ -519,7 +546,11 @@ def build_langgraph_agent(
     graph.add_node("finalize", node_finalize)
 
     graph.set_entry_point("pre_repair")
-    graph.add_edge("pre_repair", "audit")
+    graph.add_conditional_edges(
+        "pre_repair",
+        route_after_confidence,
+        {"audit": "audit", "finalize": "finalize"},
+    )
     graph.add_edge("audit", "confidence_check")
     graph.add_conditional_edges(
         "confidence_check",
@@ -558,6 +589,7 @@ class AgenticTranscriptGate:
         early_stop_confidence: float = 0.90,
         timeout_s: float = 60.0,
         low_memory_mode: bool = True,
+        fast_path_enabled: bool = True,
         reviewer_override: Callable[[dict[str, Any]], dict[str, Any] | str] | None = None,
     ) -> None:
         self.ollama_url = validate_loopback_url(ollama_url)
@@ -567,6 +599,7 @@ class AgenticTranscriptGate:
         self.early_stop_confidence = max(self.confidence_threshold, float(early_stop_confidence))
         self.timeout_s = float(timeout_s)
         self.low_memory_mode = bool(low_memory_mode)
+        self.fast_path_enabled = bool(fast_path_enabled)
         self._reviewer_override = reviewer_override
 
         # Try to build the LangGraph compiled graph
@@ -577,6 +610,7 @@ class AgenticTranscriptGate:
             confidence_threshold=self.confidence_threshold,
             early_stop_confidence=self.early_stop_confidence,
             timeout_s=self.timeout_s,
+            fast_path_enabled=self.fast_path_enabled,
             reviewer_override=self._reviewer_override,
         )
         backend_label = "langgraph" if self._graph is not None else "direct_loop"
@@ -776,6 +810,9 @@ class AgenticTranscriptGate:
         try:
             if self._graph is not None:
                 # LangGraph path
+                sig_dict = asdict(signals)
+                sig_dict["min_avg_logprob"] = min_avg_logprob
+                sig_dict["max_no_speech_prob"] = max_no_speech_prob
                 initial_state: TranscriptAuditState = {
                     "raw_text": raw_clean,
                     "pre_repaired_text": "",
@@ -787,7 +824,7 @@ class AgenticTranscriptGate:
                     "early_stop_confidence": self.early_stop_confidence,
                     "audit_history": [],
                     "pre_changes": [],
-                    "signal_summary": asdict(signals),
+                    "signal_summary": sig_dict,
                     "is_coherent": False,
                     "needs_human_review": False,
                     "convergence_reason": "max_iterations_exhausted",
