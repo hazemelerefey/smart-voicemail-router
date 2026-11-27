@@ -35,6 +35,7 @@ from .transcript_gate import (
     compute_word_changes,
     deduplicate_whisper_sequences,
     pre_repair_whisper_text,
+    strip_untrusted_transcript_tags,
     validate_candidate_transcript,
     validate_loopback_url,
 )
@@ -115,6 +116,7 @@ AUDIT RULES (follow strictly):
 7. If the sentence is already correct and meaningful as a telecom complaint, return it unchanged.
 8. Check EVERY word from first to last: e.g. 'طبق مش بيظهر Wi-Fi' -> 'التطبيق مش بيظهر Wi-Fi'.
 9. If the sentence is severely garbled or nonsensical, set is_coherent=false and confidence <= 0.55.
+10. NEVER include <untrusted_transcript> or </untrusted_transcript> wrapper tags in corrected_text; return plain transcript text only.
 
 CONFIDENCE GUIDE:
 - 0.90+: Sentence is definitely a correct, coherent telecom complaint - all words verified.
@@ -400,7 +402,7 @@ def build_langgraph_agent(
             }
 
         validated = GateLLMOutput.model_validate(data)
-        candidate = (validated.corrected_text or current).strip()
+        candidate = strip_untrusted_transcript_tags(validated.corrected_text or "") or current.strip()
         thinking = validated.thinking.strip()[:300]
         conf = validated.confidence
         is_coherent = validated.is_coherent
@@ -816,7 +818,7 @@ class AgenticTranscriptGate:
                 continue
 
             validated = GateLLMOutput.model_validate(data)
-            candidate = (validated.corrected_text or current).strip()
+            candidate = strip_untrusted_transcript_tags(validated.corrected_text or "") or current.strip()
             thinking = validated.thinking.strip()[:200]
             conf = validated.confidence
             is_coherent = validated.is_coherent

@@ -571,7 +571,7 @@ class ClassificationAdjudicator:
             and "repetition_loop" not in (gate_result.signal_summary.get("lexical_flags") or [])
             and word_count >= 4
             and not llm_out.escalate_to_human
-            and validated_cls.confidence >= max(confidence_threshold, 0.55)
+            and validated_cls.confidence >= confidence_threshold
         ):
             resolved_gate = True
 

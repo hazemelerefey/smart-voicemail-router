@@ -465,18 +465,27 @@ class VoiceGateOrchestrator:
                     },
                     latency_ms=int(reaudit_ms),
                 )
-                gate_res = reaudit_res
-                stage_status["verify_transcript"] = "flagged" if gate_res.needs_human_review else "ok"
-                ticket.transcript_verification_json = gate_res.to_report_dict()
-                if normalize_transcript(gate_res.final_text) != ticket.text_norm:
-                    ticket.transcript = gate_res.final_text
-                    ticket.text_norm = gate_res.final_text_norm
-                    ticket.language_mix = gate_res.language_mix
-                    cls_res = self.classifier_service.classify(
-                        ticket.text_norm,
-                        confidence_threshold=plan.confidence_threshold,
-                        file_name=voicemail.file_name,
-                    )
+                # Preserve an already-verified clean acoustic result if re-audit rejected all rounds with zero edits.
+                reaudit_failed_zero_accept = (
+                    gate_res.status == "verified"
+                    and not gate_res.needs_human_review
+                    and not reaudit_res.correction_applied
+                    and reaudit_res.needs_human_review
+                    and reaudit_res.confidence <= 0.0
+                )
+                if not reaudit_failed_zero_accept:
+                    gate_res = reaudit_res
+                    stage_status["verify_transcript"] = "flagged" if gate_res.needs_human_review else "ok"
+                    ticket.transcript_verification_json = gate_res.to_report_dict()
+                    if normalize_transcript(gate_res.final_text) != ticket.text_norm:
+                        ticket.transcript = gate_res.final_text
+                        ticket.text_norm = gate_res.final_text_norm
+                        ticket.language_mix = gate_res.language_mix
+                        cls_res = self.classifier_service.classify(
+                            ticket.text_norm,
+                            confidence_threshold=plan.confidence_threshold,
+                            file_name=voicemail.file_name,
+                        )
 
             cls_ms = round((time.perf_counter() - t_cls) * 1000.0, 2)
             stage_timing_ms["classify"] = cls_ms
