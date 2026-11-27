@@ -388,3 +388,25 @@ def test_weekly_quality_sample_deterministic_buckets_for_three_tickets() -> None
     assert is_weekly_quality_sample(TICKET_249, 0.05) is True
     assert is_weekly_quality_sample(TICKET_D78, 0.05) is True
     assert is_weekly_quality_sample(TICKET_D18, 0.05) is False
+
+
+def test_reprocess_tickets_cli_requires_explicit_ids(tmp_path: Path) -> None:
+    import importlib.util
+
+    script_path = Path(__file__).resolve().parents[2] / "ops" / "reprocess_tickets.py"
+    spec = importlib.util.spec_from_file_location("reprocess_tickets", script_path)
+    assert spec is not None and spec.loader is not None
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    # Missing arguments -> non-zero refusal
+    assert mod.main([]) == 2
+    # Empty --ticket-ids -> non-zero refusal
+    assert mod.main(["--ticket-ids"]) == 2
+    # Wildcards -> non-zero refusal
+    assert mod.main(["--ticket-ids", "all"]) == 2
+    assert mod.main(["--ticket-ids", "*"]) == 2
+    # Nonexistent ID -> non-zero refusal without touching DB
+    db_file = tmp_path / "empty.db"
+    DatabaseManager(f"sqlite:///{db_file.as_posix()}").create_all()
+    assert mod.main(["--database-url", f"sqlite:///{db_file.as_posix()}", "--ticket-ids", TICKET_D18]) == 2
