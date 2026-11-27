@@ -214,3 +214,33 @@ def test_discover_and_fingerprint_onnx_only_checkpoints(tmp_path: Path):
     assert set(found.keys()) == set(CLASSIFICATION_FIELDS)
     fp = compute_checkpoint_fingerprint(found)
     assert len(fp) == 12
+
+
+def test_onnx_score_casts_int32_inputs_to_int64():
+    import numpy as np
+
+    class _FakeInp:
+        def __init__(self, name: str):
+            self.name = name
+
+    seen_dtypes: dict = {}
+
+    class _FakeSession:
+        def get_inputs(self):
+            return [_FakeInp("input_ids"), _FakeInp("attention_mask")]
+
+        def run(self, _outputs, feed):
+            for k, v in feed.items():
+                seen_dtypes[k] = v.dtype
+            return [np.array([[0.1, 2.5]], dtype=np.float32)]
+
+    classes = list(TRAINED_CLASSES_BY_FIELD["churn_risk"])
+    id2label = {i: c for i, c in enumerate(classes)}
+    enc_np = {
+        "input_ids": np.array([[101, 200, 102]], dtype=np.int32),
+        "attention_mask": np.array([[1, 1, 1]], dtype=np.int32),
+    }
+    pred = MARBERTv2ClassifierService._score_single_onnx(_FakeSession(), enc_np, id2label, "churn_risk")
+    assert seen_dtypes["input_ids"] == np.int64
+    assert seen_dtypes["attention_mask"] == np.int64
+    assert pred["label"] == classes[1]

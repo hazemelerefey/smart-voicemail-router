@@ -11,6 +11,7 @@ import math
 import os
 import threading
 import time
+from collections import OrderedDict
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
@@ -285,6 +286,7 @@ class MARBERTv2ClassifierService:
         retry_backoff_s: float = 0.25,
         allow_validated_artifact_fallback: bool = True,
         low_memory_mode: bool | None = None,
+        max_resident_onnx_heads: int | None = None,
         predictor_override: Callable[[str], dict[str, dict]] | None = None,
     ) -> None:
         self.models_dir = Path(models_dir)
@@ -295,14 +297,33 @@ class MARBERTv2ClassifierService:
         self.retry_backoff_s = retry_backoff_s
         self.allow_validated_artifact_fallback = allow_validated_artifact_fallback
         self._low_memory_override = low_memory_mode
+        if max_resident_onnx_heads is None:
+            env_heads = os.environ.get("SVR_ONNX_MAX_RESIDENT_HEADS", "").strip()
+            if env_heads.isdigit():
+                self.max_resident_onnx_heads = max(1, min(4, int(env_heads)))
+            else:
+                self.max_resident_onnx_heads = 2 if self._is_low_memory("cpu") else 4
+        else:
+            self.max_resident_onnx_heads = max(1, min(4, int(max_resident_onnx_heads)))
         self._predictor_override = predictor_override
         self._lock = threading.Lock()
         self._models: dict[str, object] | None = None
+        self._onnx_sessions: OrderedDict[str, tuple[object, dict]] = OrderedDict()
         self._ckpt_dirs: dict[str, Path] | None = None
         self._tokenizer = None
         self._device = "cpu"
         self._loaded_model_version: str | None = None
         self._validated_index = ValidatedPredictionsIndex(self.repo_root, seed=seed)
+
+    def unload(self) -> None:
+        """Release cached ONNX sessions and PyTorch models to reclaim host/GPU memory."""
+        with self._lock:
+            released = bool(self._onnx_sessions) or self._models is not None
+            self._onnx_sessions.clear()
+            self._models = None
+            if released:
+                gc.collect()
+                logger.info("Unloaded MARBERTv2 classifier sessions/models.")
 
     def _is_low_memory(self, device: str) -> bool:
         if self._low_memory_override is not None:
@@ -350,10 +371,15 @@ class MARBERTv2ClassifierService:
                 raise RuntimeError(
                     f"MARBERTv2 single-task checkpoints not found under {self.models_dir}"
                 )
-            import torch
+            backend_env = os.environ.get("SVR_MARBERT_BACKEND", "auto").strip().lower()
+            if backend_env == "onnx":
+                self._device = "cpu"
+            else:
+                import torch
+
+                self._device = "cuda" if torch.cuda.is_available() else "cpu"
             from transformers import AutoTokenizer
 
-            self._device = "cuda" if torch.cuda.is_available() else "cpu"
             first_dir = ckpt_dirs[CLASSIFICATION_FIELDS[0]]
             tok_dir = first_dir if (first_dir / "tokenizer_config.json").is_file() else self.base_model_id
             self._tokenizer = AutoTokenizer.from_pretrained(str(tok_dir))
@@ -419,14 +445,50 @@ class MARBERTv2ClassifierService:
 
     @classmethod
     def _score_single_onnx(cls, session: object, enc_np: dict, id2label: dict, field_name: str) -> dict:
+        import numpy as np
+
         input_names = {inp.name for inp in session.get_inputs()}  # type: ignore[attr-defined]
-        feed = {k: v for k, v in enc_np.items() if k in input_names}
+        feed = {
+            k: (
+                np.asarray(v, dtype=np.int64)
+                if hasattr(v, "dtype") and np.issubdtype(v.dtype, np.integer)
+                else v
+            )
+            for k, v in enc_np.items()
+            if k in input_names
+        }
         logits = session.run(["logits"], feed)[0][0]  # type: ignore[attr-defined]
         return cls._logits_to_prediction([float(x) for x in logits], id2label, field_name)
 
-    def _predict_with_onnx(self, ckpt_dirs: dict[str, Path], text_norm: str) -> tuple[dict[str, dict], str]:
+    def _get_or_load_onnx_session(self, ckpt_dirs: dict[str, Path], field_name: str) -> tuple[object, dict]:
+        """Return an arena-disabled ONNX session from the bounded LRU cache."""
         import onnxruntime as ort
 
+        with self._lock:
+            cached = self._onnx_sessions.get(field_name)
+            if cached is not None:
+                self._onnx_sessions.move_to_end(field_name)
+                return cached
+
+            onnx_path = self._onnx_path_for(ckpt_dirs[field_name])
+            assert onnx_path is not None
+            cfg = json.loads((ckpt_dirs[field_name] / "config.json").read_text(encoding="utf-8"))
+            id2label = {int(k): v for k, v in (cfg.get("id2label") or {}).items()}
+            opts = ort.SessionOptions()
+            opts.enable_cpu_mem_arena = False
+            opts.enable_mem_pattern = False
+            opts.intra_op_num_threads = 2
+            sess = ort.InferenceSession(str(onnx_path), sess_options=opts, providers=["CPUExecutionProvider"])
+
+            while len(self._onnx_sessions) >= self.max_resident_onnx_heads:
+                _evicted_field, (evicted_sess, _) = self._onnx_sessions.popitem(last=False)
+                del evicted_sess
+                gc.collect()
+
+            self._onnx_sessions[field_name] = (sess, id2label)
+            return sess, id2label
+
+    def _predict_with_onnx(self, ckpt_dirs: dict[str, Path], text_norm: str) -> tuple[dict[str, dict], str]:
         assert self._tokenizer is not None
         enc_np = self._tokenizer(
             text_norm,
@@ -436,38 +498,9 @@ class MARBERTv2ClassifierService:
             return_tensors="np",
         )
         outputs: dict[str, dict] = {}
-        low_mem = self._is_low_memory(self._device)
-        if not low_mem and self._models is None:
-            with self._lock:
-                if self._models is None:
-                    sessions: dict[str, object] = {}
-                    for field_name in CLASSIFICATION_FIELDS:
-                        onnx_path = self._onnx_path_for(ckpt_dirs[field_name])
-                        assert onnx_path is not None
-                        cfg = json.loads((ckpt_dirs[field_name] / "config.json").read_text(encoding="utf-8"))
-                        id2label = {int(k): v for k, v in (cfg.get("id2label") or {}).items()}
-                        sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
-                        sessions[field_name] = (sess, id2label)
-                    self._models = sessions
-
-        if not low_mem and self._models is not None:
-            for field_name in CLASSIFICATION_FIELDS:
-                sess, id2label = self._models[field_name]  # type: ignore[misc]
-                outputs[field_name] = self._score_single_onnx(sess, enc_np, id2label, field_name)
-            return outputs, self._loaded_model_version or f"{self.base_model_id}:single-task-lr2e5-onnx"
-
-        with self._lock:
-            for field_name in CLASSIFICATION_FIELDS:
-                onnx_path = self._onnx_path_for(ckpt_dirs[field_name])
-                assert onnx_path is not None
-                cfg = json.loads((ckpt_dirs[field_name] / "config.json").read_text(encoding="utf-8"))
-                id2label = {int(k): v for k, v in (cfg.get("id2label") or {}).items()}
-                sess = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
-                try:
-                    outputs[field_name] = self._score_single_onnx(sess, enc_np, id2label, field_name)
-                finally:
-                    del sess
-                    gc.collect()
+        for field_name in CLASSIFICATION_FIELDS:
+            sess, id2label = self._get_or_load_onnx_session(ckpt_dirs, field_name)
+            outputs[field_name] = self._score_single_onnx(sess, enc_np, id2label, field_name)
         return outputs, self._loaded_model_version or f"{self.base_model_id}:single-task-lr2e5-onnx"
 
     def _predict_with_checkpoints(self, text_norm: str) -> tuple[dict[str, dict], str]:

@@ -33,11 +33,11 @@ ffmpeg -version | head -n 1
      pip install gdown onnx onnxscript onnxruntime
      python ops/download_models.py
      ```
-2. **Egyptian Arabic Whisper (`int8_float16`, recommended for 6 GB NVIDIA GPUs like RTX 3050):**
-   - Merges `AbdelrahmanHassan/whisper-large-v3-egyptian-arabic` LoRA onto `openai/whisper-large-v3` and converts to CTranslate2 at `models/whisper-large-v3-egyptian-ct2` (`~2.3 GB` VRAM). You can run both in one step:
+2. **Cohere Arabic ASR (`cohere_gpu_int8`, recommended for 6 GB NVIDIA GPUs like RTX 3050):**
+   - Uses pre-quantized `NAMAA-Space/cohere-transcribe-arabic-07-2026-int8` (`~2.7-3.2 GB` VRAM, Apache 2.0 base `CohereLabs/cohere-transcribe-arabic-07-2026`) with bundled offline `silero-vad` and `<=30s` VAD chunking. Optional `Whisper` Egyptian CT2 builder (`--with-egyptian-whisper`) remains supported for fallback.
      ```bash
-     pip install gdown onnx onnxscript onnxruntime torch transformers peft ctranslate2
-     python ops/download_models.py --with-egyptian-whisper
+     pip install gdown onnx onnxscript onnxruntime torch transformers accelerate bitsandbytes silero-vad
+     python ops/download_models.py --with-cohere-int8
      ```
 
 ---
@@ -47,15 +47,13 @@ ffmpeg -version | head -n 1
 ### Profile A: RTX 3050 (6 GB VRAM) + 16 GB RAM (Docker + NVIDIA Container Toolkit)
 
 Uses `docker-compose.yml` + `docker-compose.prod.yml` + `docker-compose.gpu-6gb.yml`:
-- **STT:** Egyptian Whisper `int8_float16` (`~2.3 GB` VRAM) -> unloads after transcription
-- **VoiceGate:** Ollama `aya-expanse:8b` (`Q4_K_M`, `~5.0 GB` VRAM) -> unloads via `keep_alive=0`
-- **Classification:** 4x MARBERTv2 ONNX INT8 on CPU (`SVR_MARBERT_BACKEND=onnx`, `0 GB` VRAM, `~105 ms`)
+- **STT:** Cohere Arabic INT8 (`NAMAA-Space/cohere-transcribe-arabic-07-2026-int8`, `~2.7-3.2 GB` VRAM) -> unloads after transcription (`SVR_STT_BACKEND=faster_whisper` fallback)
+- **VoiceGate:** Ollama `qwen2.5:3b` (`Q4_K_M`, `~2.1 GB` VRAM, `num_ctx=1536`) -> unloads via `keep_alive=0` (`aya-expanse:8b` opt-in on >=8 GB VRAM)
+- **Classification:** 4x MARBERTv2 ONNX INT8 on CPU (`SVR_MARBERT_BACKEND=onnx`, `SVR_ONNX_MAX_RESIDENT_HEADS=2`, `0 GB` VRAM, `~0.85 GB` RSS)
 
 ```bash
 bash ops/deploy_server.sh --gpu-6gb
 ```
-
-*(If `models/whisper-large-v3-egyptian-ct2` is not built yet, `deploy_server.sh --gpu-6gb` automatically falls back to `WHISPER_MODEL_ID=large-v3`.)*
 
 ### Profile B: CPU-Only Server (16-24 GB RAM, e.g. Oracle Cloud Always Free Ampere ARM)
 
@@ -111,6 +109,6 @@ For an end-to-end voicemail smoke test, sign in at `http://localhost:3000` (`sup
 
 1. **Zero em dashes (`\u2014`) or en dashes (`\u2013`)** in source, config, or docs, and **zero empty `except: pass` blocks** in Python (enforced by `.github/workflows/ci.yml`).
 2. **Never touch `final/clean_training_test.csv` or `dataset/test/`** during setup, benchmarking, or smoke tests.
-3. **Never switch Whisper to `distil-large-v3`** (English-only) and **never re-add `initial_prompt`** to `WhisperSTTService` (causes prompt echoing on quiet audio).
-4. **Keep `SVR_MARBERT_BACKEND=onnx` and `SVR_LOW_MEMORY_MODE=1` on 6 GB GPUs** so Whisper + `aya-expanse:8b` never collide in VRAM.
+3. **Never switch Whisper to `distil-large-v3`** (English-only) and **never re-add `initial_prompt`** to `WhisperSTTService` (causes prompt echoing on quiet audio); always pass `language="ar"` and use offline `silero-vad` with `CohereArabicSTTService`.
+4. **Keep `SVR_MARBERT_BACKEND=onnx`, `SVR_ONNX_MAX_RESIDENT_HEADS=2`, and `SVR_LOW_MEMORY_MODE=1` on 6 GB GPUs / 16 GB RAM** so STT + VoiceGate + ONNX never collide in VRAM or host RAM.
 5. **Local-first LLM boundary:** Never configure external/cloud LLM endpoints; `OLLAMA_URL` must stay loopback (`127.0.0.1`) or internal Docker (`http://ollama:11434` with `SVR_ALLOW_DOCKER_OLLAMA=1`).

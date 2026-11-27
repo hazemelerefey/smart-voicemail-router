@@ -71,7 +71,7 @@ export const PRIVACY_DOC: Record<'en' | 'ar', LegalDoc> = {
             [
               'Voicemail Audio Recordings',
               'Encrypted WAV, MP3, or M4A bytes (<= 25 MB, <= 60 s), duration, SHA-256 digest',
-              'No (local Whisper large-v3)',
+              'No (local Arabic ASR: Cohere Arabic / Whisper fallback)',
               '90 days default (configurable)',
               'Subscriber consent / telecom service care',
             ],
@@ -110,7 +110,7 @@ export const PRIVACY_DOC: Record<'en' | 'ar', LegalDoc> = {
         id: 'residency',
         title: 'Zero Third-Party AI Transfer & Data Residency',
         paragraphs: [
-          'Voice recordings inherently carry biometric and personal identifiers. SVR System eliminates external AI vendor exposure by executing all speech recognition (faster-whisper Whisper large-v3) and all four natural-language classification heads (UBC-NLP/MARBERTv2) strictly inside the operator private container network.',
+          'Voice recordings inherently carry biometric and personal identifiers. SVR System eliminates external AI vendor exposure by executing all speech recognition (local Cohere Arabic ASR / Whisper fallback) and all four natural-language classification heads (UBC-NLP/MARBERTv2) strictly inside the operator private container network.',
           'All application services (database, cache, API server, AI worker, operator console, and observability stack) communicate over an isolated internal network on servers and encrypted volumes controlled by the operating organization, satisfying cross-border transfer restrictions under Articles 14 through 16 of Law No. 151 of 2020.',
         ],
         bullets: [
@@ -249,7 +249,7 @@ export const PRIVACY_DOC: Record<'en' | 'ar', LegalDoc> = {
             [
               'التسجيلات الصوتية للبريد الصوتي',
               'ملفات WAV أو MP3 أو M4A مشفرة (<= 25 ميجابايت، <= 60 ثانية) وبصمة SHA-256',
-              'لا (Whisper large-v3 محلي)',
+              'لا (محرك تفريغ عربي محلي: Cohere / Whisper)',
               '90 يوما افتراضيا',
               'موافقة المشترك / تقديم خدمة العملاء',
             ],

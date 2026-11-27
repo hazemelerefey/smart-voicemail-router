@@ -21,20 +21,21 @@ def _export_one_fp32(cdir: Path, fp32_path: Path) -> None:
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
     tokenizer = AutoTokenizer.from_pretrained(str(cdir))
-    model = AutoModelForSequenceClassification.from_pretrained(str(cdir))
+    model = AutoModelForSequenceClassification.from_pretrained(str(cdir), attn_implementation="eager")
     model.eval()
 
     sample = tokenizer("الشبكة ضعيفة جدا", return_tensors="pt")
     input_names = ["input_ids", "attention_mask"]
     inputs: tuple[torch.Tensor, ...] = (sample["input_ids"], sample["attention_mask"])
-    dynamic_shapes: dict[str, dict[int, str]] = {
+    dynamic_axes: dict[str, dict[int, str]] = {
         "input_ids": {0: "batch", 1: "seq"},
         "attention_mask": {0: "batch", 1: "seq"},
+        "logits": {0: "batch"},
     }
     if "token_type_ids" in sample:
         input_names.append("token_type_ids")
         inputs = (*inputs, sample["token_type_ids"])
-        dynamic_shapes["token_type_ids"] = {0: "batch", 1: "seq"}
+        dynamic_axes["token_type_ids"] = {0: "batch", 1: "seq"}
 
     with torch.no_grad():
         torch.onnx.export(
@@ -43,8 +44,9 @@ def _export_one_fp32(cdir: Path, fp32_path: Path) -> None:
             str(fp32_path),
             input_names=input_names,
             output_names=["logits"],
-            dynamic_shapes=dynamic_shapes,
-            external_data=True,
+            dynamic_axes=dynamic_axes,
+            opset_version=17,
+            dynamo=False,
         )
 
 

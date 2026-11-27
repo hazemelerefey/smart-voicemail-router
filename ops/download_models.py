@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -57,7 +58,22 @@ def main() -> None:
     parser.add_argument(
         "--with-egyptian-whisper",
         action="store_true",
-        help="Also build models/whisper-large-v3-egyptian-ct2 for 6 GB GPU hosts.",
+        help="Also build models/whisper-large-v3-egyptian-ct2 for Whisper GPU fallback.",
+    )
+    parser.add_argument(
+        "--with-cohere-int8",
+        action="store_true",
+        help="Download pre-quantized NAMAA-Space/cohere-transcribe-arabic-07-2026-int8 for 6 GB GPU.",
+    )
+    parser.add_argument(
+        "--with-cohere-bf16",
+        action="store_true",
+        help="Download CohereLabs/cohere-transcribe-arabic-07-2026 BF16 weights (8+ GB GPU).",
+    )
+    parser.add_argument(
+        "--hf-token",
+        default=os.environ.get("HF_TOKEN", ""),
+        help="Optional Hugging Face token for gated repositories (defaults to HF_TOKEN env var).",
     )
     args = parser.parse_args()
 
@@ -109,6 +125,22 @@ def main() -> None:
             ],
             check=True,
         )
+
+    if args.with_cohere_int8 or args.with_cohere_bf16:
+        try:
+            from huggingface_hub import snapshot_download
+        except ImportError as exc:
+            raise RuntimeError("huggingface_hub is required to download Cohere ASR weights.") from exc
+
+        token = args.hf_token.strip() or None
+        if args.with_cohere_int8:
+            repo_id = "NAMAA-Space/cohere-transcribe-arabic-07-2026-int8"
+            print(f"Pre-caching Cohere Arabic INT8 ({repo_id}) for offline local serving...")
+            snapshot_download(repo_id=repo_id, token=token)
+        if args.with_cohere_bf16:
+            repo_id = "CohereLabs/cohere-transcribe-arabic-07-2026"
+            print(f"Pre-caching Cohere Arabic BF16 ({repo_id}) for offline local serving...")
+            snapshot_download(repo_id=repo_id, token=token)
 
 
 if __name__ == "__main__":

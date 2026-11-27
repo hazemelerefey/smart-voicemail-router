@@ -449,6 +449,33 @@ class HealthResponse(StrictResponseSchema):
     environment: str
     database: str
     whisper_model: str
+    stt_backend: str = "faster_whisper"
+    stt_model: str = ""
     marbert_checkpoints_ready: bool
     active_ws_connections: int
     version: str
+
+
+class AgentMemoryLessonItem(StrictResponseSchema):
+    id: str
+    rule_type: str
+    trigger_pattern: str
+    instruction: str
+    support_count: int
+    success_count: int
+    source: str
+    updated_at: datetime
+
+
+class AgentMemoryStatsResponse(StrictResponseSchema):
+    organization_id: str
+    memory_enabled: bool
+    adjudicator_enabled: bool
+    embed_model: str
+    episodic_total: int
+    episodic_by_source: dict[str, int]
+    semantic_entries_count: int
+    procedural_rules_active_count: int
+    training_feedback_total: int
+    training_feedback_by_tier: dict[str, int]
+    recent_procedural_lessons: list[AgentMemoryLessonItem]

@@ -3,6 +3,7 @@
 FROM python:3.11-slim
 
 ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
+ARG INSTALL_GPU_EXTRAS=0
 ARG APP_UID=10001
 ARG APP_GID=10001
 
@@ -38,7 +39,8 @@ WORKDIR /app
 COPY backend/requirements.txt /app/backend/requirements.txt
 RUN pip install --upgrade pip \
     && pip install --index-url "${TORCH_INDEX_URL}" torch \
-    && pip install -r /app/backend/requirements.txt
+    && pip install -r /app/backend/requirements.txt \
+    && if [ "${INSTALL_GPU_EXTRAS}" = "1" ]; then pip install "bitsandbytes>=0.45.0" "accelerate>=1.0.0"; fi
 
 # Copy backend application, evaluation harness, and operational utilities
 COPY backend /app/backend

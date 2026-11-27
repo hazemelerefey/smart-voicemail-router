@@ -121,6 +121,27 @@ export interface TranscriptVerificationRound {
   changes?: TranscriptVerificationChange[];
 }
 
+export interface OrchestratorAdjudicationSummary {
+  mode: string;
+  marbert_original_labels: Record<string, string | null>;
+  agent_final_labels: Record<string, string | null>;
+  label_sources: Record<string, string>;
+  changed_fields: string[];
+  flagged_fields: string[];
+  trigger_reasons: string[];
+  calibrated_confidence: number;
+  reasoning: string;
+  learned_lesson: string;
+  memory_episodes_used: number;
+  max_episode_similarity: number;
+  semantic_rules_used: number;
+  procedural_rules_used: number;
+  resolved_gate_uncertainty: boolean;
+  escalate_to_human: boolean;
+  latency_ms: number;
+  error?: string;
+}
+
 export interface TranscriptVerificationReport {
   agent_name: string;
   model: string;
@@ -137,6 +158,7 @@ export interface TranscriptVerificationReport {
   signal_summary?: Record<string, unknown>;
   changes: TranscriptVerificationChange[];
   trace: TranscriptVerificationRound[];
+  orchestrator_adjudication?: OrchestratorAdjudicationSummary | null;
   latency_ms: number;
   error?: string;
 }

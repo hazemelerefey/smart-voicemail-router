@@ -158,7 +158,7 @@ export function SupportPage() {
               </CardTitle>
               <CardDescription>
                 {L(
-                  'Self-hosted Whisper large-v3 and Fernet vault requirements with zero third-party egress.',
+                  'Self-hosted Arabic ASR (Cohere Arabic / Whisper fallback) and Fernet vault requirements with zero third-party egress.',
                   'متطلبات الاستقبال المحلي والتشفير دون إرسال أي بيانات صوتية لجهات خارجية.'
                 )}
               </CardDescription>

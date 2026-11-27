@@ -428,8 +428,8 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
                 <CardTitle>{L('Verified Arabic Transcript', 'النص الصوتي المدقق')}</CardTitle>
                 <CardDescription>
                   {L(
-                    'Whisper large-v3 -> VoiceGate Orchestrator (Qwen2 0.5B Gate)',
-                    'تفريغ Whisper ثم بوابة التحقق والضبط عبر VoiceGate Orchestrator'
+                    `${String(ticket.stt_v1_json?.model || 'Local Arabic ASR')} -> VoiceGate Orchestrator (${ticket.transcript_verification?.model || 'VoiceGate'})`,
+                    `تفريغ ${String(ticket.stt_v1_json?.model || 'ASR المحلي')} ثم بوابة التحقق عبر VoiceGate Orchestrator`
                   )}
                 </CardDescription>
               </div>
@@ -449,7 +449,7 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
                     {ticket.transcript_verification.needs_human_review
                       ? L('Uncertain Gate', 'يتطلب مراجعة')
                       : ticket.transcript_verification.correction_applied
-                        ? L('Qwen Repaired', 'تم تصحيح النص')
+                        ? L('VoiceGate Repaired', 'تم تصحيح النص')
                         : L('Gate Verified', 'تم التحقق')}
                   </span>
                   <span className='font-mono tabular-nums'>
@@ -497,7 +497,7 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
                     <Button variant='ghost' size='sm' className='gap-1 px-2 text-xs'>
                       <ChevronDown className='size-3.5' />
                       {L(
-                        'VoiceGate Orchestrator Reasoning & Raw Whisper Comparison',
+                        'VoiceGate Orchestrator Reasoning & Raw STT Comparison',
                         'تفاصيل تفكير VoiceGate Orchestrator ومقارنة النص الخام'
                       )}
                     </Button>
@@ -515,7 +515,7 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
                     </div>
                     <div>
                       <div className='font-semibold text-muted-foreground'>
-                        {L('Original Raw Whisper Output:', 'النص الخام الأصلي من Whisper:')}
+                        {L('Original Raw STT Output:', 'النص الخام الأصلي قبل المراجعة:')}
                       </div>
                       <p className='mt-1 rounded bg-muted/40 p-2 leading-relaxed' dir='rtl'>
                         {ticket.transcript_verification.raw_text || '-'}
@@ -556,7 +556,7 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
                   <CollapsibleTrigger asChild>
                     <Button variant='ghost' size='sm' className='gap-1 px-2 text-xs'>
                       <ChevronDown className='size-3.5' />
-                      {L('Whisper STT v1 Metadata (10 columns)', 'بيانات Whisper STT v1')}
+                      {L('STT v1 Metadata (10 columns)', 'بيانات STT v1')}
                     </Button>
                   </CollapsibleTrigger>
                   <CollapsibleContent className='mt-2 rounded-md border p-3'>
@@ -585,6 +585,43 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {ticket.transcript_verification?.orchestrator_adjudication && (
+            <div className='mb-4 rounded-lg border bg-muted/30 p-3 text-xs'>
+              <div className='flex flex-wrap items-center justify-between gap-2'>
+                <span className='font-semibold'>
+                  {L('VoiceGate Orchestrator Adjudication', 'مراجعة وتحكيم وكيل VoiceGate')} (
+                  <span className='font-mono'>
+                    {ticket.transcript_verification.orchestrator_adjudication.mode}
+                  </span>
+                  )
+                </span>
+                <span className='font-mono text-muted-foreground tabular-nums'>
+                  {L('Episodes:', 'الحالات المشابهة:')}{' '}
+                  {ticket.transcript_verification.orchestrator_adjudication.memory_episodes_used} ·{' '}
+                  {L('Rules:', 'القواعد:')}{' '}
+                  {ticket.transcript_verification.orchestrator_adjudication.semantic_rules_used +
+                    ticket.transcript_verification.orchestrator_adjudication.procedural_rules_used}{' '}
+                  · {ticket.transcript_verification.orchestrator_adjudication.latency_ms.toFixed(0)} ms
+                </span>
+              </div>
+              {ticket.transcript_verification.orchestrator_adjudication.changed_fields.length > 0 && (
+                <div className='mt-1.5 font-mono text-[11px] text-blue-600 dark:text-sky-400'>
+                  {L('Agent overrode MARBERTv2:', 'تم تعديل قرار MARBERTv2:')}{' '}
+                  {ticket.transcript_verification.orchestrator_adjudication.changed_fields
+                    .map((f) => {
+                      const adj = ticket.transcript_verification!.orchestrator_adjudication!
+                      return `${f} (${adj.marbert_original_labels[f] ?? '-'} -> ${adj.agent_final_labels[f] ?? '-'})`
+                    })
+                    .join(', ')}
+                </div>
+              )}
+              {ticket.transcript_verification.orchestrator_adjudication.reasoning && (
+                <p className='mt-1 text-muted-foreground'>
+                  {ticket.transcript_verification.orchestrator_adjudication.reasoning}
+                </p>
+              )}
+            </div>
+          )}
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
             {FIELD_ORDER.map((fieldKey) => {
               const info = fieldMeta[fieldKey]
@@ -596,9 +633,18 @@ export function TicketDetailPage({ ticketId }: { ticketId: string }) {
                     <span className='text-xs font-semibold uppercase text-muted-foreground'>
                       {info.title}
                     </span>
-                    <Badge variant={src === 'human' ? 'default' : 'secondary'} className='gap-1 text-[11px]'>
+                    <Badge
+                      variant={src === 'human' ? 'default' : src === 'agent' ? 'outline' : 'secondary'}
+                      className={`gap-1 text-[11px] ${
+                        src === 'agent' ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : ''
+                      }`}
+                    >
                       {src === 'human' ? <UserCheck className='size-3' /> : <Bot className='size-3' />}
-                      {src === 'human' ? L('Human', 'بشري') : L('AI', 'آلي')}
+                      {src === 'human'
+                        ? L('Human', 'بشري')
+                        : src === 'agent'
+                          ? L('VoiceGate Agent', 'وكيل VoiceGate')
+                          : L('AI', 'آلي')}
                     </Badge>
                   </div>
                   <div className='mt-1 mb-3 text-base font-bold'>{info.value}</div>

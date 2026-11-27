@@ -14,25 +14,35 @@ function downsampleBuffer(
   sourceRate: number,
   targetRate: number
 ): Float32Array {
-  if (sourceRate === targetRate) {
+  if (sourceRate === targetRate || input.length === 0) {
     return input;
   }
   const ratio = sourceRate / targetRate;
   const newLength = Math.max(1, Math.round(input.length / ratio));
   const result = new Float32Array(newLength);
-  let offsetResult = 0;
-  let offsetBuffer = 0;
-  while (offsetResult < result.length) {
-    const nextOffsetBuffer = Math.min(input.length, Math.round((offsetResult + 1) * ratio));
-    let accum = 0;
-    let count = 0;
-    for (let i = offsetBuffer; i < nextOffsetBuffer; i += 1) {
-      accum += input[i];
-      count += 1;
+  // Anti-aliased Hann-windowed sinc resampling to avoid high-frequency foldback
+  const halfTaps = 16;
+  const cutoff = Math.min(0.45, 0.45 * (targetRate / sourceRate));
+  for (let outIdx = 0; outIdx < newLength; outIdx += 1) {
+    const center = outIdx * ratio;
+    const start = Math.max(0, Math.floor(center) - halfTaps + 1);
+    const end = Math.min(input.length - 1, Math.floor(center) + halfTaps);
+    let weightedSum = 0;
+    let weightTotal = 0;
+    for (let i = start; i <= end; i += 1) {
+      const dist = i - center;
+      const sinc =
+        Math.abs(dist) < 1e-6
+          ? 2 * cutoff
+          : Math.sin(2 * Math.PI * cutoff * dist) / (Math.PI * dist);
+      const winPos = (dist + halfTaps) / (2 * halfTaps);
+      const hann =
+        winPos >= 0 && winPos <= 1 ? 0.5 * (1 - Math.cos(2 * Math.PI * winPos)) : 0;
+      const w = sinc * hann;
+      weightedSum += input[i] * w;
+      weightTotal += w;
     }
-    result[offsetResult] = count > 0 ? accum / count : 0;
-    offsetResult += 1;
-    offsetBuffer = nextOffsetBuffer;
+    result[outIdx] = weightTotal > 1e-8 ? weightedSum / weightTotal : 0;
   }
   return result;
 }
@@ -87,14 +97,56 @@ export function encodeMonoWav16k(
   return { blob, durationSeconds };
 }
 
+const WORKLET_PROCESSOR_SOURCE = `
+class SvrPcmRecorderProcessor extends AudioWorkletProcessor {
+  process(inputs) {
+    const input = inputs[0];
+    if (input && input[0] && input[0].length > 0) {
+      this.port.postMessage(new Float32Array(input[0]));
+    }
+    return true;
+  }
+}
+registerProcessor("svr-pcm-recorder", SvrPcmRecorderProcessor);
+`;
+
 export class BrowserWavRecorder {
   private stream: MediaStream | null = null;
   private audioCtx: AudioContext | null = null;
   private sourceNode: MediaStreamAudioSourceNode | null = null;
+  private workletNode: AudioWorkletNode | null = null;
+  private workletBlobUrl: string | null = null;
   private processorNode: ScriptProcessorNode | null = null;
   private chunks: Float32Array[] = [];
   private sampleRate = 48000;
   private active = false;
+
+  private cleanupAudioGraph(): void {
+    if (this.workletNode) {
+      this.workletNode.port.onmessage = null;
+      this.workletNode.disconnect();
+      this.workletNode = null;
+    }
+    if (this.workletBlobUrl) {
+      URL.revokeObjectURL(this.workletBlobUrl);
+      this.workletBlobUrl = null;
+    }
+    if (this.processorNode) {
+      this.processorNode.disconnect();
+      this.processorNode.onaudioprocess = null;
+      this.processorNode = null;
+    }
+    if (this.sourceNode) {
+      this.sourceNode.disconnect();
+      this.sourceNode = null;
+    }
+    if (this.stream) {
+      for (const track of this.stream.getTracks()) {
+        track.stop();
+      }
+      this.stream = null;
+    }
+  }
 
   async start(): Promise<void> {
     if (this.active) return;
@@ -113,34 +165,40 @@ export class BrowserWavRecorder {
     this.audioCtx = new AudioCtx();
     this.sampleRate = this.audioCtx.sampleRate;
     this.sourceNode = this.audioCtx.createMediaStreamSource(this.stream);
-    this.processorNode = this.audioCtx.createScriptProcessor(4096, 1, 1);
-    this.processorNode.onaudioprocess = (ev: AudioProcessingEvent) => {
-      if (!this.active) return;
-      const channel = ev.inputBuffer.getChannelData(0);
-      this.chunks.push(new Float32Array(channel));
-    };
-    this.sourceNode.connect(this.processorNode);
-    this.processorNode.connect(this.audioCtx.destination);
+
+    if (typeof AudioWorkletNode !== "undefined" && this.audioCtx.audioWorklet) {
+      const blob = new Blob([WORKLET_PROCESSOR_SOURCE], { type: "application/javascript" });
+      this.workletBlobUrl = URL.createObjectURL(blob);
+      await this.audioCtx.audioWorklet.addModule(this.workletBlobUrl);
+      this.workletNode = new AudioWorkletNode(this.audioCtx, "svr-pcm-recorder", {
+        numberOfInputs: 1,
+        numberOfOutputs: 1,
+        channelCount: 1,
+      });
+      this.workletNode.port.onmessage = (ev: MessageEvent<Float32Array>) => {
+        if (!this.active) return;
+        if (ev.data instanceof Float32Array) {
+          this.chunks.push(new Float32Array(ev.data));
+        }
+      };
+      this.sourceNode.connect(this.workletNode);
+      this.workletNode.connect(this.audioCtx.destination);
+    } else {
+      this.processorNode = this.audioCtx.createScriptProcessor(4096, 1, 1);
+      this.processorNode.onaudioprocess = (ev: AudioProcessingEvent) => {
+        if (!this.active) return;
+        const channel = ev.inputBuffer.getChannelData(0);
+        this.chunks.push(new Float32Array(channel));
+      };
+      this.sourceNode.connect(this.processorNode);
+      this.processorNode.connect(this.audioCtx.destination);
+    }
     this.active = true;
   }
 
   async stop(): Promise<RecordingResult> {
     this.active = false;
-    if (this.processorNode) {
-      this.processorNode.disconnect();
-      this.processorNode.onaudioprocess = null;
-      this.processorNode = null;
-    }
-    if (this.sourceNode) {
-      this.sourceNode.disconnect();
-      this.sourceNode = null;
-    }
-    if (this.stream) {
-      for (const track of this.stream.getTracks()) {
-        track.stop();
-      }
-      this.stream = null;
-    }
+    this.cleanupAudioGraph();
     if (this.audioCtx) {
       await this.audioCtx.close();
       this.audioCtx = null;
@@ -158,20 +216,7 @@ export class BrowserWavRecorder {
   abort(): void {
     this.active = false;
     this.chunks = [];
-    if (this.processorNode) {
-      this.processorNode.disconnect();
-      this.processorNode = null;
-    }
-    if (this.sourceNode) {
-      this.sourceNode.disconnect();
-      this.sourceNode = null;
-    }
-    if (this.stream) {
-      for (const track of this.stream.getTracks()) {
-        track.stop();
-      }
-      this.stream = null;
-    }
+    this.cleanupAudioGraph();
     if (this.audioCtx) {
       void this.audioCtx.close();
       this.audioCtx = null;

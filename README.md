@@ -18,7 +18,7 @@
 
 ![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?style=flat-square&logo=fastapi&logoColor=white)
-![Whisper large-v3](https://img.shields.io/badge/STT-Whisper_large--v3-0284C7?style=flat-square&logo=openai&logoColor=white)
+![Cohere Arabic ASR](https://img.shields.io/badge/STT-Cohere_Arabic_ASR_%7C_Whisper-0284C7?style=flat-square&logo=huggingface&logoColor=white)
 ![VoiceGate LangGraph](https://img.shields.io/badge/Agent-LangGraph_Qwen2.5--3B-8B5CF6?style=flat-square&logo=langchain&logoColor=white)
 ![MARBERTv2](https://img.shields.io/badge/NLP-4x_MARBERTv2-06B6D4?style=flat-square&logo=pytorch&logoColor=white)
 ![React 19](https://img.shields.io/badge/React-19-149ECA?style=flat-square&logo=react&logoColor=white)
@@ -67,8 +67,8 @@ Telecom contact centers accumulate thousands of subscriber voicemails across pea
 **Smart Voicemail Router (SVR)** replaces FIFO voicemail backlogs with an end-to-end operational control plane:
 
 1. **Ingests & Encrypts Locally**: Accepts uploaded audio (`WAV`, `MP3`, `M4A`) or live in-browser 16 kHz microphone recordings, validates container headers and duration (`<= 60s`), deduplicates via `SHA-256`, encrypts audio at rest with **Fernet (`AES-128-CBC + HMAC-SHA256`)**, and returns `HTTP 202 Accepted` in under 2 seconds.
-2. **Transcribes Dialectal Telecom Speech**: Applies safe RMS/peak loudness normalization and runs self-hosted `faster-whisper` (`Whisper large-v3`, `beam_size=3`) on Egyptian Arabic speech mixed with English telecom terms (`eSIM`, `4G`, `5G`, `DSL`, `MB/GB`).
-3. **Audits & Repairs via VoiceGate Orchestrator (LangGraph)**: Runs a local-first **LangGraph** `StateGraph` agent (`AgenticTranscriptGate` backed by `qwen2.5:3b` via loopback Ollama) in an iterative audit-and-fix loop anchored in Egyptian telecom context, with anti-hallucination guardrails and acoustic-degradation escalation (`uncertain_transcript`) when speech is unrecoverable.
+2. **Transcribes Dialectal Telecom Speech**: Applies DC-offset removal, 80 Hz high-pass filtering, RMS/peak loudness normalization, and offline Silero VAD chunking, running **`CohereLabs/cohere-transcribe-arabic-07-2026`** (`NAMAA-Space/cohere-transcribe-arabic-07-2026-int8` on 6 GB GPUs) with `faster-whisper` (`Whisper large-v3`, `beam_size=3`) CPU fallback on Egyptian Arabic speech mixed with English telecom terms (`eSIM`, `4G`, `5G`, `DSL`, `Wi-Fi`, `MB/GB`).
+3. **Audits & Repairs via VoiceGate Orchestrator (LangGraph)**: Runs a local-first **LangGraph** `StateGraph` agent (`AgenticTranscriptGate` backed by `qwen2.5:3b` via loopback Ollama) in an iterative audit-and-fix loop anchored in Egyptian telecom context, with anti-hallucination guardrails, acoustic-degradation escalation (`uncertain_transcript`), and max-1 adaptive re-audit when MARBERTv2 category confidence falls below `0.60`.
 4. **Classifies Across Four Independent Heads**: Evaluates verified, normalized transcripts (`text_norm`) through four dedicated single-task **`UBC-NLP/MARBERTv2`** models for **Complaint Category**, **Complaint Urgency**, **Customer State**, and **Churn Risk** with calibrated probability distributions and confidence gating.
 5. **Scores Priority & Routes by Skill + Capacity**: Applies a transparent, deterministic 1-to-6 priority rule and assigns each ticket to an available, on-shift specialist matching the required telecom skill (`Network`, `Billing`, `General`), or escalates low-confidence cases to the **Human Routing Queue**.
 6. **Equips Agents Before They Dial**: Generates a concise bilingual callback brief from the final verified transcript and an approved Arabic/English opening script grounded strictly in verified ticket facts, streamed live to operators over WebSockets.
@@ -81,7 +81,7 @@ Telecom contact centers accumulate thousands of subscriber voicemails across pea
   <tr>
     <td width="50%" valign="top">
       <h3><img src="assets/icons/capability-stt.svg" width="20" height="20" align="absmiddle" alt="" />&nbsp; Dialectal Arabic + Telecom STT</h3>
-      <p>Self-hosted <code>Whisper large-v3</code> pipeline with 16 kHz mono PCM normalization, language-mix detection, and a locked 10-column structured STT schema engineered for Egyptian Arabic customer care.</p>
+      <p>Self-hosted <code>CohereLabs/cohere-transcribe-arabic-07-2026</code> (INT8 GPU) and <code>Whisper large-v3</code> fallback pipeline with offline Silero VAD, 16 kHz mono PCM normalization, language-mix detection, and a locked 10-column structured STT schema engineered for Egyptian Arabic customer care.</p>
     </td>
     <td width="50%" valign="top">
       <h3><img src="assets/icons/capability-triage.svg" width="20" height="20" align="absmiddle" alt="" />&nbsp; 4-Head MARBERTv2 Triage</h3>
@@ -117,8 +117,8 @@ Telecom contact centers accumulate thousands of subscriber voicemails across pea
 ```mermaid
 flowchart LR
     S1["01. Audio Intake & Vault<br/>WAV/MP3/M4A + 16 kHz Mic<br/>ffprobe <= 60s · Fernet AES-128"]
-    S2["02. Whisper large-v3 STT<br/>Loudness Norm + faster-whisper<br/>Egyptian Arabic + EN Telecom"]
-    S3["03. VoiceGate Agent (LangGraph)<br/>Qwen2.5-3B Audit-and-Repair Loop<br/>Guardrails + Acoustic Gate"]
+    S2["02. Cohere Arabic ASR / Whisper<br/>Silero VAD + 30s Chunking<br/>Egyptian Arabic + EN Telecom"]
+    S3["03. VoiceGate Agent (LangGraph)<br/>Qwen2.5-3B Audit-and-Repair Loop<br/>Guardrails + Adaptive Re-Audit"]
     S4["04. 4x MARBERTv2 Triage<br/>Category · Urgency · State · Churn<br/>Calibrated Confidence Gate"]
     S5["05. Priority & Skill Route<br/>Deterministic Score 1..6<br/>Network / Billing / General"]
     S6["06. Live Operator Console<br/>Grounded AR/EN Script Brief<br/>WebSocket Push + Audit Log"]
@@ -140,7 +140,7 @@ flowchart LR
 | Stage | Engine / Mechanism | Key Output & Guardrail |
 | :--- | :--- | :--- |
 | **01. Audio Intake** | Magic-byte probe + `ffprobe` + Fernet vault | Enforces `<= 25 MB` & `<= 60s`, normalizes to 16 kHz mono WAV, deduplicates by `SHA-256` & `Idempotency-Key`, returns `202 Accepted` |
-| **02. Transcription** | `normalize_wav_16k_loudness` + `faster-whisper` (`Whisper large-v3`, `beam_size=3`) | Boosts quiet mic recordings safely (`-20 dBFS` target), produces raw Arabic transcript, `text_norm`, segment log-probabilities, and `language_mix` |
+| **02. Transcription** | `normalize_wav_16k_loudness` + offline Silero VAD + `CohereArabicSTTService` (INT8/BF16) or `faster-whisper` fallback | Removes DC/80 Hz rumble, boosts quiet recordings, splits `>30s` clips on VAD pauses, produces Arabic + EN transcript, `text_norm`, logprobs, and `language_mix` |
 | **03. VoiceGate Audit** | **LangGraph** `StateGraph` (`AgenticTranscriptGate` + local Ollama `qwen2.5:3b`) | Runs `pre_repair -> audit -> confidence_check -> finalize` loop, removes Whisper stutters, repairs Egyptian telecom ASR errors, enforces anti-hallucination & acoustic caps (`min_avg_logprob < -0.75`) |
 | **04. Classification** | `4x Single-Task UBC-NLP/MARBERTv2` | Consumes verified `text_norm`, outputs validated class labels, per-class probability vectors summing to `1.0`, and minimum-head confidence gating |
 | **05. Priority & Routing** | Deterministic scoring + Telecom Skill Matrix | Computes priority score `1..6`, maps 11 categories to `Network` / `Billing` / `General`, checks live agent capacity, or flags Human Review |
@@ -222,9 +222,9 @@ python3 ops/download_models.py
 #    - CPU / Oracle Cloud ARM (16-24 GB RAM):
 bash ops/deploy_server.sh
 
-#    - RTX 3050 (6 GB VRAM) + 16 GB RAM (Egyptian Whisper int8_float16 + aya-expanse:8b):
-pip install torch transformers peft ctranslate2
-python3 ops/download_models.py --with-egyptian-whisper
+#    - RTX 3050 (6 GB VRAM) + 16 GB RAM (Cohere Arabic INT8 + qwen2.5:3b):
+pip install torch transformers accelerate bitsandbytes silero-vad
+python3 ops/download_models.py --with-cohere-int8
 bash ops/deploy_server.sh --gpu-6gb
 ```
 

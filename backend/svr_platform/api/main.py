@@ -88,8 +88,16 @@ from ..security import (
     verify_csrf,
 )
 from ..seed import seed_initial_data
+from ..services.adjudicator import ClassificationAdjudicator
 from ..services.brief import build_callback_brief
 from ..services.classification import CLASSIFICATION_FIELDS, MARBERTv2ClassifierService
+from ..services.factories import (
+    build_adjudicator,
+    build_memory_service,
+    build_stt_service,
+    build_transcript_gate,
+)
+from ..services.memory import AgentMemoryService
 from ..services.intake import (
     MAX_BYTES,
     IntakeValidationError,
@@ -103,7 +111,7 @@ from ..services.routing import (
     recommend_route,
     release_active_assignment,
 )
-from ..services.stt import WhisperSTTService
+from ..services.stt import BaseSTTService
 from ..services.text_norm import normalize_transcript
 from ..services.agentic_gate import AgenticTranscriptGate
 from ..services.transcript_gate import TranscriptVerificationGate
@@ -116,6 +124,8 @@ from ..taxonomy import (
 from .schemas import (
     AIInteractionLogResponse,
     AgentCreateRequest,
+    AgentMemoryLessonItem,
+    AgentMemoryStatsResponse,
     AgentResponse,
     AgentUpdateRequest,
     AuditEventResponse,
@@ -157,7 +167,7 @@ _MEDIA_TYPES: dict[str, str] = {
     "m4a": "audio/mp4",
 }
 
-_PIPELINE_STAGES = ("transcribe", "verify_transcript", "classify", "priority", "route", "brief")
+_PIPELINE_STAGES = ("transcribe", "verify_transcript", "classify", "adjudicate", "priority", "route", "brief")
 _STAGE_ORDER = {name: idx for idx, name in enumerate(_PIPELINE_STAGES)}
 _CSV_FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
 
@@ -245,6 +255,12 @@ def _build_prometheus_metrics() -> tuple[CollectorRegistry, dict[str, Any]]:
             "svr_human_review_tickets_total",
             "Tickets flagged for Human Review by reason",
             ["reason"],
+            registry=registry,
+        ),
+        "voicegate_runs": Counter(
+            "svr_voicegate_runs_total",
+            "VoiceGate transcript verification outcomes",
+            ["status", "fast_path"],
             registry=registry,
         ),
         "ws_connections": Gauge(
@@ -475,11 +491,14 @@ def _run_pipeline_bg(app: FastAPI, ticket_id: str) -> None:
     """Execute voicemail pipeline in worker thread without blocking HTTP response."""
     db_mgr: DatabaseManager = app.state.db_manager
     crypto: EncryptionService = app.state.crypto
-    stt_service: WhisperSTTService = app.state.stt_service
-    transcript_gate: TranscriptVerificationGate = app.state.transcript_gate
+    stt_service: BaseSTTService = app.state.stt_service
+    transcript_gate: TranscriptVerificationGate | AgenticTranscriptGate = app.state.transcript_gate
     classifier_service: MARBERTv2ClassifierService = app.state.classifier_service
+    adjudicator: ClassificationAdjudicator | None = getattr(app.state, "adjudicator", None)
+    memory_service: AgentMemoryService | None = getattr(app.state, "memory_service", None)
     queue_hub: QueueHub = app.state.queue_hub
     prom = app.state.prom_metrics
+    cfg: Settings = app.state.settings
 
     with db_mgr.session_factory() as db:
         try:
@@ -490,12 +509,20 @@ def _run_pipeline_bg(app: FastAPI, ticket_id: str) -> None:
                 stt_service=stt_service,
                 transcript_gate=transcript_gate,
                 classifier_service=classifier_service,
+                adjudicator=adjudicator,
+                memory_service=memory_service,
                 on_update=lambda evt: queue_hub.broadcast_threadsafe(evt["organization_id"], evt),
+                adaptive_reaudit_enabled=cfg.adaptive_reaudit_enabled,
+                adaptive_reaudit_category_threshold=cfg.adaptive_reaudit_category_threshold,
             )
             prom["pipeline_runs"].labels(status=ticket.status).inc()
             prom["pipeline_duration"].observe(max(0.0, ticket.processing_ms / 1000.0))
             for stage, ms in (ticket.stage_timing_ms or {}).items():
                 prom["stage_duration"].labels(stage=stage).observe(max(0.0, float(ms) / 1000.0))
+            tv = ticket.transcript_verification_json or {}
+            if tv:
+                fast_flag = "true" if int(tv.get("rounds_run", 0)) == 0 and tv.get("status") == "verified" else "false"
+                prom["voicegate_runs"].labels(status=str(tv.get("status", "unknown")), fast_path=fast_flag).inc()
             if ticket.needs_human_review:
                 prom["human_review_tickets"].labels(reason=ticket.review_reason or "unspecified").inc()
         except Exception:
@@ -527,13 +554,76 @@ def _run_pipeline_bg(app: FastAPI, ticket_id: str) -> None:
                 )
 
 
+async def _redis_events_listener(redis_url: str, channel: str, queue_hub: QueueHub) -> None:
+    """Subscribe to worker Redis Pub/Sub ticket events and fan out over QueueHub WebSockets."""
+    import redis.asyncio as aioredis
+
+    while True:
+        client = None
+        pubsub = None
+        try:
+            client = aioredis.from_url(redis_url, decode_responses=True)
+            pubsub = client.pubsub()
+            await pubsub.subscribe(channel)
+            async for msg in pubsub.listen():
+                if msg.get("type") != "message":
+                    continue
+                raw_data = msg.get("data")
+                if not isinstance(raw_data, str):
+                    continue
+                try:
+                    evt = json.loads(raw_data)
+                except ValueError:
+                    continue
+                org_id = evt.get("organization_id")
+                if isinstance(org_id, str) and org_id:
+                    await queue_hub.broadcast(org_id, evt)
+        except asyncio.CancelledError:
+            raise
+        except Exception as exc:
+            logger.warning("Redis WS pub/sub listener error (%s); reconnecting in 2s.", exc)
+            await asyncio.sleep(2.0)
+        finally:
+            if pubsub is not None:
+                try:
+                    await pubsub.close()
+                except Exception as exc:
+                    logger.debug("PubSub close cleanup: %s", exc)
+            if client is not None:
+                try:
+                    await client.aclose()
+                except Exception as exc:
+                    logger.debug("Redis client close cleanup: %s", exc)
+
+
+def _enqueue_or_run_pipeline(
+    app: FastAPI,
+    background_tasks: BackgroundTasks,
+    ticket_id: str,
+) -> None:
+    """Enqueue ticket to Redis worker when REDIS_URL is configured; otherwise run in-process."""
+    cfg: Settings = app.state.settings
+    if cfg.redis_url:
+        try:
+            import redis
+
+            client = redis.Redis.from_url(cfg.redis_url, decode_responses=True, socket_timeout=3.0)
+            client.rpush(cfg.redis_queue_key, ticket_id)
+            return
+        except Exception as exc:
+            logger.warning("Redis RPUSH failed for ticket %s (%s); falling back to local background task.", ticket_id, exc)
+    background_tasks.add_task(_run_pipeline_bg, app, ticket_id)
+
+
 def create_app(
     *,
     settings: Settings | None = None,
     db_manager: DatabaseManager | None = None,
-    stt_service: WhisperSTTService | None = None,
+    stt_service: BaseSTTService | None = None,
     transcript_gate: TranscriptVerificationGate | AgenticTranscriptGate | None = None,
     classifier_service: MARBERTv2ClassifierService | None = None,
+    memory_service: AgentMemoryService | None = None,
+    adjudicator: ClassificationAdjudicator | None = None,
 ) -> FastAPI:
     """Create and configure the production SVR FastAPI application."""
     resolved_settings = settings or get_settings()
@@ -543,49 +633,53 @@ def create_app(
     resolved_hub = QueueHub()
     prom_registry, prom_metrics = _build_prometheus_metrics()
 
-    whisper_cache = str(resolved_settings.repo_root / ".cache" / "huggingface")
-    resolved_stt = stt_service or WhisperSTTService(
-        model_id=resolved_settings.whisper_model_id,
-        device=resolved_settings.whisper_device,
-        compute_type=resolved_settings.whisper_compute_type,
-        download_root=whisper_cache,
-        ffmpeg_bin=resolved_settings.ffmpeg_bin,
-    )
-    resolved_gate = transcript_gate or (
-        AgenticTranscriptGate(
-            ollama_url=resolved_settings.ollama_url,
-            ollama_model=resolved_settings.qwen_model_id,
-            max_iterations=resolved_settings.agentic_gate_max_iterations,
-            confidence_threshold=resolved_settings.qwen_confidence_threshold,
-            early_stop_confidence=resolved_settings.agentic_gate_early_stop_confidence,
-            timeout_s=resolved_settings.qwen_timeout_s,
-            fast_path_enabled=resolved_settings.agentic_gate_fast_path_enabled,
-        )
-        if resolved_settings.agentic_gate_enabled
-        else TranscriptVerificationGate(
-            backend=resolved_settings.qwen_backend,
-            ollama_url=resolved_settings.ollama_url,
-            ollama_model=resolved_settings.qwen_model_id,
-            hf_model_id=resolved_settings.qwen_hf_model_id,
-            max_rounds=resolved_settings.qwen_max_rounds,
-            confidence_threshold=resolved_settings.qwen_confidence_threshold,
-            timeout_s=resolved_settings.qwen_timeout_s,
-        )
-    )
+    resolved_stt = stt_service or build_stt_service(resolved_settings)
+    resolved_gate = transcript_gate or build_transcript_gate(resolved_settings)
+    resolved_memory = memory_service or build_memory_service(resolved_settings)
+    resolved_adjudicator = adjudicator or build_adjudicator(resolved_settings, resolved_memory)
     resolved_classifier = classifier_service or MARBERTv2ClassifierService(
         models_dir=resolved_settings.svr_models_dir,
         repo_root=resolved_settings.repo_root,
         base_model_id=resolved_settings.marbert_base_model,
         seed=resolved_settings.marbert_checkpoint_seed,
+        max_resident_onnx_heads=resolved_settings.onnx_max_resident_heads,
     )
 
     @asynccontextmanager
     async def lifespan(application: FastAPI):
         application.state.db_manager.create_all()
         with application.state.db_manager.session_factory() as db:
-            seed_initial_data(db, application.state.settings)
+            org = seed_initial_data(db, application.state.settings)
+            mem_svc: AgentMemoryService = application.state.memory_service
+            mem_svc.ensure_default_semantic_and_procedural_memory(db, org.id)
+            seed_csv = (application.state.settings.memory_train_seed_csv or "").strip()
+            if seed_csv and application.state.settings.svr_env.lower() != "test":
+                try:
+                    mem_svc.seed_episodic_memory_from_train(db, org.id, seed_csv)
+                    mem_svc.embed_client.unload()
+                except Exception as exc:
+                    logger.warning("Optional train memory seeding skipped: %s", exc)
         application.state.queue_hub.set_loop(asyncio.get_running_loop())
-        yield
+        pubsub_task = None
+        if application.state.settings.redis_url:
+            pubsub_task = asyncio.create_task(
+                _redis_events_listener(
+                    application.state.settings.redis_url,
+                    application.state.settings.redis_events_channel,
+                    application.state.queue_hub,
+                )
+            )
+        try:
+            yield
+        finally:
+            if pubsub_task is not None:
+                pubsub_task.cancel()
+                try:
+                    await pubsub_task
+                except asyncio.CancelledError:
+                    logger.debug("Redis pub/sub listener stopped.")
+            if hasattr(application.state.classifier_service, "unload"):
+                application.state.classifier_service.unload()
 
     application = FastAPI(
         title="Smart Voicemail Router (SVR) API",
@@ -606,6 +700,8 @@ def create_app(
     application.state.stt_service = resolved_stt
     application.state.transcript_gate = resolved_gate
     application.state.classifier_service = resolved_classifier
+    application.state.memory_service = resolved_memory
+    application.state.adjudicator = resolved_adjudicator
     application.state.prom_registry = prom_registry
     application.state.prom_metrics = prom_metrics
 
@@ -919,7 +1015,7 @@ def create_app(
         )
         db.commit()
 
-        background_tasks.add_task(_run_pipeline_bg, request.app, ticket.id)
+        _enqueue_or_run_pipeline(request.app, background_tasks, ticket.id)
 
         return VoicemailUploadResponse(
             voicemail_id=vm.id,
@@ -1339,6 +1435,25 @@ def create_app(
             old_value=old_snapshot,
             new_value=new_snapshot,
         )
+        mem_svc: AgentMemoryService | None = getattr(request.app.state, "memory_service", None)
+        if mem_svc is not None and mem_svc.enabled and (ticket.text_norm or "").strip():
+            try:
+                mem_svc.consolidate_ticket_outcome(
+                    db,
+                    organization_id=ctx.organization_id,
+                    ticket_id=ticket.id,
+                    transcript=ticket.transcript,
+                    text_norm=ticket.text_norm,
+                    marbert_labels={f: old_snapshot.get(f) for f in CLASSIFICATION_FIELDS},
+                    final_labels={f: getattr(ticket, f) for f in CLASSIFICATION_FIELDS},
+                    confidence=1.0,
+                    rationale=body.note or f"Supervisor correction applied by {ctx.user.email}.",
+                    source="human_correction",
+                    was_corrected=True,
+                    learned_lesson=body.note or "",
+                )
+            except Exception as exc:
+                logger.warning("Human feedback memory consolidation failed for ticket %s: %s", ticket.id, exc)
         db.commit()
         db.refresh(ticket)
 
@@ -2204,6 +2319,95 @@ def create_app(
         data = generate_latest(request.app.state.prom_registry)
         return Response(content=data, media_type=CONTENT_TYPE_LATEST)
 
+    @application.get(
+        "/api/agent/memory/stats",
+        response_model=AgentMemoryStatsResponse,
+        tags=["Monitoring"],
+    )
+    def get_agent_memory_stats(
+        request: Request,
+        ctx: AuthContext = Depends(require_roles(UserRole.ADMIN, UserRole.SUPERVISOR)),
+        db: Session = Depends(get_db_from_app),
+        cfg: Settings = Depends(get_settings),
+    ) -> AgentMemoryStatsResponse:
+        mem_svc: AgentMemoryService = request.app.state.memory_service
+        adj: ClassificationAdjudicator = request.app.state.adjudicator
+        raw = mem_svc.get_memory_stats(db, ctx.organization_id)
+        return AgentMemoryStatsResponse(
+            organization_id=raw["organization_id"],
+            memory_enabled=raw["memory_enabled"],
+            adjudicator_enabled=adj.enabled,
+            embed_model=cfg.ollama_embed_model,
+            episodic_total=raw["episodic_total"],
+            episodic_by_source=raw["episodic_by_source"],
+            semantic_entries_count=raw["semantic_entries_count"],
+            procedural_rules_active_count=raw["procedural_rules_active_count"],
+            training_feedback_total=raw["training_feedback_total"],
+            training_feedback_by_tier=raw["training_feedback_by_tier"],
+            recent_procedural_lessons=[
+                AgentMemoryLessonItem.model_validate(r) for r in raw["recent_procedural_lessons"]
+            ],
+        )
+
+    @application.get("/api/agent/memory/training-export", tags=["Monitoring"])
+    def export_agent_training_samples(
+        request: Request,
+        export_format: str = Query(default="jsonl", alias="format", pattern="^(jsonl|csv)$"),
+        ctx: AuthContext = Depends(require_roles(UserRole.ADMIN, UserRole.SUPERVISOR)),
+        db: Session = Depends(get_db_from_app),
+    ) -> Response:
+        mem_svc: AgentMemoryService = request.app.state.memory_service
+        samples = mem_svc.export_training_samples(db, ctx.organization_id)
+        if export_format == "jsonl":
+            body = "\n".join(json.dumps(row, ensure_ascii=False) for row in samples)
+            return Response(
+                content=body,
+                media_type="application/x-ndjson; charset=utf-8",
+                headers={"Content-Disposition": 'attachment; filename="svr-agent-training-feedback.jsonl"'},
+            )
+        buf = io.StringIO()
+        writer = csv.writer(buf)
+        writer.writerow(
+            [
+                "id",
+                "ticket_id",
+                "source",
+                "quality_tier",
+                "complaint_category",
+                "complaint_urgency",
+                "customer_state",
+                "churn_risk",
+                "marbert_agreed",
+                "confidence",
+                "text_norm",
+                "transcript",
+                "created_at",
+            ]
+        )
+        for row in samples:
+            writer.writerow(
+                [
+                    _csv_safe_cell(row["id"]),
+                    _csv_safe_cell(row["ticket_id"]),
+                    _csv_safe_cell(row["source"]),
+                    _csv_safe_cell(row["quality_tier"]),
+                    _csv_safe_cell(row["complaint_category"]),
+                    _csv_safe_cell(row["complaint_urgency"]),
+                    _csv_safe_cell(row["customer_state"]),
+                    _csv_safe_cell(row["churn_risk"]),
+                    _csv_safe_cell(row["marbert_agreed"]),
+                    _csv_safe_cell(row["confidence"]),
+                    _csv_safe_cell(row["text_norm"]),
+                    _csv_safe_cell(row["transcript"]),
+                    _csv_safe_cell(row["created_at"]),
+                ]
+            )
+        return StreamingResponse(
+            iter([buf.getvalue()]),
+            media_type="text/csv; charset=utf-8",
+            headers={"Content-Disposition": 'attachment; filename="svr-agent-training-feedback.csv"'},
+        )
+
     @application.get("/api/health", response_model=HealthResponse, tags=["Monitoring"])
     def health_check(
         request: Request,
@@ -2212,12 +2416,15 @@ def create_app(
     ) -> HealthResponse:
         db.execute(text("SELECT 1"))
         classifier: MARBERTv2ClassifierService = request.app.state.classifier_service
+        stt: BaseSTTService = request.app.state.stt_service
         queue_hub: QueueHub = request.app.state.queue_hub
         return HealthResponse(
             status="ok",
             environment=cfg.svr_env,
             database="connected",
-            whisper_model=cfg.whisper_model_id,
+            whisper_model=stt.canonical_model_name,
+            stt_backend=cfg.stt_backend,
+            stt_model=stt.canonical_model_name,
             marbert_checkpoints_ready=classifier.has_local_checkpoints(),
             active_ws_connections=queue_hub.active_count(),
             version=APP_VERSION,

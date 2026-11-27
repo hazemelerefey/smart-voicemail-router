@@ -16,7 +16,7 @@ COMPOSE_FILES="-f docker-compose.yml -f docker-compose.prod.yml"
 LLM_MODEL="${QWEN_MODEL_ID:-qwen2.5:3b}"
 if [ "$GPU_6GB" -eq 1 ]; then
   COMPOSE_FILES="${COMPOSE_FILES} -f docker-compose.gpu-6gb.yml"
-  LLM_MODEL="${QWEN_MODEL_ID:-aya-expanse:8b}"
+  LLM_MODEL="${QWEN_MODEL_ID:-qwen2.5:3b}"
 fi
 
 if ! command -v docker >/dev/null 2>&1; then
@@ -39,8 +39,11 @@ if [ ! -f ".env" ]; then
   sed -i "s|^SVR_ENV=.*|SVR_ENV=production|" .env
   sed -i "s|^SVR_SECRET_KEY=.*|SVR_SECRET_KEY=${SECRET_KEY}|" .env
   sed -i "s|^SVR_ENCRYPTION_KEY=.*|SVR_ENCRYPTION_KEY=${FERNET_KEY}|" .env
-  sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=${PG_PASS}|" .env 2>/dev/null || echo "POSTGRES_PASSWORD=${PG_PASS}" >> .env
-  echo "POSTGRES_PASSWORD=${PG_PASS}" >> .env
+  if grep -q '^POSTGRES_PASSWORD=' .env; then
+    sed -i "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=${PG_PASS}|" .env
+  else
+    echo "POSTGRES_PASSWORD=${PG_PASS}" >> .env
+  fi
   sed -i "s|^SVR_COOKIE_SECURE=.*|SVR_COOKIE_SECURE=true|" .env
   sed -i "s|^SVR_LOW_MEMORY_MODE=.*|SVR_LOW_MEMORY_MODE=0|" .env
   echo "Created .env. Please review SVR_DOMAIN, SVR_CORS_ORIGINS, and SVR_BOOTSTRAP_PASSWORD before exposing publicly."
@@ -53,10 +56,10 @@ if [ ! -d "models/marbertv2-single-task/seed_99" ]; then
   exit 1
 fi
 
-if [ "$GPU_6GB" -eq 1 ] && [ ! -d "models/whisper-large-v3-egyptian-ct2" ]; then
-  echo "NOTE: models/whisper-large-v3-egyptian-ct2 not found; falling back to WHISPER_MODEL_ID=large-v3."
-  echo "To enable the fine-tuned Egyptian Whisper model, run: python3 ops/build_egyptian_whisper_ct2.py"
-  export WHISPER_MODEL_ID="large-v3"
+if [ "$GPU_6GB" -eq 1 ]; then
+  echo "6 GB GPU profile selected: using Cohere Arabic INT8 (NAMAA-Space/cohere-transcribe-arabic-07-2026-int8) + ${LLM_MODEL}."
+  echo "Ensure Cohere INT8 weights are cached first via: python3 ops/download_models.py --with-cohere-int8"
+  echo "To roll back to Whisper if needed, set SVR_STT_BACKEND=faster_whisper."
 fi
 
 echo "Building and starting SVR production stack (${COMPOSE_FILES})..."

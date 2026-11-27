@@ -17,8 +17,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 _DEFAULT_STORAGE = _REPO_ROOT / "storage"
 _DEFAULT_MODELS = _REPO_ROOT / "models" / "marbertv2-single-task"
-_DEFAULT_FFMPEG = Path("E:/migration/Temp-Archive/ffmpeg/ffmpeg-9.0.2-essentials_build/bin/ffmpeg.exe")
-_DEFAULT_FFPROBE = Path("E:/migration/Temp-Archive/ffmpeg/ffmpeg-9.0.2-essentials_build/bin/ffprobe.exe")
 
 
 def _default_sqlite_url() -> str:
@@ -44,12 +42,28 @@ class Settings(BaseSettings):
 
     database_url: str = Field(default_factory=_default_sqlite_url, alias="DATABASE_URL")
     redis_url: str = Field(default="", alias="REDIS_URL")
+    redis_queue_key: str = Field(default="svr:pipeline:queue", alias="SVR_REDIS_QUEUE_KEY")
+    redis_inflight_key: str = Field(default="svr:pipeline:inflight", alias="SVR_REDIS_INFLIGHT_KEY")
+    redis_events_channel: str = Field(default="svr:pipeline:events", alias="SVR_REDIS_EVENTS_CHANNEL")
 
     svr_secret_key: str = Field(default="", alias="SVR_SECRET_KEY")
     svr_encryption_key: str = Field(default="", alias="SVR_ENCRYPTION_KEY")
 
     svr_storage_dir: Path = Field(default=_DEFAULT_STORAGE, alias="SVR_STORAGE_DIR")
     svr_models_dir: Path = Field(default=_DEFAULT_MODELS, alias="SVR_MODELS_DIR")
+
+    stt_backend: str = Field(default="faster_whisper", alias="SVR_STT_BACKEND")
+    cohere_model_id: str = Field(
+        default="NAMAA-Space/cohere-transcribe-arabic-07-2026-int8",
+        alias="COHERE_MODEL_ID",
+    )
+    cohere_bf16_model_id: str = Field(
+        default="CohereLabs/cohere-transcribe-arabic-07-2026",
+        alias="COHERE_BF16_MODEL_ID",
+    )
+    cohere_gguf_bin: str = Field(default="", alias="SVR_COHERE_GGUF_BIN")
+    cohere_gguf_model_path: str = Field(default="", alias="SVR_COHERE_GGUF_MODEL_PATH")
+    cohere_local_files_only: bool = Field(default=True, alias="SVR_COHERE_LOCAL_FILES_ONLY")
 
     whisper_model_id: str = Field(default="large-v3", alias="WHISPER_MODEL_ID")
     whisper_device: str = Field(default="cpu", alias="WHISPER_DEVICE")
@@ -66,17 +80,24 @@ class Settings(BaseSettings):
     agentic_gate_fast_path_enabled: bool = Field(default=True, alias="AGENTIC_GATE_FAST_PATH_ENABLED")
     agentic_gate_max_iterations: int = Field(default=4, alias="AGENTIC_GATE_MAX_ITERATIONS")
     agentic_gate_early_stop_confidence: float = Field(default=0.90, alias="AGENTIC_GATE_EARLY_STOP_CONFIDENCE")
+    adaptive_reaudit_enabled: bool = Field(default=True, alias="SVR_ADAPTIVE_REAUDIT_ENABLED")
+    adaptive_reaudit_category_threshold: float = Field(
+        default=0.60, alias="SVR_ADAPTIVE_REAUDIT_CATEGORY_THRESHOLD"
+    )
+    # VoiceGate Cognitive Context Layer, 4-Layer Memory, and Classification Adjudicator
+    ollama_embed_model: str = Field(default="bge-m3:latest", alias="OLLAMA_EMBED_MODEL")
+    adjudicator_enabled: bool = Field(default=True, alias="SVR_ADJUDICATOR_ENABLED")
+    adjudicator_conf_trigger: float = Field(default=0.68, alias="SVR_ADJUDICATOR_CONF_TRIGGER")
+    adjudicator_margin_trigger: float = Field(default=0.25, alias="SVR_ADJUDICATOR_MARGIN_TRIGGER")
+    adjudicator_knn_k: int = Field(default=7, alias="SVR_ADJUDICATOR_KNN_K")
+    memory_enabled: bool = Field(default=True, alias="SVR_MEMORY_ENABLED")
+    memory_train_seed_csv: str = Field(default="", alias="SVR_MEMORY_TRAIN_SEED_CSV")
     marbert_base_model: str = Field(default="UBC-NLP/MARBERTv2", alias="MARBERT_BASE_MODEL")
     marbert_checkpoint_seed: int = Field(default=99, alias="MARBERT_CHECKPOINT_SEED")
+    onnx_max_resident_heads: int = Field(default=2, alias="SVR_ONNX_MAX_RESIDENT_HEADS")
 
-    ffmpeg_bin: str = Field(
-        default=str(_DEFAULT_FFMPEG) if _DEFAULT_FFMPEG.exists() else "ffmpeg",
-        alias="FFMPEG_BIN",
-    )
-    ffprobe_bin: str = Field(
-        default=str(_DEFAULT_FFPROBE) if _DEFAULT_FFPROBE.exists() else "ffprobe",
-        alias="FFPROBE_BIN",
-    )
+    ffmpeg_bin: str = Field(default="ffmpeg", alias="FFMPEG_BIN")
+    ffprobe_bin: str = Field(default="ffprobe", alias="FFPROBE_BIN")
 
     svr_bootstrap_password: str = Field(
         default="SvrTelecom2026!", alias="SVR_BOOTSTRAP_PASSWORD"
@@ -153,7 +174,7 @@ class Settings(BaseSettings):
         if is_prod and "*" in self.cors_origins_list:
             raise RuntimeError("Wildcard CORS origins are forbidden in production")
 
-        # Keep HuggingFace and Torch caches on E: if configured in environment
+        # Keep HuggingFace and Torch caches local to repo unless configured in environment
         cache_root = _REPO_ROOT / ".cache"
         os.environ.setdefault("HF_HOME", str(cache_root / "huggingface"))
         os.environ.setdefault("TORCH_HOME", str(cache_root / "torch"))

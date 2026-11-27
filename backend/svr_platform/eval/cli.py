@@ -43,10 +43,11 @@ from ..services.classification import (
     discover_single_task_checkpoints,
     validate_and_score_raw_outputs,
 )
+from ..services.factories import build_stt_service, build_transcript_gate
 from ..services.intake import validate_and_probe_audio
 from ..services.priority import compute_priority
 from ..services.routing import recommend_route
-from ..services.stt import STT_V1_COLUMNS, WhisperSTTService
+from ..services.stt import STT_V1_COLUMNS, BaseSTTService
 from ..taxonomy import DEFAULT_SKILL_MAPPING, TRAINED_CLASSES_BY_FIELD
 from .once_guard import (
     compute_checkpoint_set_sha256,
@@ -628,7 +629,7 @@ def _build_eval_summary_markdown(report: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "## 3. Whisper large-v3 STT Sample & Per-Stage Latency",
+            f"## 3. STT Sample ({stt_info['model']}) & Per-Stage Latency",
             "",
             f"- **Real WAVs Transcribed:** {stt_info['sample_size']} from `dataset/{report['infra_split']}/`",
             f"- **10-Column STT v1 Schema Valid:** {stt_info['v1_schema_valid_count']}/{stt_info['sample_size']} (errors: {stt_info['error_count']})",
@@ -640,7 +641,11 @@ def _build_eval_summary_markdown(report: dict[str, Any]) -> str:
         ]
     )
 
-    for stage in ("transcribe", "classify", "priority", "route", "brief", "end_to_end"):
+    stage_list = ["transcribe"]
+    if "verify_transcript" in latency:
+        stage_list.append("verify_transcript")
+    stage_list.extend(["classify", "priority", "route", "brief", "end_to_end"])
+    for stage in stage_list:
         st = latency[stage]
         p50 = f"{st['p50']:.2f}" if st["p50"] is not None else "N/A"
         p95 = f"{st['p95']:.2f}" if st["p95"] is not None else "N/A"
@@ -680,7 +685,9 @@ def run_evaluation(
     database_url: str | None = None,
     ledger_path: Path | None = None,
     allow_fallback: bool = False,
-    stt_service: WhisperSTTService | None = None,
+    with_voicegate: bool = False,
+    stt_service: BaseSTTService | None = None,
+    transcript_gate: Any | None = None,
     classifier_service: MARBERTv2ClassifierService | None = None,
     settings_override: Settings | None = None,
 ) -> dict[str, Any]:
@@ -720,9 +727,14 @@ def run_evaluation(
     if ckpt_dirs is not None:
         for field_name in CLASSIFICATION_FIELDS:
             cdir = ckpt_dirs[field_name]
-            wfile = cdir / "model.safetensors"
-            if not wfile.is_file():
-                wfile = cdir / "pytorch_model.bin"
+            wfile = next(
+                (
+                    cdir / fname
+                    for fname in ("model.safetensors", "pytorch_model.bin", "model_int8.onnx", "model.onnx")
+                    if (cdir / fname).is_file()
+                ),
+                cdir / "model.safetensors",
+            )
             checkpoint_files[field_name] = wfile
             checkpoint_hashes[field_name] = compute_file_sha256(wfile)
         combined_ckpt_sha256 = compute_checkpoint_set_sha256(checkpoint_files)
@@ -769,16 +781,14 @@ def run_evaluation(
             org = seed_initial_data(db, settings)
             org_id = org.id
 
-        # 1. Whisper large-v3 live STT sample evaluation
-        stt = stt_service or WhisperSTTService(
-            model_id=settings.whisper_model_id,
-            device=settings.whisper_device,
-            compute_type=settings.whisper_compute_type,
-            download_root=str(root / ".cache" / "huggingface"),
-            ffmpeg_bin=settings.ffmpeg_bin,
-        )
+        # 1. Live STT sample evaluation (+ optional VoiceGate ablation)
+        stt = stt_service or build_stt_service(settings)
+        gate = transcript_gate or (build_transcript_gate(settings) if with_voicegate else None)
         sample_rows = _select_sample_rows(rows, stt_sample_size, audio_dir)
         stt_latencies_ms: list[float] = []
+        vg_latencies_ms: list[float] = []
+        vg_repaired_count = 0
+        vg_uncertain_count = 0
         stt_v1_valid = 0
         stt_errors = 0
         stt_needs_review = 0
@@ -788,7 +798,7 @@ def run_evaluation(
         if sample_rows and stt._transcriber_override is None:
             # Warm model download/load outside per-voicemail inference timing
             print(
-                f"[eval-cli] Loading Whisper {stt.canonical_model_name} ({stt.device}/{stt.compute_type})...",
+                f"[eval-cli] Loading STT {stt.canonical_model_name} ({stt.device}/{stt.compute_type})...",
                 file=sys.stderr,
                 flush=True,
             )
@@ -825,11 +835,33 @@ def run_evaluation(
             if stt_res.needs_review:
                 stt_needs_review += 1
 
+            final_text_norm = stt_res.text_norm or srow["text_norm"]
+            vg_ms = 0.0
+            vg_status = "disabled"
+            if gate is not None:
+                gate_res = gate.verify(
+                    stt_res.text,
+                    min_avg_logprob=stt_res.min_avg_logprob,
+                    max_no_speech_prob=stt_res.max_no_speech_prob,
+                    stt_review_reasons=stt_res.review_reasons,
+                )
+                vg_ms = round(float(gate_res.latency_ms), 2)
+                vg_latencies_ms.append(vg_ms)
+                vg_status = gate_res.status
+                if gate_res.correction_applied:
+                    vg_repaired_count += 1
+                if gate_res.needs_human_review:
+                    vg_uncertain_count += 1
+                if gate_res.final_text_norm:
+                    final_text_norm = gate_res.final_text_norm
+
             stt_file_records.append(
                 {
                     "audio_file": srow["audio_file"],
                     "duration_seconds": round(float(meta.duration_seconds), 3),
                     "latency_ms": stt_ms,
+                    "voicegate_latency_ms": vg_ms if gate is not None else None,
+                    "voicegate_status": vg_status if gate is not None else None,
                     "min_avg_logprob": stt_res.min_avg_logprob,
                     "max_no_speech_prob": stt_res.max_no_speech_prob,
                     "needs_review": stt_res.needs_review,
@@ -838,12 +870,11 @@ def run_evaluation(
                     "error": stt_res.error,
                 }
             )
-            stt_e2e_candidates.append((srow, stt_ms, stt_res.text_norm or srow["text_norm"]))
+            stt_e2e_candidates.append((srow, stt_ms + vg_ms, final_text_norm))
 
-        # Release Whisper large-v3 from RAM before loading the 4 MARBERTv2 checkpoints
-        if stt_service is None and getattr(stt, "_model", None) is not None:
-            stt._model = None
-            gc.collect()
+        # Release STT model from RAM/VRAM before loading the 4 MARBERTv2 checkpoints
+        if stt_service is None and hasattr(stt, "unload"):
+            stt.unload()
 
         # 2. MARBERTv2 4-field single-task classification on ALL rows (using text_norm)
         t_cls_total_0 = time.perf_counter()
@@ -1026,7 +1057,7 @@ def run_evaluation(
             "checks": gate_checks,
         }
 
-        latency_report = {
+        latency_report: dict[str, Any] = {
             "transcribe": _latency_summary(stt_latencies_ms),
             "classify": _latency_summary(classify_latencies_ms),
             "priority": _latency_summary(priority_latencies_ms),
@@ -1036,6 +1067,8 @@ def run_evaluation(
             "full_split_classification_seconds": total_classify_seconds,
             "full_split_batch_size": batch_size if (has_local_ckpts and clf._predictor_override is None) else 1,
         }
+        if gate is not None:
+            latency_report["verify_transcript"] = _latency_summary(vg_latencies_ms)
 
         hardware = collect_hardware_metadata(
             classifier_device=clf._device,
@@ -1072,6 +1105,9 @@ def run_evaluation(
             "v1_columns": list(STT_V1_COLUMNS),
             "error_count": stt_errors,
             "needs_review_count": stt_needs_review,
+            "voicegate_enabled": gate is not None,
+            "voicegate_repaired_count": vg_repaired_count if gate is not None else 0,
+            "voicegate_uncertain_count": vg_uncertain_count if gate is not None else 0,
             "latency_ms": latency_report["transcribe"],
             "files": stt_file_records,
         }
@@ -1302,6 +1338,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Allow validated artifact fallback when local checkpoints are not mounted (for dry tests only).",
     )
+    parser.add_argument(
+        "--with-voicegate",
+        action="store_true",
+        help="Run VoiceGate transcript verification ablation on sampled STT outputs.",
+    )
     return parser
 
 
@@ -1321,6 +1362,7 @@ def main(argv: list[str] | None = None) -> int:
         database_url=args.database_url,
         ledger_path=args.ledger_path,
         allow_fallback=args.allow_fallback,
+        with_voicegate=args.with_voicegate,
     )
     print(
         json.dumps(

@@ -161,7 +161,7 @@ export function VoicemailIntakeSheet({
             `ملف مكرر. تم ربط التذكرة الحالية #${res.ticket_id.slice(0, 8)}.`
           )
         : L(
-            `Voicemail queued (Ticket #${res.ticket_id.slice(0, 8)}). VoiceGate Orchestrator started Whisper STT, Qwen verification, and MARBERTv2 classification.`,
+            `Voicemail queued (Ticket #${res.ticket_id.slice(0, 8)}). VoiceGate Orchestrator started local Arabic ASR, VoiceGate verification, and MARBERTv2 classification.`,
             `تم استلام الرسالة الصوتية (تذكرة #${res.ticket_id.slice(0, 8)}) وبدأ VoiceGate Orchestrator مراحل التفريغ والتحقق والتصنيف.`
           )
       setResultMsg(msg)

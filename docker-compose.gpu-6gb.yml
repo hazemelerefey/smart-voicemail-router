@@ -1,8 +1,8 @@
 # Smart Voicemail Router (SVR) - RTX 3050 (6 GB VRAM) + 16 GB RAM GPU Overlay
-# Option B (Max Egyptian Accuracy with Sequential GPU Swap):
-#   1. Whisper Egyptian Arabic (int8_float16, ~2.3 GB VRAM) -> unloads after STT
-#   2. Ollama aya-expanse:8b (Q4_K_M, ~5.0 GB VRAM) -> unloads after VoiceGate
-#   3. 4x MARBERTv2 ONNX INT8 on CPU (0 GB VRAM, ~105 ms warm)
+# Sequential Low-Memory GPU Pipeline:
+#   1. Cohere Arabic ASR INT8 (NAMAA-Space/cohere-transcribe-arabic-07-2026-int8, ~2.7-3.2 GB VRAM) -> unloads after STT
+#   2. Ollama qwen2.5:3b (Q4_K_M, ~2.1 GB VRAM; aya-expanse:8b opt-in on >=8 GB VRAM) -> unloads via keep_alive=0
+#   3. 4x MARBERTv2 ONNX INT8 on CPU (bounded LRU 2 resident heads, ~0.85 GB RSS, 0 GB VRAM)
 #
 # Usage:
 #   docker compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.gpu-6gb.yml up -d --build
@@ -20,14 +20,18 @@ services:
   backend:
     build:
       args:
-        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu124}
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu126}
+        INSTALL_GPU_EXTRAS: "1"
     environment:
-      WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-/data/models/whisper-large-v3-egyptian-ct2}
+      SVR_STT_BACKEND: ${SVR_STT_BACKEND:-cohere_gpu_int8}
+      COHERE_MODEL_ID: ${COHERE_MODEL_ID:-NAMAA-Space/cohere-transcribe-arabic-07-2026-int8}
+      WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-large-v3}
       WHISPER_DEVICE: cuda
       WHISPER_COMPUTE_TYPE: int8_float16
-      QWEN_MODEL_ID: ${QWEN_MODEL_ID:-aya-expanse:8b}
+      QWEN_MODEL_ID: ${QWEN_MODEL_ID:-qwen2.5:3b}
       SVR_LOW_MEMORY_MODE: "1"
       SVR_MARBERT_BACKEND: onnx
+      SVR_ONNX_MAX_RESIDENT_HEADS: "2"
     deploy:
       resources:
         reservations:
@@ -39,14 +43,18 @@ services:
   worker:
     build:
       args:
-        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu124}
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu126}
+        INSTALL_GPU_EXTRAS: "1"
     environment:
-      WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-/data/models/whisper-large-v3-egyptian-ct2}
+      SVR_STT_BACKEND: ${SVR_STT_BACKEND:-cohere_gpu_int8}
+      COHERE_MODEL_ID: ${COHERE_MODEL_ID:-NAMAA-Space/cohere-transcribe-arabic-07-2026-int8}
+      WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-large-v3}
       WHISPER_DEVICE: cuda
       WHISPER_COMPUTE_TYPE: int8_float16
-      QWEN_MODEL_ID: ${QWEN_MODEL_ID:-aya-expanse:8b}
+      QWEN_MODEL_ID: ${QWEN_MODEL_ID:-qwen2.5:3b}
       SVR_LOW_MEMORY_MODE: "1"
       SVR_MARBERT_BACKEND: onnx
+      SVR_ONNX_MAX_RESIDENT_HEADS: "2"
     deploy:
       resources:
         reservations:

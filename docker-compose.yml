@@ -63,6 +63,9 @@ services:
       SVR_CORS_ORIGINS: ${SVR_CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
       SVR_STORAGE_DIR: /data/storage
       SVR_MODELS_DIR: /data/models/marbertv2-single-task
+      SVR_STT_BACKEND: ${SVR_STT_BACKEND:-faster_whisper}
+      COHERE_MODEL_ID: ${COHERE_MODEL_ID:-NAMAA-Space/cohere-transcribe-arabic-07-2026-int8}
+      SVR_COHERE_LOCAL_FILES_ONLY: ${SVR_COHERE_LOCAL_FILES_ONLY:-true}
       WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-large-v3}
       WHISPER_DEVICE: ${WHISPER_DEVICE:-cpu}
       WHISPER_COMPUTE_TYPE: ${WHISPER_COMPUTE_TYPE:-int8}
@@ -71,7 +74,12 @@ services:
       QWEN_MODEL_ID: ${QWEN_MODEL_ID:-qwen2.5:3b}
       AGENTIC_GATE_ENABLED: ${AGENTIC_GATE_ENABLED:-true}
       AGENTIC_GATE_FAST_PATH_ENABLED: ${AGENTIC_GATE_FAST_PATH_ENABLED:-true}
+      SVR_ADAPTIVE_REAUDIT_ENABLED: ${SVR_ADAPTIVE_REAUDIT_ENABLED:-true}
       SVR_MARBERT_BACKEND: ${SVR_MARBERT_BACKEND:-auto}
+      SVR_ONNX_MAX_RESIDENT_HEADS: ${SVR_ONNX_MAX_RESIDENT_HEADS:-2}
+      SVR_REDIS_QUEUE_KEY: ${SVR_REDIS_QUEUE_KEY:-svr:pipeline:queue}
+      SVR_REDIS_INFLIGHT_KEY: ${SVR_REDIS_INFLIGHT_KEY:-svr:pipeline:inflight}
+      SVR_REDIS_EVENTS_CHANNEL: ${SVR_REDIS_EVENTS_CHANNEL:-svr:pipeline:events}
       HF_HOME: /data/cache/huggingface
       TORCH_HOME: /data/cache/torch
     volumes:
@@ -112,6 +120,9 @@ services:
       SVR_ENCRYPTION_KEY: ${SVR_ENCRYPTION_KEY:-replace-with-url-safe-base64-fernet-key}
       SVR_STORAGE_DIR: /data/storage
       SVR_MODELS_DIR: /data/models/marbertv2-single-task
+      SVR_STT_BACKEND: ${SVR_STT_BACKEND:-faster_whisper}
+      COHERE_MODEL_ID: ${COHERE_MODEL_ID:-NAMAA-Space/cohere-transcribe-arabic-07-2026-int8}
+      SVR_COHERE_LOCAL_FILES_ONLY: ${SVR_COHERE_LOCAL_FILES_ONLY:-true}
       WHISPER_MODEL_ID: ${WHISPER_MODEL_ID:-large-v3}
       WHISPER_DEVICE: ${WHISPER_DEVICE:-cpu}
       WHISPER_COMPUTE_TYPE: ${WHISPER_COMPUTE_TYPE:-int8}
@@ -120,7 +131,12 @@ services:
       QWEN_MODEL_ID: ${QWEN_MODEL_ID:-qwen2.5:3b}
       AGENTIC_GATE_ENABLED: ${AGENTIC_GATE_ENABLED:-true}
       AGENTIC_GATE_FAST_PATH_ENABLED: ${AGENTIC_GATE_FAST_PATH_ENABLED:-true}
+      SVR_ADAPTIVE_REAUDIT_ENABLED: ${SVR_ADAPTIVE_REAUDIT_ENABLED:-true}
       SVR_MARBERT_BACKEND: ${SVR_MARBERT_BACKEND:-auto}
+      SVR_ONNX_MAX_RESIDENT_HEADS: ${SVR_ONNX_MAX_RESIDENT_HEADS:-2}
+      SVR_REDIS_QUEUE_KEY: ${SVR_REDIS_QUEUE_KEY:-svr:pipeline:queue}
+      SVR_REDIS_INFLIGHT_KEY: ${SVR_REDIS_INFLIGHT_KEY:-svr:pipeline:inflight}
+      SVR_REDIS_EVENTS_CHANNEL: ${SVR_REDIS_EVENTS_CHANNEL:-svr:pipeline:events}
       HF_HOME: /data/cache/huggingface
       TORCH_HOME: /data/cache/torch
     volumes:
@@ -171,6 +187,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.55.1
+    profiles: ["monitoring"]
     restart: unless-stopped
     depends_on:
       backend:
@@ -190,6 +207,7 @@ services:
 
   grafana:
     image: grafana/grafana:11.3.0
+    profiles: ["monitoring"]
     restart: unless-stopped
     depends_on:
       - prometheus

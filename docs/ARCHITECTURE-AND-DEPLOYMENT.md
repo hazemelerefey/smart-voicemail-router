@@ -23,7 +23,7 @@ flowchart LR
     Worker["Scalable AI Workers (ops/worker_runner.py, NFR9)"]
     PG["PostgreSQL 16 (SQLite WAL standalone fallback)"]
     AudioStore["Fernet-Encrypted Audio Storage (/data/storage/voicemails)"]
-    Models["Local Models (Whisper large-v3 + Ollama qwen2.5:3b + 4x MARBERTv2)"]
+    Models["Local Models (Cohere Arabic ASR / Whisper + Ollama qwen2.5:3b + 4x MARBERTv2)"]
     Prom["Prometheus (:9090, 15s scrape + AI10 Alert Rules)"]
     Graf["Grafana (:3001, Pre-provisioned SVR Dashboard)"]
 
@@ -33,7 +33,8 @@ flowchart LR
     API --> PG
     API --> Redis
     API --> AudioStore
-    Redis -->|"BLPOP svr:pipeline:queue"| Worker
+    Redis -->|"BLMOVE svr:pipeline:queue -> inflight"| Worker
+    Worker -->|"Redis Pub/Sub svr:pipeline:events"| API
     Worker --> AudioStore
     Worker --> Models
     Worker --> PG
@@ -180,16 +181,16 @@ On 24 GB RAM hosts (such as Oracle Cloud Always Free Ampere ARM 4 OCPU / 24 GB R
 
 #### RTX 3050 (6 GB VRAM) + 16 GB RAM GPU Profile (`docker-compose.gpu-6gb.yml`)
 
-For 6 GB NVIDIA GPUs (such as **RTX 3050 6 GB** with 16 GB system RAM), `docker-compose.gpu-6gb.yml` configures sequential GPU execution so VRAM never exceeds 6 GB while cutting end-to-end latency to ~3-5 s:
-- **Stage 1-2 (STT):** `AbdelrahmanHassan/whisper-large-v3-egyptian-arabic` converted to CTranslate2 `int8_float16` (`~2.3 GB` VRAM, built via `python ops/build_egyptian_whisper_ct2.py`, then unloaded).
-- **Stage 3 (VoiceGate):** `aya-expanse:8b` (`Q4_K_M`, `~5.0 GB` VRAM) via Ollama GPU, unloaded via `keep_alive=0` after verification.
-- **Stage 4 (Triage):** `SVR_MARBERT_BACKEND=onnx` keeps all 4 `MARBERTv2` ONNX INT8 heads on CPU (`0 GB` VRAM, `~105 ms` warm).
+For 6 GB NVIDIA GPUs (such as **RTX 3050 6 GB** with 16 GB system RAM), `docker-compose.gpu-6gb.yml` configures sequential GPU execution so VRAM stays safely under 6 GB WDDM limits:
+- **Stage 1-2 (STT):** `NAMAA-Space/cohere-transcribe-arabic-07-2026-int8` (`~2.7-3.2 GB` VRAM, bundled offline `silero-vad`, `<=30s` chunking, then unloaded).
+- **Stage 3 (VoiceGate):** `qwen2.5:3b` (`Q4_K_M`, `~2.1 GB` VRAM, `num_ctx=1536`) via Ollama GPU, unloaded via `keep_alive=0` after verification (`aya-expanse:8b` is opt-in only on >=8 GB VRAM hosts).
+- **Stage 4 (Triage):** `SVR_MARBERT_BACKEND=onnx` + `SVR_ONNX_MAX_RESIDENT_HEADS=2` keeps `MARBERTv2` ONNX INT8 heads on CPU with bounded LRU memory (`~0.85 GB` RSS, `0 GB` VRAM).
 
 ```bash
-# Optional: build Egyptian Arabic Whisper CT2 model first (needs peft + ctranslate2 + transformers)
-python ops/build_egyptian_whisper_ct2.py
+# Pre-cache Cohere Arabic INT8 weights (requires HF_TOKEN once for gated Cohere base if needed)
+python ops/download_models.py --with-cohere-int8
 
-# Start 6 GB GPU stack with Caddy HTTPS + aya-expanse:8b
+# Start 6 GB GPU stack with Caddy HTTPS + qwen2.5:3b
 bash ops/deploy_server.sh --gpu-6gb
 ```
 

@@ -146,12 +146,16 @@ export const FIELD_LABELS: Record<Locale, Record<string, string>> = {
 
 export const LANGUAGE_MIX_LABELS: Record<Locale, Record<string, string>> = {
   en: {
+    arabic: "Egyptian Arabic",
     arabic_only: "Egyptian Arabic",
+    english_telecom_terms: "Arabic + English Telecom Terms",
     arabic_with_english_telecom_terms: "Arabic + English Telecom Terms",
     mixed: "Mixed Arabic / English",
   },
   ar: {
+    arabic: "عربي مصري",
     arabic_only: "عربي مصري",
+    english_telecom_terms: "عربي مع مصطلحات اتصالات إنجليزية",
     arabic_with_english_telecom_terms: "عربي مع مصطلحات اتصالات إنجليزية",
     mixed: "مختلط عربي وإنجليزي",
   },

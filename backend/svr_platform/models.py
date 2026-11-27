@@ -323,3 +323,119 @@ class SystemSetting(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
+
+
+class MemoryEpisode(Base):
+    """Layer 2 Episodic Memory storing verified/corrected voicemail episodes & embeddings."""
+
+    __tablename__ = "memory_episodes"
+    __table_args__ = (
+        Index("ix_mem_episodes_org_source", "organization_id", "source"),
+        Index("ix_mem_episodes_org_ticket", "organization_id", "ticket_id"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_uuid)
+    organization_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    ticket_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    source: Mapped[str] = mapped_column(
+        String(32), nullable=False
+    )  # train_seed | human_correction | agent_adjudicated | high_conf_verified
+    trust_weight: Mapped[float] = mapped_column(Float, nullable=False, default=1.0)
+    transcript: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    text_norm: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    embedding_json: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    marbert_labels: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
+    final_labels: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
+    adjudication_rationale: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    was_corrected: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+
+class MemorySemanticEntry(Base):
+    """Layer 3 Semantic Memory storing telecom taxonomy boundaries, dialect lexicon, and ASR confusions."""
+
+    __tablename__ = "memory_semantic_entries"
+    __table_args__ = (
+        UniqueConstraint("organization_id", "key", name="uq_mem_semantic_org_key"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_uuid)
+    organization_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    entry_type: Mapped[str] = mapped_column(
+        String(32), nullable=False
+    )  # taxonomy_boundary | dialect_lexicon | asr_confusion | routing_domain
+    key: Mapped[str] = mapped_column(String(128), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    related_categories: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
+    confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.9)
+    hit_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+
+class MemoryProceduralRule(Base):
+    """Layer 4 Procedural Memory storing Reflexion rules and learned adjudication lessons."""
+
+    __tablename__ = "memory_procedural_rules"
+    __table_args__ = (
+        Index("ix_mem_proc_org_active", "organization_id", "active"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_uuid)
+    organization_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    rule_type: Mapped[str] = mapped_column(
+        String(32), nullable=False
+    )  # adjudication_lesson | confusion_override | calibration_stat | stt_repair_rule
+    trigger_pattern: Mapped[str] = mapped_column(String(160), nullable=False)
+    instruction: Mapped[str] = mapped_column(Text, nullable=False)
+    support_count: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    success_count: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    source: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="seeded"
+    )  # seeded | reflection | supervisor_feedback
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+
+class TrainingFeedbackSample(Base):
+    """Self-training data curator storing curated gold/silver/bronze labeled samples for continual tuning."""
+
+    __tablename__ = "training_feedback_samples"
+    __table_args__ = (
+        Index("ix_train_feedback_org_tier", "organization_id", "quality_tier"),
+        Index("ix_train_feedback_org_ticket", "organization_id", "ticket_id"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_uuid)
+    organization_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    ticket_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    source: Mapped[str] = mapped_column(
+        String(32), nullable=False
+    )  # human_correction | agent_adjudicated | high_conf_verified
+    quality_tier: Mapped[str] = mapped_column(
+        String(32), nullable=False
+    )  # gold_human | silver_agent | bronze_high_conf
+    transcript: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    text_norm: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    complaint_category: Mapped[str] = mapped_column(String(64), nullable=False)
+    complaint_urgency: Mapped[str] = mapped_column(String(32), nullable=False)
+    customer_state: Mapped[str] = mapped_column(String(32), nullable=False)
+    churn_risk: Mapped[str] = mapped_column(String(32), nullable=False)
+    marbert_agreed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    confidence: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)

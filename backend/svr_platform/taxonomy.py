@@ -163,6 +163,7 @@ SKILL_DISPLAY_EN: dict[str, str] = {
 
 REVIEW_REASONS = (
     "low_confidence",
+    "uncertain_transcript",
     "missing_label",
     "invalid_label",
     "no_eligible_agent",
