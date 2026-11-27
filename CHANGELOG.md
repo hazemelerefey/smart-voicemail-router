@@ -22,7 +22,7 @@ First tagged release. This is the competition build as it stands: a self-hosted 
 ### Product
 
 - Bilingual console with full RTL, role-based access, audio encrypted at rest with Fernet, an immutable audit log and live updates.
-- Separate label audit app: https://svr-data-annotation.vercel.app
+- Separate dataset audit tool for reviewing labels before training (not part of the product).
 - One-command Docker deploy on CPU or GPU, including an RTX 3050 6GB profile.
 - Prometheus and Grafana observability.
 

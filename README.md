@@ -12,7 +12,6 @@
 [![Architecture](https://img.shields.io/badge/Architecture-System_Spec-18181B?style=for-the-badge&logo=fastapi&logoColor=white)](docs/ARCHITECTURE-AND-DEPLOYMENT.md)
 [![Model Card](https://img.shields.io/badge/Model_Card-0.7941_Macro--F1-0284C7?style=for-the-badge&logo=huggingface&logoColor=white)](docs/MODEL-CARD.md)
 [![Security & DPIA](https://img.shields.io/badge/Security-Fernet_&_RBAC-0D9488?style=for-the-badge&logo=letsencrypt&logoColor=white)](docs/DPIA.md)
-[![Data Annotation Studio](https://img.shields.io/badge/Annotation_Studio-Live_App-EA580C?style=for-the-badge&logo=vercel&logoColor=white)](https://svr-data-annotation.vercel.app)
 
 <br/>
 
