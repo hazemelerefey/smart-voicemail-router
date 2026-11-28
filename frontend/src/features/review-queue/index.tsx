@@ -22,12 +22,13 @@ import type { AgentResponse, TicketSummary } from '@/lib/types'
 
 const REVIEW_REASONS = [
   'low_confidence',
-  'null_field',
-  'unsupported_label',
+  'uncertain_transcript',
+  'missing_label',
+  'invalid_label',
   'no_eligible_agent',
-  'auto_routing_disabled',
+  'kill_switch_active',
   'processing_error',
-  'weekly_quality_sample',
+  'supervisor_requested',
 ]
 
 export function ReviewQueuePage() {
@@ -106,8 +107,8 @@ export function ReviewQueuePage() {
           </h1>
           <p className='text-sm text-muted-foreground'>
             {L(
-              'Voicemails flagged for low confidence, null/unsupported fields, no eligible agent, processing error, or 5% quality sampling.',
-              'الرسائل المحولة بسبب انخفاض الثقة، تعذر التوفر، خطأ المعالجة، أو عينة الجودة الأسبوعية (5%).'
+              'Escalated voicemails requiring human intervention (low confidence, uncertain transcript, no eligible agent, kill switch, or processing error). Proactive 5% QA sampling is tracked separately on Overview & Model Evaluation.',
+              'الرسائل المحولة للتدخل البشري فقط (انخفاض الثقة، عدم وضوح النص، تعذر التوفر، إيقاف التوجيه، أو خطأ معالجة). عينة الجودة الأسبوعية 5% متابعة منفصلة في النظرة العامة وتقييم النماذج.'
             )}
           </p>
         </div>

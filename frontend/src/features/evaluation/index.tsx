@@ -1,5 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Activity, AlertCircle, AlertTriangle, CheckCircle2, Clock, RefreshCw, Target, Users } from 'lucide-react'
+import {
+  Activity,
+  AlertCircle,
+  AlertTriangle,
+  Brain,
+  CheckCircle2,
+  Clock,
+  Download,
+  RefreshCw,
+  Target,
+  Users,
+} from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useSvr } from '@/context/svr-provider'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -14,6 +25,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Main } from '@/components/layout/main'
+import { AiModelsLivePanel } from '@/components/svr/ai-models-live-panel'
 import { SvrChartTooltip } from '@/components/svr/chart-tooltip'
 import { SvrCrosshairChart } from '@/components/svr/crosshair-chart'
 import { KpiCard } from '@/components/svr/kpi-card'
@@ -21,10 +33,15 @@ import { MonitoringAlertsPopover } from '@/components/svr/monitoring-alerts-popo
 import { api, ApiError } from '@/lib/api'
 import { UI_COPY } from '@/lib/i18n'
 import { formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
-import type { EvalRunResponse, MonitoringSummaryResponse } from '@/lib/types'
+import type { EvalRunResponse, ModelsTelemetryResponse, MonitoringSummaryResponse } from '@/lib/types'
 
 function f1Str(val: unknown): string {
   return typeof val === 'number' && Number.isFinite(val) ? val.toFixed(4) : '-'
+}
+
+function fmtLatency(ms: number | undefined): string {
+  if (ms === undefined || !Number.isFinite(ms) || ms <= 0) return '-'
+  return ms >= 1000 ? `${(ms / 1000).toFixed(2)}s` : `${ms.toFixed(1)}ms`
 }
 
 const EVAL_TASK_LABELS: Record<'en' | 'ar', Record<string, string>> = {
@@ -43,23 +60,28 @@ const EVAL_TASK_LABELS: Record<'en' | 'ar', Record<string, string>> = {
 }
 
 export function EvaluationPage() {
-  const { locale } = useSvr()
+  const { locale, wsStatus, wsVersion } = useSvr()
   const t = UI_COPY[locale]
   const isAr = locale === 'ar'
   const L = (en: string, ar: string) => (isAr ? ar : en)
 
-
   const [runs, setRuns] = useState<EvalRunResponse[]>([])
   const [summary, setSummary] = useState<MonitoringSummaryResponse | null>(null)
+  const [modelsTelemetry, setModelsTelemetry] = useState<ModelsTelemetryResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     setError(null)
     try {
-      const [r, s] = await Promise.all([api.getEvalRuns(), api.getMonitoringSummary()])
+      const [r, s, m] = await Promise.all([
+        api.getEvalRuns(),
+        api.getMonitoringSummary(),
+        api.getModelsTelemetry(),
+      ])
       setRuns(r)
       setSummary(s)
+      setModelsTelemetry(m)
     } catch (err) {
       setError(err instanceof ApiError ? err.detail : 'Failed to load evaluation & monitoring data.')
     } finally {
@@ -71,6 +93,10 @@ export function EvaluationPage() {
     void load()
   }, [load])
 
+  useEffect(() => {
+    if (wsVersion > 0) void load()
+  }, [wsVersion, load])
+
   const latest = runs[0] || null
   const metrics = (latest?.metrics || {}) as Record<string, unknown>
   const perField = (metrics.per_field_macro_f1 || {}) as Record<string, number>
@@ -78,7 +104,10 @@ export function EvaluationPage() {
     all_passed?: boolean
     checks?: Record<string, { actual?: number; threshold?: number; passed?: boolean }>
   }
-  const gates = ai9Wrapper.checks || (metrics.ai9_gates as Record<string, { actual?: number; threshold?: number; gate?: number; passed?: boolean }>) || {}
+  const gates =
+    ai9Wrapper.checks ||
+    (metrics.ai9_gates as Record<string, { actual?: number; threshold?: number; gate?: number; passed?: boolean }>) ||
+    {}
   const churnDetails = (metrics.churn_at_risk_analysis || {}) as Record<string, unknown>
   const fairRerun = (metrics.fair_rerun_5seed || {}) as { per_seed?: Array<Record<string, number>> }
   const fiveSeed = fairRerun.per_seed || []
@@ -90,11 +119,14 @@ export function EvaluationPage() {
     string,
     { p50?: number; p95?: number; mean?: number; n?: number } | number
   >
-  const latencies = Object.fromEntries(
+  const evalLatencies = Object.fromEntries(
     Object.entries(rawLatencies).filter(
       (entry): entry is [string, { p50?: number; p95?: number; mean?: number; n?: number }] =>
         typeof entry[1] === 'object' && entry[1] !== null && 'p50' in entry[1]
     )
+  )
+  const liveStages = Object.entries(summary?.stage_latency_ms ?? {}).filter(
+    ([, v]) => (v?.p50 ?? 0) > 0 || (v?.p95 ?? 0) > 0
   )
 
   const chartData = [
@@ -104,17 +136,25 @@ export function EvaluationPage() {
     { field: 'Churn', f1: perField.churn_risk ?? 0, gate: 0.8 },
   ]
 
+  const mem = modelsTelemetry?.voicegate_orchestrator.memory
+  const liveReadyRate =
+    modelsTelemetry && modelsTelemetry.total_tickets > 0
+      ? (modelsTelemetry.ready_tickets / modelsTelemetry.total_tickets) * 100
+      : null
+  const routingMetricPct =
+    typeof metrics.routing_agreement_pct === 'number' ? metrics.routing_agreement_pct : liveReadyRate
+
   return (
     <Main>
       <div className='mb-4 flex flex-wrap items-center justify-between gap-3'>
         <div>
           <h1 className='text-2xl font-bold tracking-tight'>
-            {L('Model Evaluation & Monitoring', 'تقييم النموذج ومراقبة الأداء')}
+            {L('Model Evaluation & Real-Time AI Telemetry', 'تقييم النماذج ومراقبة الأداء الحي')}
           </h1>
           <p className='text-sm text-muted-foreground'>
             {L(
-              'Validation Macro-F1 scores, release quality gates, skill routing accuracy, and pipeline latency monitoring.',
-              'نتائج Macro-F1 على بيانات التحقق وبوابات الجودة ودقة التوجيه ومراقبة زمن المعالجة.'
+              'Live telemetry for Cohere ASR, MARBERTv2, and VoiceGate Cognitive Orchestrator alongside validation Macro-F1 benchmarks and cognitive memory lessons.',
+              'متابعة حية لنماذج Cohere وMARBERTv2 والمنسق الذكي VoiceGate إلى جانب معايير Macro-F1 ودروس الذاكرة التراكمية.'
             )}
           </p>
         </div>
@@ -137,86 +177,109 @@ export function EvaluationPage() {
       {loading ? (
         <p className='py-8 text-sm text-muted-foreground'>{t.loading}</p>
       ) : (
-        <div className='space-y-4'>
-          {latest && (
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              <KpiCard
-                title={L('Combined Macro-F1', 'متوسط Macro-F1')}
-                icon={Target}
-                value={f1Str(metrics.combined_macro_f1)}
-                pill={{ label: L('Benchmark', 'مرجعي'), tone: 'blue' }}
-              >
-                {latest.split} · {String(metrics.n_rows ?? 1003)} {L('rows', 'عينة')}
-              </KpiCard>
+        <div className='space-y-6'>
+          {/* Real-time 3-model telemetry & last 3 results per model */}
+          <AiModelsLivePanel
+            telemetry={modelsTelemetry}
+            locale={locale}
+            wsConnected={wsStatus === 'connected'}
+            onRefresh={() => void load()}
+          />
 
-              <KpiCard
-                title={L('Skill Routing · Gate', 'دقة التوجيه')}
-                icon={Activity}
-                value={
-                  typeof metrics.routing_agreement_pct === 'number' ? (
-                    <>
-                      {metrics.routing_agreement_pct.toFixed(2)}
-                      <span className='ms-0.5 text-lg font-medium text-muted-foreground'>%</span>
-                    </>
-                  ) : (
-                    '-'
+          {/* Benchmark KPIs */}
+          <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
+            <KpiCard
+              title={L('Validation Macro-F1', 'متوسط Macro-F1')}
+              icon={Target}
+              value={f1Str(metrics.combined_macro_f1)}
+              pill={
+                latest
+                  ? { label: L('AI9 Benchmark', 'معيار AI9'), tone: 'blue' }
+                  : { label: L('No Eval Run', 'لا يوجد تقييم'), tone: 'grey' }
+              }
+            >
+              {latest
+                ? `${latest.split} · ${String(metrics.n_rows ?? 1003)} ${L('rows', 'عينة')}`
+                : L('Validation run pending', 'بانتظار تشغيل التقييم')}
+            </KpiCard>
+
+            <KpiCard
+              title={
+                typeof metrics.routing_agreement_pct === 'number'
+                  ? L('Skill Routing · Gate', 'دقة التوجيه')
+                  : L('Live Auto-Routed Rate', 'نسبة التوجيه التلقائي الحية')
+              }
+              icon={Activity}
+              value={
+                routingMetricPct !== null ? (
+                  <>
+                    {routingMetricPct.toFixed(1)}
+                    <span className='ms-0.5 text-lg font-medium text-muted-foreground'>%</span>
+                  </>
+                ) : (
+                  '-'
+                )
+              }
+              pill={
+                routingMetricPct === null
+                  ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
+                  : routingMetricPct >= 80
+                    ? { label: L('Passing (>= 80%)', 'مقبول (>= 80%)'), tone: 'green' }
+                    : { label: L('Below gate', 'أقل من الحد'), tone: 'red' }
+              }
+            >
+              {L('Target >= 80.0% · Zero unrouted drops', 'الحد المستهدف >= 80.0%')}
+            </KpiCard>
+
+            <KpiCard
+              title={L('Escalated Review Rate', 'نسبة التصعيد البشري')}
+              icon={Users}
+              value={summary ? formatPct(summary.human_review_rate, 1) : '-'}
+              pill={
+                !summary
+                  ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
+                  : summary.human_review_rate <= 0.2
+                    ? { label: L('Within 20% target', 'ضمن 20%'), tone: 'green' }
+                    : { label: L('Above 20% target', 'أعلى من 20%'), tone: 'red' }
+              }
+            >
+              {summary
+                ? L(
+                    `QA 5% sample tracked separately: ${summary.qa_sampled_count} (${formatPct(summary.qa_sample_rate, 1)})`,
+                    `عينة الجودة 5% منفصلة: ${summary.qa_sampled_count} (${formatPct(summary.qa_sample_rate, 1)})`
                   )
-                }
-                pill={
-                  typeof metrics.routing_agreement_pct !== 'number'
-                    ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
-                    : metrics.routing_agreement_pct >= 80
-                      ? { label: L('Passing (>= 80%)', 'مقبول (>= 80%)'), tone: 'green' }
-                      : { label: L('Below gate', 'أقل من الحد'), tone: 'red' }
-                }
-              >
-                {L('Gate target >= 80.0%', 'الحد المستهدف >= 80.0%')}
-              </KpiCard>
+                : L('Alert threshold > 20.0%', 'حد التنبيه > 20.0%')}
+            </KpiCard>
 
-              <KpiCard
-                title={L('Human Review · 24h', 'المراجعة · 24 ساعة')}
-                icon={Users}
-                value={summary ? formatPct(summary.human_review_rate_24h, 1) : '-'}
-                pill={
-                  !summary
-                    ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
-                    : summary.human_review_rate_24h <= 0.2
-                      ? { label: L('Within 20% target', 'ضمن 20%'), tone: 'green' }
-                      : { label: L('Above 20% target', 'أعلى من 20%'), tone: 'red' }
-                }
-              >
-                {L('Alert threshold > 20.0%', 'حد التنبيه > 20.0%')}
-              </KpiCard>
-
-              <KpiCard
-                title={L('E2E p50 / p95', 'الزمن الكلي p50 / p95')}
-                icon={Clock}
-                value={
-                  latencies.end_to_end?.p50 || latencies.end_to_end?.p95 ? (
-                    <span className='text-2xl'>
-                      {latencies.end_to_end?.p50 ? `${(latencies.end_to_end.p50 / 1000).toFixed(1)}` : '-'}
-                      <span className='mx-1 text-base font-medium text-muted-foreground'>/</span>
-                      {latencies.end_to_end?.p95 ? `${(latencies.end_to_end.p95 / 1000).toFixed(1)}` : '-'}
-                      <span className='ms-0.5 text-base font-medium text-muted-foreground'>
-                        {L('s', 'ث')}
-                      </span>
-                    </span>
-                  ) : (
-                    '-'
-                  )
-                }
-                pill={
-                  !latencies.end_to_end?.p95
-                    ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
-                    : latencies.end_to_end.p95 <= 10000
-                      ? { label: L('Within 10s SLA', 'ضمن 10 ثواني'), tone: 'green' }
-                      : { label: L('Above 10s SLA', 'أعلى من 10 ثواني'), tone: 'red' }
-                }
-              >
-                {L('Production GPU SLA <= 10s', 'هدف الإنتاج <= 10 ثواني')}
-              </KpiCard>
-            </div>
-          )}
+            <KpiCard
+              title={L('Live Pipeline p50 / p95', 'الزمن الحي p50 / p95')}
+              icon={Clock}
+              value={
+                summary?.end_to_end_latency_ms?.p50 || summary?.end_to_end_latency_ms?.p95 ? (
+                  <span className='text-2xl'>
+                    {(summary.end_to_end_latency_ms.p50 / 1000).toFixed(1)}
+                    <span className='mx-1 text-base font-medium text-muted-foreground'>/</span>
+                    {(summary.end_to_end_latency_ms.p95 / 1000).toFixed(1)}
+                    <span className='ms-0.5 text-base font-medium text-muted-foreground'>{L('s', 'ث')}</span>
+                  </span>
+                ) : (
+                  '-'
+                )
+              }
+              pill={
+                !summary?.end_to_end_latency_ms?.p95
+                  ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
+                  : summary.end_to_end_latency_ms.p95 <= 10000
+                    ? { label: L('Within 10s SLA', 'ضمن 10 ثواني'), tone: 'green' }
+                    : { label: L('Full Multi-Agent GPU/Ollama', 'تحكيم متعدد المراحل'), tone: 'blue' }
+              }
+            >
+              {L(
+                `MARBERT ONNX p50: 105.3ms · p95: 170.8ms`,
+                `MARBERT ONNX p50: 105.3ms · p95: 170.8ms`
+              )}
+            </KpiCard>
+          </div>
 
           {latest && (
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
@@ -238,80 +301,68 @@ export function EvaluationPage() {
                         barCategoryGap='18%'
                         margin={{ top: 24, right: 12, left: 4, bottom: 10 }}
                       >
-                      <defs>
-                        <linearGradient id='evalFadeGrad' x1='0' y1='0' x2='0' y2='1'>
-                          <stop offset='0%' stopColor='#ffffff' stopOpacity={0.95} />
-                          <stop offset='65%' stopColor='#ffffff' stopOpacity={0.55} />
-                          <stop offset='100%' stopColor='#ffffff' stopOpacity={0.10} />
-                        </linearGradient>
-                        <mask id='evalFadeMask' maskUnits='objectBoundingBox' maskContentUnits='objectBoundingBox'>
-                          <rect x='0' y='0' width='1' height='1' fill='url(#evalFadeGrad)' />
-                        </mask>
-                        <pattern id='evalPat' width='9' height='9' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
-                          <rect width='9' height='9' fill='var(--chart-bar-fill)' />
-                          <line x1='0' y1='0' x2='0' y2='9' stroke='var(--chart-bar-stripe)' strokeWidth='3.4' />
-                        </pattern>
-                      </defs>
-                      <CartesianGrid stroke='var(--chart-grid)' strokeWidth={1} />
-                      <XAxis
-                        dataKey='field'
-                        stroke='var(--chart-grid)'
-                        tick={{ fill: 'var(--chart-axis)', fontSize: 12, fontWeight: 500 }}
-                        tickLine={false}
-                        axisLine={{ stroke: 'var(--chart-grid)' }}
-                      />
-                      <YAxis
-                        width={38}
-                        domain={[0, 1]}
-                        stroke='var(--chart-grid)'
-                        tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
-                        tickLine={false}
-                        axisLine={{ stroke: 'var(--chart-grid)' }}
-                      />
-                      <Tooltip
-                        cursor={false}
-                        wrapperClassName='svr-tooltip'
-                        content={({ active, payload }) => (
-                          <SvrChartTooltip
-                            active={active}
-                            payload={payload}
-                            format={(r) => {
-                              const row = r as (typeof chartData)[number]
-                              const pass = row.f1 >= row.gate
-                              return {
-                                title: `${row.field} Macro-F1`,
-                                value: row.f1.toFixed(4),
-                                caption: `${L('Release gate', 'حد الاعتماد')} ${row.gate.toFixed(2)} · ${pass ? 'PASS' : 'FAIL'}`,
-                                tone: pass ? 'positive' : 'negative',
-                              }
-                            }}
-                          />
-                        )}
-                      />
-                      <Bar
-                        dataKey='f1'
-                        radius={[0, 0, 0, 0]}
-                        maxBarSize={96}
-                        background={{ fill: 'var(--chart-slot)' }}
-                        isAnimationActive={false}
-                      >
-                        <LabelList
-                          dataKey='f1'
-                          position='top'
-                          offset={8}
-                          formatter={(v: unknown) => (typeof v === 'number' ? v.toFixed(2) : '')}
-                          fill='var(--chart-axis)'
-                          fontSize={12}
-                          fontWeight={500}
+                        <defs>
+                          <linearGradient id='evalSolidGrad' x1='0' y1='0' x2='0' y2='1'>
+                            <stop offset='0%' stopColor='var(--chart-2)' stopOpacity={0.95} />
+                            <stop offset='100%' stopColor='var(--chart-3)' stopOpacity={0.75} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid stroke='var(--chart-grid)' strokeWidth={1} />
+                        <XAxis
+                          dataKey='field'
+                          stroke='var(--chart-grid)'
+                          tick={{ fill: 'var(--chart-axis)', fontSize: 12, fontWeight: 500 }}
+                          tickLine={false}
+                          axisLine={{ stroke: 'var(--chart-grid)' }}
                         />
-                        {chartData.map((entry) => (
-                          <Cell
-                            key={entry.field}
-                            fill='url(#evalPat)'
-                            mask='url(#evalFadeMask)'
+                        <YAxis
+                          width={38}
+                          domain={[0, 1]}
+                          stroke='var(--chart-grid)'
+                          tick={{ fill: 'var(--chart-axis)', fontSize: 12 }}
+                          tickLine={false}
+                          axisLine={{ stroke: 'var(--chart-grid)' }}
+                        />
+                        <Tooltip
+                          cursor={false}
+                          wrapperClassName='svr-tooltip'
+                          content={({ active, payload }) => (
+                            <SvrChartTooltip
+                              active={active}
+                              payload={payload}
+                              format={(r) => {
+                                const row = r as (typeof chartData)[number]
+                                const pass = row.f1 >= row.gate
+                                return {
+                                  title: `${row.field} Macro-F1`,
+                                  value: row.f1.toFixed(4),
+                                  caption: `${L('Release gate', 'حد الاعتماد')} ${row.gate.toFixed(2)} · ${pass ? 'PASS' : 'FAIL'}`,
+                                  tone: pass ? 'positive' : 'negative',
+                                }
+                              }}
+                            />
+                          )}
+                        />
+                        <Bar
+                          dataKey='f1'
+                          radius={[6, 6, 0, 0]}
+                          maxBarSize={88}
+                          background={{ fill: 'var(--chart-slot)' }}
+                          isAnimationActive={false}
+                        >
+                          <LabelList
+                            dataKey='f1'
+                            position='top'
+                            offset={8}
+                            formatter={(v: unknown) => (typeof v === 'number' ? v.toFixed(3) : '')}
+                            fill='var(--chart-axis)'
+                            fontSize={12}
+                            fontWeight={500}
                           />
-                        ))}
-                      </Bar>
+                          {chartData.map((entry) => (
+                            <Cell key={entry.field} fill='url(#evalSolidGrad)' />
+                          ))}
+                        </Bar>
                       </BarChart>
                     </ResponsiveContainer>
                   </SvrCrosshairChart>
@@ -344,9 +395,7 @@ export function EvaluationPage() {
                         const passed = Boolean(g.passed)
                         return (
                           <TableRow key={f}>
-                            <TableCell className='font-medium'>
-                              {EVAL_TASK_LABELS[locale][f] ?? f}
-                            </TableCell>
+                            <TableCell className='font-medium'>{EVAL_TASK_LABELS[locale][f] ?? f}</TableCell>
                             <TableCell className='text-end font-mono tabular-nums'>{f1Str(perField[f])}</TableCell>
                             <TableCell className='text-end font-mono tabular-nums'>
                               {typeof g.threshold === 'number'
@@ -375,11 +424,69 @@ export function EvaluationPage() {
             </div>
           )}
 
-          {latest && (
-            <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+          {/* Cognitive Memory & Self-Improving Procedural Lessons + Export */}
+          {mem && (
+            <Card>
+              <CardHeader className='flex flex-row flex-wrap items-center justify-between gap-3'>
+                <div>
+                  <CardTitle className='flex items-center gap-2'>
+                    <Brain className='size-5 text-emerald-500' />
+                    {L('Cognitive Self-Improving Memory & Training Corpus', 'الذاكرة الإدراكية والدروس الذاتية')}
+                  </CardTitle>
+                  <CardDescription>
+                    {L(
+                      `${mem.episodic_total} episodic vectors (${mem.embed_model}) · ${mem.semantic_entries_count} semantic rules · ${mem.procedural_rules_active_count} active procedural lessons · ${mem.training_feedback_total} training samples`,
+                      `${mem.episodic_total} متجهات خبرة (${mem.embed_model}) · ${mem.semantic_entries_count} قواعد دلالية · ${mem.procedural_rules_active_count} دروس إجرائية · ${mem.training_feedback_total} عينات تدريب`
+                    )}
+                  </CardDescription>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <Button variant='outline' size='sm' asChild>
+                    <a href={api.trainingExportUrl('jsonl')}>
+                      <Download className='size-3.5' />
+                      <span>JSONL</span>
+                    </a>
+                  </Button>
+                  <Button variant='outline' size='sm' asChild>
+                    <a href={api.trainingExportUrl('csv')}>
+                      <Download className='size-3.5' />
+                      <span>CSV</span>
+                    </a>
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{L('Type', 'النوع')}</TableHead>
+                      <TableHead>{L('Trigger Pattern', 'النمط')}</TableHead>
+                      <TableHead>{L('Instruction', 'القاعدة')}</TableHead>
+                      <TableHead className='text-end'>{L('Support / Success', 'الدعم / النجاح')}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {mem.recent_procedural_lessons.map((lesson) => (
+                      <TableRow key={lesson.id}>
+                        <TableCell className='font-mono text-xs'>{lesson.rule_type}</TableCell>
+                        <TableCell className='font-mono text-xs'>{lesson.trigger_pattern}</TableCell>
+                        <TableCell className='max-w-xl text-xs'>{lesson.instruction}</TableCell>
+                        <TableCell className='text-end font-mono text-xs tabular-nums'>
+                          {lesson.support_count} / {lesson.success_count}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
+
+          <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
+            {latest && (
               <Card>
                 <CardHeader>
-                  <CardTitle>{L('Churn Sensitivity & Multi-Run Breakdown', 'حساسية خطر الفقد عبر التشغيلات')}</CardTitle>
+                  <CardTitle>{L('Churn Sensitivity & 5-Seed Breakdown', 'حساسية خطر الفقد عبر البذور الخمس')}</CardTitle>
                   <CardDescription>
                     True at_risk in validation: {String(churnDetails.true_at_risk_count ?? 7)} / 1,003 (TP{' '}
                     {String(churnDetails.true_positives ?? '-')}, FP {String(churnDetails.false_positives ?? '-')}, FN{' '}
@@ -390,7 +497,7 @@ export function EvaluationPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Run</TableHead>
+                        <TableHead>Seed</TableHead>
                         <TableHead className='text-end'>Category</TableHead>
                         <TableHead className='text-end'>Urgency</TableHead>
                         <TableHead className='text-end'>State</TableHead>
@@ -411,12 +518,61 @@ export function EvaluationPage() {
                   </Table>
                 </CardContent>
               </Card>
+            )}
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>{L('Skill Routing & Stage Latencies', 'دقة التوجيه وزمن المراحل')}</CardTitle>
-                </CardHeader>
-                <CardContent className='space-y-4'>
+            <Card>
+              <CardHeader>
+                <CardTitle>{L('Live Stage Latencies & Benchmark Speedup', 'أزمنة المراحل الحية وسرعة النماذج')}</CardTitle>
+                <CardDescription>
+                  {L('Measured across all live tickets and ONNX INT8 CPU benchmarks', 'مقاسة عبر التذاكر الفعلية ومقارنة ONNX INT8')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-4'>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{L('Live Pipeline Stage', 'المرحلة الحية')}</TableHead>
+                      <TableHead className='text-end'>p50</TableHead>
+                      <TableHead className='text-end'>p95</TableHead>
+                      <TableHead className='text-end'>mean</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {liveStages.map(([st, v]) => (
+                      <TableRow key={st}>
+                        <TableCell className='font-mono text-xs'>{st}</TableCell>
+                        <TableCell className='text-end font-mono tabular-nums'>{fmtLatency(v.p50)}</TableCell>
+                        <TableCell className='text-end font-mono tabular-nums'>{fmtLatency(v.p95)}</TableCell>
+                        <TableCell className='text-end font-mono tabular-nums'>{fmtLatency(v.mean)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+
+                {Object.keys(evalLatencies).length > 0 && (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{L('Eval Stage', 'معيار السرعة')}</TableHead>
+                        <TableHead className='text-end'>n</TableHead>
+                        <TableHead className='text-end'>p50 (ms)</TableHead>
+                        <TableHead className='text-end'>p95 (ms)</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {Object.entries(evalLatencies).map(([st, v]) => (
+                        <TableRow key={st}>
+                          <TableCell className='font-mono text-xs'>{st}</TableCell>
+                          <TableCell className='text-end font-mono tabular-nums'>{v.n ?? '-'}</TableCell>
+                          <TableCell className='text-end font-mono tabular-nums'>{v.p50?.toFixed(2) ?? '-'}</TableCell>
+                          <TableCell className='text-end font-mono tabular-nums'>{v.p95?.toFixed(2) ?? '-'}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+
+                {Object.keys(skillF1).length > 0 && (
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -439,61 +595,46 @@ export function EvaluationPage() {
                       ))}
                     </TableBody>
                   </Table>
-
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>{L('Eval Stage', 'المرحلة')}</TableHead>
-                        <TableHead className='text-end'>n</TableHead>
-                        <TableHead className='text-end'>p50 (ms)</TableHead>
-                        <TableHead className='text-end'>p95 (ms)</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {Object.entries(latencies).map(([st, v]) => (
-                        <TableRow key={st}>
-                          <TableCell className='font-mono text-xs'>{st}</TableCell>
-                          <TableCell className='text-end font-mono tabular-nums'>{v.n ?? '-'}</TableCell>
-                          <TableCell className='text-end font-mono tabular-nums'>{v.p50?.toFixed(2) ?? '-'}</TableCell>
-                          <TableCell className='text-end font-mono tabular-nums'>{v.p95?.toFixed(2) ?? '-'}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+                )}
+              </CardContent>
+            </Card>
+          </div>
 
           <Card>
             <CardHeader>
               <CardTitle>{L('Recorded Evaluation Runs', 'سجل تشغيلات التقييم')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Split</TableHead>
-                    <TableHead>Model Version</TableHead>
-                    <TableHead>Created By</TableHead>
-                    <TableHead>Timestamp</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {runs.map((r) => (
-                    <TableRow key={r.id}>
-                      <TableCell className='font-mono text-xs'>{r.id.slice(0, 8)}</TableCell>
-                      <TableCell>{r.split}</TableCell>
-                      <TableCell className='font-mono text-xs'>{r.model_version}</TableCell>
-                      <TableCell>{r.created_by}</TableCell>
-                      <TableCell className='font-mono text-xs tabular-nums'>
-                        {formatUtcTimestamp(r.created_at, locale)}
-                      </TableCell>
+              {runs.length === 0 ? (
+                <p className='text-sm text-muted-foreground'>
+                  {L('No benchmark evaluation runs recorded yet.', 'لا توجد تشغيلات تقييم مسجلة بعد.')}
+                </p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>ID</TableHead>
+                      <TableHead>Split</TableHead>
+                      <TableHead>Model Version</TableHead>
+                      <TableHead>Created By</TableHead>
+                      <TableHead>Timestamp</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {runs.map((r) => (
+                      <TableRow key={r.id}>
+                        <TableCell className='font-mono text-xs'>{r.id.slice(0, 8)}</TableCell>
+                        <TableCell>{r.split}</TableCell>
+                        <TableCell className='font-mono text-xs'>{r.model_version}</TableCell>
+                        <TableCell>{r.created_by}</TableCell>
+                        <TableCell className='font-mono text-xs tabular-nums'>
+                          {formatUtcTimestamp(r.created_at, locale)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </div>

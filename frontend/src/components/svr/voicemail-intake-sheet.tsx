@@ -18,7 +18,7 @@ import { VoicemailAudioPlayer } from '@/components/svr/voicemail-audio-player'
 import { api, ApiError } from '@/lib/api'
 import type { Locale } from '@/lib/i18n'
 import { formatDuration } from '@/lib/taxonomy'
-import { BrowserWavRecorder } from '@/lib/wavRecorder'
+import { BrowserWavRecorder, MicrophoneError } from '@/lib/wavRecorder'
 
 interface VoicemailIntakeSheetProps {
   open: boolean
@@ -45,6 +45,7 @@ export function VoicemailIntakeSheet({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [recording, setRecording] = useState(false)
   const [recSeconds, setRecSeconds] = useState(0)
+  const [audioLevel, setAudioLevel] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [resultMsg, setResultMsg] = useState<string | null>(null)
@@ -97,9 +98,12 @@ export function VoicemailIntakeSheet({
     setError(null)
     setResultMsg(null)
     setCreatedTicketId(null)
+    setAudioLevel(0)
     try {
       const rec = new BrowserWavRecorder()
-      await rec.start()
+      await rec.start({
+        onLevel: (rms) => setAudioLevel(Math.min(100, Math.round(rms * 350))),
+      })
       recorderRef.current = rec
       setRecording(true)
       setRecSeconds(0)
@@ -112,13 +116,36 @@ export function VoicemailIntakeSheet({
           return s + 1
         })
       }, 1000)
-    } catch {
-      setError(
-        L(
-          'Microphone access was denied or unavailable. You can still upload a WAV/MP3/M4A file.',
-          'تم رفض الوصول للميكروفون أو غير متاح. يمكنك رفع ملف صوتي بدلا من ذلك.'
-        )
-      )
+    } catch (err) {
+      setAudioLevel(0)
+      const code = err instanceof MicrophoneError ? err.code : 'audio_graph_error'
+      const msgMap: Record<string, string> = {
+        insecure_context: L(
+          'Microphone access requires localhost (127.0.0.1) or HTTPS. You can still upload a WAV/MP3/M4A file.',
+          'يتطلب تسجيل الميكروفون تشغيل الموقع على localhost أو HTTPS. يمكنك رفع ملف صوتي بدلا من ذلك.'
+        ),
+        unsupported: L(
+          'This browser or embedded pane does not expose microphone APIs. Use Chrome/Edge tab or upload a WAV/MP3/M4A file.',
+          'هذا المتصفح لا يدعم واجهة الميكروفون. استخدم نافذة Chrome أو ارفع ملفا صوتيا.'
+        ),
+        permission_denied: L(
+          'Microphone permission was blocked. Allow microphone access in the browser address bar or upload a WAV/MP3/M4A file.',
+          'تم حظر إذن الميكروفون. اسمح بالوصول من شريط العنوان أو ارفع ملفا صوتيا.'
+        ),
+        no_device: L(
+          'No active microphone device was detected on this machine. Connect a mic or upload a WAV/MP3/M4A file.',
+          'لم يتم العثور على ميكروفون متصل بهذا الجهاز. يمكنك رفع ملف صوتي بدلا من ذلك.'
+        ),
+        device_in_use: L(
+          'The microphone is currently in use by another application. Close the other app or upload a WAV/MP3/M4A file.',
+          'الميكروفون مستخدم حاليا في تطبيق آخر. يمكنك رفع ملف صوتي بدلا من ذلك.'
+        ),
+        audio_graph_error: L(
+          'Microphone audio capture could not start in this browser context. You can upload a WAV/MP3/M4A file directly.',
+          'تعذر تشغيل التقاط الصوت في المتصفح. يمكنك رفع ملف WAV/MP3/M4A مباشرة.'
+        ),
+      }
+      setError(msgMap[code] || msgMap.audio_graph_error)
     }
   }
 
@@ -128,6 +155,7 @@ export function VoicemailIntakeSheet({
       timerRef.current = null
     }
     setRecording(false)
+    setAudioLevel(0)
     if (!recorderRef.current) return
     try {
       const result = await recorderRef.current.stop()
@@ -216,9 +244,18 @@ export function VoicemailIntakeSheet({
                 </Button>
               )}
               {recording && (
-                <span className='text-xs font-medium text-destructive'>
-                  {L('Recording (max 60s)...', 'جاري التسجيل (حد أقصى 60 ثانية)...')}
-                </span>
+                <div className='flex items-center gap-2'>
+                  <span className='inline-block size-2 animate-pulse rounded-full bg-destructive' />
+                  <span className='text-xs font-medium text-destructive'>
+                    {L('Recording (max 60s)...', 'جاري التسجيل (حد أقصى 60 ثانية)...')}
+                  </span>
+                  <div className='h-2 w-24 overflow-hidden rounded-full bg-muted'>
+                    <div
+                      className='h-full bg-emerald-500 transition-all duration-75'
+                      style={{ width: `${Math.max(8, audioLevel)}%` }}
+                    />
+                  </div>
+                </div>
               )}
             </div>
           </div>

@@ -435,6 +435,8 @@ class MonitoringSummaryResponse(StrictResponseSchema):
     confidence_histogram: list[dict[str, Any]]
     human_review_rate: float
     human_review_rate_24h: float
+    qa_sampled_count: int = 0
+    qa_sample_rate: float = 0.0
     processing_success_rate: float
     end_to_end_latency_ms: dict[str, float]
     end_to_end_latency_24h_ms: dict[str, float]
@@ -479,3 +481,111 @@ class AgentMemoryStatsResponse(StrictResponseSchema):
     training_feedback_total: int
     training_feedback_by_tier: dict[str, int]
     recent_procedural_lessons: list[AgentMemoryLessonItem]
+
+
+class CohereRecentResult(StrictResponseSchema):
+    ticket_id: str
+    file_name: str
+    transcript_preview: str
+    min_avg_logprob: float | None = None
+    max_no_speech_prob: float | None = None
+    needs_review: bool
+    latency_ms: int
+    status: str
+    created_at: datetime
+
+
+class CohereModelTelemetry(StrictResponseSchema):
+    name: str
+    model_id: str
+    backend: str
+    device: str
+    status: str
+    total_runs: int
+    success_rate: float
+    latency_ms: dict[str, float]
+    avg_logprob: float | None = None
+    avg_no_speech_prob: float | None = None
+    flagged_rate: float
+    recent_results: list[CohereRecentResult]
+
+
+class MarbertRecentResult(StrictResponseSchema):
+    ticket_id: str
+    file_name: str
+    complaint_category: str | None = None
+    complaint_urgency: str | None = None
+    customer_state: str | None = None
+    churn_risk: str | None = None
+    confidence: float
+    agreed_with_orchestrator: bool
+    latency_ms: int
+    status: str
+    created_at: datetime
+
+
+class MarbertModelTelemetry(StrictResponseSchema):
+    name: str
+    model_id: str
+    backend: str
+    checkpoints_ready: bool
+    status: str
+    total_runs: int
+    avg_confidence: float
+    below_threshold_rate: float
+    latency_ms: dict[str, float]
+    per_head_avg_confidence: dict[str, float]
+    category_distribution: dict[str, int]
+    recent_results: list[MarbertRecentResult]
+
+
+class OrchestratorRecentResult(StrictResponseSchema):
+    ticket_id: str
+    file_name: str
+    gate_status: str
+    adjudicator_mode: str
+    changed_fields: list[str]
+    memory_episodes_used: int
+    max_episode_similarity: float
+    calibrated_confidence: float
+    assigned_agent_name: str | None = None
+    reasoning_preview: str
+    latency_ms: int
+    created_at: datetime
+
+
+class OrchestratorModelTelemetry(StrictResponseSchema):
+    name: str
+    model_id: str
+    embed_model: str
+    status: str
+    total_runs: int
+    fast_path_count: int
+    repaired_count: int
+    uncertain_count: int
+    fast_verified_count: int
+    adjudicated_count: int
+    override_count: int
+    agreement_rate: float
+    verify_latency_ms: dict[str, float]
+    adjudicate_latency_ms: dict[str, float]
+    memory: AgentMemoryStatsResponse
+    recent_results: list[OrchestratorRecentResult]
+
+
+class ModelsTelemetryResponse(StrictResponseSchema):
+    generated_at: datetime
+    total_tickets: int
+    ready_tickets: int
+    unassigned_tickets: int
+    failed_tickets: int
+    escalated_human_review_count: int
+    escalated_human_review_rate: float
+    qa_sampled_count: int
+    qa_sample_rate: float
+    avg_confidence: float
+    active_ws_connections: int
+    e2e_latency_ms: dict[str, float]
+    cohere_asr: CohereModelTelemetry
+    marbert_v2: MarbertModelTelemetry
+    voicegate_orchestrator: OrchestratorModelTelemetry

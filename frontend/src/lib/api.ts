@@ -3,6 +3,7 @@
 
 import type {
   AgentCreateRequest,
+  AgentMemoryStatsResponse,
   AgentResponse,
   AgentUpdateRequest,
   AuditLogListResponse,
@@ -11,6 +12,7 @@ import type {
   CorrectionPreviewRequest,
   CorrectionPreviewResponse,
   EvalRunResponse,
+  ModelsTelemetryResponse,
   MonitoringSummaryResponse,
   PatchTicketRequest,
   ScriptTemplateResponse,
@@ -297,6 +299,18 @@ export const api = {
 
   getMonitoringSummary(): Promise<MonitoringSummaryResponse> {
     return request<MonitoringSummaryResponse>("/api/monitoring/summary");
+  },
+
+  getModelsTelemetry(): Promise<ModelsTelemetryResponse> {
+    return request<ModelsTelemetryResponse>("/api/monitoring/models");
+  },
+
+  getAgentMemoryStats(): Promise<AgentMemoryStatsResponse> {
+    return request<AgentMemoryStatsResponse>("/api/agent/memory/stats");
+  },
+
+  trainingExportUrl(format: "jsonl" | "csv"): string {
+    return apiUrl(`/api/agent/memory/training-export?format=${format}`);
   },
 
   // Audit Log

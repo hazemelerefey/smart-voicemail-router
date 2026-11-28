@@ -410,3 +410,148 @@ def test_reprocess_tickets_cli_requires_explicit_ids(tmp_path: Path) -> None:
     db_file = tmp_path / "empty.db"
     DatabaseManager(f"sqlite:///{db_file.as_posix()}").create_all()
     assert mod.main(["--database-url", f"sqlite:///{db_file.as_posix()}", "--ticket-ids", TICKET_D18]) == 2
+
+
+def test_clean_sampled_ticket_tracks_qa_without_human_review_and_models_telemetry(
+    db_manager: DatabaseManager,
+    test_settings: Settings,
+) -> None:
+    from fastapi.testclient import TestClient
+    from svr_platform.api.main import create_app
+
+    crypto = EncryptionService(test_settings.svr_encryption_key)
+    enc_dir = test_settings.svr_storage_dir / "voicemails"
+    enc_dir.mkdir(parents=True, exist_ok=True)
+    enc_path = enc_dir / "frustrated_0014.wav.enc"
+    enc_path.write_bytes(crypto.encrypt_bytes(make_wav_bytes(1.5)))
+
+    with db_manager.session_factory() as db:
+        org = db.query(Organization).first()
+        user = db.query(User).first()
+        assert org is not None and user is not None
+
+        vm = Voicemail(
+            organization_id=org.id,
+            file_name="frustrated_0014.wav",
+            file_path=str(enc_path),
+            format="wav",
+            size_bytes=enc_path.stat().st_size,
+            duration_seconds=5.9,
+            sample_rate_hz=16000,
+            channels=1,
+            status=TicketStatus.PROCESSING.value,
+            idempotency_key="test-249-qa-non-blocking",
+            content_sha256="1" * 64,
+            encrypted=True,
+            created_by=user.id,
+        )
+        db.add(vm)
+        db.flush()
+        ticket = Ticket(
+            id=TICKET_249,  # bucket = 7 < 50 (in 5% sample)
+            voicemail_id=vm.id,
+            organization_id=org.id,
+            status=TicketStatus.PROCESSING.value,
+            needs_human_review=True,
+        )
+        db.add(ticket)
+        db.commit()
+
+        class _MockCleanSTT:
+            canonical_model_name = "cohere-mock"
+            device = "cuda"
+            low_memory_mode = False
+
+            def transcribe(self, _wav_or_path, file_name: str = "", **_kwargs) -> STTResult:
+                return STTResult(
+                    file=file_name or "frustrated_0014.wav",
+                    model="cohere-mock",
+                    text="لما بستخدم باقة اليومية ساعات بتشتغل وساعات لأ",
+                    text_norm="لما بستخدم باقه اليوميه ساعات بتشتغل وساعات لا",
+                    min_avg_logprob=-0.09,
+                    max_no_speech_prob=0.12,
+                    needs_review=False,
+                    review_reasons="",
+                    dup_text_size=1,
+                    stt_confidence_source="logprob",
+                    error="",
+                )
+
+        class _MockCleanClassifier:
+            base_model_id = "marbert-mock"
+
+            def has_local_checkpoints(self) -> bool:
+                return True
+
+            def classify(self, _text_norm: str, *, confidence_threshold: float = 0.5, file_name: str = "") -> ClassificationResult:
+                return ClassificationResult(
+                    labels={
+                        "complaint_category": "balance_and_data",
+                        "complaint_urgency": "medium",
+                        "customer_state": "calm",
+                        "churn_risk": "not_at_risk",
+                    },
+                    probabilities={
+                        "complaint_category": _dist("complaint_category", "balance_and_data", 0.88),
+                        "complaint_urgency": _dist("complaint_urgency", "medium", 0.82),
+                        "customer_state": _dist("customer_state", "calm", 0.86),
+                        "churn_risk": _dist("churn_risk", "not_at_risk", 0.99),
+                    },
+                    confidence=0.82,
+                    needs_human_review=False,
+                    review_reason=None,
+                    model_version="marbert-mock",
+                    label_sources={f: "model" for f in ("complaint_category", "complaint_urgency", "customer_state", "churn_risk")},
+                )
+
+        gate = AgenticTranscriptGate(
+            reviewer_override=lambda ctx: {
+                "thinking": "clean",
+                "corrected_text": ctx["current_text"],
+                "confidence": 0.94,
+                "is_coherent": True,
+                "changes": [],
+            },
+            fast_path_enabled=True,
+        )
+        stt = _MockCleanSTT()
+        clf = _MockCleanClassifier()
+        orchestrator = VoiceGateOrchestrator(
+            crypto=crypto,
+            stt_service=stt,  # type: ignore[arg-type]
+            transcript_gate=gate,
+            classifier_service=clf,  # type: ignore[arg-type]
+        )
+        updated = orchestrator.run(db, ticket_id=TICKET_249)
+        assert updated.status == TicketStatus.READY.value
+        assert updated.needs_human_review is False
+        assert updated.review_reason is None
+        assert updated.config_snapshot.get("qa_sampled") is True
+        assert updated.config_snapshot.get("qa_sample_reason") == "weekly_quality_sample"
+
+    app = create_app(
+        settings=test_settings,
+        db_manager=db_manager,
+        stt_service=stt,  # type: ignore[arg-type]
+        transcript_gate=gate,
+        classifier_service=clf,  # type: ignore[arg-type]
+    )
+    with TestClient(app) as client:
+        login = client.post(
+            "/api/auth/login",
+            json={"email": "supervisor@telecom.local", "password": test_settings.svr_bootstrap_password},
+        )
+        assert login.status_code == 200
+        summary = client.get("/api/monitoring/summary").json()
+        assert summary["human_review_rate"] == 0.0
+        assert summary["qa_sampled_count"] == 1
+        assert summary["qa_sample_rate"] == 1.0
+
+        models_res = client.get("/api/monitoring/models")
+        assert models_res.status_code == 200, models_res.text
+        m = models_res.json()
+        assert m["escalated_human_review_count"] == 0
+        assert m["qa_sampled_count"] == 1
+        assert len(m["cohere_asr"]["recent_results"]) == 1
+        assert len(m["marbert_v2"]["recent_results"]) == 1
+        assert len(m["voicegate_orchestrator"]["recent_results"]) == 1

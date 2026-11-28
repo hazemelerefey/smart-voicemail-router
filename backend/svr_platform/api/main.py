@@ -87,7 +87,7 @@ from ..security import (
     set_csrf_cookie,
     verify_csrf,
 )
-from ..seed import seed_initial_data
+from ..seed import ensure_verified_val_eval_run, seed_initial_data
 from ..services.adjudicator import ClassificationAdjudicator
 from ..services.brief import build_callback_brief
 from ..services.classification import CLASSIFICATION_FIELDS, MARBERTv2ClassifierService
@@ -131,6 +131,8 @@ from .schemas import (
     AuditEventResponse,
     AuditLogListResponse,
     AuthResponse,
+    CohereModelTelemetry,
+    CohereRecentResult,
     CorrectionApplyRequest,
     CorrectionPreviewRequest,
     CorrectionPreviewResponse,
@@ -138,8 +140,13 @@ from .schemas import (
     HealthResponse,
     LoginRequest,
     LogoutResponse,
+    MarbertModelTelemetry,
+    MarbertRecentResult,
+    ModelsTelemetryResponse,
     MonitoringAlert,
     MonitoringSummaryResponse,
+    OrchestratorModelTelemetry,
+    OrchestratorRecentResult,
     PatchTicketRequest,
     ScriptTemplateResponse,
     ScriptTemplateUpdateRequest,
@@ -650,6 +657,11 @@ def create_app(
         application.state.db_manager.create_all()
         with application.state.db_manager.session_factory() as db:
             org = seed_initial_data(db, application.state.settings)
+            if application.state.settings.svr_env.lower() != "test":
+                try:
+                    ensure_verified_val_eval_run(db, org.id)
+                except Exception as exc:
+                    logger.warning("Optional baseline EvalRun seed skipped: %s", exc)
             mem_svc: AgentMemoryService = application.state.memory_service
             mem_svc.ensure_default_semantic_and_procedural_memory(db, org.id)
             seed_csv = (application.state.settings.memory_train_seed_csv or "").strip()
@@ -1136,6 +1148,10 @@ def create_app(
                 select(func.count(Ticket.id)).where(
                     *base_filters,
                     Ticket.needs_human_review.is_(True),
+                    or_(
+                        Ticket.review_reason.is_(None),
+                        Ticket.review_reason != "weekly_quality_sample",
+                    ),
                 )
             )
             or 0
@@ -2192,11 +2208,17 @@ def create_app(
         e2e_latencies_24h: list[float] = []
         flagged_total = 0
         flagged_24h = 0
+        qa_sampled_total = 0
         succeeded_total = 0
 
         for t in tickets:
             tickets_by_status[t.status] = tickets_by_status.get(t.status, 0) + 1
-            if t.needs_human_review:
+            is_qa_sample = bool((t.config_snapshot or {}).get("qa_sampled")) or (
+                t.review_reason == "weekly_quality_sample"
+            )
+            if is_qa_sample:
+                qa_sampled_total += 1
+            if t.needs_human_review and t.review_reason != "weekly_quality_sample":
                 flagged_total += 1
             if (
                 t.status
@@ -2217,7 +2239,7 @@ def create_app(
                 hist_counts[bin_idx] += 1
 
         for t in tickets_24h:
-            if t.needs_human_review:
+            if t.needs_human_review and t.review_reason != "weekly_quality_sample":
                 flagged_24h += 1
             if t.processing_ms > 0:
                 e2e_latencies_24h.append(float(t.processing_ms))
@@ -2239,6 +2261,7 @@ def create_app(
 
         review_rate = round(flagged_total / total_tickets, 4) if total_tickets else 0.0
         review_rate_24h = round(flagged_24h / len(tickets_24h), 4) if tickets_24h else 0.0
+        qa_sample_rate = round(qa_sampled_total / total_tickets, 4) if total_tickets else 0.0
         completed_count = sum(
             c
             for st, c in tickets_by_status.items()
@@ -2287,6 +2310,8 @@ def create_app(
             confidence_histogram=confidence_histogram,
             human_review_rate=review_rate,
             human_review_rate_24h=review_rate_24h,
+            qa_sampled_count=qa_sampled_total,
+            qa_sample_rate=qa_sample_rate,
             processing_success_rate=success_rate,
             end_to_end_latency_ms=e2e_stats,
             end_to_end_latency_24h_ms=e2e_stats_24h,
@@ -2294,6 +2319,314 @@ def create_app(
             alerts=alerts,
             auto_routing_enabled=sys_setting.auto_routing_enabled if sys_setting else True,
             active_ws_connections=queue_hub.active_count(ctx.organization_id),
+        )
+
+    @application.get(
+        "/api/monitoring/models",
+        response_model=ModelsTelemetryResponse,
+        tags=["Monitoring"],
+    )
+    def get_models_telemetry(
+        request: Request,
+        ctx: AuthContext = Depends(require_roles(UserRole.ADMIN, UserRole.SUPERVISOR)),
+        db: Session = Depends(get_db_from_app),
+        cfg: Settings = Depends(get_settings),
+    ) -> ModelsTelemetryResponse:
+        now = utcnow()
+        tickets = db.scalars(
+            select(Ticket)
+            .where(Ticket.organization_id == ctx.organization_id)
+            .order_by(Ticket.updated_at.desc(), Ticket.id.desc())
+        ).all()
+        voicemails = {
+            v.id: v
+            for v in db.scalars(select(Voicemail).where(Voicemail.organization_id == ctx.organization_id)).all()
+        }
+        agents = {
+            a.id: a.name
+            for a in db.scalars(select(Agent).where(Agent.organization_id == ctx.organization_id)).all()
+        }
+        ai_logs = db.scalars(
+            select(AIInteractionLog)
+            .where(AIInteractionLog.organization_id == ctx.organization_id)
+            .order_by(AIInteractionLog.created_at.desc(), AIInteractionLog.id.desc())
+        ).all()
+
+        # Deduplicate to the latest interaction log per (ticket_id, stage)
+        latest_stage_by_ticket: dict[tuple[str, str], AIInteractionLog] = {}
+        for row in ai_logs:
+            key = (row.ticket_id, row.stage)
+            if key not in latest_stage_by_ticket:
+                latest_stage_by_ticket[key] = row
+
+        ticket_map = {t.id: t for t in tickets}
+        total_tickets = len(tickets)
+        ready_tickets = sum(1 for t in tickets if t.status == TicketStatus.READY.value)
+        unassigned_tickets = sum(1 for t in tickets if t.status == TicketStatus.UNASSIGNED.value)
+        failed_tickets = sum(1 for t in tickets if t.status == TicketStatus.FAILED.value)
+        escalated_count = sum(
+            1 for t in tickets if t.needs_human_review and t.review_reason != "weekly_quality_sample"
+        )
+        qa_sampled_count = sum(
+            1
+            for t in tickets
+            if bool((t.config_snapshot or {}).get("qa_sampled")) or t.review_reason == "weekly_quality_sample"
+        )
+        conf_vals = [float(t.confidence) for t in tickets if t.confidence > 0 or t.complaint_category is not None]
+        avg_confidence = round(sum(conf_vals) / len(conf_vals), 4) if conf_vals else 0.0
+        e2e_latencies = [float(t.processing_ms) for t in tickets if t.processing_ms > 0]
+
+        # 1. Cohere Arabic ASR telemetry
+        cohere_logs = sorted(
+            [log for (tid, stage), log in latest_stage_by_ticket.items() if stage == "transcribe" and tid in ticket_map],
+            key=lambda x: (_ensure_utc(x.created_at), x.id),
+            reverse=True,
+        )
+        cohere_latencies = [float(x.latency_ms) for x in cohere_logs if x.latency_ms >= 0]
+        cohere_logprobs: list[float] = []
+        cohere_nsp: list[float] = []
+        cohere_flagged = 0
+        cohere_ok = 0
+        cohere_recent: list[CohereRecentResult] = []
+        for log in cohere_logs:
+            out = log.output if isinstance(log.output, dict) else {}
+            lp = out.get("min_avg_logprob")
+            nsp = out.get("max_no_speech_prob")
+            if isinstance(lp, (int, float)):
+                cohere_logprobs.append(float(lp))
+            if isinstance(nsp, (int, float)):
+                cohere_nsp.append(float(nsp))
+            flagged = bool(out.get("needs_review"))
+            if flagged:
+                cohere_flagged += 1
+            if not out.get("error"):
+                cohere_ok += 1
+            if len(cohere_recent) < 3:
+                t = ticket_map[log.ticket_id]
+                vm = voicemails.get(t.voicemail_id)
+                raw_txt = str((vm.stt_v1_json or {}).get("text") if vm else t.transcript or "")
+                cohere_recent.append(
+                    CohereRecentResult(
+                        ticket_id=t.id,
+                        file_name=vm.file_name if vm else "",
+                        transcript_preview=raw_txt[:110],
+                        min_avg_logprob=round(float(lp), 4) if isinstance(lp, (int, float)) else None,
+                        max_no_speech_prob=round(float(nsp), 4) if isinstance(nsp, (int, float)) else None,
+                        needs_review=flagged,
+                        latency_ms=int(log.latency_ms),
+                        status="error" if out.get("error") else ("flagged" if flagged else "ok"),
+                        created_at=log.created_at,
+                    )
+                )
+
+        stt_svc: BaseSTTService = request.app.state.stt_service
+        cohere_telemetry = CohereModelTelemetry(
+            name="Cohere Arabic ASR",
+            model_id=stt_svc.canonical_model_name,
+            backend=cfg.stt_backend,
+            device=getattr(stt_svc, "device", "cuda"),
+            status="online",
+            total_runs=len(cohere_logs),
+            success_rate=round(cohere_ok / len(cohere_logs), 4) if cohere_logs else 1.0,
+            latency_ms=_latency_stats(cohere_latencies),
+            avg_logprob=round(sum(cohere_logprobs) / len(cohere_logprobs), 4) if cohere_logprobs else None,
+            avg_no_speech_prob=round(sum(cohere_nsp) / len(cohere_nsp), 4) if cohere_nsp else None,
+            flagged_rate=round(cohere_flagged / len(cohere_logs), 4) if cohere_logs else 0.0,
+            recent_results=cohere_recent,
+        )
+
+        # 2. MARBERTv2 4-Head Classifier telemetry
+        marbert_logs = sorted(
+            [log for (tid, stage), log in latest_stage_by_ticket.items() if stage == "classify" and tid in ticket_map],
+            key=lambda x: (_ensure_utc(x.created_at), x.id),
+            reverse=True,
+        )
+        marbert_latencies = [float(x.latency_ms) for x in marbert_logs if x.latency_ms >= 0]
+        per_head_probs: dict[str, list[float]] = {f: [] for f in CLASSIFICATION_FIELDS}
+        cat_counts: dict[str, int] = {}
+        below_thresh = 0
+        marbert_recent: list[MarbertRecentResult] = []
+        for t in tickets:
+            probs = t.probabilities if isinstance(t.probabilities, dict) else {}
+            for f in CLASSIFICATION_FIELDS:
+                lbl = getattr(t, f)
+                fmap = probs.get(f)
+                if lbl and isinstance(fmap, dict) and isinstance(fmap.get(lbl), (int, float)):
+                    per_head_probs[f].append(float(fmap[lbl]))
+            if t.complaint_category:
+                cat_counts[t.complaint_category] = cat_counts.get(t.complaint_category, 0) + 1
+            if (t.confidence > 0 or t.complaint_category is not None) and float(t.confidence) < float(
+                t.confidence_threshold_snapshot or 0.5
+            ):
+                below_thresh += 1
+
+        for log in marbert_logs[:3]:
+            t = ticket_map[log.ticket_id]
+            vm = voicemails.get(t.voicemail_id)
+            out = log.output if isinstance(log.output, dict) else {}
+            adj_log = latest_stage_by_ticket.get((t.id, "adjudicate"))
+            adj_out = (adj_log.output if adj_log and isinstance(adj_log.output, dict) else {}) or {}
+            changed = list(adj_out.get("changed_fields") or [])
+            marbert_recent.append(
+                MarbertRecentResult(
+                    ticket_id=t.id,
+                    file_name=vm.file_name if vm else "",
+                    complaint_category=t.complaint_category,
+                    complaint_urgency=t.complaint_urgency,
+                    customer_state=t.customer_state,
+                    churn_risk=t.churn_risk,
+                    confidence=round(float(t.confidence), 4),
+                    agreed_with_orchestrator=len(changed) == 0,
+                    latency_ms=int(log.latency_ms),
+                    status="error" if out.get("error") else ("low_conf" if out.get("needs_human_review") else "ok"),
+                    created_at=log.created_at,
+                )
+            )
+
+        classifier_svc: MARBERTv2ClassifierService = request.app.state.classifier_service
+        marbert_backend = "onnx-int8" if getattr(classifier_svc, "_onnx_dirs", None) else "onnx-int8/pytorch"
+        marbert_telemetry = MarbertModelTelemetry(
+            name="MARBERTv2 (4-Head Classifier)",
+            model_id=f"{cfg.marbert_base_model} (seed_{cfg.marbert_checkpoint_seed})",
+            backend=marbert_backend,
+            checkpoints_ready=classifier_svc.has_local_checkpoints(),
+            status="online" if classifier_svc.has_local_checkpoints() else "degraded",
+            total_runs=len(marbert_logs),
+            avg_confidence=avg_confidence,
+            below_threshold_rate=round(below_thresh / len(conf_vals), 4) if conf_vals else 0.0,
+            latency_ms=_latency_stats(marbert_latencies),
+            per_head_avg_confidence={
+                f: round(sum(vals) / len(vals), 4) if vals else 0.0 for f, vals in per_head_probs.items()
+            },
+            category_distribution=cat_counts,
+            recent_results=marbert_recent,
+        )
+
+        # 3. VoiceGate Cognitive Orchestrator telemetry
+        verify_logs = sorted(
+            [log for (tid, stage), log in latest_stage_by_ticket.items() if stage == "verify_transcript" and tid in ticket_map],
+            key=lambda x: (_ensure_utc(x.created_at), x.id),
+            reverse=True,
+        )
+        adj_logs = sorted(
+            [log for (tid, stage), log in latest_stage_by_ticket.items() if stage == "adjudicate" and tid in ticket_map],
+            key=lambda x: (_ensure_utc(x.created_at), x.id),
+            reverse=True,
+        )
+        verify_latencies = [float(x.latency_ms) for x in verify_logs if x.latency_ms >= 0]
+        adj_latencies = [float(x.latency_ms) for x in adj_logs if x.latency_ms >= 0]
+
+        fast_path_count = 0
+        repaired_count = 0
+        uncertain_count = 0
+        for log in verify_logs:
+            out = log.output if isinstance(log.output, dict) else {}
+            st = str(out.get("status") or "")
+            if st == "corrected" or out.get("correction_applied"):
+                repaired_count += 1
+            elif st == "uncertain" or out.get("needs_human_review"):
+                uncertain_count += 1
+            elif int(out.get("rounds_run") or 0) == 0:
+                fast_path_count += 1
+
+        fast_verified_count = 0
+        adjudicated_count = 0
+        override_count = 0
+        for log in adj_logs:
+            out = log.output if isinstance(log.output, dict) else {}
+            mode = str(out.get("mode") or "")
+            if mode == "fast_verified":
+                fast_verified_count += 1
+            elif mode == "adjudicated":
+                adjudicated_count += 1
+            if list(out.get("changed_fields") or []):
+                override_count += 1
+
+        orch_source = adj_logs if adj_logs else verify_logs
+        orch_recent: list[OrchestratorRecentResult] = []
+        for log in orch_source[:3]:
+            t = ticket_map[log.ticket_id]
+            vm = voicemails.get(t.voicemail_id)
+            tv = t.transcript_verification_json if isinstance(t.transcript_verification_json, dict) else {}
+            adj_out = tv.get("orchestrator_adjudication") if isinstance(tv.get("orchestrator_adjudication"), dict) else {}
+            if not adj_out and log.stage == "adjudicate" and isinstance(log.output, dict):
+                adj_out = log.output
+            v_log = latest_stage_by_ticket.get((t.id, "verify_transcript"))
+            v_out = (v_log.output if v_log and isinstance(v_log.output, dict) else {}) or {}
+            orch_recent.append(
+                OrchestratorRecentResult(
+                    ticket_id=t.id,
+                    file_name=vm.file_name if vm else "",
+                    gate_status=str(tv.get("status") or v_out.get("status") or "verified"),
+                    adjudicator_mode=str(adj_out.get("mode") or "fast_verified"),
+                    changed_fields=[str(c) for c in (adj_out.get("changed_fields") or [])],
+                    memory_episodes_used=int(adj_out.get("memory_episodes_used") or 0),
+                    max_episode_similarity=round(float(adj_out.get("max_episode_similarity") or 0.0), 4),
+                    calibrated_confidence=round(float(adj_out.get("calibrated_confidence") or t.confidence or 0.0), 4),
+                    assigned_agent_name=agents.get(t.assigned_agent_id) if t.assigned_agent_id else None,
+                    reasoning_preview=str(adj_out.get("reasoning") or "")[:160],
+                    latency_ms=int(adj_out.get("latency_ms") or log.latency_ms),
+                    created_at=log.created_at,
+                )
+            )
+
+        mem_svc: AgentMemoryService = request.app.state.memory_service
+        adj_svc: ClassificationAdjudicator = request.app.state.adjudicator
+        mem_raw = mem_svc.get_memory_stats(db, ctx.organization_id)
+        mem_stats = AgentMemoryStatsResponse(
+            organization_id=mem_raw["organization_id"],
+            memory_enabled=mem_raw["memory_enabled"],
+            adjudicator_enabled=adj_svc.enabled,
+            embed_model=cfg.ollama_embed_model,
+            episodic_total=mem_raw["episodic_total"],
+            episodic_by_source=mem_raw["episodic_by_source"],
+            semantic_entries_count=mem_raw["semantic_entries_count"],
+            procedural_rules_active_count=mem_raw["procedural_rules_active_count"],
+            training_feedback_total=mem_raw["training_feedback_total"],
+            training_feedback_by_tier=mem_raw["training_feedback_by_tier"],
+            recent_procedural_lessons=[
+                AgentMemoryLessonItem.model_validate(r) for r in mem_raw["recent_procedural_lessons"]
+            ],
+        )
+
+        total_adj = len(adj_logs)
+        agreement_rate = round((total_adj - override_count) / total_adj, 4) if total_adj else 1.0
+        orchestrator_telemetry = OrchestratorModelTelemetry(
+            name="VoiceGate Cognitive Orchestrator",
+            model_id=cfg.qwen_model_id,
+            embed_model=cfg.ollama_embed_model,
+            status="online" if adj_svc.enabled else "verify_only",
+            total_runs=max(len(verify_logs), len(adj_logs)),
+            fast_path_count=fast_path_count,
+            repaired_count=repaired_count,
+            uncertain_count=uncertain_count,
+            fast_verified_count=fast_verified_count,
+            adjudicated_count=adjudicated_count,
+            override_count=override_count,
+            agreement_rate=agreement_rate,
+            verify_latency_ms=_latency_stats(verify_latencies),
+            adjudicate_latency_ms=_latency_stats(adj_latencies),
+            memory=mem_stats,
+            recent_results=orch_recent,
+        )
+
+        queue_hub: QueueHub = request.app.state.queue_hub
+        return ModelsTelemetryResponse(
+            generated_at=now,
+            total_tickets=total_tickets,
+            ready_tickets=ready_tickets,
+            unassigned_tickets=unassigned_tickets,
+            failed_tickets=failed_tickets,
+            escalated_human_review_count=escalated_count,
+            escalated_human_review_rate=round(escalated_count / total_tickets, 4) if total_tickets else 0.0,
+            qa_sampled_count=qa_sampled_count,
+            qa_sample_rate=round(qa_sampled_count / total_tickets, 4) if total_tickets else 0.0,
+            avg_confidence=avg_confidence,
+            active_ws_connections=queue_hub.active_count(ctx.organization_id),
+            e2e_latency_ms=_latency_stats(e2e_latencies),
+            cohere_asr=cohere_telemetry,
+            marbert_v2=marbert_telemetry,
+            voicegate_orchestrator=orchestrator_telemetry,
         )
 
     @application.get("/api/metrics", tags=["Monitoring"])

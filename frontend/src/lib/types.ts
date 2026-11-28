@@ -351,6 +351,8 @@ export interface MonitoringSummaryResponse {
   confidence_histogram: Array<{ bucket?: string; label?: string; range?: string; count: number }>;
   human_review_rate: number;
   human_review_rate_24h: number;
+  qa_sampled_count: number;
+  qa_sample_rate: number;
   processing_success_rate: number;
   end_to_end_latency_ms: Record<string, number>;
   end_to_end_latency_24h_ms: Record<string, number>;
@@ -358,6 +360,139 @@ export interface MonitoringSummaryResponse {
   alerts: MonitoringAlert[];
   auto_routing_enabled: boolean;
   active_ws_connections: number;
+}
+
+export interface AgentMemoryLessonItem {
+  id: string;
+  rule_type: string;
+  trigger_pattern: string;
+  instruction: string;
+  support_count: number;
+  success_count: number;
+  source: string;
+  updated_at: string;
+}
+
+export interface AgentMemoryStatsResponse {
+  organization_id: string;
+  memory_enabled: boolean;
+  adjudicator_enabled: boolean;
+  embed_model: string;
+  episodic_total: number;
+  episodic_by_source: Record<string, number>;
+  semantic_entries_count: number;
+  procedural_rules_active_count: number;
+  training_feedback_total: number;
+  training_feedback_by_tier: Record<string, number>;
+  recent_procedural_lessons: AgentMemoryLessonItem[];
+}
+
+export interface CohereRecentResult {
+  ticket_id: string;
+  file_name: string;
+  transcript_preview: string;
+  min_avg_logprob: number | null;
+  max_no_speech_prob: number | null;
+  needs_review: boolean;
+  latency_ms: number;
+  status: string;
+  created_at: string;
+}
+
+export interface CohereModelTelemetry {
+  name: string;
+  model_id: string;
+  backend: string;
+  device: string;
+  status: string;
+  total_runs: number;
+  success_rate: number;
+  latency_ms: Record<string, number>;
+  avg_logprob: number | null;
+  avg_no_speech_prob: number | null;
+  flagged_rate: number;
+  recent_results: CohereRecentResult[];
+}
+
+export interface MarbertRecentResult {
+  ticket_id: string;
+  file_name: string;
+  complaint_category: string | null;
+  complaint_urgency: string | null;
+  customer_state: string | null;
+  churn_risk: string | null;
+  confidence: number;
+  agreed_with_orchestrator: boolean;
+  latency_ms: number;
+  status: string;
+  created_at: string;
+}
+
+export interface MarbertModelTelemetry {
+  name: string;
+  model_id: string;
+  backend: string;
+  checkpoints_ready: boolean;
+  status: string;
+  total_runs: number;
+  avg_confidence: number;
+  below_threshold_rate: number;
+  latency_ms: Record<string, number>;
+  per_head_avg_confidence: Record<string, number>;
+  category_distribution: Record<string, number>;
+  recent_results: MarbertRecentResult[];
+}
+
+export interface OrchestratorRecentResult {
+  ticket_id: string;
+  file_name: string;
+  gate_status: string;
+  adjudicator_mode: string;
+  changed_fields: string[];
+  memory_episodes_used: number;
+  max_episode_similarity: number;
+  calibrated_confidence: number;
+  assigned_agent_name: string | null;
+  reasoning_preview: string;
+  latency_ms: number;
+  created_at: string;
+}
+
+export interface OrchestratorModelTelemetry {
+  name: string;
+  model_id: string;
+  embed_model: string;
+  status: string;
+  total_runs: number;
+  fast_path_count: number;
+  repaired_count: number;
+  uncertain_count: number;
+  fast_verified_count: number;
+  adjudicated_count: number;
+  override_count: number;
+  agreement_rate: number;
+  verify_latency_ms: Record<string, number>;
+  adjudicate_latency_ms: Record<string, number>;
+  memory: AgentMemoryStatsResponse;
+  recent_results: OrchestratorRecentResult[];
+}
+
+export interface ModelsTelemetryResponse {
+  generated_at: string;
+  total_tickets: number;
+  ready_tickets: number;
+  unassigned_tickets: number;
+  failed_tickets: number;
+  escalated_human_review_count: number;
+  escalated_human_review_rate: number;
+  qa_sampled_count: number;
+  qa_sample_rate: number;
+  avg_confidence: number;
+  active_ws_connections: number;
+  e2e_latency_ms: Record<string, number>;
+  cohere_asr: CohereModelTelemetry;
+  marbert_v2: MarbertModelTelemetry;
+  voicegate_orchestrator: OrchestratorModelTelemetry;
 }
 
 type intLike = number;

@@ -37,6 +37,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Main } from '@/components/layout/main'
 import { SvrChartTooltip } from '@/components/svr/chart-tooltip'
 import { SvrCrosshairChart } from '@/components/svr/crosshair-chart'
+import { AiModelsLivePanel } from '@/components/svr/ai-models-live-panel'
 import { MonitoringAlertsPopover } from '@/components/svr/monitoring-alerts-popover'
 import { KpiCard } from '@/components/svr/kpi-card'
 import { BucketText, PriorityScoreAvatar, TicketStatusText } from '@/components/svr/status-badges'
@@ -44,7 +45,12 @@ import { VoicemailIntakeSheet } from '@/components/svr/voicemail-intake-sheet'
 import { api, ApiError } from '@/lib/api'
 import { UI_COPY, formatTicketSummary, labelForCategory } from '@/lib/i18n'
 import { COMPLAINT_CATEGORIES, formatPct, formatUtcTimestamp } from '@/lib/taxonomy'
-import type { AgentResponse, MonitoringSummaryResponse, TicketListResponse } from '@/lib/types'
+import type {
+  AgentResponse,
+  ModelsTelemetryResponse,
+  MonitoringSummaryResponse,
+  TicketListResponse,
+} from '@/lib/types'
 
 const REVIEW_RATE_TARGET = 0.2
 const LATENCY_TARGET_MS = 10000
@@ -87,13 +93,14 @@ function prettyStage(key: string): string {
 
 export function OverviewPage() {
   const navigate = useNavigate()
-  const { locale, wsVersion, settings } = useSvr()
+  const { locale, wsStatus, wsVersion, settings } = useSvr()
   const t = UI_COPY[locale]
   const isAr = locale === 'ar'
   const L = (en: string, ar: string) => (isAr ? ar : en)
 
 
   const [summary, setSummary] = useState<MonitoringSummaryResponse | null>(null)
+  const [modelsTelemetry, setModelsTelemetry] = useState<ModelsTelemetryResponse | null>(null)
   const [queue, setQueue] = useState<TicketListResponse | null>(null)
   const [agents, setAgents] = useState<AgentResponse[]>([])
   const [loading, setLoading] = useState(true)
@@ -103,12 +110,14 @@ export function OverviewPage() {
   const load = useCallback(async () => {
     setError(null)
     try {
-      const [s, q, a] = await Promise.all([
+      const [s, m, q, a] = await Promise.all([
         api.getMonitoringSummary(),
+        api.getModelsTelemetry(),
         api.listTickets({ limit: 6 }),
         api.listAgents(),
       ])
       setSummary(s)
+      setModelsTelemetry(m)
       setQueue(q)
       setAgents(a)
     } catch (err) {
@@ -162,10 +171,13 @@ export function OverviewPage() {
   const churnDist = summary?.classification_distribution?.churn_risk ?? {}
 
   const has24h = (summary?.tickets_last_24h ?? 0) > 0
-  const reviewRate24h = summary?.human_review_rate_24h ?? 0
-  const p95_24h = summary?.end_to_end_latency_24h_ms?.p95
-  const reviewOk = reviewRate24h <= REVIEW_RATE_TARGET
-  const latencyOk = (p95_24h ?? 0) <= LATENCY_TARGET_MS
+  const hasAnyTickets = (summary?.total_tickets ?? 0) > 0
+  const displayReviewRate = has24h ? (summary?.human_review_rate_24h ?? 0) : (summary?.human_review_rate ?? 0)
+  const p95Display = has24h ? summary?.end_to_end_latency_24h_ms?.p95 : summary?.end_to_end_latency_ms?.p95
+  const qaSampledCount = summary?.qa_sampled_count ?? modelsTelemetry?.qa_sampled_count ?? 0
+  const qaSampleRate = summary?.qa_sample_rate ?? modelsTelemetry?.qa_sample_rate ?? 0
+  const reviewOk = displayReviewRate <= REVIEW_RATE_TARGET
+  const latencyOk = (p95Display ?? 0) <= LATENCY_TARGET_MS
 
   const stageRows = Object.entries(summary?.stage_latency_ms ?? {}).filter(
     ([, v]) => (v?.p50 ?? 0) > 0 || (v?.p95 ?? 0) > 0
@@ -208,6 +220,7 @@ export function OverviewPage() {
       <Tabs defaultValue='overview' className='space-y-4'>
         <TabsList>
           <TabsTrigger value='overview'>{L('Overview', 'نظرة عامة')}</TabsTrigger>
+          <TabsTrigger value='models'>{L('AI Models Live', 'النماذج الحية')}</TabsTrigger>
           <TabsTrigger value='analytics'>{L('Analytics', 'التحليلات')}</TabsTrigger>
         </TabsList>
 
@@ -233,36 +246,44 @@ export function OverviewPage() {
             </KpiCard>
 
             <KpiCard
-              title={L('Voicemails · 24h', 'الرسائل · 24 ساعة')}
+              title={L('Voicemails Processed', 'الرسائل المعالجة')}
               icon={Activity}
-              value={summary?.tickets_last_24h ?? 0}
-              pill={{ label: L('Live', 'مباشر'), tone: 'blue' }}
+              value={has24h ? (summary?.tickets_last_24h ?? 0) : (summary?.total_tickets ?? 0)}
+              pill={{ label: wsStatus === 'connected' ? L('Live WS', 'مباشر') : L('Live', 'متصل'), tone: 'blue' }}
             >
-              {L(`${summary?.total_tickets ?? 0} total tickets`, `${summary?.total_tickets ?? 0} تذكرة إجمالا`)}
+              {L(
+                `${summary?.total_tickets ?? 0} total · ${summary?.tickets_last_24h ?? 0} in 24h`,
+                `${summary?.total_tickets ?? 0} إجمالا · ${summary?.tickets_last_24h ?? 0} خلال 24 ساعة`
+              )}
             </KpiCard>
 
             <KpiCard
-              title={L('Human Review · 24h', 'المراجعة · 24 ساعة')}
+              title={L('Escalated Review Rate', 'نسبة التصعيد البشري')}
               icon={Users}
-              value={has24h ? formatPct(reviewRate24h, 1) : '-'}
+              value={hasAnyTickets ? formatPct(displayReviewRate, 1) : '-'}
               pill={
-                !has24h
+                !hasAnyTickets
                   ? { label: L('No data', 'لا بيانات'), tone: 'grey' }
                   : reviewOk
                     ? { label: L('Within 20% target', 'ضمن 20%'), tone: 'green' }
                     : { label: L('Above 20% target', 'أعلى من 20%'), tone: 'red' }
               }
             >
-              {has24h ? L(`${humanReview} in review`, `${humanReview} للمراجعة`) : L('No 24h tickets', 'لا توجد تذاكر خلال 24 ساعة')}
+              {hasAnyTickets
+                ? L(
+                    `${humanReview} escalated · QA 5% sample: ${qaSampledCount} (${formatPct(qaSampleRate, 1)})`,
+                    `${humanReview} للمراجعة · عينة التدقيق: ${qaSampledCount} (${formatPct(qaSampleRate, 1)})`
+                  )
+                : L('No tickets yet', 'لا توجد تذاكر')}
             </KpiCard>
 
             <KpiCard
-              title={L('E2E p95 · 24h', 'زمن المعالجة p95')}
+              title={L('E2E Pipeline p95', 'زمن المعالجة p95')}
               icon={CheckCircle2}
               value={
-                has24h && p95_24h && p95_24h > 0 ? (
+                hasAnyTickets && p95Display && p95Display > 0 ? (
                   <>
-                    {(p95_24h / 1000).toFixed(1)}
+                    {(p95Display / 1000).toFixed(1)}
                     <span className='ms-0.5 text-lg font-medium text-muted-foreground'>
                       {L('s', 'ث')}
                     </span>
@@ -272,7 +293,7 @@ export function OverviewPage() {
                 )
               }
               pill={
-                has24h && p95_24h
+                hasAnyTickets && p95Display
                   ? latencyOk
                     ? { label: L('Within 10s SLA', 'ضمن 10 ثواني'), tone: 'green' }
                     : { label: L('Above 10s SLA', 'أعلى من 10 ثواني'), tone: 'red' }
@@ -314,31 +335,10 @@ export function OverviewPage() {
                         margin={{ top: 22, right: 12, left: 4, bottom: 10 }}
                       >
                       <defs>
-                        <linearGradient id='catFadeGrad' x1='0' y1='0' x2='0' y2='1'>
-                          <stop offset='0%' stopColor='#ffffff' stopOpacity={0.95} />
-                          <stop offset='65%' stopColor='#ffffff' stopOpacity={0.55} />
-                          <stop offset='100%' stopColor='#ffffff' stopOpacity={0.10} />
+                        <linearGradient id='catSolidGrad' x1='0' y1='0' x2='0' y2='1'>
+                          <stop offset='0%' stopColor='var(--chart-2)' stopOpacity={0.95} />
+                          <stop offset='100%' stopColor='var(--chart-3)' stopOpacity={0.75} />
                         </linearGradient>
-                        <mask id='catFadeMask' maskUnits='objectBoundingBox' maskContentUnits='objectBoundingBox'>
-                          <rect x='0' y='0' width='1' height='1' fill='url(#catFadeGrad)' />
-                        </mask>
-                        <pattern
-                          id='catHatchPattern'
-                          width='9'
-                          height='9'
-                          patternUnits='userSpaceOnUse'
-                          patternTransform='rotate(45)'
-                        >
-                          <rect width='9' height='9' fill='var(--chart-bar-fill)' />
-                          <line
-                            x1='0'
-                            y1='0'
-                            x2='0'
-                            y2='9'
-                            stroke='var(--chart-bar-stripe)'
-                            strokeWidth='3.4'
-                          />
-                        </pattern>
                       </defs>
                       <CartesianGrid stroke='var(--chart-grid)' strokeWidth={1} />
                       <XAxis
@@ -382,8 +382,8 @@ export function OverviewPage() {
                       />
                       <Bar
                         dataKey='count'
-                        radius={[0, 0, 0, 0]}
-                        maxBarSize={68}
+                        radius={[6, 6, 0, 0]}
+                        maxBarSize={64}
                         background={{ fill: 'var(--chart-slot)' }}
                         isAnimationActive={false}
                         className='cursor-pointer'
@@ -401,8 +401,7 @@ export function OverviewPage() {
                         {categoryData.map((entry) => (
                           <Cell
                             key={entry.key}
-                            fill='url(#catHatchPattern)'
-                            mask='url(#catFadeMask)'
+                            fill='url(#catSolidGrad)'
                           />
                         ))}
                       </Bar>
@@ -462,6 +461,23 @@ export function OverviewPage() {
               </CardContent>
             </Card>
           </div>
+
+          <AiModelsLivePanel
+            telemetry={modelsTelemetry}
+            locale={locale}
+            wsConnected={wsStatus === 'connected'}
+            onRefresh={() => void load()}
+            compact
+          />
+        </TabsContent>
+
+        <TabsContent value='models' className='space-y-4'>
+          <AiModelsLivePanel
+            telemetry={modelsTelemetry}
+            locale={locale}
+            wsConnected={wsStatus === 'connected'}
+            onRefresh={() => void load()}
+          />
         </TabsContent>
 
         <TabsContent value='analytics' className='space-y-4'>
@@ -491,22 +507,14 @@ export function OverviewPage() {
                       margin={{ top: 24, right: 12, left: 4, bottom: 10 }}
                     >
                     <defs>
-                      <linearGradient id='histFadeGrad' x1='0' y1='0' x2='0' y2='1'>
-                        <stop offset='0%' stopColor='#ffffff' stopOpacity={0.95} />
-                        <stop offset='65%' stopColor='#ffffff' stopOpacity={0.55} />
-                        <stop offset='100%' stopColor='#ffffff' stopOpacity={0.10} />
+                      <linearGradient id='histOkGrad' x1='0' y1='0' x2='0' y2='1'>
+                        <stop offset='0%' stopColor='var(--chart-2)' stopOpacity={0.95} />
+                        <stop offset='100%' stopColor='var(--chart-3)' stopOpacity={0.75} />
                       </linearGradient>
-                      <mask id='histFadeMask' maskUnits='objectBoundingBox' maskContentUnits='objectBoundingBox'>
-                        <rect x='0' y='0' width='1' height='1' fill='url(#histFadeGrad)' />
-                      </mask>
-                      <pattern id='histPatOk' width='9' height='9' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
-                        <rect width='9' height='9' fill='var(--chart-bar-fill)' />
-                        <line x1='0' y1='0' x2='0' y2='9' stroke='var(--chart-bar-stripe)' strokeWidth='3.4' />
-                      </pattern>
-                      <pattern id='histPatWarn' width='9' height='9' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
-                        <rect width='9' height='9' fill='var(--bar-warn)' />
-                        <line x1='0' y1='0' x2='0' y2='9' stroke='var(--chart-bar-stripe)' strokeWidth='3.4' />
-                      </pattern>
+                      <linearGradient id='histWarnGrad' x1='0' y1='0' x2='0' y2='1'>
+                        <stop offset='0%' stopColor='var(--bar-warn)' stopOpacity={0.95} />
+                        <stop offset='100%' stopColor='var(--bar-warn)' stopOpacity={0.65} />
+                      </linearGradient>
                     </defs>
                     <CartesianGrid stroke='var(--chart-grid)' strokeWidth={1} />
                     <XAxis
@@ -549,7 +557,7 @@ export function OverviewPage() {
                     />
                     <Bar
                       dataKey='count'
-                      radius={[0, 0, 0, 0]}
+                      radius={[6, 6, 0, 0]}
                       background={{ fill: 'var(--chart-slot)' }}
                       isAnimationActive={false}
                     >
@@ -565,8 +573,7 @@ export function OverviewPage() {
                       {histData.map((entry, idx) => (
                         <Cell
                           key={idx}
-                          fill={entry.below ? 'url(#histPatWarn)' : 'url(#histPatOk)'}
-                          mask='url(#histFadeMask)'
+                          fill={entry.below ? 'url(#histWarnGrad)' : 'url(#histOkGrad)'}
                         />
                       ))}
                     </Bar>

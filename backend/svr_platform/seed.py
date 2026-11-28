@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .auth import hash_password
 from .config import Settings
 from .models import (
     Agent,
+    EvalRun,
     Organization,
     ScriptTemplate,
     SkillMapping,
@@ -212,3 +213,98 @@ def seed_initial_data(db: Session, settings: Settings) -> Organization:
 
     db.commit()
     return org
+
+
+def ensure_verified_val_eval_run(db: Session, organization_id: str) -> bool:
+    """Seed verified validation benchmark EvalRun from docs/MODEL-CARD.md if none exist."""
+    existing = int(
+        db.scalar(select(func.count(EvalRun.id)).where(EvalRun.organization_id == organization_id))
+        or 0
+    )
+    if existing > 0:
+        return False
+
+    db.add(
+        EvalRun(
+            organization_id=organization_id,
+            dataset_version="v2",
+            split="val",
+            model_version="UBC-NLP/MARBERTv2:single-task-lr2e5-seed99-onnx-int8",
+            config={
+                "base_model": "UBC-NLP/MARBERTv2",
+                "seed": 99,
+                "backend": "onnx-int8",
+                "max_seq_len": 128,
+                "source": "docs/MODEL-CARD.md",
+            },
+            metrics={
+                "n_rows": 1003,
+                "combined_macro_f1": 0.7888,
+                "per_field_macro_f1": {
+                    "complaint_category": 0.7847,
+                    "complaint_urgency": 0.7055,
+                    "customer_state": 0.7487,
+                    "churn_risk": 0.9162,
+                },
+                "ai9_gates": {
+                    "all_passed": True,
+                    "checks": {
+                        "complaint_category": {"actual": 0.7847, "threshold": 0.75, "passed": True},
+                        "complaint_urgency": {"actual": 0.7055, "threshold": 0.70, "passed": True},
+                        "customer_state": {"actual": 0.7487, "threshold": 0.70, "passed": True},
+                        "churn_risk": {"actual": 0.9162, "threshold": 0.80, "passed": True},
+                    },
+                },
+                "churn_at_risk_analysis": {
+                    "true_at_risk_count": 7,
+                    "validation_rows": 1003,
+                },
+                "fair_rerun_5seed": {
+                    "per_seed": [
+                        {
+                            "seed": 42,
+                            "complaint_category": 0.7835,
+                            "complaint_urgency": 0.7305,
+                            "customer_state": 0.7415,
+                            "churn_risk": 0.7990,
+                        },
+                        {
+                            "seed": 1337,
+                            "complaint_category": 0.7987,
+                            "complaint_urgency": 0.7212,
+                            "customer_state": 0.7428,
+                            "churn_risk": 0.9613,
+                        },
+                        {
+                            "seed": 2023,
+                            "complaint_category": 0.7815,
+                            "complaint_urgency": 0.7133,
+                            "customer_state": 0.7466,
+                            "churn_risk": 0.9281,
+                        },
+                        {
+                            "seed": 7,
+                            "complaint_category": 0.7923,
+                            "complaint_urgency": 0.7294,
+                            "customer_state": 0.7443,
+                            "churn_risk": 0.9162,
+                        },
+                        {
+                            "seed": 99,
+                            "complaint_category": 0.7914,
+                            "complaint_urgency": 0.7307,
+                            "customer_state": 0.7459,
+                            "churn_risk": 0.9162,
+                        },
+                    ]
+                },
+                "latency_ms": {
+                    "marbert_onnx_int8_cpu": {"n": 1003, "p50": 105.3, "p95": 170.8},
+                    "marbert_pytorch_cpu": {"n": 1003, "p50": 229.8, "p95": 374.1},
+                },
+            },
+            created_by="system:model-card-val-v2",
+        )
+    )
+    db.commit()
+    return True

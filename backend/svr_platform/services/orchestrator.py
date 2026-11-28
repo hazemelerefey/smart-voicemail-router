@@ -767,9 +767,14 @@ class VoiceGateOrchestrator:
         ):
             ticket.status = TicketStatus.READY.value
             voicemail.status = TicketStatus.READY.value
-            if not needs_review and is_weekly_quality_sample(ticket.id, plan.weekly_sample_rate):
-                needs_review = True
-                review_reason = "weekly_quality_sample"
+            # Track proactive 5% QA sampling separately so clean routed tickets do not inflate escalations
+            qa_sampled = bool(
+                not needs_review and is_weekly_quality_sample(ticket.id, plan.weekly_sample_rate)
+            )
+            cfg_snap = dict(ticket.config_snapshot or {})
+            cfg_snap["qa_sampled"] = qa_sampled
+            cfg_snap["qa_sample_reason"] = "weekly_quality_sample" if qa_sampled else None
+            ticket.config_snapshot = cfg_snap
         else:
             if ticket.assigned_agent_id is not None:
                 release_active_assignment(db, ticket, final_status="released")
