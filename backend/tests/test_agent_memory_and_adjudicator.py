@@ -129,6 +129,7 @@ def test_adjudicator_fixes_wrong_marbert_and_learns_from_supervisor_feedback(db_
         adjudicator_override=_mock_adjudicator,
     )
 
+    test_settings.transcript_edit_enabled = True
     app = create_app(
         settings=test_settings,
         db_manager=db_manager,

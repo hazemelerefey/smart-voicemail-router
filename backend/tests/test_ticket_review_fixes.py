@@ -279,6 +279,7 @@ def test_orchestrator_reaudit_zero_accept_does_not_downgrade_clean_ticket(
             adjudicator=_MockAdjudicator(),  # type: ignore[arg-type]
             adaptive_reaudit_enabled=True,
             adaptive_reaudit_category_threshold=0.45,
+            allow_transcript_edits=True,
         )
         updated = orchestrator.run(db, ticket_id=TICKET_D18)
 
@@ -555,3 +556,109 @@ def test_clean_sampled_ticket_tracks_qa_without_human_review_and_models_telemetr
         assert len(m["cohere_asr"]["recent_results"]) == 1
         assert len(m["marbert_v2"]["recent_results"]) == 1
         assert len(m["voicegate_orchestrator"]["recent_results"]) == 1
+
+
+def test_orchestrator_default_revokes_transcript_edits_and_preserves_cohere_text(
+    db_manager: DatabaseManager,
+    test_settings: Settings,
+) -> None:
+    """Default orchestrator mode must analyze only and never alter Cohere ASR output."""
+    cohere_raw = "كان عندي مشكلة في الشبكة بقالها كذا يوم مش عايزة تتحل"
+    crypto = EncryptionService(test_settings.svr_encryption_key)
+    enc_dir = test_settings.svr_storage_dir / "voicemails"
+    enc_dir.mkdir(parents=True, exist_ok=True)
+    enc_path = enc_dir / "fc082e12.wav.enc"
+    enc_path.write_bytes(crypto.encrypt_bytes(make_wav_bytes(1.5)))
+
+    with db_manager.session_factory() as db:
+        org = db.query(Organization).first()
+        user = db.query(User).first()
+        assert org is not None and user is not None
+
+        vm = Voicemail(
+            organization_id=org.id,
+            file_name="voicemail-recording-test.wav",
+            file_path=str(enc_path),
+            format="wav",
+            size_bytes=enc_path.stat().st_size,
+            duration_seconds=3.8,
+            sample_rate_hz=16000,
+            channels=1,
+            status=TicketStatus.PROCESSING.value,
+            idempotency_key="test-fc082e12-readonly-transcript",
+            content_sha256="2" * 64,
+            encrypted=True,
+            created_by=user.id,
+        )
+        db.add(vm)
+        db.flush()
+        ticket = Ticket(
+            id="fc082e12-2496-49c3-b1f6-87a283edb164",
+            voicemail_id=vm.id,
+            organization_id=org.id,
+            status=TicketStatus.PROCESSING.value,
+            needs_human_review=True,
+        )
+        db.add(ticket)
+        db.commit()
+
+        class _MockCohereSTT:
+            canonical_model_name = "cohere-mock"
+            low_memory_mode = False
+
+            def transcribe(self, _wav_or_path, file_name: str = "", **_kwargs) -> STTResult:
+                return STTResult(
+                    file=file_name or "voicemail-recording-test.wav",
+                    model="cohere-mock",
+                    text=cohere_raw,
+                    text_norm="كان عندي مشكله في الشبكه بقالها كذا يوم مش عايزه تتحل",
+                    min_avg_logprob=-0.0513,
+                    max_no_speech_prob=0.4864,
+                    needs_review=False,
+                    review_reasons="",
+                    dup_text_size=1,
+                    stt_confidence_source="logprob",
+                    error="",
+                )
+
+        class _GateThatWouldCorruptIfCalled:
+            def verify(self, *_args, **_kwargs) -> GateResult:
+                raise AssertionError("Transcript-editing gate must NOT run when allow_transcript_edits=False")
+
+        class _MockNetClassifier:
+            base_model_id = "marbert-mock"
+
+            def classify(self, _text_norm: str, *, confidence_threshold: float = 0.5, file_name: str = "") -> ClassificationResult:
+                return ClassificationResult(
+                    labels={
+                        "complaint_category": "network_and_connectivity",
+                        "complaint_urgency": "high",
+                        "customer_state": "frustrated",
+                        "churn_risk": "not_at_risk",
+                    },
+                    probabilities={
+                        "complaint_category": _dist("complaint_category", "network_and_connectivity", 0.72),
+                        "complaint_urgency": _dist("complaint_urgency", "high", 0.78),
+                        "customer_state": _dist("customer_state", "frustrated", 0.82),
+                        "churn_risk": _dist("churn_risk", "not_at_risk", 0.99),
+                    },
+                    confidence=0.72,
+                    needs_human_review=False,
+                    review_reason=None,
+                    model_version="marbert-mock",
+                    label_sources={f: "model" for f in ("complaint_category", "complaint_urgency", "customer_state", "churn_risk")},
+                )
+
+        orchestrator = VoiceGateOrchestrator(
+            crypto=crypto,
+            stt_service=_MockCohereSTT(),  # type: ignore[arg-type]
+            transcript_gate=_GateThatWouldCorruptIfCalled(),  # type: ignore[arg-type]
+            classifier_service=_MockNetClassifier(),  # type: ignore[arg-type]
+        )
+        updated = orchestrator.run(db, ticket_id="fc082e12-2496-49c3-b1f6-87a283edb164")
+        assert updated.transcript == cohere_raw
+        assert updated.status == TicketStatus.READY.value
+        assert updated.transcript_verification_json is not None
+        assert updated.transcript_verification_json["correction_applied"] is False
+        assert updated.transcript_verification_json["changes"] == []
+        assert updated.transcript_verification_json["backend_used"] == "analyze_only"

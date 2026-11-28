@@ -32,6 +32,7 @@ def run_voicemail_pipeline(
     on_update: Callable[[dict[str, Any]], None] | None = None,
     adaptive_reaudit_enabled: bool = True,
     adaptive_reaudit_category_threshold: float = 0.60,
+    allow_transcript_edits: bool = False,
 ) -> Ticket:
     """Execute full local voicemail pipeline via VoiceGate Orchestrator."""
     gate = transcript_gate or TranscriptVerificationGate()
@@ -44,5 +45,6 @@ def run_voicemail_pipeline(
         memory_service=memory_service,
         adaptive_reaudit_enabled=adaptive_reaudit_enabled,
         adaptive_reaudit_category_threshold=adaptive_reaudit_category_threshold,
+        allow_transcript_edits=allow_transcript_edits,
     )
     return orchestrator.run(db, ticket_id=ticket_id, on_update=on_update)

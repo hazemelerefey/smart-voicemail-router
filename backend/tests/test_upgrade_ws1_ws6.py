@@ -417,6 +417,7 @@ def test_vg09_and_vg10_skipped_empty_and_adaptive_reaudit(test_settings, db_mana
             return _pred("other", cat_prob=0.42)
         return _pred("network_and_connectivity", cat_prob=0.92)
 
+    test_settings.transcript_edit_enabled = True
     app_reaudit = create_app(
         settings=test_settings,
         db_manager=db_manager,

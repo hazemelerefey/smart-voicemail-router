@@ -318,6 +318,7 @@ def main(argv: list[str] | None = None) -> int:
                     memory_service=memory_service,
                     adaptive_reaudit_enabled=settings.adaptive_reaudit_enabled,
                     adaptive_reaudit_category_threshold=settings.adaptive_reaudit_category_threshold,
+                    allow_transcript_edits=settings.transcript_edit_enabled,
                 )
     finally:
         if hasattr(classifier_service, "unload"):

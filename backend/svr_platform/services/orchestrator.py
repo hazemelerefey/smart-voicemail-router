@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import logging
 import time
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Callable
 
@@ -27,9 +27,9 @@ from .classification import CLASSIFICATION_FIELDS, ClassificationResult, MARBERT
 from .memory import AgentMemoryService
 from .priority import compute_priority
 from .routing import assign_ticket_to_agent, recommend_route, release_active_assignment
-from .stt import BaseSTTService
-from .text_norm import normalize_transcript
-from .transcript_gate import GateResult, TranscriptVerificationGate
+from .stt import BaseSTTService, STTResult
+from .text_norm import detect_language_mix, normalize_transcript
+from .transcript_gate import GateResult, TranscriptVerificationGate, analyze_stt_signals
 
 try:
     from .agentic_gate import AgenticTranscriptGate as _AgenticGateType
@@ -104,6 +104,7 @@ class VoiceGateOrchestrator:
         memory_service: AgentMemoryService | None = None,
         adaptive_reaudit_enabled: bool = True,
         adaptive_reaudit_category_threshold: float = 0.60,
+        allow_transcript_edits: bool = False,
     ) -> None:
         self.agent_name = AGENT_NAME
         self.crypto = crypto
@@ -114,6 +115,81 @@ class VoiceGateOrchestrator:
         self.memory_service = memory_service
         self.adaptive_reaudit_enabled = bool(adaptive_reaudit_enabled)
         self.adaptive_reaudit_category_threshold = float(adaptive_reaudit_category_threshold)
+        self.allow_transcript_edits = bool(allow_transcript_edits)
+
+    def _analyze_transcript_readonly(self, stt_res: STTResult) -> GateResult:
+        """Analyze STT transcript quality without altering Cohere ASR output."""
+        t0 = time.perf_counter()
+        raw_clean = " ".join((stt_res.text or "").strip().split())
+        min_lp = stt_res.min_avg_logprob
+        max_nsp = stt_res.max_no_speech_prob
+        conf_src = getattr(stt_res, "stt_confidence_source", "logprob")
+        signals = analyze_stt_signals(
+            raw_clean,
+            min_avg_logprob=min_lp,
+            max_no_speech_prob=max_nsp,
+            stt_review_reasons=stt_res.review_reasons or "",
+            stt_confidence_source=conf_src,
+        )
+        sig_dict = asdict(signals)
+        sig_dict["min_avg_logprob"] = min_lp
+        sig_dict["max_no_speech_prob"] = max_nsp
+
+        if not raw_clean:
+            return GateResult(
+                agent_name=self.agent_name,
+                model=stt_res.model,
+                backend_used="analyze_only",
+                status="skipped_empty",
+                raw_text=stt_res.text,
+                final_text="",
+                final_text_norm="",
+                language_mix="arabic",
+                correction_applied=False,
+                rounds_run=0,
+                confidence=0.0,
+                convergence_reason="empty_transcript",
+                needs_human_review=True,
+                review_reason="uncertain_transcript",
+                signal_summary=sig_dict,
+                changes=[],
+                trace=[],
+                latency_ms=round((time.perf_counter() - t0) * 1000.0, 2),
+                error="Raw ASR transcript was empty.",
+            )
+
+        final_norm = (stt_res.text_norm or "").strip() or normalize_transcript(raw_clean)
+        lang_mix = detect_language_mix(raw_clean)
+        words = raw_clean.split()
+        severe_failure = (
+            len(words) < 2
+            or (min_lp is not None and float(min_lp) < -0.75)
+            or (max_nsp is not None and float(max_nsp) > 0.80)
+            or ("repetition_loop" in signals.lexical_flags)
+        )
+        return GateResult(
+            agent_name=self.agent_name,
+            model=stt_res.model,
+            backend_used="analyze_only",
+            status="uncertain" if severe_failure else "verified",
+            raw_text=stt_res.text,
+            final_text=raw_clean,
+            final_text_norm=final_norm,
+            language_mix=lang_mix,
+            correction_applied=False,
+            rounds_run=0,
+            confidence=0.35 if severe_failure else 0.92,
+            convergence_reason=(
+                "read_only_severe_acoustic_or_loop" if severe_failure else "read_only_cohere_authoritative"
+            ),
+            needs_human_review=bool(severe_failure),
+            review_reason="uncertain_transcript" if severe_failure else None,
+            signal_summary=sig_dict,
+            changes=[],
+            trace=[],
+            latency_ms=round((time.perf_counter() - t0) * 1000.0, 2),
+            error="",
+        )
 
     def _emit_event(
         self,
@@ -325,22 +401,26 @@ class VoiceGateOrchestrator:
         db.commit()
         self._emit_event(on_update, event_type="ticket_stage_update", ticket=ticket, extra={"stage": "transcribe"})
 
-        # 2. Stage: Transcript Verification Gate (iterative word repair & confidence check)
-        verify_kwargs: dict[str, Any] = {
-            "min_avg_logprob": stt_res.min_avg_logprob,
-            "max_no_speech_prob": stt_res.max_no_speech_prob,
-            "stt_review_reasons": stt_res.review_reasons,
-        }
-        if hasattr(self.transcript_gate, "verify"):
-            import inspect
+        # 2. Stage: Transcript Analysis (Cohere ASR is authoritative unless edits are explicitly enabled)
+        if self.allow_transcript_edits:
+            verify_kwargs: dict[str, Any] = {
+                "min_avg_logprob": stt_res.min_avg_logprob,
+                "max_no_speech_prob": stt_res.max_no_speech_prob,
+                "stt_review_reasons": stt_res.review_reasons,
+            }
+            if hasattr(self.transcript_gate, "verify"):
+                import inspect
 
-            sig_params = inspect.signature(self.transcript_gate.verify).parameters
-            if "stt_confidence_source" in sig_params:
-                verify_kwargs["stt_confidence_source"] = getattr(stt_res, "stt_confidence_source", "logprob")
-        gate_res: GateResult = self.transcript_gate.verify(
-            stt_res.text,
-            **verify_kwargs,
-        )
+                sig_params = inspect.signature(self.transcript_gate.verify).parameters
+                if "stt_confidence_source" in sig_params:
+                    verify_kwargs["stt_confidence_source"] = getattr(stt_res, "stt_confidence_source", "logprob")
+            gate_res: GateResult = self.transcript_gate.verify(
+                stt_res.text,
+                **verify_kwargs,
+            )
+        else:
+            verify_kwargs = {}
+            gate_res = self._analyze_transcript_readonly(stt_res)
         gate_ms = round(float(gate_res.latency_ms), 2)
         stage_timing_ms["verify_transcript"] = gate_ms
         stage_status["verify_transcript"] = "flagged" if gate_res.needs_human_review else "ok"
@@ -432,7 +512,8 @@ class VoiceGateOrchestrator:
                 else 0.0
             )
             if (
-                self.adaptive_reaudit_enabled
+                self.allow_transcript_edits
+                and self.adaptive_reaudit_enabled
                 and gate_res.rounds_run == 0
                 and not cls_res.error
                 and cat_conf < self.adaptive_reaudit_category_threshold

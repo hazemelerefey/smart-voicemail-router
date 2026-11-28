@@ -521,6 +521,7 @@ def _run_pipeline_bg(app: FastAPI, ticket_id: str) -> None:
                 on_update=lambda evt: queue_hub.broadcast_threadsafe(evt["organization_id"], evt),
                 adaptive_reaudit_enabled=cfg.adaptive_reaudit_enabled,
                 adaptive_reaudit_category_threshold=cfg.adaptive_reaudit_category_threshold,
+                allow_transcript_edits=cfg.transcript_edit_enabled,
             )
             prom["pipeline_runs"].labels(status=ticket.status).inc()
             prom["pipeline_duration"].observe(max(0.0, ticket.processing_ms / 1000.0))

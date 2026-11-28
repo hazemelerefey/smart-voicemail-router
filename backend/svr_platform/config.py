@@ -76,6 +76,7 @@ class Settings(BaseSettings):
     qwen_confidence_threshold: float = Field(default=0.75, alias="QWEN_CONFIDENCE_THRESHOLD")
     qwen_timeout_s: float = Field(default=60.0, alias="QWEN_TIMEOUT_S")
     # AgenticTranscriptGate settings (LangGraph-powered audit loop)
+    transcript_edit_enabled: bool = Field(default=False, alias="SVR_TRANSCRIPT_EDIT_ENABLED")
     agentic_gate_enabled: bool = Field(default=True, alias="AGENTIC_GATE_ENABLED")
     agentic_gate_fast_path_enabled: bool = Field(default=True, alias="AGENTIC_GATE_FAST_PATH_ENABLED")
     agentic_gate_max_iterations: int = Field(default=4, alias="AGENTIC_GATE_MAX_ITERATIONS")

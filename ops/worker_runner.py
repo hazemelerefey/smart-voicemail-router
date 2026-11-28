@@ -194,6 +194,7 @@ def main() -> int:
                     on_update=lambda evt: publish_ticket_event(redis_client, events_channel, evt),
                     adaptive_reaudit_enabled=settings.adaptive_reaudit_enabled,
                     adaptive_reaudit_category_threshold=settings.adaptive_reaudit_category_threshold,
+                    allow_transcript_edits=settings.transcript_edit_enabled,
                 )
                 logger.info("Processed ticket %s", ticket_id)
             except Exception as exc:

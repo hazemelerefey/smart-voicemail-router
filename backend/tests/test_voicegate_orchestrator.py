@@ -225,6 +225,7 @@ def test_voicegate_orchestrator_end_to_end_repaired_and_uncertain(test_settings,
         ),
     )
 
+    test_settings.transcript_edit_enabled = True
     app = create_app(
         settings=test_settings,
         db_manager=db_manager,
@@ -392,6 +393,7 @@ def test_agentic_gate_orchestrator_downstream_brief_uses_repaired_text(test_sett
         ),
     )
 
+    test_settings.transcript_edit_enabled = True
     app = create_app(
         settings=test_settings,
         db_manager=db_manager,
